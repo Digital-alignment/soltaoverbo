@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, Sparkles, PenTool, Heart, Zap, ArrowDown, CheckCircle } from 'lucide-react';
+import { BookOpen, Users, Sparkles, PenTool, Heart, Zap, ArrowDown, CheckCircle, MessageCircle } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import WavyLine from '../components/WavyLine';

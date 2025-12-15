@@ -232,7 +232,7 @@ export default function NossaFogueira() {
     }
 
     const previousComments = { ...postComments };
-    const previousPosts = [...posts];
+    const previousPosts = [...displayedPosts];
 
     const removeCommentFromState = (comments: Comment[]): Comment[] => {
       return comments.filter(c => {
@@ -249,7 +249,7 @@ export default function NossaFogueira() {
       [postId]: removeCommentFromState(prev[postId] || [])
     }));
 
-    setPosts(prev => prev.map(p =>
+    setDisplayedPosts(prev => prev.map(p =>
       p.id === postId ? { ...p, comment_count: Math.max(0, (p.comment_count || 0) - 1) } : p
     ));
 
@@ -264,7 +264,7 @@ export default function NossaFogueira() {
       if (error) {
         console.error('Delete error:', error);
         setPostComments(previousComments);
-        setPosts(previousPosts);
+        setDisplayedPosts(previousPosts);
 
         if (error.message.includes('permission')) {
           alert('Você não tem permissão para excluir este comentário.');
@@ -279,7 +279,7 @@ export default function NossaFogueira() {
     } catch (error: any) {
       console.error('Erro ao excluir comentário:', error);
       setPostComments(previousComments);
-      setPosts(previousPosts);
+      setDisplayedPosts(previousPosts);
       alert('Erro ao excluir comentário. Tente novamente.');
     }
   };
