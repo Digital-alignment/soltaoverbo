@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, Loader, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Loader } from 'lucide-react';
 import { createCheckoutSession } from '../lib/stripe';
 
 interface PaymentModalProps {
@@ -33,11 +33,34 @@ const PRICE_IDS = {
 export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
   const [selectedInstallment, setSelectedInstallment] = useState<InstallmentOption>(INSTALLMENT_OPTIONS[0]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
     if (!priceId) {
@@ -62,81 +85,46 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
     }
   };
 
-  const handleCopyCode = async () => {
-    try {
-      await navigator.clipboard.writeText('primeirissimos');
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Erro ao copiar código:', err);
-    }
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl animate-in fade-in zoom-in-95 duration-300">
-        <div className="flex justify-between items-center p-8 border-b border-deepBlue/10">
-          <h2 className="font-editorial text-3xl text-deepBlue">Escolha Seu Plano</h2>
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
+      onClick={handleBackdropClick}
+    >
+      <div className="bg-white rounded-3xl max-w-2xl w-full my-8 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+        <div className="flex justify-between items-center p-4 sm:p-6 md:p-8 border-b border-deepBlue/10">
+          <h2 className="font-editorial text-xl sm:text-2xl md:text-3xl text-deepBlue">Escolha Seu Plano</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-deepBlue/5 rounded-lg transition-colors"
-            aria-label="Fechar"
+            className="p-2 hover:bg-deepBlue/10 rounded-lg transition-colors flex-shrink-0"
+            aria-label="Fechar modal"
           >
-            <X className="w-6 h-6 text-deepBlue" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6 text-deepBlue" />
           </button>
         </div>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-6 md:p-8">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+            <div className="mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
               {error}
             </div>
           )}
 
-          <div className="flex flex-col items-center justify-center mb-8">
-            <div className="relative w-full max-w-sm">
-              <button
-                onClick={handleCopyCode}
-                className="w-full group relative overflow-hidden rounded-2xl transition-all duration-300"
-                aria-label="Clique para copiar o código de desconto"
-              >
-                <img
-                  src="/whatsapp_image_2025-12-11_at_6.28.10_pm.jpeg"
-                  alt="Código de desconto PRIMEIRÍSSIMOS"
-                  className="w-full rounded-2xl group-hover:opacity-75 transition-opacity duration-300 cursor-pointer"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-colors duration-300 flex items-center justify-center">
-                  {copied && (
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="bg-limeGreen rounded-full p-3">
-                        <Check className="w-6 h-6 text-white" />
-                      </div>
-                      <p className="text-white font-bold text-sm bg-deepBlue/80 px-4 py-2 rounded-lg">
-                        Código copiado!
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <div className="space-y-6 mb-8">
-            <div className="bg-gradient-to-br from-deepBlue/5 to-deepBlue/10 rounded-2xl p-6 border border-deepBlue/10 hover:border-deepBlue/20 transition-all duration-300">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-gradient-to-br from-deepBlue/5 to-deepBlue/10 rounded-2xl p-4 sm:p-5 md:p-6 border border-deepBlue/10 hover:border-deepBlue/20 transition-all duration-300">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex-1">
-                  <p className="text-sm text-deepBlue/70 font-medium">Pagamento Único</p>
-                  <p className="text-3xl font-bold text-deepBlue mt-1">R$ 2.897,00</p>
+                  <p className="text-xs sm:text-sm text-deepBlue/70 font-medium">Pagamento Único</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-deepBlue mt-1">R$ 2.897,00</p>
                   <p className="text-xs text-deepBlue/50 mt-2">Acesso integral por 1 ano</p>
                 </div>
                 <button
                   onClick={() => !loading && handleCheckout(PRICE_IDS.ONE_TIME, 'payment')}
                   disabled={loading}
-                  className="btn-primary py-3 px-6 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap"
+                  className="btn-primary py-3 px-6 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap w-full md:w-auto"
                 >
                   {loading ? (
                     <>
-                      <Loader className="w-5 h-5 animate-spin" />
+                      <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                       Processando...
                     </>
                   ) : (
@@ -146,21 +134,21 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50/60 to-blue-100/40 rounded-2xl p-6 border border-blue-200 hover:border-blue-300 transition-all duration-300">
+            <div className="bg-gradient-to-br from-blue-50/60 to-blue-100/40 rounded-2xl p-4 sm:p-5 md:p-6 border border-blue-200 hover:border-blue-300 transition-all duration-300">
               <div className="space-y-4">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
+                <div className="flex flex-col gap-4">
                   <div className="flex-1">
-                    <p className="text-sm text-deepBlue/70 font-medium mb-4">Parcelas</p>
+                    <p className="text-xs sm:text-sm text-deepBlue/70 font-medium mb-3 sm:mb-4">Parcelas</p>
 
-                    <div className="relative w-full md:w-64">
+                    <div className="relative w-full">
                       <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                         disabled={loading}
-                        className="w-full bg-white border-2 border-blue-300 hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-deepBlue font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between"
+                        className="w-full bg-white border-2 border-blue-300 hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-deepBlue font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between text-sm sm:text-base"
                       >
                         <span>{selectedInstallment.months}x de R$ {selectedInstallment.monthlyAmount.toFixed(2)}</span>
                         <svg
-                          className={`w-5 h-5 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
+                          className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -178,16 +166,16 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
                                 setSelectedInstallment(option);
                                 setDropdownOpen(false);
                               }}
-                              className={`w-full text-left px-4 py-3 transition-all duration-200 ${
+                              className={`w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 transition-all duration-200 text-sm sm:text-base ${
                                 selectedInstallment.months === option.months
                                   ? 'bg-blue-100 border-l-4 border-blue-500 text-deepBlue font-semibold'
                                   : 'hover:bg-blue-50 text-deepBlue/80'
                               }`}
                             >
-                              <div className="flex justify-between items-center">
-                                <span>{option.months}x de R$ {option.monthlyAmount.toFixed(2)}</span>
+                              <div className="flex justify-between items-center gap-2">
+                                <span className="truncate">{option.months}x de R$ {option.monthlyAmount.toFixed(2)}</span>
                                 {option.isHighlighted && (
-                                  <span className="text-xs bg-limeGreen text-white px-2 py-1 rounded-full font-bold">
+                                  <span className="text-xs bg-limeGreen text-white px-2 py-1 rounded-full font-bold whitespace-nowrap">
                                     Melhor opção
                                   </span>
                                 )}
@@ -202,11 +190,11 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
                   <button
                     onClick={() => !loading && handleCheckout(selectedInstallment.priceId, 'subscription')}
                     disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap md:self-start"
+                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-3 px-6 sm:px-8 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap w-full"
                   >
                     {loading ? (
                       <>
-                        <Loader className="w-5 h-5 animate-spin" />
+                        <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                         Processando...
                       </>
                     ) : (
@@ -219,10 +207,10 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-green-50 to-green-25 rounded-2xl p-6 border border-green-200 hover:border-green-300 transition-all duration-300">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6">
+            <div className="bg-gradient-to-br from-green-50 to-green-25 rounded-2xl p-4 sm:p-5 md:p-6 border border-green-200 hover:border-green-300 transition-all duration-300">
+              <div className="flex flex-col gap-4">
                 <div className="flex-1">
-                  <p className="text-sm text-deepBlue/70 font-medium">Pagar com PIX</p>
+                  <p className="text-xs sm:text-sm text-deepBlue/70 font-medium">Pagar com PIX</p>
                   <p className="text-xs text-limeGreen font-bold mt-2 uppercase tracking-wide">Desconto especial nesta forma de pagamento</p>
                   <p className="text-xs text-deepBlue/50 mt-2">Acesso integral por 1 ano</p>
                 </div>
@@ -230,7 +218,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
                   href="https://wa.link/nyiqy2"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-limeGreen hover:bg-limeGreen/90 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap"
+                  className="bg-limeGreen hover:bg-limeGreen/90 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap w-full"
                 >
                   Pagar via WhatsApp
                 </a>
@@ -238,7 +226,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
             </div>
           </div>
 
-          <div className="text-center text-deepBlue/60 text-sm border-t border-deepBlue/10 pt-6">
+          <div className="text-center text-deepBlue/60 text-xs sm:text-sm border-t border-deepBlue/10 pt-4 sm:pt-6 mt-4">
             <p>Todas as opções incluem acesso total por 1 ano</p>
           </div>
         </div>
