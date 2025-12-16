@@ -448,7 +448,12 @@ export default function Admin() {
                         <h3 className="font-semibold text-gray-900 text-lg truncate">
                           {user.display_name}
                         </h3>
-                        <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                          <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded-full whitespace-nowrap">
+                            Admin only
+                          </span>
+                        </div>
                         <p className="text-xs text-gray-500 mt-1 flex items-center">
                           <Users className="w-3 h-3 mr-1" />
                           Membro desde {new Date(user.created_at).toLocaleDateString('pt-BR')}
@@ -490,16 +495,16 @@ export default function Admin() {
                             <FileText className="w-4 h-4" />
                           </a>
                         )}
-                        {(user.email_public || user.email) && (
+                        {user.email_public && (
                           <a
-                            href={`mailto:${user.email_public || user.email}`}
+                            href={`mailto:${user.email_public}`}
                             className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 transition-colors"
-                            title="Email"
+                            title="Email Público"
                           >
                             <Mail className="w-4 h-4" />
                           </a>
                         )}
-                        {!user.instagram_url && !user.linkedin_url && !user.substack_url && (
+                        {!user.instagram_url && !user.linkedin_url && !user.substack_url && !user.email_public && (
                           <span className="text-xs text-gray-400 italic px-2">Sem links sociais</span>
                         )}
                       </div>
