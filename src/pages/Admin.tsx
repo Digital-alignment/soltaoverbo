@@ -8,7 +8,7 @@ import BannerManagement from '../components/BannerManagement';
 import BroadcastManagement from '../components/BroadcastManagement';
 import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
-import { Users, BookOpen, Mail, Image, Instagram, Linkedin, FileText, Search, Filter, X, Megaphone, MessageCircle, ShoppingCart } from 'lucide-react';
+import { Users, BookOpen, Mail, Image, Instagram, Linkedin, FileText, Search, Filter, X, Megaphone, MessageCircle, ShoppingCart, Download } from 'lucide-react';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
 
@@ -129,6 +129,52 @@ export default function Admin() {
     setSearchQuery('');
     setRoleFilter('all');
     setDateFilter('all');
+  };
+
+  const downloadUsersCSV = () => {
+    const escapeCSV = (value: string | null | undefined): string => {
+      if (!value) return '';
+      const stringValue = String(value);
+      if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+        return `"${stringValue.replace(/"/g, '""')}"`;
+      }
+      return stringValue;
+    };
+
+    const roleNames: { [key: string]: string } = {
+      free: 'Gratuito',
+      paid: 'Premium',
+      admin: 'Administrador'
+    };
+
+    const headers = ['Nome', 'Email', 'Instagram', 'LinkedIn', 'Substack', 'Email Público', 'Plano', 'Data de Registro'];
+
+    const rows = filteredUsers.map(user => [
+      escapeCSV(user.display_name),
+      escapeCSV(user.email),
+      escapeCSV(user.instagram_url),
+      escapeCSV(user.linkedin_url),
+      escapeCSV(user.substack_url),
+      escapeCSV(user.email_public),
+      escapeCSV(roleNames[user.role] || user.role),
+      escapeCSV(new Date(user.created_at).toLocaleDateString('pt-BR'))
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `usuarios-soltao-overboo-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const loadData = async () => {
@@ -342,10 +388,27 @@ export default function Admin() {
 
         {activeTab === 'users' && (
           <div ref={usersRef} className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <Users className="w-6 h-6 mr-2 text-amber-600" />
-              Gerenciar Usuários
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                <Users className="w-6 h-6 mr-2 text-amber-600" />
+                Gerenciar Usuários
+              </h2>
+              <button
+                onClick={downloadUsersCSV}
+                disabled={filteredUsers.length === 0}
+                className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
+                title="Exportar lista de usuários para CSV"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">Exportar CSV</span>
+                <span className="sm:hidden">CSV</span>
+                {filteredUsers.length > 0 && (
+                  <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                    {filteredUsers.length}
+                  </span>
+                )}
+              </button>
+            </div>
 
             {/* Search and Filter Bar */}
             <div className="mb-6 space-y-3">
