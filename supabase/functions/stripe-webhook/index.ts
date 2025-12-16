@@ -243,6 +243,27 @@ async function handleEvent(event: Stripe.Event) {
           console.error('Error creating notification:', notifError);
         }
 
+        // Mark checkout attempt as completed
+        const { error: checkoutUpdateError } = await supabase
+          .from('checkout_attempts')
+          .update({
+            completed: true,
+            completed_at: new Date().toISOString(),
+            stripe_session_id: sessionId,
+            user_id: user.id,
+            plan_type: planType,
+          })
+          .eq('email', email)
+          .eq('completed', false)
+          .order('attempted_at', { ascending: false })
+          .limit(1);
+
+        if (checkoutUpdateError) {
+          console.error('Error updating checkout attempt:', checkoutUpdateError);
+        } else {
+          console.info(`Checkout attempt marked as completed for email: ${email}`);
+        }
+
         console.info(`Successfully processed payment and updated user role for: ${email} with ${totalInstallments} installments`);
       }
     }

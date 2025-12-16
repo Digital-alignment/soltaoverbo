@@ -7,7 +7,8 @@ import ContactMessagesManagement from '../components/ContactMessagesManagement';
 import BannerManagement from '../components/BannerManagement';
 import BroadcastManagement from '../components/BroadcastManagement';
 import CommentModeration from '../components/CommentModeration';
-import { Users, BookOpen, Mail, Image, Instagram, Linkedin, FileText, Search, Filter, X, Megaphone, MessageCircle } from 'lucide-react';
+import CheckoutAnalytics from '../components/CheckoutAnalytics';
+import { Users, BookOpen, Mail, Image, Instagram, Linkedin, FileText, Search, Filter, X, Megaphone, MessageCircle, ShoppingCart } from 'lucide-react';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
 
@@ -21,7 +22,7 @@ export default function Admin() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation' | 'checkout'>('users');
   const [stats, setStats] = useState({
     totalUsers: 0,
     freeUsers: 0,
@@ -39,6 +40,7 @@ export default function Admin() {
   const broadcastsRef = useRef<HTMLDivElement>(null);
   const moderationRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
+  const checkoutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadData();
@@ -70,6 +72,9 @@ export default function Admin() {
           break;
         case 'messages':
           ref = messagesRef;
+          break;
+        case 'checkout':
+          ref = checkoutRef;
           break;
       }
 
@@ -287,6 +292,17 @@ export default function Admin() {
           >
             <Mail className="w-5 h-5 mr-2" />
             Mensagens
+          </button>
+          <button
+            onClick={() => setActiveTab('checkout')}
+            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+              activeTab === 'checkout'
+                ? 'bg-white text-amber-600 shadow-lg'
+                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+            }`}
+          >
+            <ShoppingCart className="w-5 h-5 mr-2" />
+            Checkout
           </button>
         </div>
 
@@ -541,6 +557,12 @@ export default function Admin() {
         {activeTab === 'messages' && (
           <div ref={messagesRef} className="bg-white rounded-2xl shadow-lg p-6">
             <ContactMessagesManagement />
+          </div>
+        )}
+
+        {activeTab === 'checkout' && (
+          <div ref={checkoutRef} className="bg-white rounded-2xl shadow-lg p-6">
+            <CheckoutAnalytics />
           </div>
         )}
 

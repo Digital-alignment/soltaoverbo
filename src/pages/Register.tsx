@@ -13,6 +13,8 @@ export default function Register() {
   const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
+  const hasCheckoutIntent = localStorage.getItem('checkout_intent') !== null;
+
   if (loading) {
     return <LoadingPage />;
   }
@@ -30,7 +32,13 @@ export default function Register() {
 
     try {
       await signUp(email, password, displayName);
-      navigate('/dashboard');
+
+      const checkoutIntent = localStorage.getItem('checkout_intent');
+      if (checkoutIntent) {
+        navigate('/roteirooriginal?openCheckout=true');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err.message || 'erro ao criar conta');
     } finally {
@@ -64,6 +72,17 @@ export default function Register() {
         </div>
 
         <div className="bg-white rounded-2xl border border-darkNeutral/10 p-8">
+          {hasCheckoutIntent && (
+            <div className="mb-6 p-4 bg-limeGreen/10 border-2 border-limeGreen rounded-xl">
+              <p className="text-deepBlue font-semibold text-center text-lg mb-2">
+                Falta apenas um passo para garantir sua vaga!
+              </p>
+              <p className="text-deepBlue/70 text-center text-sm">
+                Crie sua conta agora e continue sua compra
+              </p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">

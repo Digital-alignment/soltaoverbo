@@ -1,26 +1,41 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { CheckCircle2, BookOpen, Users, Lightbulb, Heart, Pen, ChevronDown, ChevronLeft, ChevronRight, PenTool, Sparkles, RefreshCw } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import PaymentModal from '../components/PaymentModal';
+import AuthPromptModal from '../components/AuthPromptModal';
 import WavyLine from '../components/WavyLine';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 export default function RoteiroOriginal() {
   const { user } = useAuth();
+  const location = useLocation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [visibleSteps, setVisibleSteps] = useState<Set<number>>(new Set());
   const [visibleSections, setVisibleSections] = useState<Set<number>>(new Set());
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isAuthPromptModalOpen, setIsAuthPromptModalOpen] = useState(false);
   const [autoPlay, setAutoPlay] = useState(true);
   const stepsRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+
+    const params = new URLSearchParams(location.search);
+    const openCheckout = params.get('openCheckout');
+
+    if (openCheckout === 'true' && user) {
+      const checkoutIntent = localStorage.getItem('checkout_intent');
+      if (checkoutIntent) {
+        setIsPaymentModalOpen(true);
+        localStorage.removeItem('checkout_intent');
+      }
+    }
+  }, [location, user]);
 
   useEffect(() => {
     if (!autoPlay) return;
@@ -66,6 +81,29 @@ export default function RoteiroOriginal() {
       });
     };
   }, []);
+
+  const trackCheckoutAttempt = async () => {
+    try {
+      await supabase.from('checkout_attempts').insert({
+        user_id: user?.id || null,
+        email: user?.email || '',
+        source_page: 'roteiro-original',
+        attempted_at: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Error tracking checkout attempt:', error);
+    }
+  };
+
+  const handleCheckoutClick = async () => {
+    await trackCheckoutAttempt();
+
+    if (!user) {
+      setIsAuthPromptModalOpen(true);
+    } else {
+      setIsPaymentModalOpen(true);
+    }
+  };
 
   const heroSlides = [
     {
@@ -178,7 +216,7 @@ export default function RoteiroOriginal() {
 
               <div className="pt-4 slide-fade-in-buttons">
                 <button
-                  onClick={() => setIsPaymentModalOpen(true)}
+                  onClick={handleCheckoutClick}
                   className="btn-primary text-base md:text-lg px-6 py-3 md:px-8 md:py-4 hover:scale-105 transition-transform"
                 >
                   {slide.ctaText}
@@ -482,7 +520,7 @@ export default function RoteiroOriginal() {
 
           <div id="garantir" className="text-center">
             <button
-              onClick={() => setIsPaymentModalOpen(true)}
+              onClick={handleCheckoutClick}
               className="btn-primary text-base md:text-lg px-8 py-4 mb-4 hover:scale-105 transition-transform"
             >
               inscreva-se agora
@@ -567,6 +605,12 @@ export default function RoteiroOriginal() {
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         userEmail={user?.email || ''}
+      />
+
+      {/* Auth Prompt Modal */}
+      <AuthPromptModal
+        isOpen={isAuthPromptModalOpen}
+        onClose={() => setIsAuthPromptModalOpen(false)}
       />
 
       {/* Footer */}
