@@ -326,13 +326,13 @@ export default function Programs() {
                     mentoria roteiro original
                   </h2>
                   <p className="text-base md:text-lg leading-relaxed mb-4" style={{ color: '#ede5d1', opacity: 0.9 }}>
-                    a joia da nossa comunidade. uma mentoria coletiva de 12 semanas para você revisitar sua história, ampliar perspectivas e escrever um novo capítulo da sua vida com autonomia e coragem.
+                    a joia da nossa comunidade. uma mentoria coletiva de 11 encontros para você revisitar sua história, ampliar perspectivas e escrever um novo capítulo da sua vida com autonomia e coragem.
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-sm md:text-base" style={{ color: '#ede5d1', opacity: 0.85 }}>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#BEC540' }} />
-                    <span>12 encontros ao vivo</span>
+                    <span>11 encontros ao vivo</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#BEC540' }} />
@@ -355,7 +355,7 @@ export default function Programs() {
                     saiba mais
                   </Link>
                   <div className="flex flex-col justify-center text-sm" style={{ color: '#ede5d1', opacity: 0.8 }}>
-                    <span className="font-bold">mentoria de 12 semanas</span>
+                    <span className="font-bold">mentoria de 11 semanas</span>
                     <span className="font-editorial text-base" style={{ color: '#ede5d1' }}>roteiro original</span>
                   </div>
                 </div>
