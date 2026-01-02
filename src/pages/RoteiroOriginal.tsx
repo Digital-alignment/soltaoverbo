@@ -152,9 +152,9 @@ export default function RoteiroOriginal() {
   ];
 
   const bonusClasses = [
-    { name: 'lucy hallak', focus: 'o olhar poético para o cotidiano', desc: 'a escrita como exercício de presença no mundo.' },
-    { name: 'bruno kilary', focus: 'meditação e socioemocional', desc: 'silêncio, presença e autorregulação.' },
-    { name: 'mauricio assis', focus: 'teu lugar no mundo', desc: 'comunidade, pertencimento e redes de apoio.' }
+    { name: 'lucy hallak', date: '26/02', focus: 'o olhar poético para o cotidiano', desc: 'a escrita como exercício de presença no mundo.' },
+    { name: 'bruno kilary', date: '12/03', focus: 'meditação e socioemocional', desc: 'silêncio, presença e autorregulação.' },
+    { name: 'mauricio assis', date: '26/03', focus: 'teu lugar no mundo', desc: 'comunidade, pertencimento e redes de apoio.' }
   ];
 
   const faqs = [
@@ -472,7 +472,8 @@ export default function RoteiroOriginal() {
                 className="card border-2 border-limeGreen/30 hover:border-limeGreen/70 hover:shadow-xl transition-all duration-300"
                 style={{ transitionDelay: `${idx * 100}ms` }}
               >
-                <div className="text-3xl md:text-4xl font-editorial text-deepBlue mb-4 font-bold">{cls.name}</div>
+                <div className="text-3xl md:text-4xl font-editorial text-deepBlue mb-2 font-bold">{cls.name}</div>
+                <div className="text-sm md:text-base text-deepBlue/60 mb-4 font-medium">{cls.date}</div>
                 <h4 className="text-base md:text-lg font-medium text-actionOrange mb-3">{cls.focus}</h4>
                 <p className="text-deepBlue/70 text-sm md:text-base leading-relaxed">{cls.desc}</p>
               </div>
