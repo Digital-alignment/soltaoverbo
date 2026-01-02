@@ -123,13 +123,13 @@ export default function RoteiroOriginal() {
   ];
 
   const journeySteps = [
-    { date: '13/01', title: 'prólogo – abertura do caminho', desc: 'o chamado à jornada, conexão inicial do grupo, apresentação dos propósitos e combinados.', guest: null },
-    { date: '20/01', title: 'capítulo 1 – era uma vez: perspectivas', desc: 'reconhecimento do passado, das narrativas herdadas e pertencimento.', guest: null },
-    { date: '27/01', title: 'capítulo 1 – convidada', desc: 'elen cristina (corpo território) - "o futuro é ancestral."', guest: 'elen cristina' },
-    { date: '03/02', title: 'capítulo 2 – o futuro se constrói em comunidade', desc: 'o poder do coletivo e como as histórias se entrelaçam na comunidade.', guest: null },
-    { date: '10/02', title: 'capítulo 2 – convidada', desc: 'marcelle xavier (instituto amuta) - representa o espaço seguro para transformação, cura e construção coletiva.', guest: 'marcelle xavier' },
-    { date: '17/02', title: 'capítulo 3 – clímax: o destino é a jornada em si', desc: 'reflexão sobre conquistas, dúvidas e o verdadeiro propósito da travessia.', guest: null },
-    { date: '24/02', title: 'capítulo 3 – convidado', desc: 'gabriel tarso (fotógrafo e montanhista) - metáfora viva da entrega às montanhas e o aprendizado na travessia.', guest: 'gabriel tarso' },
+    { date: '27/01', title: 'prólogo – abertura do caminho', desc: 'o chamado à jornada, conexão inicial do grupo, apresentação dos propósitos e combinados.', guest: null },
+    { date: '04/02', title: 'capítulo 1 – era uma vez: perspectivas', desc: 'reconhecimento do passado, das narrativas herdadas e pertencimento.', guest: null },
+    { date: '10/02', title: 'capítulo 1 – convidada', desc: 'elen cristina (corpo território) - "o futuro é ancestral."', guest: 'elen cristina' },
+    { date: '24/02', title: 'capítulo 2 – o futuro se constrói em comunidade', desc: 'o poder do coletivo e como as histórias se entrelaçam na comunidade.', guest: null },
+    { date: '26/02', title: 'capítulo 2 – convidada', desc: 'marcelle xavier (instituto amuta) - representa o espaço seguro para transformação, cura e construção coletiva.', guest: 'marcelle xavier' },
+    { date: '03/03', title: 'capítulo 3 – clímax: o destino é a jornada em si', desc: 'reflexão sobre conquistas, dúvidas e o verdadeiro propósito da travessia.', guest: null },
+    { date: '14/02', title: 'capítulo 3 – convidado', desc: 'gabriel tarso (fotógrafo e montanhista) - metáfora viva da entrega às montanhas e o aprendizado na travessia.', guest: 'gabriel tarso' },
     { date: '09/03', title: 'capítulo 4 – segura firme: a descida', desc: 'a descida como momento fértil de renovação e possibilidade de leveza.', guest: null },
     { date: '16/03', title: 'capítulo 4 – convidada', desc: 'caca rhenius (caórdico aprendizagem) - sabedoria da ludicidade, experimentação e prazer no aprender.', guest: 'caca rhenius' },
     { date: '23/03', title: 'capítulo 5 – e foram felizes para sempre?', desc: 'um olhar sobre finais e recomeços, e a continuidade da narrativa pessoal.', guest: null },
