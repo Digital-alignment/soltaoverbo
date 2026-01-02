@@ -16,18 +16,18 @@ interface InstallmentOption {
 }
 
 const INSTALLMENT_OPTIONS: InstallmentOption[] = [
-  { months: 3, priceId: import.meta.env.VITE_STRIPE_PRICE_3X || '', monthlyAmount: 965.66 },
-  { months: 6, priceId: import.meta.env.VITE_STRIPE_PRICE_6X || '', monthlyAmount: 482.83 },
-  { months: 9, priceId: import.meta.env.VITE_STRIPE_PRICE_9X || '', monthlyAmount: 321.88 },
-  { months: 12, priceId: import.meta.env.VITE_STRIPE_PRICE_INSTALLMENT || '', monthlyAmount: 248.00, isHighlighted: true },
+  { months: 2, priceId: import.meta.env.VITE_STRIPE_PRICE_2X || '', monthlyAmount: 748.50 },
+  { months: 3, priceId: import.meta.env.VITE_STRIPE_PRICE_3X || '', monthlyAmount: 499.00 },
+  { months: 4, priceId: import.meta.env.VITE_STRIPE_PRICE_4X || '', monthlyAmount: 374.25 },
+  { months: 5, priceId: import.meta.env.VITE_STRIPE_PRICE_5X || '', monthlyAmount: 299.40, isHighlighted: true },
 ];
 
 const PRICE_IDS = {
   ONE_TIME: import.meta.env.VITE_STRIPE_PRICE_ONE_TIME || '',
-  INSTALLMENT: import.meta.env.VITE_STRIPE_PRICE_INSTALLMENT || '',
+  TWO_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_2X || '',
   THREE_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_3X || '',
-  SIX_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_6X || '',
-  NINE_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_9X || '',
+  FOUR_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_4X || '',
+  FIVE_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_5X || '',
 };
 
 export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModalProps) {
@@ -114,7 +114,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex-1">
                   <p className="text-xs sm:text-sm text-deepBlue/70 font-medium">Pagamento Único</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-deepBlue mt-1">R$ 2.897,00</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-deepBlue mt-1">R$ 1.497,00</p>
                   <p className="text-xs text-deepBlue/50 mt-2">Acesso integral por 1 ano</p>
                 </div>
                 <button

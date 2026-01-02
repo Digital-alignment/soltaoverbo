@@ -6,17 +6,17 @@ interface CreateCheckoutSessionParams {
 
 function getPlanTypeFromPriceId(priceId: string): string {
   const oneTimeId = import.meta.env.VITE_STRIPE_PRICE_ONE_TIME;
-  const twoXId = import.meta.env.VITE_STRIPE_PRICE_INSTALLMENT;
+  const twoXId = import.meta.env.VITE_STRIPE_PRICE_2X;
   const threeXId = import.meta.env.VITE_STRIPE_PRICE_3X;
-  const sixXId = import.meta.env.VITE_STRIPE_PRICE_6X;
-  const nineXId = import.meta.env.VITE_STRIPE_PRICE_9X;
+  const fourXId = import.meta.env.VITE_STRIPE_PRICE_4X;
+  const fiveXId = import.meta.env.VITE_STRIPE_PRICE_5X;
 
   if (priceId === oneTimeId) return 'one_time';
   if (priceId === twoXId) return '2x';
   if (priceId === threeXId) return '3x';
-  if (priceId === sixXId) return '6x';
-  if (priceId === nineXId) return '9x';
-  return '12x';
+  if (priceId === fourXId) return '4x';
+  if (priceId === fiveXId) return '5x';
+  return 'unknown';
 }
 
 export async function createCheckoutSession({

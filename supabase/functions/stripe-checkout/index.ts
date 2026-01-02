@@ -66,9 +66,8 @@ Deno.serve(async (req) => {
       'one_time': { installments: 1, name: 'one_time' },
       '2x': { installments: 2, name: '2x' },
       '3x': { installments: 3, name: '3x' },
-      '6x': { installments: 6, name: '6x' },
-      '9x': { installments: 9, name: '9x' },
-      '12x': { installments: 12, name: '12x' },
+      '4x': { installments: 4, name: '4x' },
+      '5x': { installments: 5, name: '5x' },
     };
 
     const plan = planType ? planTypeMap[planType] : { installments: 1, name: 'one_time' };
