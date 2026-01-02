@@ -127,14 +127,13 @@ export default function RoteiroOriginal() {
     { date: '04/02', title: 'capítulo 1 – era uma vez: perspectivas', desc: 'reconhecimento do passado, das narrativas herdadas e pertencimento.', guest: null },
     { date: '10/02', title: 'capítulo 1 – convidada', desc: 'elen cristina (corpo território) - "o futuro é ancestral."', guest: 'elen cristina' },
     { date: '24/02', title: 'capítulo 2 – o futuro se constrói em comunidade', desc: 'o poder do coletivo e como as histórias se entrelaçam na comunidade.', guest: null },
-    { date: '26/02', title: 'capítulo 2 – convidada', desc: 'marcelle xavier (instituto amuta) - representa o espaço seguro para transformação, cura e construção coletiva.', guest: 'marcelle xavier' },
-    { date: '03/03', title: 'capítulo 3 – clímax: o destino é a jornada em si', desc: 'reflexão sobre conquistas, dúvidas e o verdadeiro propósito da travessia.', guest: null },
-    { date: '14/02', title: 'capítulo 3 – convidado', desc: 'gabriel tarso (fotógrafo e montanhista) - metáfora viva da entrega às montanhas e o aprendizado na travessia.', guest: 'gabriel tarso' },
-    { date: '09/03', title: 'capítulo 4 – segura firme: a descida', desc: 'a descida como momento fértil de renovação e possibilidade de leveza.', guest: null },
-    { date: '16/03', title: 'capítulo 4 – convidada', desc: 'caca rhenius (caórdico aprendizagem) - sabedoria da ludicidade, experimentação e prazer no aprender.', guest: 'caca rhenius' },
-    { date: '23/03', title: 'capítulo 5 – e foram felizes para sempre?', desc: 'um olhar sobre finais e recomeços, e a continuidade da narrativa pessoal.', guest: null },
-    { date: '30/03', title: 'capítulo 5 – convidado', desc: 'rodrigo brites (membuka) - transforma conversas difíceis em clareza: o que se mantém quando tudo muda?', guest: 'rodrigo brites' },
-    { date: '02/04', title: 'epílogo – fechamento simbólico', desc: 'integração das vivências e celebração das novas narrativas construídas.', guest: null }
+    { date: '03/03', title: 'capítulo 2 – convidada', desc: 'marcelle xavier (instituto amuta) - representa o espaço seguro para transformação, cura e construção coletiva.', guest: 'marcelle xavier' },
+    { date: '10/03', title: 'capítulo 3 – clímax: o destino é a jornada em si', desc: 'reflexão sobre conquistas, dúvidas e o verdadeiro propósito da travessia.', guest: null },
+    { date: '17/03', title: 'capítulo 3 – convidado', desc: 'gabriel tarso (fotógrafo e montanhista) - metáfora viva da entrega às montanhas e o aprendizado na travessia.', guest: 'gabriel tarso' },
+    { date: '024/03', title: 'capítulo 4 – segura firme: a descida', desc: 'a descida como momento fértil de renovação e possibilidade de leveza.', guest: null },
+    { date: '31/03', title: 'capítulo 4 – convidada', desc: 'caca rhenius (caórdico aprendizagem) - sabedoria da ludicidade, experimentação e prazer no aprender.', guest: 'caca rhenius' },
+    { date: '07/04', title: 'capítulo 5 – e foram felizes para sempre?', desc: 'um olhar sobre finais e recomeços, e a continuidade da narrativa pessoal.', guest: null },
+    { date: '14/04', title: 'capítulo 5 – convidado', desc: 'rodrigo brites (membuka) - transforma conversas difíceis em clareza: o que se mantém quando tudo muda?', guest: 'rodrigo brites' },
   ];
 
   const benefits = [
@@ -153,13 +152,13 @@ export default function RoteiroOriginal() {
   ];
 
   const bonusClasses = [
-    { name: 'bruno kilary', focus: 'meditação e socioemocional', desc: 'silêncio, presença e autorregulação.' },
     { name: 'lucy hallak', focus: 'o olhar poético para o cotidiano', desc: 'a escrita como exercício de presença no mundo.' },
+    { name: 'bruno kilary', focus: 'meditação e socioemocional', desc: 'silêncio, presença e autorregulação.' },
     { name: 'mauricio assis', focus: 'teu lugar no mundo', desc: 'comunidade, pertencimento e redes de apoio.' }
   ];
 
   const faqs = [
-    { q: 'quando começa a mentoria?', a: 'a mentoria inicia terça-feira, dia 13 de janeiro.' },
+    { q: 'quando começa a mentoria?', a: 'a mentoria inicia terça-feira, dia 27 de janeiro.' },
     { q: 'as aulas são ao vivo?', a: 'sim! os encontros serão ao vivo, realizados pelo zoom, e as aulas ficarão gravadas e disponíveis no aplicativo da solta o verbo. é fundamental que se programe para participar ao vivo, pois sua presença é essencial para as trocas de experiências e para a construção da comunidade.' },
     { q: 'por quanto tempo terei acesso aos encontros gravados?', a: 'o acesso do curso tem duração de 1 ano a partir da data de início.' },
     { q: 'tem garantia?', a: 'sim. após o início da comunidade, você tem 7 dias de garantia incondicional. se por algum motivo você achar que as aulas e o método não corresponderam às suas expectativas, você pode solicitar seu dinheiro de volta (dentro dos 7 dias).' },
@@ -292,7 +291,7 @@ export default function RoteiroOriginal() {
           </div>
 
           <p className="text-center text-deepBlue/70 mb-16 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-            uma jornada com 12 encontros divididos em 5 grandes temas, cada um acompanhado por uma pessoa inspiradora que amplia o olhar e provoca reflexões profundas.
+            uma jornada com 11 encontros divididos em 5 grandes temas, cada um acompanhado por uma pessoa inspiradora que amplia o olhar e provoca reflexões profundas.
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
@@ -357,7 +356,7 @@ export default function RoteiroOriginal() {
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-editorial text-3xl md:text-4xl lg:text-5xl text-center text-deepBlue mb-16">
-            estrutura da jornada (12 encontros)
+            estrutura da jornada (11 encontros)
           </h2>
 
           <div className="relative">
