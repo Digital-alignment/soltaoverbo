@@ -2,7 +2,13 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import WavyLine from './WavyLine';
-import Scribble from './Scribble';
+
+interface SlideButton {
+  label: string;
+  to: string;
+  bgColor: string;
+  textColor: string;
+}
 
 interface Slide {
   id: number;
@@ -11,12 +17,9 @@ interface Slide {
   description: string;
   backgroundColor: string;
   textColor: string;
-  buttons: Array<{
-    label: string;
-    to: string;
-    bgColor: string;
-    textColor: string;
-  }>;
+  buttons: SlideButton[];
+  image: string;
+  imageAlt: string;
 }
 
 const slides: Slide[] = [
@@ -24,263 +27,244 @@ const slides: Slide[] = [
     id: 1,
     title: 'mentoria coletiva',
     subtitle: 'roteiro original',
-    description: 'revisite sua história, amplie perspectivas e abra espaço para escolhas mais conscientes. um convite para questionar narrativas impostas e escrever seu próprio caminho.',
+    description:
+      'revisite sua história, amplie perspectivas e abra espaço para escolhas mais conscientes. um convite para questionar narrativas impostas e escrever seu próprio caminho.',
     backgroundColor: '#190087',
     textColor: '#ede5d1',
     buttons: [
-      {
-        label: 'quero ser parte',
-        to: '/register',
-        bgColor: '#ede5d1',
-        textColor: '#190087',
-      },
-      {
-        label: 'saiba mais',
-        to: '/roteirooriginal',
-        bgColor: '#bac706',
-        textColor: '#000000',
-      },
+      { label: 'quero ser parte', to: '/register', bgColor: '#ede5d1', textColor: '#190087' },
+      { label: 'saiba mais', to: '/roteirooriginal', bgColor: '#bac706', textColor: '#000000' },
     ],
+    image: '/whatsapp_image_2025-12-08_at_18.13.13_cda3219b.jpg',
+    imageAlt: 'roteiro original',
   },
   {
     id: 2,
     title: 'comunidade viva',
     subtitle: 'solta o verbo',
-    description: 'uma comunidade de autodesenvolvimento onde a expressão é caminho para transformar realidades. a escrita é nosso eixo central, mas o encontro, a escuta e a criação coletiva sustentam toda a jornada.',
+    description:
+      'uma comunidade de autodesenvolvimento onde a expressão é caminho para transformar realidades. a escrita é nosso eixo central, mas o encontro, a escuta e a criação coletiva sustentam toda a jornada.',
     backgroundColor: '#140D82',
     textColor: '#ede5d1',
     buttons: [
-      {
-        label: 'faz parte da comunidade',
-        to: '/register',
-        bgColor: '#bac706',
-        textColor: '#000000',
-      },
-      {
-        label: 'sobre nós',
-        to: '/about',
-        bgColor: '#ede5d1',
-        textColor: '#140D82',
-      },
+      { label: 'faz parte da comunidade', to: '/register', bgColor: '#bac706', textColor: '#000000' },
+      { label: 'sobre nós', to: '/about', bgColor: '#ede5d1', textColor: '#140D82' },
     ],
+    image: '/whatsapp_image_2025-12-08_at_17.50.04_530c541c.jpg',
+    imageAlt: 'solta o verbo',
   },
 ];
 
+const DURATION = 7500;
+
 export default function HeroSlider() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState(0);
-  const [dragCurrent, setDragCurrent] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!autoPlay) return;
-
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 7500);
-
-    return () => clearInterval(interval);
-  }, [autoPlay]);
-
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-    setAutoPlay(false);
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-    setAutoPlay(false);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-    setAutoPlay(false);
-  };
-
-  const handleDragStart = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setDragStart(e.clientX);
-    setDragCurrent(e.clientX);
-    setAutoPlay(false);
-  };
-
-  const handleDragMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    setDragCurrent(e.clientX);
-  };
-
-  const handleDragEnd = () => {
-    if (!isDragging) return;
-    setIsDragging(false);
-
-    const dragDistance = dragStart - dragCurrent;
-    const dragThreshold = 50;
-
-    if (Math.abs(dragDistance) > dragThreshold) {
-      if (dragDistance > 0) {
-        nextSlide();
-      } else {
-        prevSlide();
-      }
+    if (!autoPlay) {
+      setProgress(0);
+      return;
     }
+
+    setProgress(0);
+    const t0 = Date.now();
+
+    const iv = setInterval(() => {
+      setProgress(Math.min(((Date.now() - t0) / DURATION) * 100, 100));
+    }, 50);
+
+    const st = setTimeout(() => {
+      setCurrent(c => (c + 1) % slides.length);
+    }, DURATION);
+
+    return () => {
+      clearInterval(iv);
+      clearTimeout(st);
+    };
+  }, [current, autoPlay]);
+
+  const goTo = (idx: number) => {
+    setCurrent(idx);
+    setAutoPlay(false);
   };
 
-  const handleMouseLeave = () => {
-    handleDragEnd();
-    setAutoPlay(true);
+  const next = () => goTo((current + 1) % slides.length);
+  const prev = () => goTo((current - 1 + slides.length) % slides.length);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.touches[0].clientX);
+    setAutoPlay(false);
   };
 
-  const slide = slides[currentSlide];
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const delta = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 50) delta > 0 ? next() : prev();
+    setTouchStart(null);
+  };
+
+  const slide = slides[current];
 
   return (
     <section
-      className="relative py-24 md:py-32 overflow-hidden transition-colors duration-1000 user-select-none"
-      style={{
-        backgroundColor: slide.backgroundColor,
-        cursor: isDragging ? 'grabbing' : 'grab',
-      }}
+      className="relative overflow-hidden flex flex-col transition-colors duration-700 min-h-[90vh] md:min-h-screen"
+      style={{ backgroundColor: slide.backgroundColor }}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       onMouseEnter={() => setAutoPlay(false)}
-      onMouseDown={handleDragStart}
-      onMouseMove={handleDragMove}
-      onMouseUp={handleDragEnd}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={() => setAutoPlay(true)}
     >
-      <div className="absolute top-20 right-20 w-40 h-40 opacity-10 pointer-events-none">
-        <Scribble variant="circle" color="#FFFFFF" />
+      <div
+        key={`desktop-img-${current}`}
+        className="hidden lg:block absolute inset-y-0 right-0 w-[45%] slide-fade-in-image"
+      >
+        <img
+          src={slide.image}
+          alt={slide.imageAlt}
+          className="w-full h-full object-cover"
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(to right, ${slide.backgroundColor} 0%, transparent 30%)`,
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(to top, ${slide.backgroundColor}90 0%, transparent 30%)`,
+          }}
+        />
       </div>
-      <div className="absolute bottom-20 left-10 w-32 h-32 opacity-10 pointer-events-none">
-        <Scribble variant="star" color="#FFFFFF" />
+
+      <div className="absolute inset-0 lg:hidden pointer-events-none">
+        <img
+          src={slide.image}
+          alt={slide.imageAlt}
+          className="w-full h-full object-cover"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(175deg, ${slide.backgroundColor}d8 0%, ${slide.backgroundColor}f2 55%, ${slide.backgroundColor} 100%)`,
+          }}
+        />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div key={currentSlide} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1">
-            <div className="space-y-6">
-              <div>
-                <h3
-                  className="text-lg md:text-xl font-bold tracking-wider mb-2 slide-fade-in-title"
-                  style={{ color: slide.textColor }}
-                >
-                  {slide.title}
-                </h3>
-                <h1
-                  className="font-editorial text-4xl md:text-5xl lg:text-6xl font-bold leading-tight slide-fade-in-subtitle"
-                  style={{ color: slide.textColor }}
-                >
-                  {slide.subtitle}
-                </h1>
-              </div>
-
-              <div className="pt-4">
-                <WavyLine color={slide.buttons[1].bgColor} width={200} />
-              </div>
-
-              <p
-                className="text-lg md:text-xl leading-relaxed max-w-xl slide-fade-in-description"
-                style={{ color: slide.textColor }}
-              >
-                {slide.description}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-6 slide-fade-in-buttons">
-                {slide.buttons.map((button, idx) => (
-                  <Link
-                    key={idx}
-                    to={button.to}
-                    className="px-8 py-3 rounded-lg font-bold text-center transition-all duration-500 hover:scale-105 transform"
-                    style={{
-                      backgroundColor: button.bgColor,
-                      color: button.textColor,
-                    }}
-                  >
-                    {button.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="order-1 lg:order-2 flex justify-center">
-            <div
-              className="w-full max-w-md h-64 md:h-80 rounded-3xl flex items-center justify-center relative overflow-hidden slide-fade-in-image"
-              style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+      <div className="relative flex-1 flex items-center z-10">
+        <div className="max-w-7xl w-full mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 py-24 lg:py-16">
+          <div className="max-w-[540px] lg:max-w-[600px] xl:max-w-[640px]">
+            <p
+              key={`label-${current}`}
+              className="text-[11px] font-bold tracking-[0.22em] mb-5 opacity-55 slide-fade-in-title"
+              style={{ color: slide.textColor }}
             >
-              {currentSlide === 0 ? (
-                <img
-                  src="/whatsapp_image_2025-12-08_at_18.13.13_cda3219b.jpg"
-                  alt="Roteiro Original"
-                  className="w-full h-full object-cover"
-                />
-              ) : currentSlide === 1 ? (
-                <img
-                  src="/whatsapp_image_2025-12-08_at_17.50.04_530c541c.jpg"
-                  alt="Solta o Verbo"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="text-center">
-                  <Scribble variant="star" color={slide.textColor} />
-                </div>
-              )}
+              {slide.title}
+            </p>
+
+            <h1
+              key={`h1-${current}`}
+              className="font-editorial font-bold leading-[1.02] mb-6 slide-fade-in-subtitle"
+              style={{
+                color: slide.textColor,
+                fontSize: 'clamp(2.8rem, 7vw, 5.5rem)',
+              }}
+            >
+              {slide.subtitle}
+            </h1>
+
+            <div className="mb-6">
+              <WavyLine color="#bac706" width={160} />
+            </div>
+
+            <p
+              key={`desc-${current}`}
+              className="text-[15px] sm:text-base md:text-lg leading-relaxed mb-8 slide-fade-in-description"
+              style={{ color: slide.textColor, opacity: 0.85 }}
+            >
+              {slide.description}
+            </p>
+
+            <div className="flex flex-wrap gap-3 slide-fade-in-buttons">
+              {slide.buttons.map((btn, i) => (
+                <Link
+                  key={i}
+                  to={btn.to}
+                  className="inline-block px-6 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 hover:scale-[1.04] hover:brightness-105 active:scale-[0.98]"
+                  style={{
+                    backgroundColor: btn.bgColor,
+                    color: btn.textColor,
+                  }}
+                >
+                  {btn.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="flex items-center justify-between mt-16 pt-8 border-t border-white/20">
-          <div className="flex gap-3">
+      <div className="relative z-10 pb-8 md:pb-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
             {slides.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => goToSlide(idx)}
-                className="transition-all duration-500"
-                aria-label={`Go to slide ${idx + 1}`}
+                onClick={() => goTo(idx)}
+                className="relative rounded-full overflow-hidden"
+                style={{
+                  height: '2px',
+                  width: idx === current ? '48px' : '20px',
+                  backgroundColor: `${slide.textColor}28`,
+                  transition: 'width 0.4s ease',
+                }}
+                aria-label={`slide ${idx + 1}`}
               >
-                <div
-                  className={`rounded-full transition-all duration-500 ${
-                    idx === currentSlide ? 'w-8 h-3' : 'w-3 h-3'
-                  }`}
-                  style={{
-                    backgroundColor:
-                      idx === currentSlide ? slide.buttons[1].bgColor : 'rgba(255, 255, 255, 0.4)',
-                  }}
-                />
+                {idx === current && (
+                  <div
+                    className="absolute left-0 top-0 h-full rounded-full"
+                    style={{
+                      width: `${progress}%`,
+                      backgroundColor: '#bac706',
+                    }}
+                  />
+                )}
               </button>
             ))}
-          </div>
-
-          <div className="hidden md:flex gap-3">
-            <button
-              onClick={prevSlide}
-              className="p-3 rounded-lg transition-all duration-500 hover:scale-110 border"
-              style={{
-                borderColor: slide.textColor,
-                color: slide.textColor,
-              }}
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="p-3 rounded-lg transition-all duration-500 hover:scale-110 border"
-              style={{
-                borderColor: slide.textColor,
-                color: slide.textColor,
-              }}
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          <div className="md:hidden">
             <span
-              className="text-sm font-bold"
-              style={{ color: slide.textColor }}
+              className="text-[11px] font-bold ml-1"
+              style={{ color: slide.textColor, opacity: 0.45 }}
             >
-              {currentSlide + 1} / {slides.length}
+              {String(current + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
             </span>
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={prev}
+              className="w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 hover:scale-110 active:scale-95"
+              style={{
+                borderColor: `${slide.textColor}28`,
+                color: slide.textColor,
+              }}
+              aria-label="anterior"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={next}
+              className="w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 hover:scale-110 active:scale-95"
+              style={{
+                borderColor: `${slide.textColor}28`,
+                color: slide.textColor,
+              }}
+              aria-label="próximo"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
