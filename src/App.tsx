@@ -20,6 +20,7 @@ import Programs from './pages/Programs';
 import Programa21Dias from './pages/Programa21Dias';
 import ProgramaCiclo from './pages/ProgramaCiclo';
 import ProgramaCafeComLetras from './pages/ProgramaCafeComLetras';
+import ContrateExperiencia from './pages/ContrateExperiencia';
 import RoteiroOriginal from './pages/RoteiroOriginal';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -39,11 +40,13 @@ function AppContent() {
           <Route path="/programas/21-dias-de-escrita" element={<Programa21Dias />} />
           <Route path="/programas/ciclo-de-aprofundamento" element={<ProgramaCiclo />} />
           <Route path="/programas/cafe-com-letras" element={<ProgramaCafeComLetras />} />
+          <Route path="/experiencias" element={<ContrateExperiencia />} />
           
           {/* Alias de rotas curtas */}
           <Route path="/21-dias-de-escrita" element={<Programa21Dias />} />
           <Route path="/ciclo-de-aprofundamento" element={<ProgramaCiclo />} />
           <Route path="/cafe-com-letras" element={<ProgramaCafeComLetras />} />
+          <Route path="/contrate-uma-experiencia" element={<ContrateExperiencia />} />
 
           <Route path="/roteirooriginal" element={<RoteiroOriginal />} />
           <Route path="/checkout-success" element={<CheckoutSuccess />} />

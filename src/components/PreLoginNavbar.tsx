@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, Pencil, ChevronDown, BookOpen, Users, Coffee, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight, Pencil, ChevronDown, BookOpen, Users, Coffee, Building2 } from 'lucide-react';
 import { BRAND_ASSETS } from '../config/brandAssets';
 
 export default function PreLoginNavbar() {
@@ -59,11 +59,10 @@ export default function PreLoginNavbar() {
       icon: Coffee,
     },
     {
-      to: '/#experiencias',
+      to: '/experiencias',
       label: 'contrate uma experiência',
       desc: 'oficinas corporativas & eventos',
-      icon: Sparkles,
-      isHash: true,
+      icon: Building2,
     },
   ];
 
