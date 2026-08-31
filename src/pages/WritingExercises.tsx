@@ -36,8 +36,6 @@ import {
   BookOpen,
   PanelLeftClose,
   PanelLeftOpen,
-  ChevronLeft,
-  ChevronRight,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -454,13 +452,12 @@ export default function WritingExercises() {
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        {/* CABEÇALHO LIMPO DA PÁGINA (SEM TAG SUPERIOR, DESCRIÇÃO MAIS CURTA E FONTE MAIOR) */}
+        {/* CABEÇALHO LIMPO DA PÁGINA (DESCRITIVO MAIS CURTO E FONTE MAIOR EM EDITORIAL SERIF) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/40 pb-4">
           <div className="space-y-1">
             <h1 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
               exercícios de escrita
             </h1>
-            {/* Texto Descritivo Mais Compacto e com Fonte Maior em Editorial Serif */}
             <p className="text-base sm:text-lg text-tintaCarvao/85 font-medium font-editorial lowercase leading-relaxed">
               seu espaço protegido para criar, organizar seus cadernos e soltar a voz.
             </p>
@@ -644,10 +641,12 @@ export default function WritingExercises() {
                         ))}
 
                         {filteredExercises.length === 0 && (
-                          <div className="text-center py-8 space-y-2 bg-bgPlataforma/40 rounded-2xl border border-papelKraft/30 p-3">
-                            <FileText className="w-7 h-7 text-acentoAzul/30 mx-auto" />
-                            <p className="text-xs text-tintaCarvao/60 lowercase italic">
-                              {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto ainda.'}
+                          <div className="text-center py-8 space-y-2 bg-bgPlataforma/50 rounded-2xl border border-papelKraft/40 p-4 shadow-sm">
+                            <div className="p-2.5 rounded-xl bg-papelClaro text-acentoAzul/40 inline-flex border border-papelKraft/30">
+                              <FileText className="w-6 h-6 text-acentoAzul/40" />
+                            </div>
+                            <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
+                              {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto criado ainda.'}
                             </p>
                           </div>
                         )}
@@ -762,8 +761,7 @@ export default function WritingExercises() {
             {isEditing || currentExercise ? (
               <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-kraft space-y-5 relative">
                 
-                {/* BARRA DE FERRAMENTAS RE-ESTRUTURADA NO TOPO DO EDITOR:
-                    Esquerda: Sprint Poético | Direita: Rituais Guiados, Disparador Poético, Modo Foco */}
+                {/* BARRA DE FERRAMENTAS RE-ESTRUTURADA NO TOPO DO EDITOR */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-papelKraft/40 pb-3">
                   
                   {/* Lado Esquerdo: Temporizador de Sprint Poético */}
@@ -961,50 +959,36 @@ export default function WritingExercises() {
 
               </div>
             ) : (
-              /* Estado Vazio de Início */
-              <div className="bg-papelClaro rounded-3xl p-8 sm:p-12 border border-papelKraft/60 shadow-kraft text-center space-y-6">
-                <div className="w-16 h-16 rounded-full bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mx-auto">
-                  <Edit3 className="w-8 h-8" />
+              /* ESTADO VAZIO DE INÍCIO — ULTRA-LIMPIO, ELEGANTE E SEM DISTRAÇÕES */
+              <div className="bg-papelClaro rounded-3xl p-10 sm:p-16 border border-papelKraft/60 shadow-kraft text-center space-y-6 min-h-[460px] flex flex-col items-center justify-center">
+                <div className="p-4 rounded-2xl bg-bgPlataforma/70 border border-papelKraft/40 text-acentoAzul inline-flex shadow-sm">
+                  <Feather className="w-8 h-8 text-acentoAzul" />
                 </div>
                 
-                <div className="space-y-1 max-w-md mx-auto">
-                  <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                <div className="space-y-2 max-w-md mx-auto">
+                  <h3 className="text-3xl font-bold font-editorial text-acentoAzul lowercase">
                     comece a escrever
                   </h3>
-                  <p className="text-xs sm:text-sm text-tintaCarvao/75 lowercase font-medium leading-relaxed">
-                    crie um novo texto livre ou selecione uma das nossas plantillas de rituais guiados.
+                  <p className="text-sm text-tintaCarvao/80 font-editorial lowercase leading-relaxed">
+                    seu espaço protegido para transformar sentimentos e ideias em palavras soltas.
                   </p>
                 </div>
 
-                {/* Seleção Rápida de Templates na Tela Inicial */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto text-left">
-                  {GUIDED_TEMPLATES.map((tmpl) => (
-                    <button
-                      key={tmpl.id}
-                      type="button"
-                      onClick={() => handleApplyTemplate(tmpl)}
-                      className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 hover:border-acentoAzul shadow-sm transition-all group space-y-1"
-                    >
-                      <div className="flex items-center gap-2">
-                        {renderTemplateIcon(tmpl.type)}
-                        <h4 className="text-xs font-bold text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
-                          {tmpl.title}
-                        </h4>
-                      </div>
-                      <p className="text-[11px] text-tintaCarvao/70 lowercase line-clamp-1 font-medium">
-                        {tmpl.subtitle}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="pt-2">
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
                   <button
                     onClick={() => handleNew()}
-                    className="btn-pill-primary px-6 py-3 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
+                    className="btn-pill-primary px-7 py-3 text-xs sm:text-sm font-bold lowercase shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
                   >
                     <Plus className="w-4 h-4 text-white" />
-                    <span>criar novo texto livre</span>
+                    <span>criar novo texto</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowTemplatesModal(true)}
+                    className="px-5 py-3 rounded-2xl bg-bgPlataforma/80 hover:bg-papelKraft/40 text-acentoAzul hover:text-acentoTerracota border border-papelKraft/50 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
+                  >
+                    <LayoutTemplate className="w-4 h-4 text-acentoTerracota" />
+                    <span>ou escolha um ritual guiado →</span>
                   </button>
                 </div>
               </div>
