@@ -1,19 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Caveat:wght@400..700&family=Patrick+Hand&display=swap');
+
+@font-face {
+  font-family: 'PP Editorial';
+  src: url('/brand-assets/fuentes/PP Editorial (logo)/PPEditorialNew-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Editorial';
+  src: url('/brand-assets/fuentes/PP Editorial (logo)/PPEditorialNew-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Editorial';
+  src: url('/brand-assets/fuentes/PP Editorial (logo)/PPEditorialNew-Ultrabold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PP Editorial';
+  src: url('/brand-assets/fuentes/PP Editorial (logo)/PPEditorialNew-UltraboldItalic.otf') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Muthaze';
+  src: url('/brand-assets/fuentes/Muthaze (escrita)/Muthazle.otf') format('opentype'),
+       url('/brand-assets/fuentes/Muthaze (escrita)/Muthazle.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: Helvetica, 'Helvetica Neue', Arial, sans-serif;
-  --font-accent: 'Patrick Hand', cursive, sans-serif;
+  --bg-plataforma: #EDE6D4;
+  --papel-claro: #F7F3E8;
+  --acento-azul: #140D82;
+  --acento-terracota: #FD5E32;
+  --acento-oliva: #BEC540;
+  --tinta-carvao: #2C2720;
+  --papel-kraft: #DFD6BF;
+
+  --font-editorial: 'PP Editorial', 'Playfair Display', Georgia, serif;
+  --font-corpo: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif;
+  --font-gesto: 'Muthaze', 'Caveat', 'Patrick Hand', cursive;
+  --font-typewriter: Courier, monospace;
+
+  /* Aliases de compatibilidad */
+  --font-heading: var(--font-editorial);
+  --font-body: var(--font-corpo);
+  --font-accent: var(--font-gesto);
 }
 
 @layer base {
   body {
-    @apply bg-paper text-darkNeutral;
-    font-family: var(--font-body);
+    @apply bg-bgPlataforma text-tintaCarvao;
+    font-family: var(--font-corpo);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -24,11 +79,10 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-editorial);
     font-weight: 700;
-    @apply text-deepBlue;
+    @apply text-acentoAzul lowercase;
     font-variant: normal;
-    text-transform: none;
   }
 
   h1 {
@@ -61,56 +115,71 @@
 }
 
 @layer components {
-  .btn-primary {
-    @apply bg-actionOrange text-white px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    font-family: var(--font-body);
+  /* Componentes UI pílula y bento del manual vivo */
+  .btn-pill-primary {
+    @apply bg-acentoTerracota text-white px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-sm lowercase inline-flex items-center justify-center gap-2;
+    font-family: var(--font-corpo);
+  }
+  .btn-pill-primary:hover {
+    @apply bg-[#e64d24] -translate-y-0.5 shadow-md;
   }
 
-  .btn-primary:hover {
-    background-color: #e64d24;
-    transform: translateY(-1px);
+  .btn-pill-secondary {
+    @apply bg-acentoAzul text-white px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-sm lowercase inline-flex items-center justify-center gap-2;
+    font-family: var(--font-corpo);
+  }
+  .btn-pill-secondary:hover {
+    @apply bg-[#100a6c] -translate-y-0.5 shadow-md;
+  }
+
+  .btn-pill-accent {
+    @apply bg-acentoOliva text-tintaCarvao px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-sm lowercase inline-flex items-center justify-center gap-2;
+    font-family: var(--font-corpo);
+  }
+  .btn-pill-accent:hover {
+    @apply bg-[#aab133] -translate-y-0.5 shadow-md;
+  }
+
+  .card-bento {
+    @apply bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/50 shadow-kraft transition-all duration-300;
+  }
+  .card-bento:hover {
+    @apply border-papelKraft shadow-kraft-lg -translate-y-0.5;
+  }
+
+  .hairline-border {
+    @apply border border-papelKraft/50;
+  }
+
+  /* Aliases heredados de botones */
+  .btn-primary {
+    @apply btn-pill-primary;
   }
 
   .btn-secondary {
-    @apply bg-deepBlue text-white px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    font-family: var(--font-body);
-  }
-
-  .btn-secondary:hover {
-    background-color: #1a1099;
-    transform: translateY(-1px);
+    @apply btn-pill-secondary;
   }
 
   .btn-accent {
-    @apply bg-limeGreen text-darkNeutral px-6 py-3 rounded-lg font-medium transition-all duration-300;
-    font-family: var(--font-body);
-  }
-
-  .btn-accent:hover {
-    background-color: #a8af2f;
-    transform: translateY(-1px);
+    @apply btn-pill-accent;
   }
 
   .handwritten {
-    font-family: var(--font-accent);
-    @apply text-lg leading-relaxed;
+    font-family: var(--font-gesto);
+    @apply text-lg leading-relaxed lowercase;
   }
 
   .accent-text {
-    font-family: var(--font-accent);
+    font-family: var(--font-gesto);
+    @apply lowercase;
   }
 
   .card {
-    @apply bg-white rounded-2xl p-6 border border-darkNeutral/10 transition-all duration-300;
-  }
-
-  .card:hover {
-    border-color: rgba(29, 29, 27, 0.15);
-    transform: translateY(-2px);
+    @apply card-bento;
   }
 
   .section-divider {
-    @apply my-12 border-t-2 border-deepBlue opacity-20;
+    @apply my-12 border-t border-papelKraft/60;
   }
 
   .wavy-underline {
@@ -130,11 +199,11 @@
   }
 
   .input-field {
-    @apply w-full px-4 py-3 border border-darkNeutral/20 rounded-lg focus:outline-none focus:border-deepBlue transition-all bg-white;
+    @apply w-full px-4 py-3 border border-papelKraft rounded-2xl focus:outline-none focus:border-acentoAzul transition-all bg-papelClaro text-tintaCarvao;
   }
 
   .textarea-field {
-    @apply w-full px-4 py-3 border border-darkNeutral/20 rounded-lg focus:outline-none focus:border-deepBlue transition-all resize-none bg-white;
+    @apply w-full px-4 py-3 border border-papelKraft rounded-2xl focus:outline-none focus:border-acentoAzul transition-all resize-none bg-papelClaro text-tintaCarvao;
   }
 
   .noise-texture {
@@ -605,6 +674,21 @@
 
   .animate-scaleIn {
     animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .animate-menuOpen {
+    animation: menuOpen 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes menuOpen {
+    0% {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @keyframes scaleIn {
