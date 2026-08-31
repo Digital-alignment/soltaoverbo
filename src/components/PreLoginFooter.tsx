@@ -165,7 +165,7 @@ export default function PreLoginFooter() {
                     solta o verbo.
                   </h4>
 
-                  {/* Paleta Mestre en el Pie de la Caja Azul */}
+                  {/* Cuadros de Color en el Pie de la Caja Azul (Sin el texto PALETA MESTRE) */}
                   <div className="pt-4 border-t border-white/20 flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="w-4 h-4 rounded bg-papelClaro block shadow-sm" />
@@ -173,13 +173,10 @@ export default function PreLoginFooter() {
                       <span className="w-4 h-4 rounded bg-acentoTerracota block shadow-sm" />
                       <span className="w-4 h-4 rounded bg-acentoOliva block shadow-sm" />
                     </div>
-                    <span className="font-mono text-[10px] text-white/50 uppercase tracking-widest">
-                      paleta mestre
-                    </span>
                   </div>
                 </div>
 
-                {/* Área Inferior de Papel do Polaroid */}
+                {/* Área Inferior de Papel do Polaroid (Sin Carimbo, Link Limpio) */}
                 <div className="pt-4 px-1 space-y-2 relative">
                   <p className="font-gesto text-tintaCarvao text-lg sm:text-xl font-normal">
                     — anote no seu diário de bordo hoje
@@ -197,11 +194,6 @@ export default function PreLoginFooter() {
                     >
                       @soltaoverbo.coletivo
                     </a>
-                  </div>
-
-                  {/* Carimbo Circular SV Dashed no Canto Inferior */}
-                  <div className="absolute -bottom-1 right-2 w-10 h-10 rounded-full border-2 border-dashed border-acentoTerracota/60 flex items-center justify-center font-gesto text-acentoTerracota text-xs select-none pointer-events-none rotate-12">
-                    sv
                   </div>
                 </div>
               </div>
