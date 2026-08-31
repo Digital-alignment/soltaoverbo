@@ -1,6 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, Pencil, ChevronDown, BookOpen, Users, Coffee, Building2 } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ArrowRight,
+  Pencil,
+  ChevronDown,
+  BookOpen,
+  Users,
+  Coffee,
+  Building2,
+  Compass,
+  LogIn,
+} from 'lucide-react';
 import { BRAND_ASSETS } from '../config/brandAssets';
 
 export default function PreLoginNavbar() {
@@ -68,7 +80,10 @@ export default function PreLoginNavbar() {
   ];
 
   const isActive = (path: string) => location.pathname === path;
-  const isProgramsActive = location.pathname.startsWith('/programas') || location.pathname === '/programs' || location.pathname === '/experiencias';
+  const isProgramsActive =
+    location.pathname.startsWith('/programas') ||
+    location.pathname === '/programs' ||
+    location.pathname === '/experiencias';
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
@@ -80,7 +95,7 @@ export default function PreLoginNavbar() {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setDropdownOpen(false);
-    }, 200); // 200ms de tolerancia para mover el mouse hacia las tarjetas
+    }, 200);
   };
 
   const handleSubItemClick = (subItem: typeof productSubItems[0]) => {
@@ -101,29 +116,19 @@ export default function PreLoginNavbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center transition-all duration-300">
-            {/* Logo e Ícono Master de Solta o Verbo */}
+            {/* Logo de Solta o Verbo (Solo la marca horizontal sin espiral) */}
             <Link
               to="/"
-              className="flex items-center gap-3.5 sm:gap-4 flex-shrink-0 group"
+              className="flex items-center flex-shrink-0 group"
               onClick={() => setMobileMenuOpen(false)}
             >
               <img
-                src={BRAND_ASSETS.logos.icon}
-                alt="solta o verbo mark"
-                className={`w-auto transition-all duration-300 group-hover:rotate-6 ${
-                  scrolled ? 'h-9 sm:h-10' : 'h-11 sm:h-13'
-                }`}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/icone.svg';
-                }}
-              />
-              <img
                 src={BRAND_ASSETS.logos.horizontal}
                 alt="solta o verbo"
-                className={`w-auto object-contain transition-all duration-300 ${
+                className={`w-auto object-contain transition-all duration-300 group-hover:opacity-90 ${
                   scrolled
-                    ? 'h-7 sm:h-8 max-w-[170px] sm:max-w-[200px]'
-                    : 'h-9 sm:h-11 max-w-[200px] sm:max-w-[240px]'
+                    ? 'h-8 sm:h-9 max-w-[180px] sm:max-w-[210px]'
+                    : 'h-10 sm:h-12 max-w-[220px] sm:max-w-[260px]'
                 }`}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
@@ -131,11 +136,12 @@ export default function PreLoginNavbar() {
               />
             </Link>
 
-            {/* Links de Navegación Desktop */}
-            <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
+            {/* Links de Navegación Desktop con Íconos a la Izquierda */}
+            <nav className="hidden lg:flex items-center gap-7 xl:gap-9">
+              {/* Início */}
               <Link
                 to="/"
-                className={`font-medium transition-colors duration-200 lowercase relative ${
+                className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 ${
                   scrolled ? 'text-base' : 'text-lg xl:text-xl'
                 } ${
                   isActive('/')
@@ -143,13 +149,14 @@ export default function PreLoginNavbar() {
                     : 'text-tintaCarvao/80 hover:text-acentoAzul'
                 }`}
               >
-                início
+                <Compass className={`w-4 h-4 ${isActive('/') ? 'text-acentoTerracota' : 'text-acentoTerracota/80'}`} />
+                <span>início</span>
                 {isActive('/') && (
                   <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
                 )}
               </Link>
 
-              {/* DROPDOWN MENU PARA "PROGRAMAS" COM PONTE INVISÍVEL E GRACE PERIOD */}
+              {/* Programas (con icono BookOpen a la izquierda) */}
               <div
                 ref={dropdownRef}
                 className="relative"
@@ -158,7 +165,7 @@ export default function PreLoginNavbar() {
               >
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0 py-1 ${
+                  className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 bg-transparent border-none cursor-pointer p-0 py-1 ${
                     scrolled ? 'text-base' : 'text-lg xl:text-xl'
                   } ${
                     isProgramsActive
@@ -166,6 +173,7 @@ export default function PreLoginNavbar() {
                       : 'text-tintaCarvao/80 hover:text-acentoAzul'
                   }`}
                 >
+                  <BookOpen className={`w-4 h-4 ${isProgramsActive ? 'text-acentoAzul' : 'text-acentoAzul/80'}`} />
                   <span>programas</span>
                   <ChevronDown
                     className={`w-4 h-4 transition-transform duration-200 ${
@@ -177,7 +185,7 @@ export default function PreLoginNavbar() {
                   )}
                 </button>
 
-                {/* Sub-menu Dropdown Desplegable (Puente de Hover sin vacíos) */}
+                {/* Sub-menu Dropdown Desplegable */}
                 {dropdownOpen && (
                   <div
                     className="absolute top-full left-0 pt-2.5 w-80 z-50"
@@ -233,9 +241,10 @@ export default function PreLoginNavbar() {
                 )}
               </div>
 
+              {/* Sobre Nós */}
               <Link
                 to="/about"
-                className={`font-medium transition-colors duration-200 lowercase relative ${
+                className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 ${
                   scrolled ? 'text-base' : 'text-lg xl:text-xl'
                 } ${
                   isActive('/about')
@@ -243,37 +252,40 @@ export default function PreLoginNavbar() {
                     : 'text-tintaCarvao/80 hover:text-acentoAzul'
                 }`}
               >
-                sobre nós
+                <Users className={`w-4 h-4 ${isActive('/about') ? 'text-acentoAzul' : 'text-acentoAzul/80'}`} />
+                <span>sobre nós</span>
                 {isActive('/about') && (
                   <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
                 )}
               </Link>
             </nav>
 
-            {/* Ações Direitas Desktop */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* Ações Direitas Desktop (Entrar & Fazer Parte com UI melhorada e íconos) */}
+            <div className="hidden lg:flex items-center gap-3 xl:gap-4">
               <Link
                 to="/login"
-                className="font-medium text-tintaCarvao/80 hover:text-acentoAzul transition-colors lowercase px-3 py-2 text-base"
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-medium text-tintaCarvao/80 hover:text-acentoAzul hover:bg-papelClaro border border-transparent hover:border-papelKraft/40 transition-all lowercase text-base cursor-pointer"
               >
-                entrar
+                <LogIn className="w-4 h-4 text-acentoAzul" />
+                <span>entrar</span>
               </Link>
 
               <Link
                 to="/register"
-                className="btn-pill-primary text-base px-6 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2"
+                className="btn-pill-primary text-base px-6 py-2.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5 cursor-pointer"
               >
-                <span>fazer parte</span>
                 <Pencil className="w-4 h-4 text-white" />
+                <span>fazer parte</span>
               </Link>
             </div>
 
             {/* Botão de Menu Hambúrguer Móvel */}
             <div className="flex items-center lg:hidden gap-3">
               <Link
-                to="/register"
-                className="btn-pill-primary text-xs px-4 py-2 rounded-full shadow-sm flex items-center gap-1.5"
+                to="/login"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-papelClaro border border-papelKraft/50 text-xs font-semibold text-acentoAzul lowercase"
               >
+                <LogIn className="w-3.5 h-3.5 text-acentoAzul" />
                 <span>entrar</span>
               </Link>
 
@@ -310,13 +322,14 @@ export default function PreLoginNavbar() {
                 <Link
                   to="/"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-2xl text-lg font-medium lowercase ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-lg font-medium lowercase ${
                     isActive('/')
                       ? 'bg-acentoAzul text-white font-bold'
                       : 'text-tintaCarvao hover:bg-bgPlataforma'
                   }`}
                 >
-                  início
+                  <Compass className="w-5 h-5" />
+                  <span>início</span>
                 </Link>
 
                 {/* Sub-itens de Programas no Menu Móvel */}
@@ -349,13 +362,14 @@ export default function PreLoginNavbar() {
                 <Link
                   to="/about"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-2xl text-lg font-medium lowercase ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-lg font-medium lowercase ${
                     isActive('/about')
                       ? 'bg-acentoAzul text-white font-bold'
                       : 'text-tintaCarvao hover:bg-bgPlataforma'
                   }`}
                 >
-                  sobre nós
+                  <Users className="w-5 h-5" />
+                  <span>sobre nós</span>
                 </Link>
               </div>
             </div>
@@ -364,16 +378,18 @@ export default function PreLoginNavbar() {
               <Link
                 to="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block w-full py-3 text-center font-bold text-acentoAzul bg-bgPlataforma rounded-full border border-papelKraft/40 lowercase"
+                className="flex items-center justify-center gap-2 w-full py-3 text-center font-bold text-acentoAzul bg-bgPlataforma rounded-full border border-papelKraft/40 lowercase"
               >
-                entrar na conta
+                <LogIn className="w-4 h-4" />
+                <span>entrar na conta</span>
               </Link>
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                className="btn-pill-primary block w-full py-3.5 text-center font-bold lowercase text-base"
+                className="btn-pill-primary flex items-center justify-center gap-2 w-full py-3.5 text-center font-bold lowercase text-base"
               >
-                criar conta gratuita
+                <Pencil className="w-4 h-4 text-white" />
+                <span>criar conta gratuita</span>
               </Link>
             </div>
           </div>
