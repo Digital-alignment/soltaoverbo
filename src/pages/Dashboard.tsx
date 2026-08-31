@@ -23,7 +23,6 @@ import {
   Book,
   Plus,
   Feather,
-  Clock,
   Maximize2,
   List,
   Calendar as CalendarIcon,
@@ -207,7 +206,7 @@ export default function Dashboard() {
     return milestone;
   }, [totalWordsAccumulated]);
 
-  // Agenda Integrada com Estrutura Homogênea Compacta (Imagens 2 & 4)
+  // Agenda Integrada com Cores de Data Dinâmicas e Ícones Uniformizados
   const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([
     {
       id: '1',
@@ -379,6 +378,21 @@ export default function Dashboard() {
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodedTitle}&details=${encodedDetails}`;
   };
 
+  // Helper de Estilo para a Cor do Bloco de Data (Terracota, Azul, Verde Limão/Oliva, Papel Kraft)
+  const getDateTileClass = (category: AgendaEvent['category']) => {
+    switch (category) {
+      case 'cafe':
+        return 'bg-acentoAzul text-white';
+      case 'admin':
+        return 'bg-acentoTerracota text-white';
+      case 'launch':
+        return 'bg-acentoOliva text-tintaCarvao';
+      case 'personal':
+      default:
+        return 'bg-papelKraft/80 text-tintaCarvao';
+    }
+  };
+
   const canAccessCourse = (course: Course) => {
     if (course.course_type === 'free') return true;
     return profile?.role === 'paid' || profile?.role === 'admin';
@@ -471,7 +485,7 @@ export default function Dashboard() {
                 {/* Grid do Calendário Mensal Completo (Dias Ativos em Terracota com Número Branco) */}
                 <div className="space-y-1.5 pt-1">
                   {/* Cabeçalho dos Dias da Semana */}
-                  <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono text-tintaCarvao/50 lowercase pb-1">
+                  <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-medium text-tintaCarvao/50 lowercase pb-1">
                     <span>dom</span>
                     <span>seg</span>
                     <span>ter</span>
@@ -594,24 +608,25 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (COMPACTA, HOMOGÊNEA, ÍCONE EXPANDER NO HEADER TOP - IMAGEM 4) */}
+            {/* 1B: Agenda Integrada (BORDAS ESTÁTICAS SEM EXPANSÃO DE GROSSOR NO HOVER, BOTÃO DE EXPANDIR REFINADO) */}
             <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4">
               <div className="space-y-4">
                 
-                {/* Header com Título + Ícone Expander (como Imagem 4) e Abas de Filtro */}
+                {/* Header com Título + Botão de Expansão Refinado (Pílula Elegante) e Abas de Filtro */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
                   <div className="flex items-center justify-between sm:justify-start gap-2.5 w-full sm:w-auto">
                     <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
                       agenda & encontros
                     </h2>
-                    {/* Botão Ícone Expander no Topo do Card (Imagem 4) */}
+                    {/* Botão Ícone Expander Refinado em Pílula */}
                     <button
                       type="button"
                       onClick={() => setIsFullAgendaOpen(true)}
-                      className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul transition-colors border border-papelKraft/40 shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold lowercase border border-acentoAzul/20 shadow-sm"
                       title="expandir agenda completa"
                     >
-                      <Maximize2 className="w-4 h-4" />
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span>ver tudo ({agendaEvents.length})</span>
                     </button>
                   </div>
 
@@ -647,49 +662,47 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* CARDS DE EVENTOS COM FUNDO HOMOGÊNEO COMPACTO (Único fundo separado é a Data Terracota) */}
+                {/* CARDS DE EVENTOS COM DESIGN HOMOGÊNEO (FUNDO BRANCO, BORDAS ESTÁTICAS E CORES DE DATA DINÂMICAS) */}
                 <div className="space-y-3">
                   {filteredEvents.slice(0, 3).map((ev) => (
                     <div
                       key={ev.id}
-                      className={`p-4 rounded-3xl border transition-all duration-300 shadow-sm space-y-3 bg-white ${
-                        ev.isExclusiveAdmin
-                          ? 'border-acentoTerracota/40'
-                          : 'border-papelKraft/60 hover:border-acentoAzul'
+                      className={`p-4 rounded-3xl border border-papelKraft/60 transition-all duration-200 shadow-sm space-y-3 bg-white ${
+                        ev.isExclusiveAdmin ? 'bg-white/95' : ''
                       }`}
                     >
-                      {/* Top Row: Countdown (Left) + Type Icon (Right) */}
+                      {/* Top Row: Countdown (Left) + Type Icon (Right - TAMANHO UNIFORME w-5 h-5) */}
                       <div className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
-                          <span className="font-mono font-bold text-acentoTerracota lowercase">
+                          <span className="font-bold text-acentoTerracota lowercase">
                             ao vivo em {ev.countdownStr || countdownStr}
                           </span>
                         </div>
 
                         <div className="flex items-center gap-1.5" title={ev.categoryLabel}>
-                          {ev.category === 'cafe' && <Coffee className="w-4 h-4 text-acentoAzul" />}
-                          {ev.category === 'admin' && <Crown className="w-4.5 h-4.5 text-acentoTerracota" />}
-                          {ev.category === 'launch' && <Rocket className="w-4 h-4 text-acentoOliva" />}
-                          {ev.category === 'personal' && <Feather className="w-4 h-4 text-tintaCarvao/60" />}
+                          {ev.category === 'cafe' && <Coffee className="w-5 h-5 text-acentoAzul shrink-0" />}
+                          {ev.category === 'admin' && <Crown className="w-5 h-5 text-acentoTerracota shrink-0" />}
+                          {ev.category === 'launch' && <Rocket className="w-5 h-5 text-acentoOliva shrink-0" />}
+                          {ev.category === 'personal' && <Feather className="w-5 h-5 text-tintaCarvao/60 shrink-0" />}
                         </div>
                       </div>
 
-                      {/* Middle Row: Left = Date Tile (ÚNICO FUNDO SEPARADO TERRACOTA), Right = Title & Description */}
+                      {/* Middle Row: Left = Date Tile (COR DINÂMICA: TERRACOTA, AZUL, VERDE LIMÃO, KRAFT), Right = Title & Description */}
                       <div className="flex items-center gap-3.5">
-                        {/* Bloco de Data Sólido Terracota */}
-                        <div className="bg-acentoTerracota text-white rounded-2xl px-3.5 py-2.5 text-center shrink-0 min-w-[70px] shadow-sm">
+                        {/* Bloco de Data com Cor Dinâmica */}
+                        <div className={`rounded-2xl px-3.5 py-2.5 text-center shrink-0 min-w-[70px] shadow-sm ${getDateTileClass(ev.category)}`}>
                           <span className="font-gesto text-3xl font-normal block leading-none">
                             {String(ev.dayOfMonth).padStart(2, '0')}
                           </span>
-                          <span className="text-[10px] font-mono font-bold lowercase tracking-wider block mt-1">
+                          <span className="text-[10px] font-bold lowercase tracking-wider block mt-1">
                             {ev.monthName}
                           </span>
                         </div>
 
                         {/* Conteúdo de Título & Descrição */}
                         <div className="space-y-0.5 flex-1 min-w-0">
-                          <h3 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase leading-snug">
+                          <h3 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase leading-snug truncate">
                             {ev.title}
                           </h3>
                           <p className="text-xs text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed font-medium">
@@ -700,7 +713,7 @@ export default function Dashboard() {
 
                       {/* Bottom Row: Left = Modality, Right = Calendar Export + Entrar CTA */}
                       <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs">
-                        <span className="text-tintaCarvao/70 font-mono font-medium lowercase">
+                        <span className="text-tintaCarvao/70 font-semibold lowercase">
                           {ev.modality}
                         </span>
 
@@ -737,12 +750,6 @@ export default function Dashboard() {
                   <span>ver agenda completa ({agendaEvents.length} encontros) →</span>
                 </button>
 
-              </div>
-
-              <div className="pt-2 text-center border-t border-papelKraft/30">
-                <span className="text-xs text-tintaCarvao/60 lowercase italic">
-                  clique no ícone + do evento para exportar para o seu calendário pessoal
-                </span>
               </div>
             </div>
 
@@ -794,7 +801,7 @@ export default function Dashboard() {
                   style={{ width: '38%' }}
                 />
               </div>
-              <div className="flex justify-between items-center text-[11px] font-mono text-tintaCarvao/60 pt-0.5">
+              <div className="flex justify-between items-center text-[11px] text-tintaCarvao/60 pt-0.5">
                 <span>progresso da jornada</span>
                 <span className="font-bold text-acentoAzul">38% concluído</span>
               </div>
@@ -850,7 +857,7 @@ export default function Dashboard() {
                       </div>
                       <span className="font-bold text-acentoAzul lowercase">{post.author}</span>
                     </div>
-                    <span className="text-[10px] text-tintaCarvao/50 font-mono">{post.timeAgo}</span>
+                    <span className="text-[10px] text-tintaCarvao/50">{post.timeAgo}</span>
                   </div>
 
                   <h4 className="text-xs sm:text-sm font-bold text-tintaCarvao lowercase leading-snug">
@@ -912,7 +919,7 @@ export default function Dashboard() {
                       <h4 className="text-xs sm:text-sm font-bold text-acentoAzul lowercase">
                         {nb.title}
                       </h4>
-                      <span className="text-[10px] text-tintaCarvao/50 font-mono block">
+                      <span className="text-[10px] text-tintaCarvao/50 block">
                         atualizado {nb.updatedAt} • {nb.wordCount} palavras
                       </span>
                     </div>
@@ -1072,7 +1079,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* MODAL POP-UP AGENDA COMPLETA COM ESTRUTURA HOMOGÊNEA E VISTA CALENDÁRIO */}
+        {/* MODAL POP-UP AGENDA COMPLETA COM ESTRUTURA REFINADA E VISTA CALENDÁRIO */}
         {isFullAgendaOpen && (
           <div className="fixed inset-0 z-40 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 lg:pl-24 pb-20 lg:pb-6 animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-4xl w-full max-h-[85vh] overflow-y-auto shadow-kraft-lg relative space-y-5">
@@ -1120,7 +1127,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* VISTA 1: LISTA DE ENCONTROS COM DESIGN HOMOGÊNEO */}
+              {/* VISTA 1: LISTA DE ENCONTROS COM DESIGN HOMOGÊNEO REFINADO */}
               {agendaModalView === 'list' && (
                 <div className="space-y-4">
                   {/* Abas de Filtro da Agenda sem Scrollbar */}
@@ -1158,36 +1165,34 @@ export default function Dashboard() {
                     {filteredEvents.map((ev) => (
                       <div
                         key={ev.id}
-                        className={`p-4 rounded-3xl border transition-all duration-300 shadow-sm space-y-3 bg-white ${
-                          ev.isExclusiveAdmin
-                            ? 'border-acentoTerracota/40'
-                            : 'border-papelKraft/60 hover:border-acentoAzul'
+                        className={`p-4 rounded-3xl border border-papelKraft/60 transition-all duration-200 shadow-sm space-y-3 bg-white ${
+                          ev.isExclusiveAdmin ? 'bg-white/95' : ''
                         }`}
                       >
-                        {/* Top Row: Countdown (Left) + Type Icon (Right) */}
+                        {/* Top Row: Countdown (Left) + Type Icon (Right - TAMANHO UNIFORME w-5 h-5) */}
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
                             <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
-                            <span className="font-mono font-bold text-acentoTerracota lowercase">
+                            <span className="font-bold text-acentoTerracota lowercase">
                               ao vivo em {ev.countdownStr || countdownStr}
                             </span>
                           </div>
 
                           <div className="flex items-center gap-1.5" title={ev.categoryLabel}>
-                            {ev.category === 'cafe' && <Coffee className="w-4.5 h-4.5 text-acentoAzul" />}
-                            {ev.category === 'admin' && <Crown className="w-4.5 h-4.5 text-acentoTerracota" />}
-                            {ev.category === 'launch' && <Rocket className="w-4.5 h-4.5 text-acentoOliva" />}
-                            {ev.category === 'personal' && <Feather className="w-4.5 h-4.5 text-tintaCarvao/60" />}
+                            {ev.category === 'cafe' && <Coffee className="w-5 h-5 text-acentoAzul shrink-0" />}
+                            {ev.category === 'admin' && <Crown className="w-5 h-5 text-acentoTerracota shrink-0" />}
+                            {ev.category === 'launch' && <Rocket className="w-5 h-5 text-acentoOliva shrink-0" />}
+                            {ev.category === 'personal' && <Feather className="w-5 h-5 text-tintaCarvao/60 shrink-0" />}
                           </div>
                         </div>
 
-                        {/* Middle Row: Left = Date Tile, Right = Title & Description */}
+                        {/* Middle Row: Left = Date Tile (COR DINÂMICA), Right = Title & Description */}
                         <div className="flex items-center gap-4">
-                          <div className="bg-acentoTerracota text-white rounded-2xl px-4 py-3 text-center shrink-0 min-w-[76px] shadow-sm">
+                          <div className={`rounded-2xl px-4 py-3 text-center shrink-0 min-w-[76px] shadow-sm ${getDateTileClass(ev.category)}`}>
                             <span className="font-gesto text-3.5xl font-normal block leading-none">
                               {String(ev.dayOfMonth).padStart(2, '0')}
                             </span>
-                            <span className="text-[10px] font-mono font-bold lowercase tracking-wider block mt-1">
+                            <span className="text-[10px] font-bold lowercase tracking-wider block mt-1">
                               {ev.monthName}
                             </span>
                           </div>
@@ -1204,7 +1209,7 @@ export default function Dashboard() {
 
                         {/* Bottom Row: Left = Modality, Right = Calendar Export + Entrar CTA */}
                         <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs">
-                          <span className="text-tintaCarvao/70 font-mono font-medium lowercase">
+                          <span className="text-tintaCarvao/70 font-semibold lowercase">
                             {ev.modality}
                           </span>
 
@@ -1240,11 +1245,11 @@ export default function Dashboard() {
                     <span className="text-sm font-bold font-editorial text-acentoAzul lowercase">
                       {currentMonthLabel} • encontros agendados
                     </span>
-                    <span className="text-xs font-mono text-tintaCarvao/60">agosto 2026</span>
+                    <span className="text-xs font-bold text-tintaCarvao/60">agosto 2026</span>
                   </div>
 
                   <div className="space-y-2">
-                    <div className="grid grid-cols-7 gap-2 text-center text-xs font-mono text-tintaCarvao/60 lowercase pb-1 border-b border-papelKraft/30">
+                    <div className="grid grid-cols-7 gap-2 text-center text-xs font-medium text-tintaCarvao/60 lowercase pb-1 border-b border-papelKraft/30">
                       <span>dom</span>
                       <span>seg</span>
                       <span>ter</span>
