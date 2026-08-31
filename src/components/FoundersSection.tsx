@@ -53,7 +53,7 @@ export default function FoundersSection() {
   };
 
   return (
-    <section id="sobre-nos" className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
+    <section id="sobre-nos" className="pt-24 sm:pt-32 pb-0 bg-bgPlataforma relative overflow-hidden">
       {/* Background Texture Overlay */}
       <div
         className="absolute inset-0 opacity-[0.04] bg-cover bg-center pointer-events-none mix-blend-multiply"
@@ -61,17 +61,8 @@ export default function FoundersSection() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header Section */}
+        {/* Header Section (Tag eliminada completamente) */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-            <img
-              src="/brand-assets/icons/icone_63.svg"
-              alt="chama viva"
-              className="w-5 h-5 object-contain"
-            />
-            <span>quem conduz a fogueira</span>
-          </div>
-
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
             conheça as co-criadoras
           </h2>
@@ -182,6 +173,22 @@ export default function FoundersSection() {
             );
           })}
         </div>
+      </div>
+
+      {/* Banner de Colagem Final Full Width no Rodapé da Seção */}
+      <div className="w-full mt-16 sm:mt-24 relative z-10 pointer-events-none select-none">
+        {/* Imagem para Desktop */}
+        <img
+          src="/brand-assets/elements/collages/collage final bk desktp.png"
+          alt="colagem poética final desktop"
+          className="hidden sm:block w-full h-auto object-cover object-center"
+        />
+        {/* Imagem para Mobile */}
+        <img
+          src="/brand-assets/elements/collages/collage final bk mobile.png"
+          alt="colagem poética final mobile"
+          className="block sm:hidden w-full h-auto object-cover object-center"
+        />
       </div>
     </section>
   );
