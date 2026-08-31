@@ -31,99 +31,180 @@ export default function PreLoginFooter() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-            {/* Coluna 1: Logotipo e Manifesto */}
-            <div className="space-y-4">
-              <img
-                src={BRAND_ASSETS.logos.footerWatermark}
-                alt="solta o verbo"
-                className="h-14 w-auto brightness-200"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/logo_footer_soltaoverbo.png';
-                }}
-              />
-              <p className="text-white/80 text-base font-medium leading-relaxed max-w-xs lowercase">
-                autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.
-              </p>
-            </div>
-
-            {/* Coluna 2: Navegação Rápida en Pílulas */}
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-5 text-acentoOliva lowercase">
-                navegação & programas
-              </h3>
-              <div className="flex flex-wrap gap-2.5">
-                <Link
-                  to="/programs"
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
-                >
-                  21 dias de escrita
-                </Link>
-                <Link
-                  to="/programs"
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
-                >
-                  ciclo de aprofundamento
-                </Link>
-                <Link
-                  to="/about"
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
-                >
-                  sobre nós
-                </Link>
-                <button
-                  onClick={() => setIsContactPopupOpen(true)}
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase text-left"
-                >
-                  contato
-                </button>
-                <Link
-                  to="/roteirooriginal"
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
-                >
-                  roteiro original
-                </Link>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-12">
+            {/* Esquerda: 3 Colunas de Conteúdo e Links (8 Cols em Desktop) */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-8">
+              {/* Coluna 1: Logotipo e Manifesto */}
+              <div className="space-y-4">
+                <img
+                  src={BRAND_ASSETS.logos.footerWatermark}
+                  alt="solta o verbo"
+                  className="h-14 w-auto brightness-200"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/logo_footer_soltaoverbo.png';
+                  }}
+                />
+                <p className="text-white/80 text-sm sm:text-base font-medium leading-relaxed max-w-xs lowercase">
+                  autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.
+                </p>
               </div>
-            </div>
 
-            {/* Coluna 3: Redes Sociais & Conexão */}
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider mb-5 text-acentoOliva lowercase">
-                conecte-se com o coletivo
-              </h3>
-              <div className="flex items-center gap-3 mb-6">
-                {[
-                  {
-                    href: 'https://www.instagram.com/soltaoverbo.coletivo/',
-                    icon: Instagram,
-                    label: 'instagram',
-                  },
-                  {
-                    href: 'https://wa.link/w67ibp',
-                    icon: MessageCircle,
-                    label: 'whatsapp',
-                  },
-                  {
-                    href: 'mailto:info@soltaoverbocoletivo.com',
-                    icon: Mail,
-                    label: 'e-mail',
-                  },
-                ].map(({ href, icon: Icon, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target={href.startsWith('mailto') ? undefined : '_blank'}
-                    rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-                    className="w-11 h-11 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
-                    aria-label={label}
+              {/* Coluna 2: Navegação Rápida em Pílulas */}
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-wider mb-4 text-acentoOliva lowercase">
+                  navegação & programas
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    to="/programs"
+                    className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
                   >
-                    <Icon className="w-5 h-5" />
-                  </a>
-                ))}
+                    21 dias de escrita
+                  </Link>
+                  <Link
+                    to="/programs"
+                    className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
+                  >
+                    ciclo de aprofundamento
+                  </Link>
+                  <Link
+                    to="/about"
+                    className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
+                  >
+                    sobre nós
+                  </Link>
+                  <button
+                    onClick={() => setIsContactPopupOpen(true)}
+                    className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase text-left"
+                  >
+                    contato
+                  </button>
+                  <Link
+                    to="/roteirooriginal"
+                    className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
+                  >
+                    roteiro original
+                  </Link>
+                </div>
               </div>
-              <p className="text-xs text-white/60 lowercase">
-                junte-se à comunidade e transforme sua prática diária de escrita.
-              </p>
+
+              {/* Coluna 3: Redes Sociais & Conexão */}
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-wider mb-4 text-acentoOliva lowercase">
+                  conecte-se com o coletivo
+                </h3>
+                <div className="flex items-center gap-3 mb-4">
+                  {[
+                    {
+                      href: 'https://www.instagram.com/soltaoverbo.coletivo/',
+                      icon: Instagram,
+                      label: 'instagram',
+                    },
+                    {
+                      href: 'https://wa.link/w67ibp',
+                      icon: MessageCircle,
+                      label: 'whatsapp',
+                    },
+                    {
+                      href: 'mailto:info@soltaoverbocoletivo.com',
+                      icon: Mail,
+                      label: 'e-mail',
+                    },
+                  ].map(({ href, icon: Icon, label }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target={href.startsWith('mailto') ? undefined : '_blank'}
+                      rel={href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+                      className="w-10 h-10 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
+                      aria-label={label}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </a>
+                  ))}
+                </div>
+                <p className="text-xs text-white/60 lowercase">
+                  junte-se à comunidade e transforme sua prática diária de escrita.
+                </p>
+              </div>
+            </div>
+
+            {/* Direita: CARD POLAROID SOLTA O VERBO (Último Elemento no Footer à Direita) */}
+            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+              <div className="relative bg-papelClaro text-tintaCarvao rounded-2xl p-4 sm:p-5 shadow-2xl border border-papelKraft/60 max-w-md w-full transform rotate-1 transition-transform duration-500 hover:rotate-0 hover:scale-[1.02] group select-none">
+                {/* Washi Tape Superior Esquerdo */}
+                <div className="absolute -top-3 left-6 w-24 h-6 pointer-events-none z-20 opacity-90">
+                  <img
+                    src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
+                    alt="fita washi"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                {/* Washi Tape Inferior Direito */}
+                <div className="absolute -bottom-3 right-6 w-24 h-6 pointer-events-none z-20 opacity-90">
+                  <img
+                    src="/brand-assets/elements/stickers/fitas-washi-realistica-azul.png"
+                    alt="fita washi"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                {/* Caixa Azul Interna do Postcard */}
+                <div className="bg-[#0D0859] rounded-xl p-5 sm:p-6 text-white space-y-4 relative overflow-hidden">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-mono text-acentoOliva tracking-wider">coletivo // 2026</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota block shadow-sm" />
+                  </div>
+
+                  <p className="font-gesto text-2xl sm:text-3xl text-papelClaro leading-snug font-normal my-4">
+                    “a escrita cura o que o silêncio aprisiona.”
+                  </p>
+
+                  <h4 className="font-editorial font-bold text-2xl sm:text-3xl text-papelClaro lowercase tracking-tight">
+                    solta o verbo.
+                  </h4>
+
+                  {/* Paleta Mestre en el Pie de la Caja Azul */}
+                  <div className="pt-4 border-t border-white/20 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded bg-papelClaro block shadow-sm" />
+                      <span className="w-4 h-4 rounded bg-[#0D0859] border border-white/30 block shadow-sm" />
+                      <span className="w-4 h-4 rounded bg-acentoTerracota block shadow-sm" />
+                      <span className="w-4 h-4 rounded bg-acentoOliva block shadow-sm" />
+                    </div>
+                    <span className="font-mono text-[10px] text-white/50 uppercase tracking-widest">
+                      paleta mestre
+                    </span>
+                  </div>
+                </div>
+
+                {/* Área Inferior de Papel do Polaroid */}
+                <div className="pt-4 px-1 space-y-2 relative">
+                  <p className="font-gesto text-tintaCarvao text-lg sm:text-xl font-normal">
+                    — anote no seu diário de bordo hoje
+                  </p>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <p className="text-[11px] text-tintaCarvao/60 font-mono lowercase">
+                      comunidade • reflexão • afeto
+                    </p>
+                    <a
+                      href="https://www.instagram.com/soltaoverbo.coletivo/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-acentoAzul font-bold font-mono hover:text-acentoTerracota transition-colors lowercase"
+                    >
+                      @soltaoverbo.coletivo
+                    </a>
+                  </div>
+
+                  {/* Carimbo Circular SV Dashed no Canto Inferior */}
+                  <div className="absolute -bottom-1 right-2 w-10 h-10 rounded-full border-2 border-dashed border-acentoTerracota/60 flex items-center justify-center font-gesto text-acentoTerracota text-xs select-none pointer-events-none rotate-12">
+                    sv
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
