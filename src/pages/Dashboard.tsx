@@ -23,6 +23,7 @@ import {
   Book,
   Plus,
   Feather,
+  Clock,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -122,12 +123,12 @@ export default function Dashboard() {
   const [agendaTab, setAgendaTab] = useState<'todos' | 'cafe' | 'admin' | 'personal'>('todos');
 
   // Countdown Fictício para a próxima live do Café com Letras
-  const [countdownStr, setCountdownStr] = useState('14h 22min');
+  const [countdownStr, setCountdownStr] = useState('12h 55min');
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
-      const hoursLeft = 14 - (now.getMinutes() % 3);
+      const hoursLeft = 12 - (now.getMinutes() % 2);
       const minsLeft = 59 - now.getSeconds();
       setCountdownStr(`${hoursLeft}h ${minsLeft < 10 ? '0' : ''}${minsLeft}min`);
     }, 10000);
@@ -497,7 +498,7 @@ export default function Dashboard() {
                         <span className="font-gesto text-2xl font-normal text-acentoAzul">
                           {totalWordsAccumulated.toLocaleString('pt-BR')}
                         </span>
-                        <span className="text-xs text-tintaCarvao/70 font-semibold lowercase">palavras escritas</span>
+                        <span className="text-xs text-tintaCarvao/70 font-semibold lowercase">palavras soltas</span>
                       </div>
                     </div>
                   </div>
@@ -518,8 +519,8 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Chancela Poética / Equivalência Literária de Palavras Escritas */}
-                <div className="bg-gradient-to-r from-acentoAzul/5 via-papelClaro to-acentoOliva/15 p-3.5 sm:p-4 rounded-2xl border border-papelKraft/60 flex items-center gap-3">
+                {/* Chancela Poética / Equivalência Literária de Palavras Escritas (SEM GRADIENTE) */}
+                <div className="bg-bgPlataforma/70 p-3.5 sm:p-4 rounded-2xl border border-papelKraft/60 flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-acentoOliva/20 text-acentoAzul shrink-0">
                     <BookMarked className="w-5 h-5" />
                   </div>
@@ -554,41 +555,41 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (lg:col-span-5 no Desktop) */}
+            {/* 1B: Agenda Integrada (lg:col-span-5 no Desktop, Sem Texto Superior, Sem Gradientes, UI & Fontes Ampliadas) */}
             <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 flex flex-col justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-[11px] text-tintaCarvao/60 font-medium lowercase block">
-                      seus compromissos & encontros
-                    </span>
-                    <h2 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase">
-                      agenda & encontros
-                    </h2>
-                  </div>
+              <div className="space-y-4">
+                
+                {/* Header Limpo Sem Frase Superior, com Título e Abas de Filtro */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
+                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                    agenda & encontros
+                  </h2>
 
                   {/* Abas de Filtro da Agenda */}
-                  <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-[10px] font-bold lowercase">
+                  <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-[11px] font-bold lowercase self-start sm:self-auto">
                     <button
+                      type="button"
                       onClick={() => setAgendaTab('todos')}
-                      className={`px-2.5 py-1 rounded-full transition-all ${
-                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm' : 'text-tintaCarvao/70'
+                      className={`px-3 py-1 rounded-full transition-all ${
+                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       todos
                     </button>
                     <button
+                      type="button"
                       onClick={() => setAgendaTab('cafe')}
-                      className={`px-2.5 py-1 rounded-full transition-all ${
-                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm' : 'text-tintaCarvao/70'
+                      className={`px-3 py-1 rounded-full transition-all ${
+                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       ao vivo
                     </button>
                     <button
+                      type="button"
                       onClick={() => setAgendaTab('admin')}
-                      className={`px-2.5 py-1 rounded-full transition-all ${
-                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm' : 'text-tintaCarvao/70'
+                      className={`px-3 py-1 rounded-full transition-all ${
+                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       convites
@@ -596,53 +597,64 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Banner de Cuenta Regresiva Poética para el próximo Café com Letras */}
-                <div className="bg-acentoAzul text-papelClaro p-3.5 rounded-2xl border border-acentoAzul/80 shadow-sm flex items-center justify-between gap-3 relative overflow-hidden">
-                  <div className="space-y-0.5 relative z-10">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-acentoOliva lowercase">
-                      <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                {/* Banner Destacado para o Próximo Café com Letras Ao Vivo (Fundo Azul Sólido - SEM GRADIENTE) */}
+                <div className="bg-acentoAzul text-papelClaro p-4 sm:p-5 rounded-2xl border border-acentoAzul/80 shadow-md space-y-3 relative overflow-hidden">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-acentoOliva lowercase">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
                       <span>ao vivo em {countdownStr}</span>
                     </span>
-                    <h3 className="text-xs sm:text-sm font-bold font-editorial text-papelClaro lowercase">
-                      café com letras (roda de partilha poética)
-                    </h3>
-                    <p className="text-[10px] text-papelClaro/75 font-mono">segunda-feira • 08h00</p>
+                    <span className="text-xs sm:text-sm font-semibold font-mono text-papelClaro/90 bg-white/10 px-3 py-1 rounded-lg">
+                      segunda-feira • 08h00
+                    </span>
                   </div>
 
-                  <Link
-                    to="/cafe-com-letras"
-                    className="px-3 py-1.5 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-semibold whitespace-nowrap lowercase shadow-sm transition-transform hover:scale-105"
-                  >
-                    <span>entrar ao vivo →</span>
-                  </Link>
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-bold font-editorial text-papelClaro lowercase leading-tight">
+                      café com letras (roda de partilha poética)
+                    </h3>
+                    <p className="text-xs text-papelClaro/80 lowercase leading-relaxed">
+                      roda virtual quinzenal de leitura e partilha com o colectivo.
+                    </p>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between">
+                    <span className="text-xs text-acentoOliva font-mono font-medium">sala virtual meet</span>
+                    <Link
+                      to="/cafe-com-letras"
+                      className="px-4 py-2 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs sm:text-sm font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1.5"
+                    >
+                      <span>entrar ao vivo →</span>
+                    </Link>
+                  </div>
                 </div>
 
-                {/* Lista Mesclada de Eventos */}
-                <div className="space-y-2">
+                {/* Lista de Eventos com Fundo Sólido (SEM GRADIENTE) & UI/Fontes Aumentadas */}
+                <div className="space-y-2.5">
                   {filteredEvents.map((ev) => (
                     <div
                       key={ev.id}
-                      className={`p-3 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-2 relative ${
+                      className={`p-3.5 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 relative ${
                         ev.isExclusiveAdmin
-                          ? 'bg-gradient-to-r from-acentoTerracota/10 via-papelClaro to-acentoOliva/10 border-acentoTerracota/40 shadow-sm'
+                          ? 'bg-papelClaro border-2 border-acentoTerracota/60 shadow-sm'
                           : ev.completed
-                          ? 'bg-bgPlataforma/50 border-papelKraft/30 opacity-70'
+                          ? 'bg-bgPlataforma/50 border-papelKraft/30 opacity-60'
                           : 'bg-white border-papelKraft/60 shadow-sm hover:border-acentoAzul'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
+                      <div className="flex items-center gap-3">
                         <button
                           type="button"
                           onClick={() => toggleEventComplete(ev.id)}
-                          className="focus:outline-none"
+                          className="focus:outline-none shrink-0"
                         >
                           <CheckCircle2
-                            className={`w-4 h-4 transition-colors ${
-                              ev.completed ? 'text-acentoOliva fill-acentoOliva/20' : 'text-tintaCarvao/30'
+                            className={`w-5 h-5 transition-colors ${
+                              ev.completed ? 'text-acentoOliva fill-acentoOliva/20' : 'text-tintaCarvao/30 hover:text-acentoAzul'
                             }`}
                           />
                         </button>
-                        <div>
+                        <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
                             <h3
                               className={`text-xs sm:text-sm font-bold lowercase transition-all ${
@@ -652,28 +664,29 @@ export default function Dashboard() {
                               {ev.title}
                             </h3>
                             {ev.isExclusiveAdmin && (
-                              <Crown className="w-3.5 h-3.5 text-acentoTerracota" title="convite exclusivo" />
+                              <Crown className="w-3.5 h-3.5 text-acentoTerracota shrink-0" title="convite exclusivo" />
                             )}
                           </div>
-                          <span className="text-[10px] text-tintaCarvao/60 font-mono block">
-                            {ev.time}
-                          </span>
+                          <div className="flex items-center gap-2 text-xs font-mono text-tintaCarvao/80 font-semibold">
+                            <Clock className="w-3.5 h-3.5 text-acentoTerracota" />
+                            <span>{ev.time}</span>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-2 shrink-0">
                         <a
                           href={generateGoogleCalendarUrl(ev.title, ev.time)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1 text-tintaCarvao/50 hover:text-acentoAzul transition-colors"
+                          className="p-1.5 rounded-lg bg-bgPlataforma hover:bg-papelKraft/30 text-tintaCarvao/70 hover:text-acentoAzul transition-colors"
                           title="adicionar ao meu google calendar"
                         >
-                          <CalendarPlus className="w-3.5 h-3.5" />
+                          <CalendarPlus className="w-4 h-4" />
                         </a>
 
                         <span
-                          className={`text-[9px] font-bold px-2 py-0.5 rounded-full lowercase whitespace-nowrap ${
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-full lowercase whitespace-nowrap ${
                             ev.category === 'cafe'
                               ? 'bg-acentoAzul text-white'
                               : ev.category === 'admin'
@@ -691,9 +704,9 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="pt-1 text-center">
-                <span className="text-[10px] text-tintaCarvao/50 lowercase italic">
-                  clique para concluir compromissos da semana
+              <div className="pt-2 text-center border-t border-papelKraft/30">
+                <span className="text-xs text-tintaCarvao/60 lowercase italic">
+                  clique no ícone + do evento para exportar para o seu calendário pessoal
                 </span>
               </div>
             </div>
