@@ -265,7 +265,7 @@ export default function Landing() {
             </div>
 
             {/* PRODUTO 2: Ciclo de Aprofundamento */}
-            <div className="rounded-3xl bg-acentoAzul text-white p-8 sm:p-12 shadow-kraft-lg relative overflow-hidden border-2 border-acentoTerracota group">
+            <div className="rounded-3xl bg-acentoAzul text-white p-8 sm:p-12 shadow-kraft-lg relative overflow-hidden border border-white/20 group">
               <div className="absolute -bottom-12 -right-12 opacity-[0.08] pointer-events-none select-none transition-transform duration-700 group-hover:scale-105">
                 <img
                   src="/brand-assets/logos/monogram/monograma-sv-white.svg"
