@@ -27,6 +27,8 @@ import {
   Maximize2,
   List,
   Calendar as CalendarIcon,
+  Coffee,
+  Rocket,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -54,11 +56,15 @@ interface ActivityDay {
 interface AgendaEvent {
   id: string;
   dayOfMonth: number;
+  monthName: string;
   dayOfWeekLabel: string;
   title: string;
+  description: string;
   time: string;
+  countdownStr?: string;
   category: 'cafe' | 'admin' | 'launch' | 'personal';
   categoryLabel: string;
+  modality: string;
   completed: boolean;
   isExclusiveAdmin?: boolean;
   linkUrl?: string;
@@ -134,7 +140,7 @@ export default function Dashboard() {
   const [agendaModalView, setAgendaModalView] = useState<'list' | 'calendar'>('list');
 
   // Countdown Fictício para a próxima live do Café com Letras
-  const [countdownStr, setCountdownStr] = useState('12h 19min');
+  const [countdownStr, setCountdownStr] = useState('12h 52min');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -201,27 +207,35 @@ export default function Dashboard() {
     return milestone;
   }, [totalWordsAccumulated]);
 
-  // Agenda Integrada (Café com letras, eventos admin, pessoais, lançamentos)
+  // Agenda Integrada com Estrutura Módulo-A-Módulo (Top, Middle, Bottom)
   const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([
     {
       id: '1',
       dayOfMonth: 8,
-      dayOfWeekLabel: 'seg',
-      title: 'café com letras ao vivo (roda de partilha poética)',
-      time: 'segunda-feira • 08h00',
+      monthName: 'agosto',
+      dayOfWeekLabel: 'segunda-feira',
+      title: 'café com letras (roda de partilha poética)',
+      description: 'roda virtual quinzenal de leitura e partilha de textos com todo o colectivo.',
+      time: '08h00',
+      countdownStr: '12h 52min',
       category: 'cafe',
       categoryLabel: 'ao vivo • fogueira',
+      modality: 'online • meet',
       completed: false,
       linkUrl: '/cafe-com-letras',
     },
     {
       id: '2',
       dayOfMonth: 9,
-      dayOfWeekLabel: 'ter',
+      monthName: 'agosto',
+      dayOfWeekLabel: 'terça-feira',
       title: 'mentoria exclusiva com facilitadoras bruna & júlia',
-      time: 'terça-feira • 15h00',
+      description: 'encontro individual de orientação poética e acompanhamento autoral.',
+      time: '15h00',
+      countdownStr: '21h 10min',
       category: 'admin',
       categoryLabel: 'convite das facilitadoras',
+      modality: 'online • exclusivo',
       completed: false,
       isExclusiveAdmin: true,
       linkUrl: '/profile',
@@ -229,22 +243,28 @@ export default function Dashboard() {
     {
       id: '3',
       dayOfMonth: 11,
-      dayOfWeekLabel: 'qui',
+      monthName: 'agosto',
+      dayOfWeekLabel: 'quinta-feira',
       title: 'lançamento oficial: novo ciclo de aprofundamento 2026',
-      time: 'quinta-feira • 19h00',
+      description: 'transmissão especial de abertura do novo ciclo trimestral de escrita.',
+      time: '19h00',
       category: 'launch',
       categoryLabel: 'lançamento',
+      modality: 'online • transmissão',
       completed: false,
       linkUrl: '/ciclo-de-aprofundamento',
     },
     {
       id: '4',
       dayOfMonth: 12,
-      dayOfWeekLabel: 'sex',
+      monthName: 'agosto',
+      dayOfWeekLabel: 'sexta-feira',
       title: 'meu ritual: escrita livre no caderno de memórias',
-      time: 'sexta-feira • 20h00',
+      description: 'momento individual de escrita espontânea e acolhimento dos sentimentos.',
+      time: '20h00',
       category: 'personal',
       categoryLabel: 'ritual pessoal',
+      modality: 'prática individual',
       completed: true,
       linkUrl: '/exercises',
     },
@@ -574,7 +594,7 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (lg:col-span-5 no Desktop, Exibe 3 Eventos Máximo + Botão de Expandir Pop-Up, Sem Bordas Grossas, Sem Gradientes, Tabs 100% Visíveis Sem Scrollbar) */}
+            {/* 1B: Agenda Integrada (NOVO ESTRUTURADO EM 3 SEÇÕES: TOP COUNTDOWN, MIDDLE DATE & CONTENT, BOTTOM MODALITY & CTAS) */}
             <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4">
               <div className="space-y-4">
                 
@@ -616,107 +636,85 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Banner Destacado para o Próximo Café com Letras Ao Vivo (Fundo Azul Sólido - SEM GRADIENTE) */}
-                <div className="bg-acentoAzul text-papelClaro p-4 sm:p-5 rounded-2xl border border-acentoAzul/80 shadow-md space-y-3 relative">
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-2.5">
-                    <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-acentoOliva lowercase">
-                      <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-                      <span>ao vivo em {countdownStr}</span>
-                    </span>
-                    <span className="text-xs font-mono text-papelClaro/90 bg-white/15 px-2.5 py-0.5 rounded-md">
-                      segunda-feira • 08h00
-                    </span>
-                  </div>
-
-                  <div className="space-y-1">
-                    <h3 className="text-base sm:text-lg font-bold font-editorial text-papelClaro lowercase leading-snug">
-                      café com letras (roda de partilha poética)
-                    </h3>
-                    <p className="text-xs text-papelClaro/80 lowercase leading-relaxed">
-                      roda virtual quinzenal de leitura e partilha com o colectivo.
-                    </p>
-                  </div>
-
-                  <div className="pt-1 flex items-center justify-between">
-                    <span className="text-xs text-acentoOliva font-mono">sala virtual meet</span>
-                    <Link
-                      to="/cafe-com-letras"
-                      className="px-4 py-1.5 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1.5"
-                    >
-                      <span>entrar ao vivo →</span>
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Lista de Eventos no Card Limitada a Apenas 3 Itens */}
-                <div className="space-y-2.5">
+                {/* LISTA DE CARDS DE EVENTO COM ESTRUTURA MÓDULO-A-MÓDULO (TOP, MIDDLE, BOTTOM) */}
+                <div className="space-y-4">
                   {filteredEvents.slice(0, 3).map((ev) => (
                     <div
                       key={ev.id}
-                      className={`p-3.5 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 relative ${
+                      className={`rounded-3xl border transition-all duration-300 shadow-sm overflow-hidden flex flex-col justify-between ${
                         ev.isExclusiveAdmin
-                          ? 'bg-papelClaro border border-acentoTerracota/40 shadow-sm'
-                          : ev.completed
-                          ? 'bg-bgPlataforma/50 border-papelKraft/30 opacity-60'
-                          : 'bg-white border-papelKraft/60 shadow-sm hover:border-acentoAzul'
+                          ? 'border-acentoTerracota/50 bg-white'
+                          : 'border-papelKraft/60 bg-white hover:border-acentoAzul'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => toggleEventComplete(ev.id)}
-                          className="focus:outline-none shrink-0"
-                        >
-                          <CheckCircle2
-                            className={`w-5 h-5 transition-colors ${
-                              ev.completed ? 'text-acentoOliva fill-acentoOliva/20' : 'text-tintaCarvao/30 hover:text-acentoAzul'
-                            }`}
-                          />
-                        </button>
-                        <div className="space-y-0.5">
-                          <div className="flex items-center gap-1.5">
-                            <h3
-                              className={`text-xs sm:text-sm font-bold lowercase transition-all ${
-                                ev.completed ? 'line-through text-tintaCarvao/50' : 'text-acentoAzul'
-                              }`}
-                            >
-                              {ev.title}
-                            </h3>
-                            {ev.isExclusiveAdmin && (
-                              <Crown className="w-3.5 h-3.5 text-acentoTerracota shrink-0" title="convite exclusivo" />
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-xs font-mono text-tintaCarvao/80 font-semibold">
-                            <Clock className="w-3.5 h-3.5 text-acentoTerracota" />
-                            <span>{ev.time}</span>
-                          </div>
+                      {/* SEÇÃO 1 (TOP): CONTAGEM REGRESSIVA (ESQUERDA) + ÍCONE DO TIPO (DIREITA) */}
+                      <div className="bg-acentoAzul text-papelClaro px-4 py-2.5 flex items-center justify-between">
+                        {/* Esquerda: Animação de Dot e Conta Regressiva */}
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
+                          <span className="text-xs font-bold lowercase font-mono tracking-wide text-acentoOliva">
+                            ao vivo em {ev.countdownStr || countdownStr}
+                          </span>
+                        </div>
+
+                        {/* Direita: Ícone do Tipo do Evento */}
+                        <div className="flex items-center gap-1.5" title={ev.categoryLabel}>
+                          {ev.category === 'cafe' && <Coffee className="w-4 h-4 text-acentoOliva" />}
+                          {ev.category === 'admin' && <Crown className="w-4 h-4 text-acentoTerracota" />}
+                          {ev.category === 'launch' && <Rocket className="w-4 h-4 text-acentoOliva" />}
+                          {ev.category === 'personal' && <Feather className="w-4 h-4 text-papelClaro/70" />}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
-                        <a
-                          href={generateGoogleCalendarUrl(ev.title, ev.time)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 rounded-lg bg-bgPlataforma hover:bg-papelKraft/30 text-tintaCarvao/70 hover:text-acentoAzul transition-colors"
-                          title="adicionar ao meu google calendar"
-                        >
-                          <CalendarPlus className="w-4 h-4" />
-                        </a>
+                      {/* SEÇÃO 2 (MIDDLE): ESQUERDA = DATA (NÚMERO GRANDE MUTHAZLE + MÊS), DIREITA = TÍTULO E DESCRIÇÃO */}
+                      <div className="p-4 flex items-center gap-4 bg-papelClaro/70">
+                        {/* Esquerda: Módulo de Data Em Bloco Sólido */}
+                        <div className="bg-acentoTerracota text-white rounded-2xl px-4 py-3 text-center shrink-0 min-w-[76px] shadow-sm">
+                          <span className="font-gesto text-3xl font-normal block leading-none">
+                            {String(ev.dayOfMonth).padStart(2, '0')}
+                          </span>
+                          <span className="text-[10px] font-mono font-bold lowercase tracking-wider block mt-1">
+                            {ev.monthName}
+                          </span>
+                        </div>
 
-                        <span
-                          className={`text-[10px] font-bold px-2.5 py-1 rounded-full lowercase whitespace-nowrap ${
-                            ev.category === 'cafe'
-                              ? 'bg-acentoAzul text-white'
-                              : ev.category === 'admin'
-                              ? 'bg-acentoTerracota text-white'
-                              : ev.category === 'launch'
-                              ? 'bg-acentoOliva text-tintaCarvao'
-                              : 'bg-papelKraft/40 text-tintaCarvao'
-                          }`}
-                        >
-                          {ev.categoryLabel}
+                        {/* Direita: Título & Descrição */}
+                        <div className="space-y-1 flex-1">
+                          <h3 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase leading-snug">
+                            {ev.title}
+                          </h3>
+                          <p className="text-xs text-tintaCarvao/80 lowercase leading-relaxed line-clamp-2">
+                            {ev.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* SEÇÃO 3 (BOTTOM): ESQUERDA = MODALIDADE (ONLINE/ETC), DIREITA = BOTÃO GOOGLE CAL + ENTRAR */}
+                      <div className="px-4 py-3 bg-bgPlataforma/80 border-t border-papelKraft/40 flex items-center justify-between">
+                        {/* Esquerda: Tipo/Modalidade do Evento */}
+                        <span className="px-3 py-1 rounded-full bg-papelKraft/40 text-tintaCarvao text-[10px] font-bold lowercase">
+                          {ev.modality}
                         </span>
+
+                        {/* Direita: Exportar Google Cal + Botão Entrar */}
+                        <div className="flex items-center gap-2">
+                          <a
+                            href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-xl bg-white hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/50 transition-colors shadow-sm"
+                            title="adicionar ao google calendar"
+                          >
+                            <CalendarPlus className="w-4 h-4" />
+                          </a>
+
+                          <Link
+                            to={ev.linkUrl || '/cafe-com-letras'}
+                            className="px-4 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
+                          >
+                            <span>entrar →</span>
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1067,7 +1065,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* MODAL POP-UP AGENDA COMPLETA COM VISTA LISTA E VISTA CALENDÁRIO */}
+        {/* MODAL POP-UP AGENDA COMPLETA COM ESTRUTURA MÓDULO-A-MÓDULO E VISTA CALENDÁRIO */}
         {isFullAgendaOpen && (
           <div className="fixed inset-0 z-40 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 lg:pl-24 pb-20 lg:pb-6 animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-4xl w-full max-h-[85vh] overflow-y-auto shadow-kraft-lg relative space-y-5">
@@ -1115,7 +1113,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* VISTA 1: LISTA DE ENCONTROS */}
+              {/* VISTA 1: LISTA DE ENCONTROS COM NOVO LAYOUT MÓDULO-A-MÓDULO */}
               {agendaModalView === 'list' && (
                 <div className="space-y-4">
                   {/* Abas de Filtro da Agenda sem Scrollbar */}
@@ -1149,74 +1147,78 @@ export default function Dashboard() {
                     </button>
                   </div>
 
-                  <div className="space-y-3 pt-1">
+                  <div className="space-y-4 pt-1">
                     {filteredEvents.map((ev) => (
                       <div
                         key={ev.id}
-                        className={`p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 ${
+                        className={`rounded-3xl border transition-all duration-300 shadow-sm overflow-hidden flex flex-col justify-between ${
                           ev.isExclusiveAdmin
-                            ? 'bg-papelClaro border border-acentoTerracota/40 shadow-sm'
-                            : ev.completed
-                            ? 'bg-bgPlataforma/50 border-papelKraft/30 opacity-60'
-                            : 'bg-white border-papelKraft/60 shadow-sm hover:border-acentoAzul'
+                            ? 'border-acentoTerracota/50 bg-white'
+                            : 'border-papelKraft/60 bg-white hover:border-acentoAzul'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <button
-                            type="button"
-                            onClick={() => toggleEventComplete(ev.id)}
-                            className="focus:outline-none shrink-0"
-                          >
-                            <CheckCircle2
-                              className={`w-5 h-5 transition-colors ${
-                                ev.completed ? 'text-acentoOliva fill-acentoOliva/20' : 'text-tintaCarvao/30 hover:text-acentoAzul'
-                              }`}
-                            />
-                          </button>
-                          <div className="space-y-0.5">
-                            <div className="flex items-center gap-2">
-                              <h4
-                                className={`text-sm font-bold lowercase transition-all ${
-                                  ev.completed ? 'line-through text-tintaCarvao/50' : 'text-acentoAzul'
-                                }`}
-                              >
-                                {ev.title}
-                              </h4>
-                              {ev.isExclusiveAdmin && (
-                                <Crown className="w-4 h-4 text-acentoTerracota shrink-0" title="convite exclusivo" />
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-xs font-mono text-tintaCarvao/80 font-semibold">
-                              <Clock className="w-3.5 h-3.5 text-acentoTerracota" />
-                              <span>{ev.time}</span>
-                            </div>
+                        {/* SEÇÃO 1 (TOP): CONTAGEM REGRESSIVA (ESQUERDA) + ÍCONE DO TIPO (DIREITA) */}
+                        <div className="bg-acentoAzul text-papelClaro px-5 py-3 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
+                            <span className="text-xs sm:text-sm font-bold lowercase font-mono tracking-wide text-acentoOliva">
+                              ao vivo em {ev.countdownStr || countdownStr}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2" title={ev.categoryLabel}>
+                            {ev.category === 'cafe' && <Coffee className="w-5 h-5 text-acentoOliva" />}
+                            {ev.category === 'admin' && <Crown className="w-5 h-5 text-acentoTerracota" />}
+                            {ev.category === 'launch' && <Rocket className="w-5 h-5 text-acentoOliva" />}
+                            {ev.category === 'personal' && <Feather className="w-5 h-5 text-papelClaro/70" />}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 shrink-0">
-                          <a
-                            href={generateGoogleCalendarUrl(ev.title, ev.time)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-xl bg-bgPlataforma hover:bg-papelKraft/30 text-tintaCarvao/70 hover:text-acentoAzul transition-colors"
-                            title="adicionar ao meu google calendar"
-                          >
-                            <CalendarPlus className="w-4 h-4" />
-                          </a>
+                        {/* SEÇÃO 2 (MIDDLE): ESQUERDA = DATA (NÚMERO GRANDE MUTHAZLE + MÊS), DIREITA = TÍTULO E DESCRIÇÃO */}
+                        <div className="p-5 flex items-center gap-5 bg-papelClaro/70">
+                          <div className="bg-acentoTerracota text-white rounded-2xl px-5 py-3 text-center shrink-0 min-w-[85px] shadow-sm">
+                            <span className="font-gesto text-4xl font-normal block leading-none">
+                              {String(ev.dayOfMonth).padStart(2, '0')}
+                            </span>
+                            <span className="text-xs font-mono font-bold lowercase tracking-wider block mt-1">
+                              {ev.monthName}
+                            </span>
+                          </div>
 
-                          <span
-                            className={`text-[11px] font-bold px-3 py-1 rounded-full lowercase whitespace-nowrap ${
-                              ev.category === 'cafe'
-                                ? 'bg-acentoAzul text-white'
-                                : ev.category === 'admin'
-                                ? 'bg-acentoTerracota text-white'
-                                : ev.category === 'launch'
-                                ? 'bg-acentoOliva text-tintaCarvao'
-                                : 'bg-papelKraft/40 text-tintaCarvao'
-                            }`}
-                          >
-                            {ev.categoryLabel}
+                          <div className="space-y-1 flex-1">
+                            <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase leading-snug">
+                              {ev.title}
+                            </h4>
+                            <p className="text-xs sm:text-sm text-tintaCarvao/80 lowercase leading-relaxed">
+                              {ev.description}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* SEÇÃO 3 (BOTTOM): ESQUERDA = MODALIDADE (ONLINE/ETC), DIREITA = BOTÃO GOOGLE CAL + ENTRAR */}
+                        <div className="px-5 py-3.5 bg-bgPlataforma/80 border-t border-papelKraft/40 flex items-center justify-between">
+                          <span className="px-3.5 py-1 rounded-full bg-papelKraft/40 text-tintaCarvao text-xs font-bold lowercase">
+                            {ev.modality}
                           </span>
+
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-2 rounded-xl bg-white hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/50 transition-colors shadow-sm"
+                              title="adicionar ao google calendar"
+                            >
+                              <CalendarPlus className="w-4 h-4" />
+                            </a>
+
+                            <Link
+                              to={ev.linkUrl || '/cafe-com-letras'}
+                              className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
+                            >
+                              <span>entrar →</span>
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -1274,7 +1276,7 @@ export default function Dashboard() {
                               {matchedEvents.map((ev) => (
                                 <a
                                   key={ev.id}
-                                  href={generateGoogleCalendarUrl(ev.title, ev.time)}
+                                  href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   className={`block p-1 rounded-lg text-[9px] font-bold lowercase line-clamp-2 transition-transform hover:scale-105 ${
