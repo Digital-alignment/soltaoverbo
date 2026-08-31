@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   BookOpen,
   CheckCircle2,
@@ -11,9 +11,11 @@ import {
   Flame,
   FileText,
   Clock,
-  ChevronDown,
   Quote,
   Heart,
+  Play,
+  Volume2,
+  Sparkles,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
@@ -24,8 +26,10 @@ interface WeekPhase {
   title: string;
   subtitle: string;
   description: string;
-  bullets: string[];
-  color: string;
+  image: string;
+  washiTape: string;
+  audioTeaser: string;
+  milestones: { days: string; label: string }[];
 }
 
 const journeyPhases: WeekPhase[] = [
@@ -34,36 +38,42 @@ const journeyPhases: WeekPhase[] = [
     title: 'semana 1: soltar as amarras (dias 1 a 7)',
     subtitle: 'desbloquear a voz e silenciar a crítica interna',
     description: 'nos primeiros sete dias, o foco é perder o medo da folha em branco. você aprende a escrever sem julgar a própria palavra, liberando o fluxo espontâneo de consciência.',
-    bullets: [
-      'dia 1 ao 3: quebrando o gelo e escrevendo sem filtro',
-      'dia 4 e 5: identificando e silenciando o censor interno',
-      'dia 6 e 7: criando o seu primeiro ritual diário de presença',
+    image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
+    audioTeaser: 'áudio 01: perdendo o medo da folha em branco (5 min)',
+    milestones: [
+      { days: 'dias 1 a 3', label: 'quebrando o gelo e escrevendo sem filtro' },
+      { days: 'dias 4 e 5', label: 'identificando e silenciando o censor interno' },
+      { days: 'dias 6 e 7', label: 'criando o seu primeiro ritual diário de presença' },
     ],
-    color: 'bg-acentoAzul/10 text-acentoAzul border-acentoAzul/30',
   },
   {
     number: '02',
     title: 'semana 2: aprofundar e reorganizar (dias 8 a 14)',
     subtitle: 'mapear memórias e dar forma ao caos emocional',
     description: 'na segunda semana, navegamos em camadas mais profundas. a escrita passa a funcionar como uma bússola interna para organizar pensamentos soltos e dar novo significado a cenas vividas.',
-    bullets: [
-      'dia 8 ao 10: escrita afetiva e ressignificação de memórias',
-      'dia 11 e 12: organizando o caos mental em frases curtas',
-      'dia 13 e 14: transformando preocupação e angústia em movimento',
+    image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
+    audioTeaser: 'áudio 08: a bússola das emoções e memórias (6 min)',
+    milestones: [
+      { days: 'dias 8 a 10', label: 'escrita afetiva e ressignificação de memórias' },
+      { days: 'dias 11 e 12', label: 'organizando o caos mental em frases curtas' },
+      { days: 'dias 13 e 14', label: 'transformando preocupação em movimento criativo' },
     ],
-    color: 'bg-acentoTerracota/10 text-acentoTerracota border-acentoTerracota/30',
   },
   {
     number: '03',
     title: 'semana 3: autoria e consolidação (dias 15 a 21)',
     subtitle: 'afirmar sua voz autêntica e sustentar o hábito',
     description: 'na reta final, você consolida a escrita como uma prática viva e sustentável. um convite para assumir a autoria da própria história com clareza, liberdade e coragem.',
-    bullets: [
-      'dia 15 ao 17: encontrando o seu tom e ritmo autoral único',
-      'dia 18 e 19: o poder do manifesto pessoal e metas poéticas',
-      'dia 20 e 21: ritual de encerramento e continuidade da prática',
+    image: '/brand-assets/gallery/events/_MG_9849.jpg',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png',
+    audioTeaser: 'áudio 15: seu manifesto de autoria e coragem (7 min)',
+    milestones: [
+      { days: 'dias 15 a 17', label: 'encontrando o seu tom e ritmo autoral único' },
+      { days: 'dias 18 e 19', label: 'o poder do manifesto pessoal e metas poéticas' },
+      { days: 'dias 20 e 21', label: 'ritual de encerramento e continuidade da prática' },
     ],
-    color: 'bg-acentoOliva/20 text-tintaCarvao border-acentoOliva/40',
   },
 ];
 
@@ -87,9 +97,13 @@ const faqItems = [
 ];
 
 export default function Programa21Dias() {
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [activePhaseIndex, setActivePhaseIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const navigate = useNavigate();
+
+  // URL del video de YouTube (modificable según requerimiento)
+  const youtubeVideoId = 'dQw4w9WgXcQ'; // ID de ejemplo reemplazable
 
   const handleEnroll = () => {
     localStorage.setItem('checkout_intent', '21dias');
@@ -102,7 +116,7 @@ export default function Programa21Dias() {
       <PreLoginNavbar />
 
       {/* 2. HERO SECTION DE VENDAS (High Conversion Hero) */}
-      <section className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 overflow-hidden">
+      <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Coluna Esquerda: Copy Persuasivo & Oferta */}
@@ -173,11 +187,11 @@ export default function Programa21Dias() {
                 </button>
 
                 <a
-                  href="#trilha"
+                  href="#video-apresentacao"
                   className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base px-7 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2 cursor-pointer lowercase"
                 >
-                  <span>ver como funciona</span>
-                  <ArrowRight className="w-4 h-4 text-acentoAzul" />
+                  <span>assista ao vídeo de apresentação</span>
+                  <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
                 </a>
               </div>
             </div>
@@ -219,11 +233,77 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 3. ENTREGÁVEIS & O QUE ESTÁ INCLUÍDO (Bento Grid) */}
-      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+      {/* 3. SEÇÃO VÍDEO DE APRESENTAÇÃO DE YOUTUBE (Com Capa da Galeria) */}
+      <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-10">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+              <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
+              <span>mensagem das facilitadoras</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
+              assista à apresentação do programa
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              bruna riedel e júlia alvim contam como os 21 dias vão transformar a sua relação com as palavras.
+            </p>
+          </div>
+
+          {/* Reproductor de Video Estilo Scrapbook con Capa de Foto Real de la Galería */}
+          <div className="relative rounded-3xl bg-bgPlataforma p-4 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
+            {/* Sticker Fita Washi Superior */}
+            <div className="absolute -top-2 left-10 w-32 h-8 pointer-events-none z-30 opacity-90">
+              <img
+                src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
+                alt="fita washi"
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-papelKraft/40 shadow-inner bg-acentoAzul">
+              {!isPlayingVideo ? (
+                /* Capa da Galería de Eventos con Botón Play Animado */
+                <div
+                  onClick={() => setIsPlayingVideo(true)}
+                  className="absolute inset-0 cursor-pointer group/thumb flex items-center justify-center overflow-hidden"
+                >
+                  <img
+                    src="/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
+                    alt="capa do video 21 dias de escrita"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover/thumb:scale-105 filter brightness-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/80 via-transparent to-acentoAzul/30" />
+
+                  {/* Botón de Play Pulsante Estilo Pílula Terracota */}
+                  <div className="relative z-20 flex flex-col items-center gap-3">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover/thumb:scale-110 group-hover/thumb:bg-acentoTerracota/90 animate-pulse">
+                      <Play className="w-9 h-9 sm:w-11 sm:h-11 fill-white translate-x-1" />
+                    </div>
+                    <span className="bg-papelClaro/90 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 py-2 rounded-full text-sm sm:text-base shadow-md lowercase">
+                      clique para assistir (3 min)
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                /* Iframe do YouTube embutido */
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0`}
+                  title="21 Dias de Escrita - Apresentação"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. ENTREGÁVEIS & O QUE ESTÁ INCLUÍDO (Bento Grid) */}
+      <section className="py-20 sm:py-28 bg-bgPlataforma">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
                 alt="icone"
@@ -241,7 +321,7 @@ export default function Programa21Dias() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Bento Card 1 */}
-            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
                   <FileText className="w-6 h-6" />
@@ -259,7 +339,7 @@ export default function Programa21Dias() {
             </div>
 
             {/* Bento Card 2 */}
-            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
                   <Headphones className="w-6 h-6" />
@@ -277,7 +357,7 @@ export default function Programa21Dias() {
             </div>
 
             {/* Bento Card 3 */}
-            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
                   <Flame className="w-6 h-6 text-acentoAzul" />
@@ -295,7 +375,7 @@ export default function Programa21Dias() {
             </div>
 
             {/* Bento Card 4 */}
-            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
                   <BookOpen className="w-6 h-6" />
@@ -315,11 +395,11 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 4. A TRILHA DOS 21 DIAS (Detalhamento por Semanas) */}
-      <section id="trilha" className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
+      {/* 5. A TRILHA DOS 21 DIAS (Experiência Imersiva em Cards Bento com Fotos Reais) */}
+      <section id="trilha" className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
               <Clock className="w-4 h-4 text-acentoTerracota" />
               <span>a sua jornada passo a passo</span>
             </div>
@@ -331,52 +411,86 @@ export default function Programa21Dias() {
             </p>
           </div>
 
-          {/* Abas e Painel Interativo das 3 Fases */}
-          <div className="space-y-6 max-w-4xl mx-auto">
+          {/* Rejilla de Cards Bento Inmersivos para cada Semana */}
+          <div className="space-y-12 max-w-5xl mx-auto">
             {journeyPhases.map((phase, idx) => {
-              const isActive = activePhaseIndex === idx;
+              const isSelected = activePhaseIndex === idx;
               return (
                 <div
                   key={idx}
                   onClick={() => setActivePhaseIndex(idx)}
-                  className={`rounded-3xl border p-6 sm:p-8 transition-all duration-300 cursor-pointer select-none ${
-                    isActive
-                      ? 'bg-papelClaro border-acentoTerracota/50 shadow-kraft-lg'
-                      : 'bg-papelClaro/60 border-papelKraft/40 hover:bg-papelClaro/90'
+                  className={`rounded-3xl bg-bgPlataforma p-6 sm:p-8 lg:p-10 border transition-all duration-500 shadow-kraft-lg relative overflow-hidden group cursor-pointer ${
+                    isSelected ? 'border-acentoTerracota/60 shadow-2xl' : 'border-papelKraft/40 hover:border-papelKraft'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-4 mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="font-editorial text-2xl font-bold text-acentoTerracota">
-                        {phase.number}
-                      </span>
-                      <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                        {phase.title}
-                      </h3>
-                    </div>
-
-                    <ChevronDown
-                      className={`w-5 h-5 text-acentoAzul transition-transform duration-300 ${
-                        isActive ? 'rotate-180 text-acentoTerracota' : ''
-                      }`}
+                  {/* Sticker Fita Washi no Topo do Card */}
+                  <div className="absolute -top-1 left-8 w-28 h-7 pointer-events-none z-20 opacity-85">
+                    <img
+                      src={phase.washiTape}
+                      alt="fita washi"
+                      className="w-full h-full object-contain"
                     />
                   </div>
 
-                  <p className="font-gesto text-acentoTerracota text-2xl font-normal mb-3">
-                    {phase.subtitle}
-                  </p>
-
-                  <p className="text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase mb-4">
-                    {phase.description}
-                  </p>
-
-                  <div className="pt-4 border-t border-papelKraft/30 space-y-2">
-                    {phase.bullets.map((b, bIdx) => (
-                      <div key={bIdx} className="flex items-center gap-3 text-sm text-tintaCarvao/90 font-medium lowercase">
-                        <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0" />
-                        <span>{b}</span>
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    {/* Foto Real da Galería para a Fase */}
+                    <div className="lg:col-span-5 relative">
+                      <div className="w-full h-60 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative group/img">
+                        <img
+                          src={phase.image}
+                          alt={phase.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/70 via-transparent to-transparent flex items-end p-4">
+                          <span className="font-editorial text-xs font-bold text-papelClaro uppercase tracking-wider bg-acentoAzul/80 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+                            fase 0{idx + 1} // 7 dias
+                          </span>
+                        </div>
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Conteúdo & Milestones da Semana */}
+                    <div className="lg:col-span-7 space-y-4">
+                      <div className="flex items-center gap-3">
+                        <span className="w-8 h-8 rounded-full bg-acentoTerracota text-white font-editorial font-bold text-sm flex items-center justify-center shadow-sm">
+                          {phase.number}
+                        </span>
+                        <h3 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase">
+                          {phase.title}
+                        </h3>
+                      </div>
+
+                      <p className="font-gesto text-acentoTerracota text-2xl font-normal">
+                        {phase.subtitle}
+                      </p>
+
+                      <p className="text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase">
+                        {phase.description}
+                      </p>
+
+                      {/* Badge do Áudio Guiado */}
+                      <div className="inline-flex items-center gap-2.5 text-xs font-semibold text-acentoAzul bg-papelClaro px-4 py-2 rounded-full border border-papelKraft/50 shadow-xs">
+                        <Volume2 className="w-4 h-4 text-acentoTerracota animate-pulse" />
+                        <span>{phase.audioTeaser}</span>
+                      </div>
+
+                      {/* Milestones de Dias com Ícones de Checkmark */}
+                      <div className="pt-3 border-t border-papelKraft/30 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        {phase.milestones.map((m, mIdx) => (
+                          <div
+                            key={mIdx}
+                            className="p-3 bg-papelClaro rounded-xl border border-papelKraft/40 space-y-1"
+                          >
+                            <span className="text-[11px] font-bold text-acentoTerracota uppercase tracking-wider block">
+                              {m.days}
+                            </span>
+                            <p className="text-xs text-tintaCarvao/80 font-medium lowercase line-clamp-2">
+                              {m.label}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -385,8 +499,8 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 5. PARA QUEM É X PARA QUEM NÃO É */}
-      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+      {/* 6. PARA QUEM É X PARA QUEM NÃO É */}
+      <section className="py-20 sm:py-28 bg-bgPlataforma">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
@@ -399,7 +513,7 @@ export default function Programa21Dias() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* SIM / PARA QUEM É */}
-            <div className="bg-bgPlataforma rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
+            <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold uppercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
                 <span>este programa É para você se:</span>
@@ -426,7 +540,7 @@ export default function Programa21Dias() {
             </div>
 
             {/* NÃO / PARA QUEM NÃO É */}
-            <div className="bg-bgPlataforma rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
+            <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold uppercase tracking-wider">
                 <XCircle className="w-4 h-4 text-acentoTerracota" />
                 <span>NÃO é para você se:</span>
@@ -451,10 +565,10 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 6. FACILITADORAS DO PROGRAMA */}
+      {/* 7. FACILITADORAS DO PROGRAMA */}
       <FoundersSection />
 
-      {/* 7. DEPOIMENTOS DE ALUNOS DOS 21 DIAS */}
+      {/* 8. DEPOIMENTOS DE ALUNOS DOS 21 DIAS */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -500,7 +614,7 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 8. BOX FINAL DE OFERTA & CHECKOUT */}
+      {/* 9. BOX FINAL DE OFERTA & CHECKOUT */}
       <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-14 border border-white/20 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
@@ -549,7 +663,7 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 9. FAQ DO PROGRAMA */}
+      {/* 10. FAQ DO PROGRAMA */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
@@ -596,7 +710,7 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 10. PreLoginFooter Poético com Shader WebGL */}
+      {/* 11. PreLoginFooter Poético com Shader WebGL */}
       <PreLoginFooter />
     </div>
   );
