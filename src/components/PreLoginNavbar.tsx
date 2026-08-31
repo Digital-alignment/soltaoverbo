@@ -188,12 +188,12 @@ export default function PreLoginNavbar() {
                 {/* Sub-menu Dropdown Desplegable */}
                 {dropdownOpen && (
                   <div
-                    className="absolute top-full left-0 pt-2.5 w-80 z-50"
+                    className="absolute top-full left-0 pt-2.5 w-96 sm:w-[420px] z-50"
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className="bg-papelClaro rounded-3xl p-3.5 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn space-y-1">
-                      <div className="px-3 py-1.5 text-[11px] font-bold text-tintaCarvao/50 uppercase tracking-wider">
+                    <div className="bg-papelClaro rounded-3xl p-4 sm:p-5 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn space-y-1.5">
+                      <div className="px-3 py-1.5 text-xs font-bold text-tintaCarvao/60 uppercase tracking-wider">
                         nossos programas de escrita
                       </div>
 
@@ -205,20 +205,20 @@ export default function PreLoginNavbar() {
                             key={subItem.to}
                             to={subItem.to}
                             onClick={() => handleSubItemClick(subItem)}
-                            className={`flex items-start gap-3.5 p-3 rounded-2xl transition-all ${
+                            className={`flex items-start gap-4 p-3.5 sm:p-4 rounded-2xl transition-all ${
                               active
                                 ? 'bg-acentoAzul/10 border border-acentoAzul/20 shadow-xs'
                                 : 'hover:bg-bgPlataforma border border-transparent hover:border-papelKraft/40'
                             }`}
                           >
-                            <div className="w-10 h-10 rounded-xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <Icon className="w-5 h-5 text-acentoAzul" />
+                            <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs">
+                              <Icon className="w-6 h-6 text-acentoAzul" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="font-bold text-sm text-acentoAzul lowercase block truncate">
+                              <span className="font-bold text-base sm:text-lg font-editorial text-acentoAzul lowercase block truncate">
                                 {subItem.label}
                               </span>
-                              <p className="text-xs text-tintaCarvao/75 lowercase font-medium line-clamp-1 mt-0.5">
+                              <p className="text-xs sm:text-sm text-tintaCarvao/80 lowercase font-medium mt-0.5">
                                 {subItem.desc}
                               </p>
                             </div>
@@ -230,10 +230,10 @@ export default function PreLoginNavbar() {
                         <Link
                           to="/programs"
                           onClick={() => handleSubItemClick(productSubItems[0])}
-                          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-acentoAzul hover:bg-acentoAzul/10 transition-colors lowercase"
+                          className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-bold text-acentoAzul hover:bg-acentoAzul/10 transition-colors lowercase"
                         >
                           <span>ver todos os programas</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                          <ArrowRight className="w-4 h-4" />
                         </Link>
                       </div>
                     </div>
