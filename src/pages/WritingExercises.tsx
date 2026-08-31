@@ -189,6 +189,18 @@ export default function WritingExercises() {
   // Modo Foco (Zen Editor)
   const [isZenMode, setIsZenMode] = useState(false);
 
+  // Congelar o scroll do body quando o Modo Foco estiver ativo
+  useEffect(() => {
+    if (isZenMode) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isZenMode]);
+
   // Prompts / Disparadores Poéticos
   const [showPromptsDrawer, setShowPromptsDrawer] = useState(false);
 
@@ -921,6 +933,7 @@ export default function WritingExercises() {
                     value={content}
                     onChange={setContent}
                     placeholder="escreva aqui livremente seus pensamentos..."
+                    flat={true}
                   />
                 </div>
 
@@ -1066,14 +1079,14 @@ export default function WritingExercises() {
           </div>
         )}
 
-        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA E SEM DISTRAÇÕES) */}
+        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA, Z-[99999], SEM NESTED BOXES E SEM SCROLL NO BACKGROUND) */}
         {isZenMode && (
-          <div className="fixed inset-0 z-[999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
+          <div className="fixed inset-0 z-[99999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
             <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
               
               {/* Header Superior Limpo do Modo Foco */}
-              <div className="flex items-center justify-between border-b border-papelKraft/40 pb-3">
-                {/* Lado Esquerdo: Estatísticas de Palavras & Sprint (Sem o texto 'modo foco imersivo') */}
+              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
+                {/* Lado Esquerdo: Estatísticas de Palavras & Sprint */}
                 <div className="flex items-center gap-3">
                   <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
                     produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
@@ -1108,8 +1121,8 @@ export default function WritingExercises() {
                 </div>
               </div>
 
-              {/* Caixa Principal de Escrita (Sem sombras, 100% plana com fundo suave de papel) */}
-              <div className="bg-papelClaro rounded-3xl p-6 sm:p-10 border border-papelKraft/50 shadow-none space-y-5 flex-1 flex flex-col">
+              {/* Área Principal de Escrita Integrada ao Background (Sem caixas nidadas nem bordas internas) */}
+              <div className="space-y-4 flex-1 flex flex-col pt-2">
                 <input
                   type="text"
                   value={title}
@@ -1123,6 +1136,7 @@ export default function WritingExercises() {
                     value={content}
                     onChange={setContent}
                     placeholder="escreva aqui com calma e sem interrupções..."
+                    flat={true}
                   />
                 </div>
               </div>
