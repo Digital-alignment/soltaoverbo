@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import RichTextEditor from '../components/RichTextEditor';
@@ -1079,76 +1080,78 @@ export default function WritingExercises() {
           </div>
         )}
 
-        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA, Z-[99999], SEM NESTED BOXES E SEM SCROLL NO BACKGROUND) */}
-        {isZenMode && (
-          <div className="fixed inset-0 z-[99999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
-            <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
-              
-              {/* Header Superior Limpo do Modo Foco */}
-              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
-                {/* Lado Esquerdo: Estatísticas de Palavras & Sprint */}
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
-                    produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
-                  </span>
-
-                  {timerSeconds !== null && (
-                    <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
-                      <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
-                      <span className="font-gesto text-lg font-normal">{formatTimerStr(timerSeconds)}</span>
+        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA VIA REACT PORTAL NO DOM BODY) */}
+        {isZenMode &&
+          createPortal(
+            <div className="fixed inset-0 z-[999999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
+              <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
+                
+                {/* Header Superior Limpo do Modo Foco */}
+                <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
+                  {/* Lado Esquerdo: Estatísticas de Palavras & Sprint */}
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
+                      produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
                     </span>
-                  )}
+
+                    {timerSeconds !== null && (
+                      <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
+                        <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
+                        <span className="font-gesto text-lg font-normal">{formatTimerStr(timerSeconds)}</span>
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Lado Direito: Botão 'sair do modo foco' e Botão 'salvar texto' alinhados no topo */}
+                  <div className="flex flex-col items-end gap-1.5">
+                    <button
+                      onClick={() => setIsZenMode(false)}
+                      className="btn-pill-secondary px-4 py-1.5 text-xs font-bold lowercase inline-flex items-center gap-1.5 shadow-sm"
+                    >
+                      <Minimize2 className="w-3.5 h-3.5" />
+                      <span>sair do modo foco</span>
+                    </button>
+
+                    <button
+                      onClick={handleSave}
+                      disabled={saving || !title.trim()}
+                      className="btn-pill-primary px-4 py-1.5 text-xs font-semibold lowercase shadow-sm inline-flex items-center gap-1.5 disabled:opacity-50"
+                    >
+                      <Save className="w-3.5 h-3.5 text-white" />
+                      <span>{saving ? 'salvando...' : 'salvar texto'}</span>
+                    </button>
+                  </div>
                 </div>
 
-                {/* Lado Direito: Botão 'sair do modo foco' e Botão 'salvar texto' alinhados no topo */}
-                <div className="flex flex-col items-end gap-1.5">
-                  <button
-                    onClick={() => setIsZenMode(false)}
-                    className="btn-pill-secondary px-4 py-1.5 text-xs font-bold lowercase inline-flex items-center gap-1.5 shadow-sm"
-                  >
-                    <Minimize2 className="w-3.5 h-3.5" />
-                    <span>sair do modo foco</span>
-                  </button>
-
-                  <button
-                    onClick={handleSave}
-                    disabled={saving || !title.trim()}
-                    className="btn-pill-primary px-4 py-1.5 text-xs font-semibold lowercase shadow-sm inline-flex items-center gap-1.5 disabled:opacity-50"
-                  >
-                    <Save className="w-3.5 h-3.5 text-white" />
-                    <span>{saving ? 'salvando...' : 'salvar texto'}</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Área Principal de Escrita Integrada ao Background (Sem caixas nidadas nem bordas internas) */}
-              <div className="space-y-4 flex-1 flex flex-col pt-2">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="título do seu texto..."
-                  className="w-full text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul bg-transparent border-none focus:outline-none placeholder:text-tintaCarvao/30 lowercase"
-                />
-
-                <div className="flex-1 flex flex-col min-h-[50vh]">
-                  <RichTextEditor
-                    value={content}
-                    onChange={setContent}
-                    placeholder="escreva aqui com calma e sem interrupções..."
-                    flat={true}
+                {/* Área Principal de Escrita Integrada ao Background (Sem caixas nidadas nem bordas internas) */}
+                <div className="space-y-4 flex-1 flex flex-col pt-2">
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="título do seu texto..."
+                    className="w-full text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul bg-transparent border-none focus:outline-none placeholder:text-tintaCarvao/30 lowercase"
                   />
+
+                  <div className="flex-1 flex flex-col min-h-[50vh]">
+                    <RichTextEditor
+                      value={content}
+                      onChange={setContent}
+                      placeholder="escreva aqui com calma e sem interrupções..."
+                      flat={true}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Rodapé discreto no Modo Foco */}
-              <div className="pt-2 text-center text-[11px] text-tintaCarvao/50 lowercase">
-                <span>solta o verbo • espaço protegido de escrita profunda</span>
-              </div>
+                {/* Rodapé discreto no Modo Foco */}
+                <div className="pt-2 text-center text-[11px] text-tintaCarvao/50 lowercase">
+                  <span>solta o verbo • espaço protegido de escrita profunda</span>
+                </div>
 
-            </div>
-          </div>
-        )}
+              </div>
+            </div>,
+            document.body
+          )}
 
         {/* MODAL DE COMPARTILHAMENTO NA FOGUEIRA */}
         {showShareModal && (

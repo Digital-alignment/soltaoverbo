@@ -12,6 +12,7 @@ import {
   List,
   ListOrdered,
   ChevronDown,
+  ChevronUp,
   Check,
   Undo,
   Redo,
@@ -95,19 +96,26 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
   };
 
   return (
-    <div className={`overflow-hidden transition-all ${
-      flat ? 'bg-transparent border-none' : 'border border-papelKraft/40 rounded-2xl bg-transparent'
-    }`}>
-      {/* BARRA DE FERRAMENTAS ESTILIZADA COMO MENU EM BOTÃO DA REFERÊNCIA */}
-      <div className={`p-2.5 sm:p-3 flex flex-wrap items-center gap-1.5 sm:gap-2 ${
-        flat ? 'bg-transparent border-b border-papelKraft/30' : 'bg-bgPlataforma/60 border-b border-papelKraft/30'
-      }`}>
+    <div className="relative min-h-[350px] flex flex-col justify-between">
+      
+      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE */}
+      <div
+        ref={editorRef}
+        contentEditable
+        onInput={handleInput}
+        className="p-4 sm:p-6 min-h-[300px] focus:outline-none font-editorial text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-24"
+        style={{ fontSize: `${fontSize}px`, lineHeight: '1.7', color: textColor }}
+        data-placeholder={placeholder}
+      />
+
+      {/* BARRA FLUTUANTE DE FERRAMENTAS NO BOTTOM DA PÁGINA (DOCK BOTTOM BAR DA REFERÊNCIA) */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100000] bg-papelClaro/95 backdrop-blur-md border border-papelKraft/60 shadow-kraft-lg rounded-3xl p-2 sm:p-2.5 flex items-center gap-1.5 sm:gap-2 max-w-[95vw] overflow-x-auto">
         
-        {/* DESFAZER / REFAZER (REFERÊNCIA) */}
+        {/* DESFAZER / REFAZER */}
         <button
           type="button"
           onClick={() => executeCommand('undo')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="desfazer"
         >
           <Undo className="w-4 h-4" />
@@ -115,28 +123,28 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('redo')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="refazer"
         >
           <Redo className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-        {/* MENU POPUP EM BOTÃO PARA SELEÇÃO DE TIPO DE TEXTO (PARÁGRAFO, TÍTULO, CITAÇÃO) */}
-        <div className="relative" ref={formatMenuRef}>
+        {/* MENU POPUP EM BOTÃO NO BOTTOM (ABRE PARA CIMA NA BARRA FLUTUANTE DE BAIXO) */}
+        <div className="relative shrink-0" ref={formatMenuRef}>
           <button
             type="button"
             onClick={() => setShowFormatMenu(!showFormatMenu)}
-            className="px-3 py-1.5 bg-white/90 hover:bg-white border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1.5 shadow-sm transition-all lowercase"
+            className="px-3 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1.5 shadow-sm transition-all lowercase"
             title="selecionar tipo de texto"
           >
             <span>{FORMAT_OPTIONS.find((o) => o.value === currentFormat)?.label || 'parágrafo'}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-acentoAzul" />
+            <ChevronUp className="w-3.5 h-3.5 text-acentoAzul" />
           </button>
 
           {showFormatMenu && (
-            <div className="absolute top-full left-0 mt-1 z-50 w-48 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft p-1.5 space-y-1 animate-fadeIn">
+            <div className="absolute bottom-full left-0 mb-2 z-50 w-48 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-1.5 space-y-1 animate-fadeIn">
               {FORMAT_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
@@ -156,13 +164,13 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
           )}
         </div>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-        {/* FORMATAÇÃO DE TEXTO: NEGRITO, ITÁLICO, SUBLINHADO, TACHADO, CITAÇÃO */}
+        {/* FORMATAÇÃO DE TEXTO: NEGRITO, ITÁLICO, TACHADO, SUBLINHADO, CITAÇÃO */}
         <button
           type="button"
           onClick={() => executeCommand('bold')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold shrink-0"
           title="negrito"
         >
           <Bold className="w-4 h-4" />
@@ -170,46 +178,43 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('italic')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic shrink-0"
           title="itálico"
         >
           <Italic className="w-4 h-4" />
         </button>
-
         <button
           type="button"
           onClick={() => executeCommand('strikeThrough')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="tachado"
         >
           <Strikethrough className="w-4 h-4" />
         </button>
-
         <button
           type="button"
           onClick={() => executeCommand('underline')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="sublinhado"
         >
           <Underline className="w-4 h-4" />
         </button>
-
         <button
           type="button"
           onClick={() => selectFormat('blockquote')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="citação poética"
         >
           <Quote className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
         {/* LISTAS E ALINHAMENTO */}
         <button
           type="button"
           onClick={() => executeCommand('insertUnorderedList')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="lista com marcadores"
         >
           <List className="w-4 h-4" />
@@ -217,18 +222,18 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('insertOrderedList')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="lista numerada"
         >
           <ListOrdered className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
         <button
           type="button"
           onClick={() => executeCommand('justifyLeft')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="alinhar à esquerda"
         >
           <AlignLeft className="w-4 h-4" />
@@ -236,7 +241,7 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('justifyCenter')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="centralizar"
         >
           <AlignCenter className="w-4 h-4" />
@@ -244,21 +249,21 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('justifyRight')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="alinhar à direita"
         >
           <AlignRight className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
         {/* TAMANHO DE FONTE E COR */}
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 shrink-0">
           <Type className="w-4 h-4 text-acentoAzul" />
           <select
             value={fontSize}
             onChange={handleFontSizeChange}
-            className="px-2 py-1 bg-white/80 border border-papelKraft/40 rounded-xl text-xs font-bold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors"
+            className="px-2 py-1 bg-white/90 border border-papelKraft/40 rounded-xl text-xs font-bold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors"
           >
             <option value="12">12</option>
             <option value="14">14</option>
@@ -271,7 +276,7 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
           </select>
         </div>
 
-        <div className="flex items-center space-x-1.5 pl-1">
+        <div className="flex items-center space-x-1.5 pl-1 shrink-0">
           <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-semibold text-tintaCarvao/80 lowercase">
             <span>cor:</span>
             <input
@@ -282,17 +287,8 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
             />
           </label>
         </div>
-      </div>
 
-      {/* ÁREA DE ESCRITA INTEGRA AO BACKGROUND */}
-      <div
-        ref={editorRef}
-        contentEditable
-        onInput={handleInput}
-        className="p-4 sm:p-6 min-h-[280px] focus:outline-none font-editorial text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent"
-        style={{ fontSize: `${fontSize}px`, lineHeight: '1.7', color: textColor }}
-        data-placeholder={placeholder}
-      />
+      </div>
 
       <style>{`
         [contenteditable][data-placeholder]:empty:before {
