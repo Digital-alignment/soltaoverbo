@@ -5,7 +5,7 @@ import { Heart, Users, Pencil, ArrowRight, CheckCircle2, BookOpen, Compass } fro
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
-import { LinePath } from '../components/ui/svg-follow-scroll';
+import { FullPageScrollStroke } from '../components/ui/svg-follow-scroll';
 
 interface EventPhoto {
   image: string;
@@ -90,13 +90,12 @@ export default function AboutUs() {
       {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
-      {/* SVG Stroke Animado que Acompanha o Scroll */}
-      <div className="absolute top-0 right-0 w-full h-full pointer-events-none z-0 overflow-hidden opacity-30">
-        <LinePath
+      {/* SVG Stroke Animado que Recorre TODA a Página de 0% a 100% */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden opacity-75">
+        <FullPageScrollStroke
           scrollYProgress={scrollYProgress}
           color="#FF6B35"
-          strokeWidth={14}
-          className="absolute -right-20 top-20 max-w-5xl"
+          strokeWidth={18}
         />
       </div>
 
@@ -176,7 +175,7 @@ export default function AboutUs() {
       </section>
 
       {/* 3. A ARTE DE VIVER MELHOR & NOSSOS PILARES (Versão Compacta & Elegante) */}
-      <section className="py-16 sm:py-20 bg-papelClaro border-t border-b border-papelKraft/40 relative z-10">
+      <section className="py-16 sm:py-20 bg-papelClaro/90 border-t border-b border-papelKraft/40 relative z-10 backdrop-blur-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
@@ -199,7 +198,7 @@ export default function AboutUs() {
             {pillars.map(({ icon: Icon, title, description }, idx) => (
               <div
                 key={idx}
-                className="bg-bgPlataforma/70 rounded-2xl p-5 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md group flex flex-col justify-between"
+                className="bg-bgPlataforma/80 backdrop-blur-sm rounded-2xl p-5 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md group flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3.5">
@@ -235,7 +234,7 @@ export default function AboutUs() {
       </div>
 
       {/* 5. GALERIA DE ENCONTROS & VIVÊNCIAS (Scrapbook Grid) */}
-      <section id="galeria" className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative z-10">
+      <section id="galeria" className="py-20 sm:py-28 bg-papelClaro/90 border-t border-b border-papelKraft/40 relative z-10 backdrop-blur-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
@@ -259,7 +258,7 @@ export default function AboutUs() {
               <div
                 key={idx}
                 onClick={() => setSelectedPhoto(photo)}
-                className="relative bg-bgPlataforma rounded-3xl p-4 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none"
+                className="relative bg-bgPlataforma/90 backdrop-blur-sm rounded-3xl p-4 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none"
               >
                 {/* Sticker Fita Washi */}
                 <div className="absolute -top-3 left-6 w-24 h-6 pointer-events-none z-20 opacity-90">

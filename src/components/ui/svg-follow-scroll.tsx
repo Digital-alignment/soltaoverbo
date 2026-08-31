@@ -7,14 +7,54 @@ interface LinePathProps {
   strokeWidth?: number;
 }
 
+/**
+ * Trazo SVG Orgánico de Alto Contraste que recorre toda a página de 0% a 100% de altura.
+ * Utiliza vectorEffect="non-scaling-stroke" para manter o traço impecável em qualquer resolução.
+ */
+export function FullPageScrollStroke({
+  className = '',
+  scrollYProgress,
+  color = '#FF6B35',
+  strokeWidth = 16,
+}: LinePathProps) {
+  // O traço se desenha de 0 a 1 conforme o scroll da página evolui
+  const pathLength = useTransform(scrollYProgress, [0, 0.98], [0, 1]);
+
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      fill="none"
+      overflow="visible"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`w-full h-full pointer-events-none select-none ${className}`}
+    >
+      <motion.path
+        d="M 75,2 C 20,8 90,16 30,24 C -5,32 105,40 25,48 C -10,56 100,64 35,72 C -5,80 95,88 40,96 L 70,99"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        style={{
+          pathLength,
+          strokeDashoffset: useTransform(pathLength, (value) => 1 - value),
+        }}
+      />
+    </svg>
+  );
+}
+
+/**
+ * Trazo SVG original da biblioteca Skiper19 / 21st.dev
+ */
 export function LinePath({
   className = '',
   scrollYProgress,
   color = '#FF6B35',
-  strokeWidth = 14,
+  strokeWidth = 16,
 }: LinePathProps) {
-  const pathLength = useTransform(scrollYProgress, [0, 0.95], [0, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [0, 1, 1, 0.3]);
+  const pathLength = useTransform(scrollYProgress, [0, 0.98], [0, 1]);
 
   return (
     <svg
@@ -31,9 +71,9 @@ export function LinePath({
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
         style={{
           pathLength,
-          opacity,
           strokeDashoffset: useTransform(pathLength, (value) => 1 - value),
         }}
       />
@@ -41,4 +81,4 @@ export function LinePath({
   );
 }
 
-export default LinePath;
+export default FullPageScrollStroke;
