@@ -158,23 +158,40 @@ export default function Landing() {
       </section>
 
       {/* 3. SEÇÃO DOS 3 PRODUTOS */}
-      <section id="produtos" className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/50">
+      <section id="produtos" className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase mb-4 shadow-sm">
+          <div className="mb-14 sm:mb-20">
+            {/* Em versão móvel: A imagem aparece ANTES do título */}
+            <div className="block lg:hidden w-full max-w-xs mx-auto mb-6">
               <img
-                src="/brand-assets/icons/icone_63.svg"
-                alt="icone"
-                className="w-4 h-4 object-contain"
+                src="/brand-assets/elements/collages/writes-torn-out-sheets-paper-trendy-vintage-style-mixed-media-art.png"
+                alt="escrita artesanal"
+                className="w-full h-auto object-contain drop-shadow-md animate-fadeIn"
               />
-              <span>nossos caminhos de escrita</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              escolha a experiência ideal para o seu momento
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              três formatos desenhados para acolher a sua jornada de escrita, do primeiro passo ao aprofundamento contínuo.
-            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Coluna Esquerda: Título & Subtítulo alinhados para o lado esquerdo no desktop */}
+              <div className="lg:col-span-7 text-center lg:text-left space-y-4">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase leading-[1.15]">
+                  escolha a experiência ideal para o seu momento
+                </h2>
+                <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase max-w-2xl mx-auto lg:mx-0">
+                  três formatos desenhados para acolher a sua jornada de escrita, do primeiro passo ao aprofundamento contínuo.
+                </p>
+              </div>
+
+              {/* Coluna Direita: Imagem com efeito de aparição da direita (Apenas Desktop) */}
+              <div className="hidden lg:flex lg:col-span-5 justify-end relative">
+                <div className="relative max-w-sm w-full animate-slideInRight group">
+                  <img
+                    src="/brand-assets/elements/collages/writes-torn-out-sheets-paper-trendy-vintage-style-mixed-media-art.png"
+                    alt="colagem poética de escrita"
+                    className="w-full h-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-16">
@@ -420,14 +437,33 @@ export default function Landing() {
       </section>
 
       {/* 4. PILARES DA ESCRITA CONSCIENTE */}
-      <section className="py-16 sm:py-24 bg-bgPlataforma relative overflow-hidden">
+      <section className="py-20 sm:py-28 bg-bgPlataforma relative overflow-hidden">
+        {/* Textura de Fundo */}
         <div
           className="absolute inset-0 opacity-[0.05] bg-cover bg-center pointer-events-none mix-blend-multiply"
           style={{ backgroundImage: "url('/brand-assets/textures/papel-semente.jpg')" }}
         />
 
+        {/* Elemento Gráfico de Colagem Retro Animal no Canto Inferior Esquerdo (Desktop UI Elegante) */}
+        <div className="hidden lg:block absolute -bottom-10 left-2 xl:left-8 z-0 pointer-events-none select-none opacity-90 transition-transform duration-700 hover:scale-105">
+          <img
+            src="/brand-assets/elements/collages/retro-animal-collage-sticker-png-scrapbook-paper-clip-art-border-frame.png"
+            alt="colagem retro animal scrapbook"
+            className="w-72 xl:w-80 h-auto object-contain drop-shadow-md"
+          />
+        </div>
+
+        {/* Em versão móvel: Fica sutilmente atrás dos cards sem poluir */}
+        <div className="block lg:hidden absolute -bottom-8 -left-8 z-0 pointer-events-none select-none opacity-20">
+          <img
+            src="/brand-assets/elements/collages/retro-animal-collage-sticker-png-scrapbook-paper-clip-art-border-frame.png"
+            alt="colagem retro animal scrapbook"
+            className="w-52 h-auto object-contain"
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
               os fundamentos do nosso movimento
             </h2>
@@ -436,11 +472,12 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+          {/* Grid de Cards com Respiro no Desktop para destacar a Colagem */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:pl-16 xl:pl-20 relative z-10">
             {pillars.map((pillar, index) => (
               <div
                 key={index}
-                className="bg-papelClaro/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-papelKraft relative overflow-hidden flex flex-col justify-between"
+                className="bg-papelClaro/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-papelKraft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-papelKraft relative overflow-hidden flex flex-col justify-between"
               >
                 <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul/15 absolute top-3.5 right-5 select-none">
                   0{index + 1}
