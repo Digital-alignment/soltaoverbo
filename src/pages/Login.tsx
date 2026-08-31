@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingPage from '../components/LoadingPage';
-import { BookOpen } from 'lucide-react';
+import { ShieldCheck, UserCheck } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -39,6 +39,12 @@ export default function Login() {
     }
   };
 
+  const handleDemoLogin = (demoEmail: string, demoPass: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPass);
+    setError('');
+  };
+
   const handleGoogleSignIn = async () => {
     setError('');
     setLoading(true);
@@ -52,47 +58,73 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-paper flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Animated Background Pattern */}
+    <div className="min-h-screen bg-bgPlataforma flex items-center justify-center px-4 py-12 relative overflow-hidden text-tintaCarvao">
+      {/* Background Pattern */}
       <div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
           backgroundImage: 'url(/padrão_linhas_offwhite.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          animation: 'slowFloat 20s ease-in-out infinite'
         }}
       />
 
-      <div className="max-w-md w-full relative z-10">
-        <div className="text-center mb-8">
-          <h1>
+      <div className="max-w-md w-full relative z-10 space-y-6">
+        <div className="text-center">
+          <Link to="/" className="inline-block group">
             <img
               src="/logo_vertical_tagline_4.png"
               alt="solta o verbo"
-              className="mx-auto h-32 w-auto"
+              className="mx-auto h-28 sm:h-32 w-auto transition-transform group-hover:scale-105"
             />
-          </h1>
+          </Link>
         </div>
 
-        <div className="bg-white rounded-2xl border border-darkNeutral/10 p-8">
+        {/* PAINEL DE CONTAS DEMO (1-CLICK FILL) */}
+        <div className="bg-papelClaro rounded-2xl border border-papelKraft/60 p-4 shadow-sm space-y-2.5 text-center">
+          <span className="text-xs font-bold text-acentoAzul uppercase tracking-wider block">
+            🔑 contas de teste (acesso rápido)
+          </span>
+
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => handleDemoLogin('admin@soltaoverbocoletivo.com', 'admin123456')}
+              className="px-3 py-2 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5 border border-acentoAzul/20 lowercase"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>admin demo</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleDemoLogin('aluno@soltaoverbocoletivo.com', 'aluno123456')}
+              className="px-3 py-2 rounded-xl bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-1.5 border border-acentoTerracota/20 lowercase"
+            >
+              <UserCheck className="w-4 h-4" />
+              <span>aluno demo</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-7 sm:p-8 shadow-kraft">
           {hasCheckoutIntent && (
-            <div className="mb-6 p-4 bg-limeGreen/10 border-2 border-limeGreen rounded-xl">
-              <p className="text-deepBlue font-semibold text-center">
-                Entre na sua conta para continuar sua compra
+            <div className="mb-6 p-4 bg-acentoOliva/20 border border-acentoOliva rounded-2xl">
+              <p className="text-acentoAzul font-semibold text-center text-sm lowercase">
+                entre na sua conta para continuar sua compra
               </p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50 text-red-700 px-4 py-3 rounded-xl text-sm border border-red-200">
                 {error}
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-darkNeutral mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-tintaCarvao mb-1.5 lowercase">
                 e-mail
               </label>
               <input
@@ -101,13 +133,13 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="input-field"
+                className="w-full px-4 py-3 rounded-xl border border-papelKraft/60 bg-bgPlataforma text-tintaCarvao focus:outline-none focus:border-acentoAzul text-sm font-medium"
                 placeholder="seu@email.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-darkNeutral mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-tintaCarvao mb-1.5 lowercase">
                 senha
               </label>
               <input
@@ -116,7 +148,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="input-field"
+                className="w-full px-4 py-3 rounded-xl border border-papelKraft/60 bg-bgPlataforma text-tintaCarvao focus:outline-none focus:border-acentoAzul text-sm font-medium"
                 placeholder="••••••••"
               />
             </div>
@@ -124,8 +156,7 @@ export default function Login() {
             <div className="text-right">
               <Link
                 to="/forgot-password"
-                className="text-sm hover:text-deepBlue transition"
-                style={{ color: '#1f008f' }}
+                className="text-xs text-acentoAzul font-bold hover:text-acentoTerracota transition-colors lowercase"
               >
                 esqueceu sua senha?
               </Link>
@@ -134,10 +165,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-6 py-3 rounded-lg font-medium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-white hover:shadow-lg"
-              style={{ backgroundColor: '#1f008f' }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#170069'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1f008f'}
+              className="btn-pill-primary w-full py-3.5 rounded-full text-base font-semibold lowercase shadow-md"
             >
               {loading ? 'entrando...' : 'entrar'}
             </button>
@@ -145,17 +173,17 @@ export default function Login() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-darkNeutral/20"></div>
+              <div className="w-full border-t border-papelKraft/40"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-darkNeutral/60">ou continue com</span>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3 bg-papelClaro text-tintaCarvao/60 lowercase">ou continue com</span>
             </div>
           </div>
 
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-darkNeutral/20 rounded-lg text-darkNeutral font-medium hover:bg-gray-50 hover:border-darkNeutral/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-papelKraft/60 rounded-full text-tintaCarvao font-medium hover:bg-bgPlataforma transition-all text-sm lowercase"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -166,20 +194,19 @@ export default function Login() {
             <span>entrar com google</span>
           </button>
 
-          <div className="mt-6 text-left">
+          <div className="mt-6 text-center">
             <Link
               to="/register"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg text-sm font-medium transition hover:bg-blue-100"
-              style={{ color: '#1f008f' }}
+              className="text-xs text-acentoAzul font-bold hover:text-acentoTerracota transition-colors lowercase"
             >
-              criar conta
+              não tem uma conta? crie uma conta gratuitamente →
             </Link>
           </div>
         </div>
 
-        <div className="mt-6 text-center">
-          <Link to="/" className="text-sm text-darkNeutral/70 hover:text-darkNeutral transition">
-            ← voltar para home
+        <div className="text-center">
+          <Link to="/" className="text-xs text-tintaCarvao/60 hover:text-acentoAzul transition-colors lowercase font-medium">
+            ← voltar para a página inicial
           </Link>
         </div>
       </div>
