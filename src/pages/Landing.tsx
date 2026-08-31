@@ -470,7 +470,7 @@ export default function Landing() {
                 key={index}
                 className="bg-papelClaro/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-papelKraft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-papelKraft relative overflow-hidden flex flex-col justify-between"
               >
-                <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul/15 absolute top-3.5 right-5 select-none">
+                <span className="text-4xl sm:text-5xl font-gesto text-acentoAzul/30 absolute top-2 right-5 select-none">
                   0{index + 1}
                 </span>
 
