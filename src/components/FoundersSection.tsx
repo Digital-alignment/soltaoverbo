@@ -175,8 +175,8 @@ export default function FoundersSection() {
         </div>
       </div>
 
-      {/* Banner de Colagem Final Full Width no Rodapé da Seção */}
-      <div className="w-full mt-16 sm:mt-24 relative z-10 pointer-events-none select-none">
+      {/* Banner de Colagem Final Full Width no Rodapé da Seção com espaçamento top reduzido */}
+      <div className="w-full mt-3 sm:mt-6 relative z-10 pointer-events-none select-none">
         {/* Imagem para Desktop */}
         <img
           src="/brand-assets/elements/collages/collage final bk desktp.png"
