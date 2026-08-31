@@ -143,14 +143,14 @@ export default function Dashboard() {
           <div className="mb-8 bg-gradient-to-r from-actionOrange/10 to-limeGreen/10 rounded-2xl border border-actionOrange/20 p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-white/60 rounded-xl p-4">
-                <p className="text-xs text-deepBlue/60 font-semibold uppercase">Plano de Pagamento</p>
+                <p className="text-xs text-deepBlue/60 font-semibold lowercase">Plano de Pagamento</p>
                 <p className="text-lg font-bold text-deepBlue mt-2">
                   {subscription.total_installments > 1 ? `${subscription.total_installments}x Parcelado` : 'Pagamento Único'}
                 </p>
               </div>
 
               <div className="bg-white/60 rounded-xl p-4">
-                <p className="text-xs text-deepBlue/60 font-semibold uppercase">Parcelas Pagas</p>
+                <p className="text-xs text-deepBlue/60 font-semibold lowercase">Parcelas Pagas</p>
                 <p className="text-lg font-bold text-limeGreen mt-2">
                   {subscription.completed_installments}/{subscription.total_installments}
                 </p>
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
               {subscription.next_payment_date && subscription.total_installments > 1 && (
                 <div className="bg-white/60 rounded-xl p-4">
-                  <p className="text-xs text-deepBlue/60 font-semibold uppercase flex items-center gap-1">
+                  <p className="text-xs text-deepBlue/60 font-semibold lowercase flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     Próximo Pagamento
                   </p>
@@ -169,7 +169,7 @@ export default function Dashboard() {
               )}
 
               <div className="bg-white/60 rounded-xl p-4">
-                <p className="text-xs text-deepBlue/60 font-semibold uppercase">Acesso até</p>
+                <p className="text-xs text-deepBlue/60 font-semibold lowercase">Acesso até</p>
                 <p className="text-lg font-bold text-deepBlue mt-2">
                   {formatDate(subscription.expires_at)}
                 </p>

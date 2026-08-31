@@ -150,7 +150,7 @@ export default function ProgramaCiclo() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Coluna Esquerda: Copy Persuasivo & Oferta */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
                 <Users className="w-4 h-4 text-acentoTerracota" />
                 <span>mentoria ao vivo (3 meses) & comunidade viva</span>
               </div>
@@ -170,7 +170,7 @@ export default function ProgramaCiclo() {
               <div className="p-5 bg-papelClaro rounded-2xl border border-papelKraft/50 shadow-sm max-w-xl space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-papelKraft/30">
                   <div>
-                    <span className="text-[11px] font-bold text-tintaCarvao/60 uppercase tracking-wider block">
+                    <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase tracking-wider block">
                       investimento trimestral
                     </span>
                     <div className="flex items-baseline gap-2">
@@ -259,7 +259,7 @@ export default function ProgramaCiclo() {
       <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
               <span>mensagem das facilitadoras</span>
             </div>
@@ -320,7 +320,7 @@ export default function ProgramaCiclo() {
       <section className="py-20 sm:py-28 bg-bgPlataforma">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
                 alt="icone"
@@ -416,7 +416,7 @@ export default function ProgramaCiclo() {
       <section className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <Clock className="w-4 h-4 text-acentoTerracota" />
               <span>dinâmica dos encontros no zoom</span>
             </div>
@@ -478,7 +478,7 @@ export default function ProgramaCiclo() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* SIM / PARA QUEM É */}
             <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold lowercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
                 <span>o ciclo É para você se:</span>
               </div>
@@ -505,7 +505,7 @@ export default function ProgramaCiclo() {
 
             {/* NÃO / PARA QUEM NÃO É */}
             <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold lowercase tracking-wider">
                 <XCircle className="w-4 h-4 text-acentoTerracota" />
                 <span>NÃO é para você se:</span>
               </div>
@@ -536,7 +536,7 @@ export default function ProgramaCiclo() {
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
                 alt="icone"
@@ -680,7 +680,7 @@ export default function ProgramaCiclo() {
       <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-14 border border-white/20 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold lowercase tracking-wider">
               <span>vagas abertas para o novo ciclo</span>
             </div>
 
@@ -693,7 +693,7 @@ export default function ProgramaCiclo() {
             </p>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
-              <span className="text-xs font-bold text-papelClaro/70 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-papelClaro/70 lowercase tracking-wider block">
                 investimento no ciclo completo (3 meses)
               </span>
 

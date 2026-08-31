@@ -82,7 +82,7 @@ export default function Login() {
 
         {/* PAINEL DE CONTAS DEMO (1-CLICK FILL) */}
         <div className="bg-papelClaro rounded-2xl border border-papelKraft/60 p-4 shadow-sm space-y-2.5 text-center">
-          <span className="text-xs font-bold text-acentoAzul uppercase tracking-wider block">
+          <span className="text-xs font-bold text-acentoAzul lowercase tracking-wider block">
             🔑 contas de teste (acesso rápido)
           </span>
 

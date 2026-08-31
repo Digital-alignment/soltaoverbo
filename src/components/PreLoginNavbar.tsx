@@ -194,7 +194,7 @@ export default function PreLoginNavbar() {
                   >
                     <div className="bg-papelClaro rounded-3xl p-4 sm:p-5 border border-papelKraft/60 shadow-kraft-lg animate-fadeIn space-y-2">
                       <div className="flex items-center justify-between px-2 pb-2 border-b border-papelKraft/30">
-                        <span className="text-[11px] font-bold text-tintaCarvao/50 uppercase tracking-widest">
+                        <span className="text-[11px] font-bold text-tintaCarvao/50 lowercase tracking-widest">
                           programas de escrita
                         </span>
                         <span className="text-[11px] font-medium text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
@@ -345,7 +345,7 @@ export default function PreLoginNavbar() {
 
                 {/* Sub-itens de Programas no Menu Móvel */}
                 <div className="space-y-2 pt-2 border-t border-b border-papelKraft/30 py-3">
-                  <span className="px-4 text-xs font-bold text-acentoAzul uppercase tracking-wider block mb-2">
+                  <span className="px-4 text-xs font-bold text-acentoAzul lowercase tracking-wider block mb-2">
                     nossos programas
                   </span>
 

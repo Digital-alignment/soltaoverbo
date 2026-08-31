@@ -211,7 +211,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
               <div className="flex flex-col gap-4">
                 <div className="flex-1">
                   <p className="text-xs sm:text-sm text-deepBlue/70 font-medium">Pagar com PIX</p>
-                  <p className="text-xs text-limeGreen font-bold mt-2 uppercase tracking-wide">Desconto especial nesta forma de pagamento</p>
+                  <p className="text-xs text-limeGreen font-bold mt-2 lowercase tracking-wide">Desconto especial nesta forma de pagamento</p>
                   <p className="text-xs text-deepBlue/50 mt-2">Acesso integral por 1 ano</p>
                 </div>
                 <a

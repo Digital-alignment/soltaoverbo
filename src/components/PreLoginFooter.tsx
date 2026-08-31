@@ -55,7 +55,7 @@ export default function PreLoginFooter() {
 
               {/* Coluna 2: Navegação Rápida em Pílulas */}
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider mb-4 text-acentoOliva lowercase">
+                <h3 className="text-xs font-semibold tracking-wider mb-4 text-acentoOliva lowercase">
                   navegação & programas
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -94,7 +94,7 @@ export default function PreLoginFooter() {
 
               {/* Coluna 3: Redes Sociais & Conexão */}
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider mb-4 text-acentoOliva lowercase">
+                <h3 className="text-xs font-semibold tracking-wider mb-4 text-acentoOliva lowercase">
                   conecte-se com o coletivo
                 </h3>
                 <div className="flex items-center gap-3 mb-4">

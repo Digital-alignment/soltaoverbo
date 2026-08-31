@@ -97,7 +97,7 @@ export default function ContrateExperienciaSection() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Texto de Apresentação */}
             <div className="lg:col-span-6 space-y-5">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
                 <img
                   src="/brand-assets/icons/icone_63.svg"
                   alt="chama viva"
@@ -202,7 +202,7 @@ export default function ContrateExperienciaSection() {
                     <div className="w-10 h-10 rounded-xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center group-hover:bg-acentoAzul group-hover:text-white transition-all">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-bold text-tintaCarvao/60 uppercase tracking-wider bg-papelKraft/30 px-2.5 py-1 rounded-full">
+                    <span className="text-[10px] font-bold text-tintaCarvao/60 lowercase tracking-wider bg-papelKraft/30 px-2.5 py-1 rounded-full">
                       {badge}
                     </span>
                   </div>

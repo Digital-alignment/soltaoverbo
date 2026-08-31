@@ -82,11 +82,11 @@ export default function Landing() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Coluna Esquerda: Manifiesto & Botões de Ação */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase shadow-sm">
                 <img
                   src="/brand-assets/icons/icone_63.svg"
                   alt="chama viva"
-                  className="w-5 h-5 object-contain"
+                  className="w-[3.5rem] h-auto object-contain"
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
@@ -161,7 +161,7 @@ export default function Landing() {
       <section id="produtos" className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
                 alt="icone"
@@ -217,7 +217,7 @@ export default function Landing() {
 
                   <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div className="space-y-0.5">
-                      <span className="text-[11px] font-bold text-tintaCarvao/60 uppercase tracking-wider block">
+                      <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase block">
                         investimento à vista
                       </span>
                       <div className="flex items-baseline gap-2">
@@ -303,7 +303,7 @@ export default function Landing() {
 
                   <div className="pt-6 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div className="space-y-0.5">
-                      <span className="text-[11px] font-bold text-papelClaro/70 uppercase tracking-wider block">
+                      <span className="text-[11px] font-bold text-papelClaro/70 lowercase block">
                         plano anual especial
                       </span>
                       <div className="flex items-baseline gap-2">
@@ -374,7 +374,7 @@ export default function Landing() {
 
                   <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div className="space-y-0.5">
-                      <span className="text-[11px] font-bold text-tintaCarvao/60 uppercase tracking-wider block">
+                      <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase block">
                         modalidade por edição
                       </span>
                       <span className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase block">
@@ -465,7 +465,7 @@ export default function Landing() {
       <section className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase mb-4 shadow-sm">
               <Heart className="w-4 h-4 text-acentoTerracota" />
               <span>vozes da nossa comunidade</span>
             </div>

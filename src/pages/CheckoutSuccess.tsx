@@ -116,14 +116,14 @@ export default function CheckoutSuccess() {
               <div className="mt-6 pt-6 border-t border-limeGreen/20">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-white/50 rounded-lg p-3">
-                    <p className="text-xs text-deepBlue/60 font-semibold uppercase">Plano de Pagamento</p>
+                    <p className="text-xs text-deepBlue/60 font-semibold lowercase">Plano de Pagamento</p>
                     <p className="text-lg font-bold text-deepBlue mt-1">
                       {formatInstallmentPlan(subscriptionData.installment_plan, subscriptionData.total_installments)}
                     </p>
                   </div>
                   {subscriptionData.next_payment_date && subscriptionData.total_installments > 1 && (
                     <div className="bg-white/50 rounded-lg p-3">
-                      <p className="text-xs text-deepBlue/60 font-semibold uppercase">Próximo Pagamento</p>
+                      <p className="text-xs text-deepBlue/60 font-semibold lowercase">Próximo Pagamento</p>
                       <p className="text-lg font-bold text-deepBlue mt-1">
                         {formatNextPaymentDate(subscriptionData.next_payment_date)}
                       </p>

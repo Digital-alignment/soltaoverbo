@@ -170,7 +170,7 @@ export default function Programa21Dias() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Coluna Esquerda: Copy Persuasivo & Oferta */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
                 <img
                   src="/brand-assets/icons/icone_63.svg"
                   alt="chama viva"
@@ -194,7 +194,7 @@ export default function Programa21Dias() {
               <div className="p-5 bg-papelClaro rounded-2xl border border-papelKraft/50 shadow-sm max-w-xl space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-papelKraft/30">
                   <div>
-                    <span className="text-[11px] font-bold text-tintaCarvao/60 uppercase tracking-wider block">
+                    <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase tracking-wider block">
                       investimento promocional
                     </span>
                     <div className="flex items-baseline gap-2">
@@ -286,7 +286,7 @@ export default function Programa21Dias() {
       <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
               <span>mensagem das facilitadoras</span>
             </div>
@@ -351,7 +351,7 @@ export default function Programa21Dias() {
       <section className="py-20 sm:py-28 bg-bgPlataforma">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
                 alt="icone"
@@ -443,7 +443,7 @@ export default function Programa21Dias() {
       <section id="trilha" className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <Clock className="w-4 h-4 text-acentoTerracota" />
               <span>a sua jornada passo a passo</span>
             </div>
@@ -483,7 +483,7 @@ export default function Programa21Dias() {
                           className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/70 via-transparent to-transparent flex items-end p-4">
-                          <span className="font-editorial text-xs font-bold text-papelClaro uppercase tracking-wider bg-acentoAzul/80 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+                          <span className="font-editorial text-xs font-bold text-papelClaro lowercase tracking-wider bg-acentoAzul/80 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
                             fase 0{idx + 1} // 7 dias
                           </span>
                         </div>
@@ -519,7 +519,7 @@ export default function Programa21Dias() {
                             key={mIdx}
                             className="p-3 bg-papelClaro rounded-xl border border-papelKraft/40 space-y-1"
                           >
-                            <span className="text-[11px] font-bold text-acentoTerracota uppercase tracking-wider block">
+                            <span className="text-[11px] font-bold text-acentoTerracota lowercase tracking-wider block">
                               {m.days}
                             </span>
                             <p className="text-xs text-tintaCarvao/80 font-medium lowercase line-clamp-2">
@@ -551,7 +551,7 @@ export default function Programa21Dias() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold lowercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
                 <span>este programa É para você se:</span>
               </div>
@@ -577,7 +577,7 @@ export default function Programa21Dias() {
             </div>
 
             <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold lowercase tracking-wider">
                 <XCircle className="w-4 h-4 text-acentoTerracota" />
                 <span>NÃO é para você se:</span>
               </div>
@@ -608,7 +608,7 @@ export default function Programa21Dias() {
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
                 alt="icone"
@@ -759,7 +759,7 @@ export default function Programa21Dias() {
       <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-14 border border-white/20 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold lowercase tracking-wider">
               <span>inscrições abertas com preço promocional</span>
             </div>
 
@@ -772,7 +772,7 @@ export default function Programa21Dias() {
             </p>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
-              <span className="text-xs font-bold text-papelClaro/70 uppercase tracking-wider block">
+              <span className="text-xs font-bold text-papelClaro/70 lowercase tracking-wider block">
                 investimento único com acesso completo
               </span>
 
