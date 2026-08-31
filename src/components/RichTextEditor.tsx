@@ -3,12 +3,18 @@ import {
   Bold,
   Italic,
   Underline,
+  Strikethrough,
+  Quote,
   AlignLeft,
   AlignCenter,
   AlignRight,
   Type,
   List,
   ListOrdered,
+  ChevronDown,
+  Check,
+  Undo,
+  Redo,
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -18,16 +24,38 @@ interface RichTextEditorProps {
   flat?: boolean;
 }
 
+const FORMAT_OPTIONS = [
+  { value: 'p', label: 'parágrafo' },
+  { value: 'h1', label: 'título 1' },
+  { value: 'h2', label: 'título 2' },
+  { value: 'h3', label: 'título 3' },
+  { value: 'h4', label: 'título 4' },
+  { value: 'blockquote', label: 'cita poética' },
+];
+
 export default function RichTextEditor({ value, onChange, placeholder, flat = false }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const formatMenuRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('16');
   const [textColor, setTextColor] = useState('#2C2720');
   const [currentFormat, setCurrentFormat] = useState('p');
+  const [showFormatMenu, setShowFormatMenu] = useState(false);
 
   useEffect(() => {
     if (editorRef.current && value && !editorRef.current.innerHTML) {
       editorRef.current.innerHTML = value;
     }
+  }, []);
+
+  // Fechar menu de formatos ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formatMenuRef.current && !formatMenuRef.current.contains(event.target as Node)) {
+        setShowFormatMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleInput = () => {
@@ -39,6 +67,12 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
   const executeCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     editorRef.current?.focus();
+  };
+
+  const selectFormat = (format: string) => {
+    setCurrentFormat(format);
+    setShowFormatMenu(false);
+    executeCommand('formatBlock', format);
   };
 
   const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,39 +94,75 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
     executeCommand('foreColor', color);
   };
 
-  const handleFormatChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const format = e.target.value;
-    setCurrentFormat(format);
-    executeCommand('formatBlock', format);
-  };
-
   return (
     <div className={`overflow-hidden transition-all ${
       flat ? 'bg-transparent border-none' : 'border border-papelKraft/40 rounded-2xl bg-transparent'
     }`}>
-      {/* Barra de Ferramentas com Design System Solta o Verbo */}
+      {/* BARRA DE FERRAMENTAS ESTILIZADA COMO MENU EM BOTÃO DA REFERÊNCIA */}
       <div className={`p-2.5 sm:p-3 flex flex-wrap items-center gap-1.5 sm:gap-2 ${
         flat ? 'bg-transparent border-b border-papelKraft/30' : 'bg-bgPlataforma/60 border-b border-papelKraft/30'
       }`}>
-        <select
-          value={currentFormat}
-          onChange={handleFormatChange}
-          className="px-2.5 py-1.5 bg-white/80 border border-papelKraft/40 rounded-xl text-xs font-semibold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors lowercase"
-          title="formato de parágrafo"
+        
+        {/* DESFAZER / REFAZER (REFERÊNCIA) */}
+        <button
+          type="button"
+          onClick={() => executeCommand('undo')}
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          title="desfazer"
         >
-          <option value="p">parágrafo</option>
-          <option value="h1">título 1</option>
-          <option value="h2">título 2</option>
-          <option value="h3">título 3</option>
-          <option value="h4">título 4</option>
-        </select>
+          <Undo className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => executeCommand('redo')}
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          title="refazer"
+        >
+          <Redo className="w-4 h-4" />
+        </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
 
+        {/* MENU POPUP EM BOTÃO PARA SELEÇÃO DE TIPO DE TEXTO (PARÁGRAFO, TÍTULO, CITAÇÃO) */}
+        <div className="relative" ref={formatMenuRef}>
+          <button
+            type="button"
+            onClick={() => setShowFormatMenu(!showFormatMenu)}
+            className="px-3 py-1.5 bg-white/90 hover:bg-white border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1.5 shadow-sm transition-all lowercase"
+            title="selecionar tipo de texto"
+          >
+            <span>{FORMAT_OPTIONS.find((o) => o.value === currentFormat)?.label || 'parágrafo'}</span>
+            <ChevronDown className="w-3.5 h-3.5 text-acentoAzul" />
+          </button>
+
+          {showFormatMenu && (
+            <div className="absolute top-full left-0 mt-1 z-50 w-48 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft p-1.5 space-y-1 animate-fadeIn">
+              {FORMAT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => selectFormat(opt.value)}
+                  className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold lowercase transition-colors flex items-center justify-between ${
+                    currentFormat === opt.value
+                      ? 'bg-acentoAzul text-white shadow-sm'
+                      : 'text-tintaCarvao hover:bg-bgPlataforma'
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  {currentFormat === opt.value && <Check className="w-3.5 h-3.5" />}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+
+        {/* FORMATAÇÃO DE TEXTO: NEGRITO, ITÁLICO, SUBLINHADO, TACHADO, CITAÇÃO */}
         <button
           type="button"
           onClick={() => executeCommand('bold')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold"
           title="negrito"
         >
           <Bold className="w-4 h-4" />
@@ -100,26 +170,46 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('italic')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic"
           title="itálico"
         >
           <Italic className="w-4 h-4" />
         </button>
+
+        <button
+          type="button"
+          onClick={() => executeCommand('strikeThrough')}
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          title="tachado"
+        >
+          <Strikethrough className="w-4 h-4" />
+        </button>
+
         <button
           type="button"
           onClick={() => executeCommand('underline')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="sublinhado"
         >
           <Underline className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-1"></div>
+        <button
+          type="button"
+          onClick={() => selectFormat('blockquote')}
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          title="citação poética"
+        >
+          <Quote className="w-4 h-4" />
+        </button>
 
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
+
+        {/* LISTAS E ALINHAMENTO */}
         <button
           type="button"
           onClick={() => executeCommand('insertUnorderedList')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="lista com marcadores"
         >
           <List className="w-4 h-4" />
@@ -127,18 +217,18 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('insertOrderedList')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="lista numerada"
         >
           <ListOrdered className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
 
         <button
           type="button"
           onClick={() => executeCommand('justifyLeft')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="alinhar à esquerda"
         >
           <AlignLeft className="w-4 h-4" />
@@ -146,7 +236,7 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('justifyCenter')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="centralizar"
         >
           <AlignCenter className="w-4 h-4" />
@@ -154,20 +244,21 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('justifyRight')}
-          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          className="p-1.5 bg-white/80 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
           title="alinhar à direita"
         >
           <AlignRight className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/40 mx-0.5"></div>
 
-        <div className="flex items-center space-x-1.5">
+        {/* TAMANHO DE FONTE E COR */}
+        <div className="flex items-center space-x-1">
           <Type className="w-4 h-4 text-acentoAzul" />
           <select
             value={fontSize}
             onChange={handleFontSizeChange}
-            className="px-2 py-1 bg-white/80 border border-papelKraft/40 rounded-xl text-xs font-semibold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors"
+            className="px-2 py-1 bg-white/80 border border-papelKraft/40 rounded-xl text-xs font-bold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors"
           >
             <option value="12">12</option>
             <option value="14">14</option>
@@ -181,13 +272,13 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         </div>
 
         <div className="flex items-center space-x-1.5 pl-1">
-          <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-medium text-tintaCarvao/70 lowercase">
+          <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-semibold text-tintaCarvao/80 lowercase">
             <span>cor:</span>
             <input
               type="color"
               value={textColor}
               onChange={handleColorChange}
-              className="w-6 h-6 rounded-lg cursor-pointer border border-papelKraft/40 p-0.5 bg-white"
+              className="w-6 h-6 rounded-lg cursor-pointer border border-papelKraft/40 p-0.5 bg-white shadow-sm"
             />
           </label>
         </div>
@@ -233,6 +324,13 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
           font-weight: bold;
           color: #140D82;
           margin: 1em 0;
+        }
+        [contenteditable] blockquote {
+          border-left: 3px solid #FD5E32;
+          padding-left: 12px;
+          margin: 1em 0;
+          color: #140D82;
+          font-style: italic;
         }
         [contenteditable] ul {
           list-style-type: disc;
