@@ -463,8 +463,8 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* Grid de Cards dos Pilares */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 relative z-10">
+          {/* Grid de Cards dos Pilares (Largura mais compacta max-w-5xl mx-auto) */}
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 relative z-10">
             {pillars.map((pillar, index) => (
               <div
                 key={index}
