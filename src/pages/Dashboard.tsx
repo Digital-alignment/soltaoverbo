@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Book,
   Plus,
+  Feather,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -82,6 +83,29 @@ interface DiscoverItem {
   link: string;
 }
 
+// Tabela de Níveis e Marcos Literários / Equivalências de Palavras
+const WORD_MILESTONES = [
+  { minWords: 100, title: 'um haicai poético de bashō ou uma estrofe de vinicius de moraes' },
+  { minWords: 500, title: "o poema 'no meio do caminho' de drummond ou uma carta de van gogh a theo" },
+  { minWords: 1000, title: 'o manifesto antropófago de oswald de andrade' },
+  { minWords: 3000, title: 'um conto de clarice lispector ou a arte da prudência de baltasar gracián' },
+  { minWords: 5000, title: 'o banquete de platão ou o livro o pequeno príncipe' },
+  { minWords: 9000, title: 'o libreto da ópera a flauta mágica de mozart' },
+  { minWords: 15000, title: 'o livro a metamorfose de franz kafka' },
+  { minWords: 25000, title: 'o clássico a revolução dos bichos de george orwell' },
+  { minWords: 40000, title: 'o romance o alquimista de paulo coelho' },
+  { minWords: 60000, title: 'o livro o apanhador no campo de centeio de j.d. salinger' },
+  { minWords: 100000, title: 'a obra dom casmurro de machado de assis' },
+  { minWords: 130000, title: 'o romance grande sertão: veredas de joão guimarães rosa' },
+  { minWords: 160000, title: 'as tragédias completas de william shakespeare' },
+  { minWords: 220000, title: 'a epopeia os lusíadas de luís de camões' },
+  { minWords: 280000, title: 'o épico cem anos de solidão de gabriel garcía márquez' },
+  { minWords: 350000, title: 'a obra monumental crime e castigo de dostoiévski' },
+  { minWords: 500000, title: 'a divina comédia de dante alighieri ou moby dick de herman melville' },
+  { minWords: 700000, title: 'a obra completa guerra e paz de léon tolstói' },
+  { minWords: 1000000, title: 'a catedral literária em busca do tempo perdido de marcel proust' },
+];
+
 export default function Dashboard() {
   const { profile, user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
@@ -130,9 +154,11 @@ export default function Dashboard() {
     const emptyLeadingSlots = Array.from({ length: firstDayOfWeek });
 
     const days: ActivityDay[] = [];
+    let totalWordsInMonth = 0;
     for (let day = 1; day <= daysInMonth; day++) {
       const active = day === 5 || day === 8 || day === 9 || day === 11 || day === 12 || day === 14 || day === 15 || day === 16 || day === 17 || day === 21 || day === 23 || day === 27 || day === 29 || day === 31;
       const wordCount = active ? 280 + ((day * 37) % 350) : 0;
+      if (active) totalWordsInMonth += wordCount;
       days.push({
         dayNum: String(day).padStart(2, '0'),
         dateStr: `${day} de ${currentMonth.toLocaleDateString('pt-BR', { month: 'short' })}`,
@@ -146,8 +172,22 @@ export default function Dashboard() {
       });
     }
 
-    return { emptyLeadingSlots, days };
+    return { emptyLeadingSlots, days, totalWordsInMonth };
   }, [currentMonth]);
+
+  // Total de Palavras Acumuladas & Marco Literário Equivalente Alcançado
+  const totalWordsAccumulated = 5420; // Produção total acumulada pelo aluno
+  const currentMilestone = useMemo(() => {
+    let milestone = WORD_MILESTONES[0];
+    for (const m of WORD_MILESTONES) {
+      if (totalWordsAccumulated >= m.minWords) {
+        milestone = m;
+      } else {
+        break;
+      }
+    }
+    return milestone;
+  }, [totalWordsAccumulated]);
 
   // Agenda Integrada (Café com letras, eventos admin, pessoais, lançamentos)
   const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([
@@ -350,17 +390,11 @@ export default function Dashboard() {
             <div className="lg:col-span-7 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5 flex flex-col justify-between">
               <div className="space-y-4">
                 
-                {/* Cabeçalho Sem Frase Superior, Apenas Título e Badge de Dias Ativos */}
+                {/* Título Limpo Sem Frase Superior e Sem Tag Lateral */}
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
                     histórico de escrita & atividade
                   </h2>
-
-                  {/* Badge de Dias Ativos Estilizado e Limpo */}
-                  <div className="flex items-center gap-1.5 bg-acentoTerracota/10 px-3.5 py-1 rounded-full border border-acentoTerracota/25 text-acentoTerracota text-xs font-bold lowercase shadow-sm">
-                    <Sparkles className="w-3.5 h-3.5 text-acentoTerracota" />
-                    <span>12 dias ativos</span>
-                  </div>
                 </div>
 
                 {/* Seleção do Mês Ativo (< Mês Ano >) e Aviso de Clique Mais Visível */}
@@ -436,10 +470,10 @@ export default function Dashboard() {
                           )}
                         </div>
 
-                        {/* Tooltip no Hover (Texto Maior, Palavras e Número em Muthazle) */}
-                        <div className="absolute bottom-11 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-tintaCarvao text-papelClaro text-xs font-medium lowercase rounded-xl opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity whitespace-nowrap z-30 shadow-md space-x-1">
-                          <span className="font-gesto text-sm sm:text-base text-acentoOliva font-normal">{day.words}</span>
-                          <span>palavras escritas</span>
+                        {/* Tooltip no Hover Melhora UI: Fundo Branco, Texto Azul, Número em Muthazle */}
+                        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-3.5 py-1.5 bg-white text-acentoAzul border border-papelKraft/80 text-xs sm:text-sm font-semibold lowercase rounded-2xl opacity-0 pointer-events-none group-hover/day:opacity-100 transition-all duration-200 whitespace-nowrap z-30 shadow-lg flex items-center gap-1.5">
+                          <span className="font-gesto text-base sm:text-lg text-acentoTerracota font-normal">{day.words}</span>
+                          <span className="text-acentoAzul font-bold">palavras escritas</span>
                         </div>
                       </button>
                     ))}
@@ -448,16 +482,60 @@ export default function Dashboard() {
 
               </div>
 
-              {/* Botões de Ação Compactos com Ícones Debaixo do Calendário */}
-              <div className="pt-3 border-t border-papelKraft/30 flex flex-wrap items-center justify-between gap-2">
-                <span className="text-xs text-tintaCarvao/60 lowercase">
-                  sequência ativa: <strong className="text-acentoAzul">12 dias</strong>
-                </span>
+              {/* SEÇÃO INFERIOR REORGANIZADA: Preenche o espaço antes em branco com Palavras Totais, Sequência Ativa, Chancela Literária e Botões */}
+              <div className="pt-4 border-t border-papelKraft/40 space-y-4">
+                
+                {/* Produção Escrita Acumulada & Dias Consecutivos lado a lado */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="bg-bgPlataforma/80 p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-acentoAzul/10 text-acentoAzul">
+                      <Feather className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">produção escrita total</span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="font-gesto text-2xl font-normal text-acentoAzul">
+                          {totalWordsAccumulated.toLocaleString('pt-BR')}
+                        </span>
+                        <span className="text-xs text-tintaCarvao/70 font-semibold lowercase">palavras escritas</span>
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="flex items-center gap-2">
+                  <div className="bg-bgPlataforma/80 p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-acentoTerracota/10 text-acentoTerracota">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">frequência sustentada</span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="font-gesto text-2xl font-normal text-acentoTerracota">
+                          12
+                        </span>
+                        <span className="text-xs text-tintaCarvao/70 font-semibold lowercase">dias de sequência ativa</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Chancela Poética / Equivalência Literária de Palavras Escritas */}
+                <div className="bg-gradient-to-r from-acentoAzul/5 via-papelClaro to-acentoOliva/15 p-3.5 sm:p-4 rounded-2xl border border-papelKraft/60 flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-acentoOliva/20 text-acentoAzul shrink-0">
+                    <BookMarked className="w-5 h-5" />
+                  </div>
+                  <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase leading-relaxed">
+                    você já escreveu a mesma quantidade de palavras que{' '}
+                    <strong className="text-acentoTerracota font-bold font-editorial text-sm sm:text-base">
+                      {currentMilestone.title}
+                    </strong>.
+                  </p>
+                </div>
+
+                {/* Botões de Ação Compactos */}
+                <div className="flex items-center justify-end gap-2 pt-1">
                   <Link
                     to="/exercises"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-semibold lowercase border border-acentoAzul/20 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-semibold lowercase border border-acentoAzul/20 shadow-sm"
                   >
                     <Book className="w-3.5 h-3.5" />
                     <span>meus cadernos</span>
@@ -465,12 +543,13 @@ export default function Dashboard() {
 
                   <Link
                     to="/exercises?new=true"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-xs font-semibold lowercase shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-xs font-semibold lowercase shadow-sm"
                   >
                     <Plus className="w-3.5 h-3.5 text-white" />
                     <span>novo texto</span>
                   </Link>
                 </div>
+
               </div>
 
             </div>
@@ -945,10 +1024,10 @@ export default function Dashboard() {
 
         </div>
 
-        {/* MODAL / POPOVER DE RELEER TEXTO DO DIA SELECIONADO (Exibe data, palavras com Muthazle, título e botão) */}
+        {/* MODAL / POPOVER COM LARGURA AMPLIADA (max-w-2xl) AO CLICAR EM UM DIA */}
         {selectedDayDetail && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tintaCarvao/60 backdrop-blur-sm animate-fadeIn">
-            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg relative space-y-4">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-2xl w-full shadow-kraft-lg relative space-y-5">
               <button
                 type="button"
                 onClick={() => setSelectedDayDetail(null)}
@@ -957,12 +1036,12 @@ export default function Dashboard() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <div className="text-xs font-bold text-acentoTerracota lowercase flex items-center gap-1.5">
                   <span>data: {selectedDayDetail.dateStr}</span>
                   <span>•</span>
                   <span>
-                    total de palavras escritas: <strong className="font-gesto text-lg font-normal text-acentoAzul">{selectedDayDetail.words}</strong> palavras escritas
+                    total de palavras escritas: <strong className="font-gesto text-xl font-normal text-acentoAzul">{selectedDayDetail.words}</strong> palavras escritas
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight pt-1">
@@ -971,7 +1050,7 @@ export default function Dashboard() {
               </div>
 
               {selectedDayDetail.excerpt ? (
-                <div className="p-4 rounded-2xl bg-bgPlataforma border border-papelKraft/40 space-y-2">
+                <div className="p-5 rounded-2xl bg-bgPlataforma border border-papelKraft/40 space-y-2">
                   <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase italic font-medium leading-relaxed">
                     “{selectedDayDetail.excerpt}”
                   </p>
@@ -995,7 +1074,7 @@ export default function Dashboard() {
                   <Link
                     to="/exercises"
                     onClick={() => setSelectedDayDetail(null)}
-                    className="btn-pill-primary px-5 py-2 text-xs font-semibold shadow-sm inline-flex items-center gap-1.5"
+                    className="btn-pill-primary px-6 py-2.5 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-1.5"
                   >
                     <span>reler caderno →</span>
                   </Link>
