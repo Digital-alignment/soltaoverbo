@@ -15,7 +15,7 @@ import {
   Heart,
   Play,
   Volume2,
-  Sparkles,
+  ChevronDown,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
