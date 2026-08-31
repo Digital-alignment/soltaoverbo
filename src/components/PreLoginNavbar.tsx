@@ -45,26 +45,43 @@ export default function PreLoginNavbar() {
       label: '21 dias de escrita',
       desc: 'desafio self-paced de 21 dias',
       icon: BookOpen,
-      price: 'R$ 77,00',
     },
     {
       to: '/programas/ciclo-de-aprofundamento',
       label: 'ciclo de aprofundamento',
       desc: 'mentoria ao vivo & comunidade',
       icon: Users,
-      price: 'R$ 597,00/ano',
     },
     {
       to: '/programas/cafe-com-letras',
       label: 'café com letras',
       desc: 'rodas temáticas de escrita',
       icon: Coffee,
-      price: 'por edição',
+    },
+    {
+      to: '/#experiencias',
+      label: 'contrate uma experiência',
+      desc: 'oficinas corporativas & eventos',
+      icon: Sparkles,
+      isHash: true,
     },
   ];
 
   const isActive = (path: string) => location.pathname === path;
   const isProgramsActive = location.pathname.startsWith('/programas') || location.pathname === '/programs';
+
+  const handleSubItemClick = (subItem: typeof productSubItems[0]) => {
+    setDropdownOpen(false);
+    setMobileMenuOpen(false);
+    if (subItem.isHash) {
+      const elem = document.getElementById('experiencias');
+      if (elem) {
+        elem.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = '/#experiencias';
+      }
+    }
+  };
 
   return (
     <>
@@ -126,7 +143,7 @@ export default function PreLoginNavbar() {
                 )}
               </Link>
 
-              {/* DROPDOWN MENU PARA "PROGRAMAS" */}
+              {/* DROPDOWN MENU PARA "PROGRAMAS" (SIN PRECIOS) */}
               <div
                 ref={dropdownRef}
                 className="relative"
@@ -154,9 +171,9 @@ export default function PreLoginNavbar() {
                   )}
                 </button>
 
-                {/* Sub-menu Dropdown Desplegable */}
+                {/* Sub-menu Dropdown Desplegable (Limpio Sin Valores) */}
                 {dropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-80 bg-papelClaro rounded-2xl p-3 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn z-50 space-y-1">
+                  <div className="absolute top-full left-0 mt-2 w-72 bg-papelClaro rounded-2xl p-3 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn z-50 space-y-1">
                     <div className="px-3 py-1.5 text-[11px] font-bold text-tintaCarvao/50 uppercase tracking-wider">
                       nossos programas de escrita
                     </div>
@@ -164,11 +181,30 @@ export default function PreLoginNavbar() {
                     {productSubItems.map((subItem) => {
                       const Icon = subItem.icon;
                       const active = location.pathname === subItem.to;
-                      return (
+                      return subItem.isHash ? (
+                        <a
+                          key={subItem.to}
+                          href={subItem.to}
+                          onClick={() => handleSubItemClick(subItem)}
+                          className="flex items-start gap-3 p-3 rounded-xl transition-all hover:bg-bgPlataforma border border-transparent"
+                        >
+                          <div className="w-9 h-9 rounded-lg bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Icon className="w-4 h-4 text-acentoAzul" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-bold text-sm text-acentoAzul lowercase block truncate">
+                              {subItem.label}
+                            </span>
+                            <p className="text-xs text-tintaCarvao/70 lowercase font-medium line-clamp-1 mt-0.5">
+                              {subItem.desc}
+                            </p>
+                          </div>
+                        </a>
+                      ) : (
                         <Link
                           key={subItem.to}
                           to={subItem.to}
-                          onClick={() => setDropdownOpen(false)}
+                          onClick={() => handleSubItemClick(subItem)}
                           className={`flex items-start gap-3 p-3 rounded-xl transition-all ${
                             active
                               ? 'bg-acentoAzul/10 border border-acentoAzul/20'
@@ -179,14 +215,9 @@ export default function PreLoginNavbar() {
                             <Icon className="w-4 h-4 text-acentoAzul" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-1">
-                              <span className="font-bold text-sm text-acentoAzul lowercase truncate">
-                                {subItem.label}
-                              </span>
-                              <span className="text-[10px] font-bold text-acentoTerracota lowercase bg-acentoTerracota/10 px-2 py-0.5 rounded-full flex-shrink-0">
-                                {subItem.price}
-                              </span>
-                            </div>
+                            <span className="font-bold text-sm text-acentoAzul lowercase block truncate">
+                              {subItem.label}
+                            </span>
                             <p className="text-xs text-tintaCarvao/70 lowercase font-medium line-clamp-1 mt-0.5">
                               {subItem.desc}
                             </p>
@@ -265,7 +296,7 @@ export default function PreLoginNavbar() {
         </div>
       </header>
 
-      {/* Menú Mobile Full-Page Modal */}
+      {/* Menú Mobile Full-Page Modal (UI de Sub-items Rediseñada) */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-bgPlataforma flex flex-col justify-between p-6 sm:p-8 overflow-y-auto animate-menuOpen">
           <div className="flex justify-between items-center pb-6 border-b border-papelKraft/40">
@@ -301,7 +332,7 @@ export default function PreLoginNavbar() {
             </button>
           </div>
 
-          <div className="py-8 space-y-6 my-auto">
+          <div className="py-6 space-y-5 my-auto">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
@@ -310,23 +341,55 @@ export default function PreLoginNavbar() {
               início
             </Link>
 
-            {/* Sub-menu de Productos en Mobile */}
-            <div className="space-y-3 pt-2 pb-2">
+            {/* Sub-menu de Productos Rediseñado en Mobile con Cards Bento */}
+            <div className="space-y-3 pt-1 pb-1">
               <span className="block text-2xl font-bold font-editorial text-acentoAzul lowercase">
                 programas
               </span>
 
-              <div className="pl-4 space-y-3 border-l-2 border-acentoTerracota/40">
-                {productSubItems.map((subItem) => (
-                  <Link
-                    key={subItem.to}
-                    to={subItem.to}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block text-lg font-medium text-tintaCarvao hover:text-acentoAzul lowercase"
-                  >
-                    {subItem.label}
-                  </Link>
-                ))}
+              <div className="grid grid-cols-1 gap-2.5 pl-2">
+                {productSubItems.map((subItem) => {
+                  const Icon = subItem.icon;
+                  return subItem.isHash ? (
+                    <a
+                      key={subItem.to}
+                      href={subItem.to}
+                      onClick={() => handleSubItemClick(subItem)}
+                      className="bg-papelClaro p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3.5 active:bg-papelKraft/20 transition-all shadow-sm"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-5 h-5 text-acentoAzul" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-base font-bold text-acentoAzul lowercase truncate">
+                          {subItem.label}
+                        </span>
+                        <p className="text-xs text-tintaCarvao/70 lowercase font-medium truncate">
+                          {subItem.desc}
+                        </p>
+                      </div>
+                    </a>
+                  ) : (
+                    <Link
+                      key={subItem.to}
+                      to={subItem.to}
+                      onClick={() => handleSubItemClick(subItem)}
+                      className="bg-papelClaro p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3.5 active:bg-papelKraft/20 transition-all shadow-sm"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-5 h-5 text-acentoAzul" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="block text-base font-bold text-acentoAzul lowercase truncate">
+                          {subItem.label}
+                        </span>
+                        <p className="text-xs text-tintaCarvao/70 lowercase font-medium truncate">
+                          {subItem.desc}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
