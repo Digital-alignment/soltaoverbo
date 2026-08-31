@@ -529,31 +529,76 @@ export default function WritingExercises() {
               isSidebarCollapsed ? 'lg:col-span-1' : 'lg:col-span-3'
             }`}
           >
-            <div className="bg-papelClaro rounded-3xl p-4 sm:p-5 border border-papelKraft/60 shadow-kraft space-y-4 relative">
+            <div className={`bg-papelClaro rounded-3xl border border-papelKraft/60 shadow-kraft relative transition-all duration-300 ${
+              isSidebarCollapsed ? 'p-2.5 sm:p-3 space-y-0' : 'p-4 sm:p-5 space-y-4'
+            }`}>
               
-              {/* Botão para Colapsar/Expandir o Menu Lateral */}
-              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-2">
-                {!isSidebarCollapsed && (
+              {/* HEADER EXPANDIDO OU BARRA RESPONSIVA COLAPSADA (Horizontal em Mobile, Vertical em Desktop) */}
+              {!isSidebarCollapsed ? (
+                <div className="flex items-center justify-between border-b border-papelKraft/30 pb-2">
                   <span className="text-xs font-bold text-acentoAzul lowercase">
                     estúdio de textos
                   </span>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                  className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul transition-colors border border-papelKraft/40 mx-auto lg:mx-0"
-                  title={isSidebarCollapsed ? 'expandir menu' : 'colapsar menu para maior espaço de escrita'}
-                >
-                  {isSidebarCollapsed ? (
-                    <PanelLeftOpen className="w-4 h-4" />
-                  ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsSidebarCollapsed(true)}
+                    className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul transition-colors border border-papelKraft/40"
+                    title="colapsar menu para maior espaço de escrita"
+                  >
                     <PanelLeftClose className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
+                  </button>
+                </div>
+              ) : (
+                /* BARRA COMPACTA COLAPSADA: Horizontal em telas mobile (<lg), Vertical em telas grandes (lg:) */
+                <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-center gap-2 lg:gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsSidebarCollapsed(false)}
+                    className="p-2 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul transition-colors border border-papelKraft/40"
+                    title="expandir estúdio de textos"
+                  >
+                    <PanelLeftOpen className="w-4 h-4" />
+                  </button>
+
+                  <div className="flex flex-row lg:flex-col items-center gap-2 lg:gap-3">
+                    <button
+                      onClick={() => {
+                        setIsSidebarCollapsed(false);
+                        setActiveTab('textos');
+                      }}
+                      className="p-2 rounded-2xl bg-white border border-papelKraft/50 text-acentoAzul hover:bg-acentoAzul hover:text-white transition-colors shadow-sm"
+                      title="ver todos os textos"
+                    >
+                      <FileText className="w-4.5 h-4.5" />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsSidebarCollapsed(false);
+                        setActiveTab('cadernos');
+                      }}
+                      className="p-2 rounded-2xl bg-white border border-papelKraft/50 text-acentoTerracota hover:bg-acentoTerracota hover:text-white transition-colors shadow-sm"
+                      title="ver cadernos temáticos"
+                    >
+                      <Book className="w-4.5 h-4.5" />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setIsSidebarCollapsed(false);
+                        setActiveTab('tags');
+                      }}
+                      className="p-2 rounded-2xl bg-white border border-papelKraft/50 text-acentoOliva hover:bg-acentoOliva hover:text-tintaCarvao transition-colors shadow-sm"
+                      title="ver etiquetas"
+                    >
+                      <Tag className="w-4.5 h-4.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* CONTEÚDO DO MENU LATERAL QUANDO EXPANDIDO */}
-              {!isSidebarCollapsed ? (
+              {!isSidebarCollapsed && (
                 <div className="space-y-4 animate-fadeIn">
                   {/* Abas de Organização: Textos | Cadernos | Tags */}
                   <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-2xl border border-papelKraft/50 text-xs font-semibold lowercase">
@@ -710,42 +755,6 @@ export default function WritingExercises() {
                       </div>
                     </div>
                   )}
-                </div>
-              ) : (
-                /* CONTEÚDO REDUZIDO DO MENU LATERAL QUANDO COLAPSADO */
-                <div className="flex flex-col items-center space-y-3 pt-2">
-                  <button
-                    onClick={() => {
-                      setIsSidebarCollapsed(false);
-                      setActiveTab('textos');
-                    }}
-                    className="p-2.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoAzul hover:bg-acentoAzul hover:text-white transition-colors shadow-sm"
-                    title="ver todos os textos"
-                  >
-                    <FileText className="w-5 h-5" />
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsSidebarCollapsed(false);
-                      setActiveTab('cadernos');
-                    }}
-                    className="p-2.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoTerracota hover:bg-acentoTerracota hover:text-white transition-colors shadow-sm"
-                    title="ver cadernos temáticos"
-                  >
-                    <Book className="w-5 h-5" />
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setIsSidebarCollapsed(false);
-                      setActiveTab('tags');
-                    }}
-                    className="p-2.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoOliva hover:bg-acentoOliva hover:text-tintaCarvao transition-colors shadow-sm"
-                    title="ver etiquetas"
-                  >
-                    <Tag className="w-5 h-5" />
-                  </button>
                 </div>
               )}
 
