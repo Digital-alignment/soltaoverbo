@@ -35,7 +35,7 @@ export default function ProtectedRoute({ children, requireRole }: ProtectedRoute
   return (
     <>
       <Navbar />
-      <div className="pb-20">{children}</div>
+      <div className="lg:pl-20 pb-24 lg:pb-10 min-h-[calc(100vh-80px)]">{children}</div>
       <BottomNav />
     </>
   );
