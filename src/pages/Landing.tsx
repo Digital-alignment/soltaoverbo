@@ -444,21 +444,12 @@ export default function Landing() {
           style={{ backgroundImage: "url('/brand-assets/textures/papel-semente.jpg')" }}
         />
 
-        {/* Elemento Gráfico de Colagem Retro Animal no Canto Inferior Esquerdo (Desktop UI Elegante) */}
-        <div className="hidden lg:block absolute -bottom-10 left-2 xl:left-8 z-0 pointer-events-none select-none opacity-90 transition-transform duration-700 hover:scale-105">
+        {/* Elemento Gráfico de Colagem Retro Animal anclado TOTALMENTE ao bordo esquerdo (left-0) no desktop e mobile */}
+        <div className="absolute bottom-0 left-0 z-0 pointer-events-none select-none opacity-85 sm:opacity-90 transition-transform duration-700 hover:scale-105">
           <img
             src="/brand-assets/elements/collages/retro-animal-collage-sticker-png-scrapbook-paper-clip-art-border-frame.png"
             alt="colagem retro animal scrapbook"
-            className="w-72 xl:w-80 h-auto object-contain drop-shadow-md"
-          />
-        </div>
-
-        {/* Em versão móvel: Fica sutilmente atrás dos cards sem poluir */}
-        <div className="block lg:hidden absolute -bottom-8 -left-8 z-0 pointer-events-none select-none opacity-20">
-          <img
-            src="/brand-assets/elements/collages/retro-animal-collage-sticker-png-scrapbook-paper-clip-art-border-frame.png"
-            alt="colagem retro animal scrapbook"
-            className="w-52 h-auto object-contain"
+            className="w-48 sm:w-64 md:w-80 lg:w-96 h-auto object-contain object-left-bottom drop-shadow-md"
           />
         </div>
 
@@ -472,8 +463,8 @@ export default function Landing() {
             </p>
           </div>
 
-          {/* Grid de Cards com Respiro no Desktop para destacar a Colagem */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:pl-16 xl:pl-20 relative z-10">
+          {/* Grid de Cards dos Pilares */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 relative z-10">
             {pillars.map((pillar, index) => (
               <div
                 key={index}
