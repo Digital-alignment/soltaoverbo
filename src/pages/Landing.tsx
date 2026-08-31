@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  Sparkles,
   CheckCircle2,
   Quote,
   Heart,
   Pencil,
+  BookOpen,
+  Users,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
@@ -161,7 +162,11 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
-              <Sparkles className="w-4 h-4 text-acentoTerracota" />
+              <img
+                src="/brand-assets/icons/icone_63.svg"
+                alt="icone"
+                className="w-4 h-4 object-contain"
+              />
               <span>nossos caminhos de escrita</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
@@ -316,7 +321,7 @@ export default function Landing() {
                       className="btn-pill-accent text-base px-7 py-3 rounded-full shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2"
                     >
                       <span>fazer parte do ciclo</span>
-                      <Sparkles className="w-4 h-4" />
+                      <Users className="w-4 h-4" />
                     </Link>
                   </div>
                 </div>
@@ -414,9 +419,8 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 4. PILARES DA ESCRITA CONSCIENTE (Bento Grid Compacto com Textura Kraft e Leitura Ótima en Mobile) */}
+      {/* 4. PILARES DA ESCRITA CONSCIENTE */}
       <section className="py-16 sm:py-24 bg-bgPlataforma relative overflow-hidden">
-        {/* Textura de papel semente/kraft de fondo sutil */}
         <div
           className="absolute inset-0 opacity-[0.05] bg-cover bg-center pointer-events-none mix-blend-multiply"
           style={{ backgroundImage: "url('/brand-assets/textures/papel-semente.jpg')" }}
@@ -500,16 +504,16 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* 6. SEÇÃO SOBRE AS CO-CRIADORAS (Bruna Riedel & Júlia Alvim) */}
+      {/* 6. SEÇÃO SOBRE AS CO-CRIADORAS */}
       <FoundersSection />
 
-      {/* 7. SEÇÃO B2B: CONTRATE UMA EXPERIÊNCIA */}
+      {/* 7. SEÇÃO B2B: CONTRATE UMA EXPERIÊNCIA (Com Carrossel Animado de Fotos) */}
       <ContrateExperienciaSection />
 
-      {/* 8. PERGUNTAS FREQUENTES (FAQ Accordion) */}
+      {/* 8. PERGUNTAS FREQUENTES */}
       <FaqAccordion />
 
-      {/* 9. PreLoginFooter Poético Interativo */}
+      {/* 9. PreLoginFooter Poético */}
       <PreLoginFooter />
     </div>
   );

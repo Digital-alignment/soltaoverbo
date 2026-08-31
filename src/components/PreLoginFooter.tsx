@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Instagram, MessageCircle, Mail, Sparkles } from 'lucide-react';
+import { Instagram, MessageCircle, Mail, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import ContactPopup from './ContactPopup';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -129,7 +129,7 @@ export default function PreLoginFooter() {
               </div>
             </div>
 
-            {/* Direita: CARD POLAROID SOLTA O VERBO (Último Elemento no Footer à Direita) */}
+            {/* Direita: CARD POLAROID SOLTA O VERBO */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <div className="relative bg-papelClaro text-tintaCarvao rounded-2xl p-4 sm:p-5 shadow-2xl border border-papelKraft/60 max-w-md w-full transform rotate-1 transition-transform duration-500 hover:rotate-0 hover:scale-[1.02] group select-none">
                 {/* Washi Tape Superior Esquerdo */}
@@ -165,7 +165,7 @@ export default function PreLoginFooter() {
                     solta o verbo.
                   </h4>
 
-                  {/* Cuadros de Color en el Pie de la Caja Azul (Sin el texto PALETA MESTRE) */}
+                  {/* Cuadros de Color en el Pie de la Caja Azul */}
                   <div className="pt-4 border-t border-white/20 flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       <span className="w-4 h-4 rounded bg-papelClaro block shadow-sm" />
@@ -176,7 +176,7 @@ export default function PreLoginFooter() {
                   </div>
                 </div>
 
-                {/* Área Inferior de Papel do Polaroid (Sin Carimbo, Link Limpio) */}
+                {/* Área Inferior de Papel do Polaroid */}
                 <div className="pt-4 px-1 space-y-2 relative">
                   <p className="font-gesto text-tintaCarvao text-lg sm:text-xl font-normal">
                     — anote no seu diário de bordo hoje
@@ -207,7 +207,7 @@ export default function PreLoginFooter() {
               className="btn-pill-accent flex-1 py-3.5 px-6 rounded-full text-center text-sm font-semibold flex items-center justify-center gap-2"
             >
               <span>fazer parte agora</span>
-              <Sparkles className="w-4 h-4" />
+              <Pencil className="w-4 h-4" />
             </Link>
             <Link
               to="/login"
