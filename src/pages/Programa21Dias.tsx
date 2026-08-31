@@ -103,6 +103,10 @@ const deploymentScreenshots = [
 
 const faqItems = [
   {
+    q: 'R$ 77 por um programa digital vale a pena?',
+    a: 'sim! por apenas R$ 77 você recebe 21 dias de prática guiada com áudios de escuta, espaço de escrita estruturado na plataforma, acervo e acesso imediato ao grupo de whatsapp "junto e misturado" para trocar experiências.',
+  },
+  {
     q: 'quanto tempo preciso dedicar por dia?',
     a: 'apenas 15 a 20 minutos diários! o programa foi desenhado para se encaixar com leveza na sua rotina, sem pesar como obrigação.',
   },
@@ -112,7 +116,7 @@ const faqItems = [
   },
   {
     q: 'preciso mostrar meus textos para outras pessoas?',
-    a: 'jamais! a escrita é sua e de mais ninguém. a nossa fogueira de partilha é um espaço seguro e totalmente opcional para quem sente o desejo de compartilhar.',
+    a: 'jamais! a escrita é sua e de mais ninguém. a nossa fogueira de partilha no grupo "junto e misturado" é um espaço seguro e totalmente opcional para quem sente o desejo de compartilhar.',
   },
   {
     q: 'como funciona a garantia de 7 dias?',
@@ -183,7 +187,7 @@ export default function Programa21Dias() {
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                um método simples e acolhedor de 21 dias para destravar sua voz, organizar o caos mental e criar um hábito diário de presença — sem pressão ou perfeccionismo.
+                sair de &quot;quero escrever um dia&quot; para &quot;eu escrevo, e isso já é meu&quot;. um método simples de 21 dias para destravar sua voz, criar um hábito sustentado e pertencer ao grupo &quot;junto e misturado&quot; — sem pressão por talento ou perfeição.
               </p>
 
               {/* Destaque de Preço & Garantia */}
@@ -212,11 +216,11 @@ export default function Programa21Dias() {
                 <div className="grid grid-cols-2 gap-2 text-xs text-tintaCarvao/80 font-medium lowercase">
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
-                    <span>acesso imediato</span>
+                    <span>acesso imediato ao programa</span>
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
-                    <span>15 min por dia</span>
+                    <span>grupo junto e misturado</span>
                   </span>
                 </div>
               </div>

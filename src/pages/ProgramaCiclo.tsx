@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  BookOpen,
+  Users,
   CheckCircle2,
   XCircle,
   Pencil,
@@ -11,24 +11,24 @@ import {
   Flame,
   FileText,
   Clock,
-  Quote,
   Heart,
   Play,
   Volume2,
   Video,
-  Users,
+  BookOpen,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   ZoomIn,
   X,
   Sparkles,
+  MessageCircle,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
 
-interface LiveStep {
+interface DynamicStep {
   step: string;
   time: string;
   title: string;
@@ -36,12 +36,12 @@ interface LiveStep {
   color: string;
 }
 
-const liveStructure: LiveStep[] = [
+const liveStructure: DynamicStep[] = [
   {
     step: '01',
     time: '15 minutos',
     title: 'abertura & ritual de presença',
-    description: 'acender a vela, desacelerar da correria do dia e preparar o corpo e a mente para acolher as palavras.',
+    description: 'centramento, escuta inicial e desaceleração do ritmo cotidiano para entrar no espaço poético.',
     color: 'bg-acentoAzul/10 text-acentoAzul border-acentoAzul/30',
   },
   {
@@ -80,8 +80,16 @@ const deploymentScreenshots = [
 
 const faqItems = [
   {
+    q: 'qual é o valor do investimento no ciclo de aprofundamento?',
+    a: 'o investimento no ciclo completo de 3 meses é R$ 597,00 no PIX (com ~12% de desconto à vista) ou 3x de R$ 225,67 sem juros no cartão (total de R$ 677,00). inclui encontros semanais, 21 dias de escrita grátis, acervo e os 2 grupos da comunidade.',
+  },
+  {
+    q: 'já faço parte da comunidade gratuita, por que assinar o ciclo agora?',
+    a: 'o ciclo é a forma de sustentar a comunidade viva e remunerar o trabalho semanal de facilitação de bruna e júlia. membros ativos anteriores contam com uma condição especial de fundadoras com benefícios dedicados.',
+  },
+  {
     q: 'quando acontecem os encontros ao vivo?',
-    a: 'os encontros acontecem quinzenalmente via zoom, geralmente às terças ou quintas-feiras no período da noite (19h30 às 21h). a agenda completa é enviada com antecedência.',
+    a: 'os encontros do ciclo acontecem quinzenalmente via zoom (1h30 de duração) mais o café com letras semanal (segundas às 8h). a agenda completa é enviada com antecedência.',
   },
   {
     q: 'e se eu não puder participar ao vivo de algum encontro?',
@@ -92,8 +100,8 @@ const faqItems = [
     a: 'de forma alguma! a leitura e a partilha na fogueira são 100% voluntárias. você pode participar apenas ouvindo, escrevendo e sentindo a energia do grupo.',
   },
   {
-    q: 'como funciona o cancelamento e a garantia?',
-    a: 'você conta com 7 dias de garantia incondicional. se dentro desse período você sentir que o ciclo não é para você, basta solicitar e devolvemos 100% do seu investimento.',
+    q: 'como funciona a garantia de 7 dias?',
+    a: 'você pode se inscrever, participar do primeiro encontro ao vivo e explorar toda a plataforma. se sentir que o ciclo não é para você neste momento, basta solicitar o reembolso integral em até 7 dias sem nenhuma complicação.',
   },
 ];
 
@@ -136,19 +144,15 @@ export default function ProgramaCiclo() {
       {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
-      {/* 2. HERO SECTION DE VENDAS DO CICLO (High Conversion Hero) */}
+      {/* 2. HERO SECTION DE VENDAS DO CICLO DE APROFUNDAMENTO */}
       <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Coluna Esquerda: Copy Persuasivo & Oferta */}
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
-                <img
-                  src="/brand-assets/icons/icone_63.svg"
-                  alt="chama viva"
-                  className="w-5 h-5 object-contain"
-                />
-                <span>mentoria ao vivo & comunidade viva</span>
+                <Users className="w-4 h-4 text-acentoTerracota" />
+                <span>mentoria ao vivo (3 meses) & comunidade viva</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
@@ -159,22 +163,22 @@ export default function ProgramaCiclo() {
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                encontros quinzenais ao vivo no zoom, mentorias com bruna riedel e júlia alvim, fogueira comunitária ativa e acervo completo de gravações para sustentar sua voz o ano todo.
+                3 meses de imersão contínua com encontros ao vivo, mentoria com bruna riedel e júlia alvim, 2 grupos de comunidade (&quot;junto e misturado&quot; + &quot;cá entre nós&quot;) e acesso total ao programa 21 dias de escrita.
               </p>
 
-              {/* Destaque de Preço & Garantia */}
+              {/* Destaque de Preço & Garantia (Alineado con Product Canvas 2026) */}
               <div className="p-5 bg-papelClaro rounded-2xl border border-papelKraft/50 shadow-sm max-w-xl space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-papelKraft/30">
                   <div>
                     <span className="text-[11px] font-bold text-tintaCarvao/60 uppercase tracking-wider block">
-                      investimento no ciclo
+                      investimento trimestral
                     </span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
-                        R$ 297,00
+                        R$ 597,00
                       </span>
                       <span className="text-xs sm:text-sm text-tintaCarvao/70 lowercase font-medium">
-                        à vista (ou 3x R$ 99,00)
+                        no PIX (ou 3x R$ 225,67 sem juros)
                       </span>
                     </div>
                   </div>
@@ -188,11 +192,11 @@ export default function ProgramaCiclo() {
                 <div className="grid grid-cols-2 gap-2 text-xs text-tintaCarvao/80 font-medium lowercase">
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
-                    <span>encontros ao vivo quinzenais</span>
+                    <span>21 dias de escrita 100% incluído</span>
                   </span>
                   <span className="flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
-                    <span>acervo completo gravado</span>
+                    <span>grupos junto e misturado + cá entre nós</span>
                   </span>
                 </div>
               </div>
@@ -203,7 +207,7 @@ export default function ProgramaCiclo() {
                   onClick={handleEnroll}
                   className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
                 >
-                  <span>garantir minha vaga no ciclo — R$ 297</span>
+                  <span>garantir minha vaga no ciclo — R$ 597 no PIX</span>
                   <Pencil className="w-5 h-5 text-white" />
                 </button>
 
@@ -223,7 +227,7 @@ export default function ProgramaCiclo() {
                 {/* Sticker Fita Washi */}
                 <div className="absolute -top-2 right-8 w-28 h-7 pointer-events-none z-20 opacity-90">
                   <img
-                    src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
+                    src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
                     alt="fita washi"
                     className="w-full h-full object-contain"
                   />
@@ -239,10 +243,10 @@ export default function ProgramaCiclo() {
 
                 <div className="space-y-2">
                   <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
-                    “no ciclo, a escrita deixa de ser um ato solitário para se tornar uma rede de escuta e afeto.”
+                    “a escrita deixa de ser um evento pontual e vira parte da sua rotina e identidade.”
                   </blockquote>
                   <p className="text-xs text-tintaCarvao/60 font-mono lowercase pt-2 border-t border-papelKraft/30">
-                    mentoria ao vivo // solta o verbo colectivo
+                    comunidade cá entre nós // solta o verbo colectivo
                   </p>
                 </div>
               </div>
@@ -251,7 +255,7 @@ export default function ProgramaCiclo() {
         </div>
       </section>
 
-      {/* 3. SEÇÃO VÍDEO DE APRESENTAÇÃO DO CICLO */}
+      {/* 3. SEÇÃO VÍDEO DE APRESENTAÇÃO DE YOUTUBE */}
       <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10">
@@ -260,17 +264,17 @@ export default function ProgramaCiclo() {
               <span>mensagem das facilitadoras</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              como funciona a mentoria no ciclo
+              assista à apresentação do ciclo de aprofundamento
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              bruna e júlia explicam a dinâmica dos encontros ao vivo, laboratórios e fogueira de partilha.
+              bruna riedel e júlia alvim explicam como funcionam os 3 meses de mentoria e comunidade viva.
             </p>
           </div>
 
           <div className="relative rounded-3xl bg-bgPlataforma p-3 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
             <div className="absolute -top-2 left-8 sm:left-12 w-28 sm:w-36 h-7 sm:h-9 pointer-events-none z-30 opacity-90">
               <img
-                src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
+                src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
                 alt="fita washi"
                 className="w-full h-full object-contain"
               />
@@ -294,7 +298,7 @@ export default function ProgramaCiclo() {
                       <Play className="w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 fill-white translate-x-0.5" />
                     </div>
                     <span className="bg-papelClaro/95 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-base shadow-lg lowercase border border-papelKraft/50">
-                      clique para assistir à apresentação (3 min)
+                      clique para assistir ao vídeo (3 min)
                     </span>
                   </div>
                 </div>
@@ -343,11 +347,11 @@ export default function ProgramaCiclo() {
                   encontros ao vivo no zoom
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  mentorias quinzenais com exercícios guiados em tempo real, partilhas e orientações de bruna e júlia.
+                  mentorias quinzenais com exercícios guiados em tempo real, partilhas e acesso livre ao café com letras.
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>01 // mentoria ao vivo</span>
+                <span>01 // mentoria + café com letras</span>
               </div>
             </div>
 
@@ -358,14 +362,14 @@ export default function ProgramaCiclo() {
                   <Flame className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  fogueira comunitária viva
+                  grupos &quot;junto e misturado&quot; + &quot;cá entre nós&quot;
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  espaço exclusivo e acolhedor para publicar seus textos, ler colegas e receber retorno afetivo.
+                  pertencimento pleno a dois espaços de troca: a comunidade geral e o grupo exclusivo de membros do ciclo.
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>02 // comunidade 365 dias</span>
+                <span>02 // 2 grupos de whatsapp</span>
               </div>
             </div>
 
@@ -376,14 +380,14 @@ export default function ProgramaCiclo() {
                   <BookOpen className="w-6 h-6 text-acentoAzul" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  acervo completo de aulas
+                  21 dias de escrita 100% grátis
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  acesso ilimitado às gravações de todas as mentorias anteriores e materiais de estudo.
+                  acesso integral e ilimitado a todo o programa autoguiado e acervo completo de gravações e áudios.
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>03 // biblioteca digital</span>
+                <span>03 // 21 dias + acervo completo</span>
               </div>
             </div>
 
@@ -451,7 +455,7 @@ export default function ProgramaCiclo() {
 
                 <div className="pt-3 border-t border-papelKraft/30 flex items-center gap-2 text-xs font-bold text-acentoAzul/70">
                   <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
-                  <span>etapa 0{idx + 1} da mentoria</span>
+                  <span>etapa 0{idx + 1} do encontro</span>
                 </div>
               </div>
             ))}
@@ -467,7 +471,7 @@ export default function ProgramaCiclo() {
               o ciclo de aprofundamento é para você?
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              transparência e clareza sobre o perfil do grupo.
+              transparência sobre o compromisso com a escrita e a comunidade.
             </p>
           </div>
 
@@ -482,19 +486,19 @@ export default function ProgramaCiclo() {
               <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>deseja praticar a escrita acompanhada ao vivo de forma contínua</span>
+                  <span>já fez os 21 dias de escrita (ou sente afinidade) e busca constância de longo prazo</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>busca pertencer a uma comunidade viva sem algoritmos ou julgamentos</span>
+                  <span>deseja encontros ao vivo quinzenais com condução próxima e mentoria</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>quer aprofundar sua voz autoral e aprender com os feedbacks das mentores</span>
+                  <span>quer pertencer ativamente aos dois grupos da comunidade (&quot;junto e misturado&quot; + &quot;cá entre nós&quot;)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>valoriza trocas afetivas e a presença em grupo</span>
+                  <span>busca transformar a escrita de evento pontual em um hábito sustentado de vida</span>
                 </li>
               </ul>
             </div>
@@ -509,15 +513,15 @@ export default function ProgramaCiclo() {
               <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
                 <li className="flex items-start gap-3">
                   <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>procura apenas um curso gravado passivo sem qualquer interação humana</span>
+                  <span>busca um consumo rápido e passageiro de conteúdo sem interesse em constância</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>busca técnicas rígidas de redação comercial ou copywriting publicitário</span>
+                  <span>não deseja participar de trocas comunitárias ou ouvir outras pessoas</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>não deseja se conectar com o sentir ou com o processo criativo autoral</span>
+                  <span>busca formação universitária em teoria literária estrita ou acadêmica</span>
                 </li>
               </ul>
             </div>
@@ -528,7 +532,7 @@ export default function ProgramaCiclo() {
       {/* 7. FACILITADORAS DO PROGRAMA */}
       <FoundersSection />
 
-      {/* 8. CARROSSEL DE SCREENSHOTS REAIS DE ALUNAS DO CICLO */}
+      {/* 8. CARROSSEL DE SCREENSHOTS REAIS DE ALUNAS */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
@@ -538,13 +542,13 @@ export default function ProgramaCiclo() {
                 alt="icone"
                 className="w-5 h-5 object-contain"
               />
-              <span>relatos & trocas reais do ciclo</span>
+              <span>relatos & trocas reais</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              vozes e prints das nossas alunas
+              vozes da nossa fogueira comunitária
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              depoimentos espontâneos das mentorias ao vivo e trocas na fogueira comunitária.
+              mensagens reais enviadas pelas alunas no nosso grupo exclusivo.
             </p>
           </div>
 
@@ -685,20 +689,20 @@ export default function ProgramaCiclo() {
             </h2>
 
             <p className="text-papelClaro/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
-              garanta sua vaga no ciclo de aprofundamento e tenha acesso aos encontros ao vivo, fogueira diária e acervo de gravações.
+              garanta sua vaga no ciclo de aprofundamento e tenha acesso aos encontros ao vivo, grupos de troca e acervo completo de gravações.
             </p>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
               <span className="text-xs font-bold text-papelClaro/70 uppercase tracking-wider block">
-                investimento no ciclo completo
+                investimento no ciclo completo (3 meses)
               </span>
 
               <div className="flex justify-center items-baseline gap-2">
                 <span className="text-4xl sm:text-5xl font-bold font-editorial text-white">
-                  R$ 297,00
+                  R$ 597,00
                 </span>
                 <span className="text-sm text-papelClaro/80 lowercase">
-                  à vista (ou 3x R$ 99,00)
+                  no PIX (ou 3x R$ 225,67 sem juros)
                 </span>
               </div>
 
@@ -713,7 +717,7 @@ export default function ProgramaCiclo() {
                 onClick={handleEnroll}
                 className="btn-pill-accent text-lg px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3 w-full sm:w-auto lowercase cursor-pointer"
               >
-                <span>sim! quero garantir minha vaga no ciclo</span>
+                <span>sim! quero garantir minha vaga por R$ 597 no PIX</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
