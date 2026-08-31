@@ -207,7 +207,7 @@ export default function Dashboard() {
     return milestone;
   }, [totalWordsAccumulated]);
 
-  // Agenda Integrada com Estrutura Módulo-A-Módulo (Top, Middle, Bottom)
+  // Agenda Integrada com Estrutura Homogênea Compacta (Imagens 2 & 4)
   const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([
     {
       id: '1',
@@ -594,18 +594,29 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (NOVO ESTRUTURADO EM 3 SEÇÕES: TOP COUNTDOWN, MIDDLE DATE & CONTENT, BOTTOM MODALITY & CTAS) */}
+            {/* 1B: Agenda Integrada (COMPACTA, HOMOGÊNEA, ÍCONE EXPANDER NO HEADER TOP - IMAGEM 4) */}
             <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4">
               <div className="space-y-4">
                 
-                {/* Header Limpo com Layout de Abas 100% Visíveis Sem Scrollbar */}
+                {/* Header com Título + Ícone Expander (como Imagem 4) e Abas de Filtro */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
-                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                    agenda & encontros
-                  </h2>
+                  <div className="flex items-center justify-between sm:justify-start gap-2.5 w-full sm:w-auto">
+                    <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                      agenda & encontros
+                    </h2>
+                    {/* Botão Ícone Expander no Topo do Card (Imagem 4) */}
+                    <button
+                      type="button"
+                      onClick={() => setIsFullAgendaOpen(true)}
+                      className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul transition-colors border border-papelKraft/40 shadow-sm"
+                      title="expandir agenda completa"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                    </button>
+                  </div>
 
                   {/* Abas de Filtro 100% Visíveis Sem Scrollbar */}
-                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-semibold lowercase shrink-0">
+                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-semibold lowercase shrink-0 self-start sm:self-auto">
                     <button
                       type="button"
                       onClick={() => setAgendaTab('todos')}
@@ -636,40 +647,38 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* LISTA DE CARDS DE EVENTO COM ESTRUTURA MÓDULO-A-MÓDULO (TOP, MIDDLE, BOTTOM) */}
-                <div className="space-y-4">
+                {/* CARDS DE EVENTOS COM FUNDO HOMOGÊNEO COMPACTO (Único fundo separado é a Data Terracota) */}
+                <div className="space-y-3">
                   {filteredEvents.slice(0, 3).map((ev) => (
                     <div
                       key={ev.id}
-                      className={`rounded-3xl border transition-all duration-300 shadow-sm overflow-hidden flex flex-col justify-between ${
+                      className={`p-4 rounded-3xl border transition-all duration-300 shadow-sm space-y-3 bg-white ${
                         ev.isExclusiveAdmin
-                          ? 'border-acentoTerracota/50 bg-white'
-                          : 'border-papelKraft/60 bg-white hover:border-acentoAzul'
+                          ? 'border-acentoTerracota/40'
+                          : 'border-papelKraft/60 hover:border-acentoAzul'
                       }`}
                     >
-                      {/* SEÇÃO 1 (TOP): CONTAGEM REGRESSIVA (ESQUERDA) + ÍCONE DO TIPO (DIREITA) */}
-                      <div className="bg-acentoAzul text-papelClaro px-4 py-2.5 flex items-center justify-between">
-                        {/* Esquerda: Animação de Dot e Conta Regressiva */}
+                      {/* Top Row: Countdown (Left) + Type Icon (Right) */}
+                      <div className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
-                          <span className="text-xs font-bold lowercase font-mono tracking-wide text-acentoOliva">
+                          <span className="font-mono font-bold text-acentoTerracota lowercase">
                             ao vivo em {ev.countdownStr || countdownStr}
                           </span>
                         </div>
 
-                        {/* Direita: Ícone do Tipo do Evento */}
                         <div className="flex items-center gap-1.5" title={ev.categoryLabel}>
-                          {ev.category === 'cafe' && <Coffee className="w-4 h-4 text-acentoOliva" />}
-                          {ev.category === 'admin' && <Crown className="w-4 h-4 text-acentoTerracota" />}
+                          {ev.category === 'cafe' && <Coffee className="w-4 h-4 text-acentoAzul" />}
+                          {ev.category === 'admin' && <Crown className="w-4.5 h-4.5 text-acentoTerracota" />}
                           {ev.category === 'launch' && <Rocket className="w-4 h-4 text-acentoOliva" />}
-                          {ev.category === 'personal' && <Feather className="w-4 h-4 text-papelClaro/70" />}
+                          {ev.category === 'personal' && <Feather className="w-4 h-4 text-tintaCarvao/60" />}
                         </div>
                       </div>
 
-                      {/* SEÇÃO 2 (MIDDLE): ESQUERDA = DATA (NÚMERO GRANDE MUTHAZLE + MÊS), DIREITA = TÍTULO E DESCRIÇÃO */}
-                      <div className="p-4 flex items-center gap-4 bg-papelClaro/70">
-                        {/* Esquerda: Módulo de Data Em Bloco Sólido */}
-                        <div className="bg-acentoTerracota text-white rounded-2xl px-4 py-3 text-center shrink-0 min-w-[76px] shadow-sm">
+                      {/* Middle Row: Left = Date Tile (ÚNICO FUNDO SEPARADO TERRACOTA), Right = Title & Description */}
+                      <div className="flex items-center gap-3.5">
+                        {/* Bloco de Data Sólido Terracota */}
+                        <div className="bg-acentoTerracota text-white rounded-2xl px-3.5 py-2.5 text-center shrink-0 min-w-[70px] shadow-sm">
                           <span className="font-gesto text-3xl font-normal block leading-none">
                             {String(ev.dayOfMonth).padStart(2, '0')}
                           </span>
@@ -678,31 +687,29 @@ export default function Dashboard() {
                           </span>
                         </div>
 
-                        {/* Direita: Título & Descrição */}
-                        <div className="space-y-1 flex-1">
+                        {/* Conteúdo de Título & Descrição */}
+                        <div className="space-y-0.5 flex-1 min-w-0">
                           <h3 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase leading-snug">
                             {ev.title}
                           </h3>
-                          <p className="text-xs text-tintaCarvao/80 lowercase leading-relaxed line-clamp-2">
+                          <p className="text-xs text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed font-medium">
                             {ev.description}
                           </p>
                         </div>
                       </div>
 
-                      {/* SEÇÃO 3 (BOTTOM): ESQUERDA = MODALIDADE (ONLINE/ETC), DIREITA = BOTÃO GOOGLE CAL + ENTRAR */}
-                      <div className="px-4 py-3 bg-bgPlataforma/80 border-t border-papelKraft/40 flex items-center justify-between">
-                        {/* Esquerda: Tipo/Modalidade do Evento */}
-                        <span className="px-3 py-1 rounded-full bg-papelKraft/40 text-tintaCarvao text-[10px] font-bold lowercase">
+                      {/* Bottom Row: Left = Modality, Right = Calendar Export + Entrar CTA */}
+                      <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs">
+                        <span className="text-tintaCarvao/70 font-mono font-medium lowercase">
                           {ev.modality}
                         </span>
 
-                        {/* Direita: Exportar Google Cal + Botão Entrar */}
                         <div className="flex items-center gap-2">
                           <a
                             href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-xl bg-white hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/50 transition-colors shadow-sm"
+                            className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/40 transition-colors shadow-sm"
                             title="adicionar ao google calendar"
                           >
                             <CalendarPlus className="w-4 h-4" />
@@ -720,7 +727,7 @@ export default function Dashboard() {
                   ))}
                 </div>
 
-                {/* Botão de Expandir Agenda Completa em Modal Pop-up Tela Cheia */}
+                {/* Botão de Expandir Agenda Completa no Rodapé */}
                 <button
                   type="button"
                   onClick={() => setIsFullAgendaOpen(true)}
@@ -1065,7 +1072,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* MODAL POP-UP AGENDA COMPLETA COM ESTRUTURA MÓDULO-A-MÓDULO E VISTA CALENDÁRIO */}
+        {/* MODAL POP-UP AGENDA COMPLETA COM ESTRUTURA HOMOGÊNEA E VISTA CALENDÁRIO */}
         {isFullAgendaOpen && (
           <div className="fixed inset-0 z-40 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 lg:pl-24 pb-20 lg:pb-6 animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-4xl w-full max-h-[85vh] overflow-y-auto shadow-kraft-lg relative space-y-5">
@@ -1113,7 +1120,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* VISTA 1: LISTA DE ENCONTROS COM NOVO LAYOUT MÓDULO-A-MÓDULO */}
+              {/* VISTA 1: LISTA DE ENCONTROS COM DESIGN HOMOGÊNEO */}
               {agendaModalView === 'list' && (
                 <div className="space-y-4">
                   {/* Abas de Filtro da Agenda sem Scrollbar */}
@@ -1151,53 +1158,53 @@ export default function Dashboard() {
                     {filteredEvents.map((ev) => (
                       <div
                         key={ev.id}
-                        className={`rounded-3xl border transition-all duration-300 shadow-sm overflow-hidden flex flex-col justify-between ${
+                        className={`p-4 rounded-3xl border transition-all duration-300 shadow-sm space-y-3 bg-white ${
                           ev.isExclusiveAdmin
-                            ? 'border-acentoTerracota/50 bg-white'
-                            : 'border-papelKraft/60 bg-white hover:border-acentoAzul'
+                            ? 'border-acentoTerracota/40'
+                            : 'border-papelKraft/60 hover:border-acentoAzul'
                         }`}
                       >
-                        {/* SEÇÃO 1 (TOP): CONTAGEM REGRESSIVA (ESQUERDA) + ÍCONE DO TIPO (DIREITA) */}
-                        <div className="bg-acentoAzul text-papelClaro px-5 py-3 flex items-center justify-between">
+                        {/* Top Row: Countdown (Left) + Type Icon (Right) */}
+                        <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2">
                             <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
-                            <span className="text-xs sm:text-sm font-bold lowercase font-mono tracking-wide text-acentoOliva">
+                            <span className="font-mono font-bold text-acentoTerracota lowercase">
                               ao vivo em {ev.countdownStr || countdownStr}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2" title={ev.categoryLabel}>
-                            {ev.category === 'cafe' && <Coffee className="w-5 h-5 text-acentoOliva" />}
-                            {ev.category === 'admin' && <Crown className="w-5 h-5 text-acentoTerracota" />}
-                            {ev.category === 'launch' && <Rocket className="w-5 h-5 text-acentoOliva" />}
-                            {ev.category === 'personal' && <Feather className="w-5 h-5 text-papelClaro/70" />}
+                          <div className="flex items-center gap-1.5" title={ev.categoryLabel}>
+                            {ev.category === 'cafe' && <Coffee className="w-4.5 h-4.5 text-acentoAzul" />}
+                            {ev.category === 'admin' && <Crown className="w-4.5 h-4.5 text-acentoTerracota" />}
+                            {ev.category === 'launch' && <Rocket className="w-4.5 h-4.5 text-acentoOliva" />}
+                            {ev.category === 'personal' && <Feather className="w-4.5 h-4.5 text-tintaCarvao/60" />}
                           </div>
                         </div>
 
-                        {/* SEÇÃO 2 (MIDDLE): ESQUERDA = DATA (NÚMERO GRANDE MUTHAZLE + MÊS), DIREITA = TÍTULO E DESCRIÇÃO */}
-                        <div className="p-5 flex items-center gap-5 bg-papelClaro/70">
-                          <div className="bg-acentoTerracota text-white rounded-2xl px-5 py-3 text-center shrink-0 min-w-[85px] shadow-sm">
-                            <span className="font-gesto text-4xl font-normal block leading-none">
+                        {/* Middle Row: Left = Date Tile, Right = Title & Description */}
+                        <div className="flex items-center gap-4">
+                          <div className="bg-acentoTerracota text-white rounded-2xl px-4 py-3 text-center shrink-0 min-w-[76px] shadow-sm">
+                            <span className="font-gesto text-3.5xl font-normal block leading-none">
                               {String(ev.dayOfMonth).padStart(2, '0')}
                             </span>
-                            <span className="text-xs font-mono font-bold lowercase tracking-wider block mt-1">
+                            <span className="text-[10px] font-mono font-bold lowercase tracking-wider block mt-1">
                               {ev.monthName}
                             </span>
                           </div>
 
-                          <div className="space-y-1 flex-1">
-                            <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase leading-snug">
+                          <div className="space-y-0.5 flex-1 min-w-0">
+                            <h4 className="text-base font-bold font-editorial text-acentoAzul lowercase leading-snug">
                               {ev.title}
                             </h4>
-                            <p className="text-xs sm:text-sm text-tintaCarvao/80 lowercase leading-relaxed">
+                            <p className="text-xs text-tintaCarvao/80 lowercase leading-relaxed font-medium">
                               {ev.description}
                             </p>
                           </div>
                         </div>
 
-                        {/* SEÇÃO 3 (BOTTOM): ESQUERDA = MODALIDADE (ONLINE/ETC), DIREITA = BOTÃO GOOGLE CAL + ENTRAR */}
-                        <div className="px-5 py-3.5 bg-bgPlataforma/80 border-t border-papelKraft/40 flex items-center justify-between">
-                          <span className="px-3.5 py-1 rounded-full bg-papelKraft/40 text-tintaCarvao text-xs font-bold lowercase">
+                        {/* Bottom Row: Left = Modality, Right = Calendar Export + Entrar CTA */}
+                        <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs">
+                          <span className="text-tintaCarvao/70 font-mono font-medium lowercase">
                             {ev.modality}
                           </span>
 
@@ -1206,7 +1213,7 @@ export default function Dashboard() {
                               href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-2 rounded-xl bg-white hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/50 transition-colors shadow-sm"
+                              className="p-2 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/40 transition-colors shadow-sm"
                               title="adicionar ao google calendar"
                             >
                               <CalendarPlus className="w-4 h-4" />
