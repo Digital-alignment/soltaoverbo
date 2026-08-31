@@ -608,27 +608,32 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (BORDAS ESTÁTICAS SEM EXPANSÃO DE GROSSOR NO HOVER, BOTÃO DE EXPANDIR REFINADO) */}
-            <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4">
+            {/* 1B: Agenda Integrada (BOTÃO EXPANDER APENAS ÍCONE NO CANTO SUPERIOR DIREITO COM TOOLTIP 'ver agenda completa') */}
+            <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 relative">
+              
+              {/* BOTÃO EXPANDER: APENAS ÍCONE NO CANTO SUPERIOR DIREITO SOBRE TODOS OS ELEMENTOS + TOOLTIP NO HOVER */}
+              <div className="absolute top-5 right-5 z-20 group/expander">
+                <button
+                  type="button"
+                  onClick={() => setIsFullAgendaOpen(true)}
+                  className="p-2 rounded-xl bg-bgPlataforma/80 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all border border-papelKraft/50 shadow-sm flex items-center justify-center"
+                  aria-label="ver agenda completa"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+                {/* Tooltip no Hover */}
+                <div className="absolute top-10 right-0 px-3 py-1.5 bg-white text-acentoAzul text-xs font-bold lowercase rounded-xl opacity-0 pointer-events-none group-hover/expander:opacity-100 transition-all duration-200 whitespace-nowrap shadow-lg border border-papelKraft/80 z-30">
+                  ver agenda completa
+                </div>
+              </div>
+
               <div className="space-y-4">
                 
-                {/* Header com Título + Botão de Expansão Refinado (Pílula Elegante) e Abas de Filtro */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
-                  <div className="flex items-center justify-between sm:justify-start gap-2.5 w-full sm:w-auto">
-                    <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                      agenda & encontros
-                    </h2>
-                    {/* Botão Ícone Expander Refinado em Pílula */}
-                    <button
-                      type="button"
-                      onClick={() => setIsFullAgendaOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold lowercase border border-acentoAzul/20 shadow-sm"
-                      title="expandir agenda completa"
-                    >
-                      <Maximize2 className="w-3.5 h-3.5" />
-                      <span>ver tudo ({agendaEvents.length})</span>
-                    </button>
-                  </div>
+                {/* Header Limpo com Título e Abas de Filtro */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3 pr-12">
+                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                    agenda & encontros
+                  </h2>
 
                   {/* Abas de Filtro 100% Visíveis Sem Scrollbar */}
                   <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-semibold lowercase shrink-0 self-start sm:self-auto">
@@ -1354,7 +1359,7 @@ export default function Dashboard() {
 
               {selectedDayDetail.excerpt ? (
                 <div className="p-5 rounded-2xl bg-bgPlataforma border border-papelKraft/40 space-y-2">
-                  <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase italic font-medium leading-relaxed">
+                  <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase italic font-medium relaxed">
                     “{selectedDayDetail.excerpt}”
                   </p>
                 </div>
