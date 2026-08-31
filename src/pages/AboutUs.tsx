@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Users, Pencil, ArrowRight, CheckCircle2, MessageCircle, BookOpen, Compass } from 'lucide-react';
+import { Heart, Users, Pencil, ArrowRight, CheckCircle2, BookOpen, Compass } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
-import { BRAND_ASSETS } from '../config/brandAssets';
 
 interface EventPhoto {
   image: string;
@@ -84,9 +83,9 @@ export default function AboutUs() {
       <PreLoginNavbar />
 
       {/* 2. HERO SECTION SOBRE NÓS */}
-      <section className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 overflow-hidden">
+      <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             {/* Coluna Esquerda: Texto de Manifesto */}
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
@@ -110,7 +109,7 @@ export default function AboutUs() {
                 a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a nossa jornada. um convite para desacelerar, cultivar presença e dar forma ao que vive dentro.
               </p>
 
-              <div className="pt-4 flex flex-wrap items-center gap-4">
+              <div className="pt-2 flex flex-wrap items-center gap-4">
                 <a
                   href="#criadoras"
                   className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5"
@@ -131,7 +130,7 @@ export default function AboutUs() {
 
             {/* Coluna Direita: Card Scrapbook Hero */}
             <div className="lg:col-span-5 relative">
-              <div className="relative rounded-3xl bg-papelClaro p-6 sm:p-8 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group">
+              <div className="relative rounded-3xl bg-papelClaro p-6 sm:p-7 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group">
                 {/* Sticker Fita Washi */}
                 <div className="absolute -top-2 right-8 w-28 h-7 pointer-events-none z-20 opacity-90">
                   <img
@@ -141,7 +140,7 @@ export default function AboutUs() {
                   />
                 </div>
 
-                <div className="w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-6">
+                <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
                   <img
                     src="/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg"
                     alt="solta o verbo vivencia"
@@ -149,7 +148,7 @@ export default function AboutUs() {
                   />
                 </div>
 
-                <blockquote className="font-editorial text-2xl text-acentoAzul leading-snug font-bold lowercase">
+                <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
                   “escrever é um ato de coragem para dizer ao mundo: eu existo e minha história tem valor.”
                 </blockquote>
               </div>
@@ -158,10 +157,10 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* 3. A ARTE DE VIVER MELHOR & NOSSOS PILARES */}
-      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+      {/* 3. A ARTE DE VIVER MELHOR & NOSSOS PILARES (Versão Compacta & Elegante) */}
+      <section className="py-16 sm:py-20 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
@@ -170,7 +169,7 @@ export default function AboutUs() {
               />
               <span>a arte de viver melhor</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
               o que nos move todos os dias
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
@@ -178,27 +177,33 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {pillars.map(({ icon: Icon, title, description }, idx) => (
               <div
                 key={idx}
-                className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md group flex flex-col justify-between"
+                className="bg-bgPlataforma/70 rounded-2xl p-5 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md group flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
-                    <Icon className="w-6 h-6" />
+                  <div className="flex items-center justify-between gap-2 mb-3.5">
+                    <div className="w-10 h-10 rounded-xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="font-editorial text-sm font-bold text-tintaCarvao/40">
+                      0{idx + 1}
+                    </span>
                   </div>
-                  <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+
+                  <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
                     {title}
                   </h3>
-                  <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  <p className="text-tintaCarvao/80 text-xs sm:text-sm leading-relaxed lowercase font-medium">
                     {description}
                   </p>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-papelKraft/30 flex items-center justify-between text-xs font-bold text-acentoAzul opacity-60">
-                  <span>0{idx + 1} // pilar</span>
-                  <span className="w-2 h-2 rounded-full bg-acentoOliva" />
+                <div className="pt-3 mt-4 border-t border-papelKraft/30 flex items-center justify-between text-[11px] font-bold text-acentoAzul/70">
+                  <span>pilar 0{idx + 1}</span>
+                  <span className="w-2 h-2 rounded-full bg-acentoOliva shadow-sm" />
                 </div>
               </div>
             ))}
@@ -212,9 +217,9 @@ export default function AboutUs() {
       </div>
 
       {/* 5. GALERIA DE ENCONTROS & VIVÊNCIAS (Scrapbook Grid) */}
-      <section id="galeria" className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
+      <section id="galeria" className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
               <img
                 src="/brand-assets/icons/icone_63.svg"
@@ -231,7 +236,7 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {eventGallery.map((photo, idx) => (
               <div
                 key={idx}
@@ -247,7 +252,7 @@ export default function AboutUs() {
                   />
                 </div>
 
-                <div className="w-full h-60 rounded-2xl overflow-hidden border border-papelKraft/30 relative mb-4">
+                <div className="w-full h-56 rounded-2xl overflow-hidden border border-papelKraft/30 relative mb-4">
                   <img
                     src={photo.image}
                     alt={photo.title}
