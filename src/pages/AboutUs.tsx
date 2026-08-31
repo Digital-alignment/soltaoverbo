@@ -1,398 +1,366 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Users, Pencil, Sparkles, ArrowDown, Edit, UserCheck, Shield, MessageCircle } from 'lucide-react';
+import { Heart, Users, Pencil, ArrowRight, CheckCircle2, MessageCircle, BookOpen, Compass } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
-import WavyLine from '../components/WavyLine';
-import { useState, useEffect } from 'react';
+import FoundersSection from '../components/FoundersSection';
+import { BRAND_ASSETS } from '../config/brandAssets';
+
+interface EventPhoto {
+  image: string;
+  title: string;
+  subtitle: string;
+  washiTape: string;
+}
+
+const eventGallery: EventPhoto[] = [
+  {
+    image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+    title: 'oficinas presenciais',
+    subtitle: 'vivências de escrita consciente & integração',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
+  },
+  {
+    image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    title: 'rodas de partilha',
+    subtitle: 'cadernos abertos, diálogos profundos e escuta',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
+  },
+  {
+    image: '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg',
+    title: 'experiências sob medida',
+    subtitle: 'encontros para retiros, festivais e coletivos',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png',
+  },
+  {
+    image: '/brand-assets/gallery/events/_MG_0015.jpg',
+    title: 'curadoria de ambiente',
+    subtitle: 'espaço seguro para acolher histórias humanas',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
+  },
+  {
+    image: '/brand-assets/gallery/events/_MG_9849.jpg',
+    title: 'conexões autênticas',
+    subtitle: 'transformando a rotina através da poesia',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
+  },
+  {
+    image: '/brand-assets/gallery/events/_MG_9991.jpg',
+    title: 'rituais de presença',
+    subtitle: 'reescrevendo narrativas em comunidade',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png',
+  },
+];
 
 export default function AboutUs() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<EventPhoto | null>(null);
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  const scrollToNextSection = () => {
-    const element = document.getElementById('arte-section');
-    element?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const pillars = [
+    {
+      icon: Heart,
+      title: 'encontros reais',
+      description: 'onde cada pessoa pode chegar como está. conversas que abrem espaço para o que realmente importa, sem máscaras ou julgamento.',
+    },
+    {
+      icon: Users,
+      title: 'vínculos & proteção',
+      description: 'rituais que fortalecem a confiança e criam uma rede de apoio genuína contra a solidão e o isolamento dos tempos atuais.',
+    },
+    {
+      icon: Pencil,
+      title: 'expressão & autoria',
+      description: 'exercícios guiados que colocam o sentir em movimento, dando forma poética às emoções e organizando o caos interno.',
+    },
+    {
+      icon: Compass,
+      title: 'potência criativa',
+      description: 'transformar padrões limitantes e narrativas herdadas em força de vida e liberdade de escolha.',
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-paper overflow-x-hidden">
+    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul">
+      {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
-      {/* Section 1: Hero - Solta o Verbo */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        {/* Title - Centered */}
-        <div className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h1 className="font-editorial text-5xl md:text-6xl lg:text-7xl font-bold text-deepBlue mb-6">
-            solta o verbo
-          </h1>
-          <div className="flex justify-center">
-            <WavyLine color="#BEC540" width={250} animate />
-          </div>
-        </div>
-
-        {/* Two Column Layout: Text Left, Image Right */}
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-          {/* Left Column: Text + Button */}
-          <div className={`space-y-6 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-            <p className="text-xl md:text-2xl text-deepBlue font-medium leading-relaxed">
-              uma comunidade viva de autodesenvolvimento, onde a expressão é caminho para transformar realidades.
-            </p>
-
-            <p className="text-lg md:text-xl text-deepBlue/80 leading-relaxed">
-              a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a jornada.
-            </p>
-
-            <button
-              onClick={scrollToNextSection}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-deepBlue text-white font-bold rounded-full hover:bg-deepBlue/90 transition-all duration-300 hover:shadow-xl hover:scale-105 mt-4"
-            >
-              descubra mais
-              <ArrowDown className="w-5 h-5 animate-bounce" />
-            </button>
-          </div>
-
-          {/* Right Column: Image */}
-          <div className={`transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-            <img
-              src="/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg"
-              alt="um novo olhar"
-              className="w-full h-auto rounded-lg shadow-2xl"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: A Arte de Viver Melhor */}
-      <section id="arte-section" className="bg-white/60 backdrop-blur-sm py-16 md:py-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className={`transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <div className="text-center mb-12">
-              <h2 className="font-editorial text-4xl md:text-5xl font-bold text-deepBlue mb-4">
-                a arte de viver melhor
-              </h2>
-              <div className="flex justify-center">
-                <WavyLine color="#FF6B35" width={200} animate />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-              <div className="bg-white rounded-3xl p-8 md:p-10 shadow-lg border-2 border-deepBlue/10 hover:shadow-2xl transition-all duration-500">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="flex-shrink-0 w-12 h-12 bg-limeGreen/20 rounded-xl flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-deepBlue" />
-                  </div>
-                  <p className="text-base md:text-lg text-deepBlue/80 leading-relaxed">
-                    nós criamos espaços seguros para que cada pessoa exerça sua voz, cultive hábitos de expressão,
-                    amplie perspectivas e transforme padrões limitantes em potência criativa.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-3xl p-8 md:p-10 shadow-lg border-2 border-deepBlue/10 hover:shadow-2xl transition-all duration-500">
-                <div className="flex items-start gap-4 mb-6">
-                  <div className="flex-shrink-0 w-12 h-12 bg-actionOrange/20 rounded-xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-deepBlue" />
-                  </div>
-                  <p className="text-base md:text-lg text-deepBlue/80 leading-relaxed">
-                    acreditamos que todo processo criativo floresce melhor em comunidade. por isso, reunimos pessoas
-                    que querem se aprofundar, se fortalecer e caminhar juntas - não pela lógica do "produzir mais",
-                    mas pela arte de viver melhor.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3: Values Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="mb-12 md:mb-16">
-          <img
-            src="/whatsapp_image_2025-12-11_at_3.35.23_pm copy.jpeg"
-            alt="O que nos move"
-            className="w-full max-w-4xl mx-auto rounded-lg shadow-lg"
-          />
-        </div>
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          <div className={`group bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 border-2 border-deepBlue/10 hover:border-limeGreen/50 transition-all duration-500 hover:shadow-2xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '300ms' }}>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-limeGreen/20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                <Heart className="w-8 h-8 text-deepBlue" />
-              </div>
-              <div>
-                <h3 className="font-editorial text-2xl md:text-3xl font-bold text-deepBlue mb-3">
-                  encontros reais
-                </h3>
-                <p className="text-base md:text-lg text-deepBlue/70 leading-relaxed">
-                  onde cada pessoa pode chegar como está. conversas que abrem espaço para o que importa.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={`group bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 border-2 border-deepBlue/10 hover:border-actionOrange/50 transition-all duration-500 hover:shadow-2xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '400ms' }}>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-actionOrange/20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                <Users className="w-8 h-8 text-deepBlue" />
-              </div>
-              <div>
-                <h3 className="font-editorial text-2xl md:text-3xl font-bold text-deepBlue mb-3">
-                  vínculos
-                </h3>
-                <p className="text-base md:text-lg text-deepBlue/70 leading-relaxed">
-                  rituais que fortalecem a confiança e criam uma rede de apoio genuína.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={`group bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 border-2 border-deepBlue/10 hover:border-limeGreen/50 transition-all duration-500 hover:shadow-2xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '500ms' }}>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-limeGreen/20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                <Pencil className="w-8 h-8 text-deepBlue" />
-              </div>
-              <div>
-                <h3 className="font-editorial text-2xl md:text-3xl font-bold text-deepBlue mb-3">
-                  expressão
-                </h3>
-                <p className="text-base md:text-lg text-deepBlue/70 leading-relaxed">
-                  exercícios que nos colocam em movimento e dão forma ao que sentimos.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={`group bg-white/60 backdrop-blur-sm rounded-3xl p-8 md:p-10 border-2 border-deepBlue/10 hover:border-actionOrange/50 transition-all duration-500 hover:shadow-2xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-actionOrange/20 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
-                <Sparkles className="w-8 h-8 text-deepBlue" />
-              </div>
-              <div>
-                <h3 className="font-editorial text-2xl md:text-3xl font-bold text-deepBlue mb-3">
-                  potência
-                </h3>
-                <p className="text-base md:text-lg text-deepBlue/70 leading-relaxed">
-                  transformar padrões limitantes em força criativa através da escrita.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4: Criadoras */}
-      <section className="bg-deepBlue py-16 md:py-24">
+      {/* 2. HERO SECTION SOBRE NÓS */}
+      <section className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-editorial text-4xl md:text-5xl font-bold text-white mb-4">
-              criadoras
-            </h2>
-            <p className="text-xl text-white/80">as facilitadoras</p>
-            <div className="flex justify-center mt-6">
-              <WavyLine color="#BEC540" width={200} animate />
-            </div>
-          </div>
-
-          {/* Bruna Riedel */}
-          <div className="mb-12 md:mb-20">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className={`order-2 md:order-1 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:p-10">
-                  <div className="mb-6">
-                    <h3 className="font-editorial text-3xl md:text-4xl font-bold text-white mb-2">
-                      bruna riedel
-                    </h3>
-                    <p className="text-limeGreen font-semibold text-lg">co-criadora & facilitadora</p>
-                  </div>
-
-                  <div className="space-y-4 text-white/90 leading-relaxed">
-                    <p>
-                      mineira que escolheu viver perto do mar, bruna riedel é geógrafa licenciada, escritora, community manager
-                      e designer de conexões e experiências. há dez anos em florianópolis, trabalha criando ambientes onde pessoas
-                      possam aprender, se relacionar, trocar e se transformarem juntas.
-                    </p>
-
-                    <p>
-                      ao longo de sua trajetória, co-criou um comitê de sustentabilidade dentro de uma organização de impacto
-                      socioambiental e liderou movimentos de agroecologia. sua atuação sempre buscou aproximar pessoas a partir
-                      de práticas do design, que possibilitam a regeneração de territórios internos e externos.
-                    </p>
-
-                    <p>
-                      atualmente, atua como community manager no instituto amuta e coordena ciclos de estudo sobre saúde social.
-                      em 2024, criou a quinta essência, seu projeto artístico pessoal no substack.
-                    </p>
-
-                    <p className="font-medium text-white">
-                      co-criadora e facilitadora da solta o verbo, bruna desenha experiências em que a escrita se torna uma
-                      ferramenta poderosa para gerar consciência, liberdade e autoria.
-                    </p>
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            {/* Coluna Esquerda: Texto de Manifesto */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
+                <img
+                  src="/brand-assets/icons/icone_63.svg"
+                  alt="chama viva"
+                  className="w-5 h-5 object-contain"
+                />
+                <span>nossa essência & manifesto</span>
               </div>
 
-              <div className={`order-1 md:order-2 flex justify-center transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-                <img
-                  src="/bruna copy copy.png"
-                  alt="Bruna Riedel"
-                  className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-3xl shadow-2xl"
-                />
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
+                solta o verbo: <br className="hidden sm:inline" />
+                <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
+                  uma comunidade viva
+                </span>{' '}
+                onde a expressão transforma realidades.
+              </h1>
+
+              <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
+                a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a nossa jornada. um convite para desacelerar, cultivar presença e dar forma ao que vive dentro.
+              </p>
+
+              <div className="pt-4 flex flex-wrap items-center gap-4">
+                <a
+                  href="#criadoras"
+                  className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5"
+                >
+                  <span>conhecer as facilitadoras</span>
+                  <ArrowRight className="w-5 h-5 text-white" />
+                </a>
+
+                <a
+                  href="#galeria"
+                  className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base sm:text-lg px-8 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2.5 cursor-pointer lowercase"
+                >
+                  <span>ver galeria de encontros</span>
+                  <BookOpen className="w-5 h-5 text-acentoAzul" />
+                </a>
               </div>
             </div>
-          </div>
 
-          {/* Julia Alvim */}
-          <div>
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div className={`order-1 flex justify-center transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
-                <img
-                  src="/jo.png"
-                  alt="Julia Alvim"
-                  className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-3xl shadow-2xl"
-                />
-              </div>
-
-              <div className={`order-2 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-                <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 md:p-10">
-                  <div className="mb-6">
-                    <h3 className="font-editorial text-3xl md:text-4xl font-bold text-white mb-2">
-                      julia alvim
-                    </h3>
-                    <p className="text-limeGreen font-semibold text-lg">co-criadora & facilitadora</p>
-                  </div>
-
-                  <div className="space-y-4 text-white/90 leading-relaxed">
-                    <p>
-                      de gerente em multinacional para um caminho autoral, julia alvim é contadora de histórias que encontrou
-                      na escrita a ferramenta que guiou sua própria transição de vida para um destino mais alinhado com sua verdade.
-                    </p>
-
-                    <p>
-                      desde que deixou o mundo corporativo, dedica-se a aprofundar seus estudos sobre relações humanas, criatividade
-                      e autoconhecimento. produziu eventos, retiros e encontros no brasil e na europa.
-                    </p>
-
-                    <p>
-                      criou projetos coletivos como o children of the universe e o 'segundas intenções' no substack, uma newsletter
-                      para inspirar pessoas a acreditarem que a mudança acontece de dentro para fora.
-                    </p>
-
-                    <p className="font-medium text-white">
-                      co-criadora e facilitadora do solta o verbo, julia desenha jornadas em que a expressão através da escrita
-                      se torna um espaço seguro para reorganizar emoções e ressignificar narrativas.
-                    </p>
-                  </div>
+            {/* Coluna Direita: Card Scrapbook Hero */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-3xl bg-papelClaro p-6 sm:p-8 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group">
+                {/* Sticker Fita Washi */}
+                <div className="absolute -top-2 right-8 w-28 h-7 pointer-events-none z-20 opacity-90">
+                  <img
+                    src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
+                    alt="fita washi"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
+
+                <div className="w-full h-64 sm:h-80 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-6">
+                  <img
+                    src="/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg"
+                    alt="solta o verbo vivencia"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+
+                <blockquote className="font-editorial text-2xl text-acentoAzul leading-snug font-bold lowercase">
+                  “escrever é um ato de coragem para dizer ao mundo: eu existo e minha história tem valor.”
+                </blockquote>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 5: Platform Features & CTA */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="text-center mb-16">
-          <h2 className="font-editorial text-4xl md:text-5xl font-bold text-deepBlue mb-4">
-            a plataforma
-          </h2>
-          <div className="flex justify-center mb-8">
-            <WavyLine color="#BEC540" width={200} animate />
-          </div>
-          <p className="text-lg md:text-xl text-deepBlue/80 max-w-3xl mx-auto leading-relaxed">
-            um espaço gratuito e seguro para compartilhar seus textos, ler pessoas que te inspiram e se conectar
-            com uma comunidade que sente o mundo através da escrita.
-          </p>
-          <p className="text-base md:text-lg text-deepBlue/60 max-w-3xl mx-auto leading-relaxed mt-3">
-            livre de algoritmos que limitam sua expressão
-          </p>
-        </div>
-
-        {/* Platform Image */}
-        <div className={`mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <img
-            src="/whatsapp_image_2025-12-11_at_4.25.25_pm.jpeg"
-            alt="solta o verbo plataforma"
-            className="w-full max-w-5xl mx-auto h-auto rounded-2xl shadow-2xl"
-          />
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border-2 border-deepBlue/10 hover:border-limeGreen/50 hover:shadow-xl transition-all duration-300">
-            <div className="w-12 h-12 bg-limeGreen/20 rounded-xl flex items-center justify-center mb-4">
-              <Edit className="w-6 h-6 text-deepBlue" />
-            </div>
-            <h3 className="font-editorial text-xl font-bold text-deepBlue mb-2">publique</h3>
-            <p className="text-deepBlue/70 text-sm leading-relaxed">
-              um editor limpo e focado para dar vida aos seus textos e poesias.
-            </p>
-          </div>
-
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border-2 border-deepBlue/10 hover:border-actionOrange/50 hover:shadow-xl transition-all duration-300">
-            <div className="w-12 h-12 bg-actionOrange/20 rounded-xl flex items-center justify-center mb-4">
-              <MessageCircle className="w-6 h-6 text-deepBlue" />
-            </div>
-            <h3 className="font-editorial text-xl font-bold text-deepBlue mb-2">interaja</h3>
-            <p className="text-deepBlue/70 text-sm leading-relaxed">
-              leia e comente em produções profundas. troque vivências reais.
-            </p>
-          </div>
-
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border-2 border-deepBlue/10 hover:border-limeGreen/50 hover:shadow-xl transition-all duration-300">
-            <div className="w-12 h-12 bg-limeGreen/20 rounded-xl flex items-center justify-center mb-4">
-              <UserCheck className="w-6 h-6 text-deepBlue" />
-            </div>
-            <h3 className="font-editorial text-xl font-bold text-deepBlue mb-2">personalize</h3>
-            <p className="text-deepBlue/70 text-sm leading-relaxed">
-              crie um perfil que reflete quem você é, não apenas o que você faz.
-            </p>
-          </div>
-
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border-2 border-deepBlue/10 hover:border-actionOrange/50 hover:shadow-xl transition-all duration-300">
-            <div className="w-12 h-12 bg-actionOrange/20 rounded-xl flex items-center justify-center mb-4">
-              <Shield className="w-6 h-6 text-deepBlue" />
-            </div>
-            <h3 className="font-editorial text-xl font-bold text-deepBlue mb-2">conecte</h3>
-            <p className="text-deepBlue/70 text-sm leading-relaxed">
-              conexão real em um ambiente seguro, focado em profundidade.
-            </p>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="bg-gradient-to-br from-deepBlue to-deepBlue/90 rounded-3xl p-8 md:p-12 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-limeGreen/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-actionOrange/10 rounded-full blur-3xl"></div>
-
-          <div className="relative z-10 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Left side - Text */}
-            <div className="flex flex-col justify-center">
-              <p className="text-lg md:text-2xl text-white leading-relaxed font-medium">
-                venha colocar para fora o que aperta dentro e faça parte dessa comunidade de pessoas que buscam o autodesenvolvimento através da expressão autêntica.
-              </p>
-              <Link
-                to="/register"
-                className="inline-block mt-8 px-8 py-4 bg-limeGreen text-deepBlue font-bold rounded-full hover:bg-limeGreen/90 transition-all duration-300 hover:shadow-xl hover:scale-105 w-fit"
-              >
-                comece agora
-              </Link>
-            </div>
-
-            {/* Right side - Image */}
-            <div className="flex justify-center md:justify-end">
+      {/* 3. A ARTE DE VIVER MELHOR & NOSSOS PILARES */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
               <img
-                src="/whatsapp_image_2025-12-11_at_4.40.55_pm.jpeg"
-                alt="e aí, bora soltar o verbo?"
-                className="w-full max-w-sm h-auto rounded-2xl shadow-2xl"
+                src="/brand-assets/icons/icone_63.svg"
+                alt="chama viva"
+                className="w-5 h-5 object-contain"
+              />
+              <span>a arte de viver melhor</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              o que nos move todos os dias
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              nós criamos espaços seguros para que cada pessoa exerça sua voz, cultive hábitos de expressão e transforme padrões limitantes em potência criativa.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {pillars.map(({ icon: Icon, title, description }, idx) => (
+              <div
+                key={idx}
+                className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                    {title}
+                  </h3>
+                  <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                    {description}
+                  </p>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-papelKraft/30 flex items-center justify-between text-xs font-bold text-acentoAzul opacity-60">
+                  <span>0{idx + 1} // pilar</span>
+                  <span className="w-2 h-2 rounded-full bg-acentoOliva" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. AS CRIADORAS & FACILITADORAS (Bruna Riedel & Júlia Alvim) */}
+      <div id="criadoras">
+        <FoundersSection />
+      </div>
+
+      {/* 5. GALERIA DE ENCONTROS & VIVÊNCIAS (Scrapbook Grid) */}
+      <section id="galeria" className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+              <img
+                src="/brand-assets/icons/icone_63.svg"
+                alt="galeria"
+                className="w-5 h-5 object-contain"
+              />
+              <span>diário visual de encontros</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              nossas vivências em imagens
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              registros das nossas rodas de escrita, oficinas presenciais, retiros e momentos de partilha no brasil e no mundo.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {eventGallery.map((photo, idx) => (
+              <div
+                key={idx}
+                onClick={() => setSelectedPhoto(photo)}
+                className="relative bg-bgPlataforma rounded-3xl p-4 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none"
+              >
+                {/* Sticker Fita Washi */}
+                <div className="absolute -top-3 left-6 w-24 h-6 pointer-events-none z-20 opacity-90">
+                  <img
+                    src={photo.washiTape}
+                    alt="fita washi"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+
+                <div className="w-full h-60 rounded-2xl overflow-hidden border border-papelKraft/30 relative mb-4">
+                  <img
+                    src={photo.image}
+                    alt={photo.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+
+                <div className="px-2 space-y-1">
+                  <h3 className="font-editorial text-xl font-bold text-acentoAzul lowercase">
+                    {photo.title}
+                  </h3>
+                  <p className="text-xs text-tintaCarvao/70 font-medium lowercase">
+                    {photo.subtitle}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Modal de Foto Ampliada */}
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 z-50 bg-acentoAzul/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div
+            className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-2xl max-w-3xl w-full relative animate-fadeIn"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-papelKraft/40 mb-6">
+              <img
+                src={selectedPhoto.image}
+                alt={selectedPhoto.title}
+                className="w-full h-full object-cover"
               />
             </div>
+            <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-acentoAzul lowercase mb-2">
+              {selectedPhoto.title}
+            </h3>
+            <p className="text-tintaCarvao/80 text-base font-medium lowercase mb-6">
+              {selectedPhoto.subtitle}
+            </p>
+            <button
+              onClick={() => setSelectedPhoto(null)}
+              className="btn-pill-primary w-full py-3 rounded-full text-center text-sm font-semibold lowercase"
+            >
+              fechar visualização
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 6. PLATAFORMA DIGITAL & ÁREA DE MEMBROS */}
+      <section className="py-20 sm:py-28 bg-bgPlataforma relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-12 lg:p-16 border border-white/20 shadow-kraft-lg relative overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+              <div className="lg:col-span-7 space-y-6">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-acentoOliva text-xs font-semibold uppercase tracking-wider">
+                  <span>o nosso ecossistema digital</span>
+                </div>
+
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase leading-tight">
+                  um ambiente livre de algoritmos e distrações
+                </h2>
+
+                <p className="text-papelClaro/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
+                  nossa plataforma foi desenhada para que você possa publicar textos, interagir com leitoras apaixonadas por palavras e manter um diário de bordo digital com privacidade e respeito.
+                </p>
+
+                <ul className="space-y-3 text-papelClaro/90 font-medium text-base lowercase">
+                  <li className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
+                    <span>editor limpo e focado no essencial da escrita</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
+                    <span>acesso à fogueira de partilha comunitária diária</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
+                    <span>mentoria quinzenal ao vivo e acervo completo gravado</span>
+                  </li>
+                </ul>
+
+                <div className="pt-4 flex items-center gap-4">
+                  <Link
+                    to="/register"
+                    className="btn-pill-accent text-base px-8 py-3.5 rounded-full shadow-lg hover:scale-105 transition-all flex items-center gap-2.5 lowercase"
+                  >
+                    <span>criar minha conta gratuita</span>
+                    <Pencil className="w-5 h-5" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5">
+                <div className="rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-papelClaro p-2">
+                  <img
+                    src="/whatsapp_image_2025-12-11_at_4.25.25_pm.jpeg"
+                    alt="plataforma solta o verbo"
+                    className="w-full h-auto rounded-xl object-cover"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* 7. PreLoginFooter Poético com WebGL Shader */}
       <PreLoginFooter />
     </div>
   );
