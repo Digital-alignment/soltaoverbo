@@ -1,0 +1,92 @@
+---
+name: solta-o-verbo-design-auditor
+description: Audit and enforce the strict Solta o Verbo Brand Design System rules on all UI code, components, and layout edits. Automatically checks font usage, lowercase rule, border thickness, emoji prohibition, and solid color enforcement.
+---
+
+# 🎨 Solta o Verbo - Design System Auditor Skill
+
+Esta skill atua como **Auditor e Guardião Supremo do Design System de Solta o Verbo**. Deve ser consultada e executada antes e depois de qualquer alteração ou criação de componentes de interface no repositório `soltaoverbo`.
+
+---
+
+## 📜 Regras Estritas de Design (Contrato Inviolável)
+
+### 1. 🔤 Tipografia Aprovada da Marca (Somente 3 Fontes Aprovadas)
+- **Muthazle (`font-gesto`)**: Usada exclusivamente para números (datas do calendário, estatísticas, contagem de palavras do editor e sprint) e acentos manuscritos poéticos.
+- **Editorial Serif (`font-editorial`)**: Usada exclusivamente para títulos principas (`h1`, `h2`, `h3`), cabeçalhos de cards e citações poéticas destacadas.
+- **Body / Corpo (`font-corpo` ou sans-serif padrão da marca)**: Usada para descrições, textos de corpo, modalidades, botões e etiquetas.
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar `font-mono`, fontes monospace genéricas, ou fontes não aprovadas (Playpen Sans, Inter, Arial, etc.).
+
+---
+
+### 2. 🔤 Regra de Minúsculas Estritas (No Uppercase)
+- **TODO o texto da interface** em botões, títulos, subtítulos, selos, etiquetas (tags), datas, contadores e caixas de busca DEVE ser **estritamente em minúsculas (`lowercase`)**.
+- Exemplo correto: `exercícios de escrita`, `novo texto`, `membro premium`, `agosto 2026`, `ver agenda completa`.
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar texto em maiúsculas, `capitalize` ou classes Tailwind como `uppercase` ou `capitalize` em rótulos de UI.
+
+---
+
+### 3. 📐 Borda sem Grosor (Somente Hairlines Estáticas)
+- Os bordos de cards, botões, modais e entradas devem ser bordas finas e sutilíssimas de papel (`border border-papelKraft/60` ou `border-papelKraft/40`).
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar `border-2`, `border-4` ou aumentar a espessura/cor da borda ao fazer hover (ex: `hover:border-2` ou `hover:border-acentoAzul` são **estritamente proibidos**).
+
+---
+
+### 4. 🚫 Proibição Total de Emojis no Código e UI
+- Toda a iconografia DEVE utilizar exclusivamente ícones vetoriais SVG da biblioteca `lucide-react` (ex: `<Sun />`, `<Flame />`, `<Feather />`, `<Crown />`, `<Coffee />`, `<Rocket />`, `<Sparkles />`).
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar caracteres emojis genéricos em Unicode (ex: 🌅, 🔥, ✨, 🪶, ☕, 🌿, 👑, 📔, 📖) no JSX, títulos, tags ou botões.
+
+---
+
+### 5. 🎨 Cores Sólidas da Paleta Oficial (Sem Gradientes ou Transparências em Ações)
+- A paleta oficial da plataforma é composta exclusivamente por:
+  - **Fundo da Plataforma**: `#EDE6D4` (`bg-bgPlataforma`)
+  - **Papel Claro**: `#F7F3E8` (`bg-papelClaro`)
+  - **Azul Profundo**: `#140D82` (`bg-acentoAzul text-white`)
+  - **Terracota**: `#FD5E32` (`bg-acentoTerracota text-white`)
+  - **Verde Limão / Oliva**: `#BEC540` (`bg-acentoOliva text-tintaCarvao`)
+  - **Papel Kraft**: `#D9CDB8` (`bg-papelKraft text-tintaCarvao`)
+  - **Tinta Carbão**: `#2C2720` (`text-tintaCarvao`)
+- Botões primários, etiquetas de estado e blocos de data DEVEM utilizar **cores sólidas da marca**.
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar gradientes CSS (`bg-gradient-to-r`, `from-`, `to-`), fundos translúcidos em botões de ação principal, ou bordas fluorescentes fora da paleta.
+
+---
+
+### 6. 🏗️ Bento Grid e Desacoplamento de Alturas
+- No container Bento Grid principal (`Dashboard.tsx`), utilizar sempre `items-start` para que cada card assuma a sua altura própria de forma independente, sem esticar ou deformar o card adjacente.
+
+---
+
+### 7. 🎨 Cores Dinâmicas nos Blocos de Data da Agenda
+- O fundo do bloco de data varia obrigatoriamente conforme a categoria do evento:
+  - **Café com Letras / Encontros Ao Vivo**: Azul (`bg-acentoAzul text-white`).
+  - **Mentorias Exclusivas / Convites Admin**: Terracota (`bg-acentoTerracota text-white`).
+  - **Lançamentos de Ciclo / Programas**: Verde Limão / Oliva (`bg-acentoOliva text-tintaCarvao`).
+  - **Rituais Pessoais**: Papel Kraft (`bg-papelKraft text-tintaCarvao`).
+
+---
+
+### 8. 📐 Tamanho Uniforme dos Ícones de Categoria
+- Todos os ícones de tipo de evento no canto superior direito do card de agenda devem ter tamanho estritamente uniforme (`w-5 h-5`).
+
+---
+
+### 9. ↗️ Botão Expander de Card (Ícone Exclusivo + Tooltip)
+- O botão de expandir cards/agenda deve ser **exclusivamente o ícone `<Maximize2 className="w-4 h-4" />`** sem texto interno, posicionado no canto superior direito (`absolute top-5 right-5 z-20`) com tooltip emergente no hover (`ver agenda completa`).
+
+---
+
+## 🔍 Checklist de Auto-Auditoria para o Agente
+
+Ao criar ou editar qualquer arquivo JSX/TSX de UI:
+
+1. [ ] **Verificação de Fontes**: Pesquisar por `font-mono` no código editado. Se existir, remover e substituir pela fonte da marca.
+2. [ ] **Verificação de Caixa**: Garantir que todo o texto impresso no JSX está em minúsculas e sem a classe `uppercase`.
+3. [ ] **Verificação de Bordas**: Garantir que nenhum elemento possua `border-2` ou altere a espessura no `hover:`.
+4. [ ] **Verificação de Emojis**: Garantir que nenhum caractere Unicode emoji está presente no JSX, substituindo por ícones do `lucide-react`.
+5. [ ] **Verificação de Gradientes**: Garantir que nenhuma classe `bg-gradient-*` seja usada.
+6. [ ] **Verificação de Cores Dinâmicas**: Garantir que blocos de data usam as cores sólidas por categoria.
+
+---
+
+*Esta skill auto-enriquece o agente Antigravity em todas as sessões e projetos de Solta o Verbo.*

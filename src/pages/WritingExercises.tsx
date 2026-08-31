@@ -33,6 +33,7 @@ import {
   Sun,
   Smile,
   Bell,
+  BookOpen,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -43,12 +44,12 @@ interface Notebook {
   id: string;
   title: string;
   description: string;
-  icon: string;
+  type: 'feather' | 'book' | 'openbook' | 'sparkles';
 }
 
 interface GuidedTemplate {
   id: string;
-  icon: string;
+  type: 'sun' | 'flame' | 'sparkles' | 'feather';
   title: string;
   subtitle: string;
   initialTitle: string;
@@ -90,25 +91,25 @@ const DEFAULT_NOTEBOOKS: Notebook[] = [
     id: 'sussurros',
     title: 'caderno de sussurros & presença',
     description: 'práticas diárias de escuta e acolhimento dos sentimentos.',
-    icon: '🪶',
+    type: 'feather',
   },
   {
     id: 'diario21',
     title: 'diário de bordo 21 dias',
     description: 'exercícios do programa 21 dias de escrita sustentada.',
-    icon: '📔',
+    type: 'book',
   },
   {
     id: 'rascunhos',
     title: 'rascunhos poéticos & memórias',
     description: 'textos livres, fragmentos de poemas e memórias soltas.',
-    icon: '📖',
+    type: 'openbook',
   },
   {
     id: 'fogueira',
     title: 'rituais da fogueira',
     description: 'partilhas e temas trabalhados nos encontros ao vivo.',
-    icon: '🌿',
+    type: 'sparkles',
   },
 ];
 
@@ -116,7 +117,7 @@ const DEFAULT_NOTEBOOKS: Notebook[] = [
 const GUIDED_TEMPLATES: GuidedTemplate[] = [
   {
     id: 'matinal',
-    icon: '🌅',
+    type: 'sun',
     title: 'ritual matinal',
     subtitle: 'o que desperta no meu corpo hoje?',
     initialTitle: 'ritual matinal: o que desperta no meu corpo hoje',
@@ -124,7 +125,7 @@ const GUIDED_TEMPLATES: GuidedTemplate[] = [
   },
   {
     id: 'desapego',
-    icon: '🔥',
+    type: 'flame',
     title: 'carta de desapego',
     subtitle: 'o que deixo ir no fogo de hoje?',
     initialTitle: 'carta de desapego: o que deixo ir no fogo de hoje',
@@ -132,7 +133,7 @@ const GUIDED_TEMPLATES: GuidedTemplate[] = [
   },
   {
     id: 'gratidao',
-    icon: '✨',
+    type: 'sparkles',
     title: 'diário de gratidão silenciosa',
     subtitle: '3 milagres imperceptíveis do meu dia.',
     initialTitle: 'diário de gratidão silenciosa',
@@ -140,7 +141,7 @@ const GUIDED_TEMPLATES: GuidedTemplate[] = [
   },
   {
     id: 'poema',
-    icon: '🪶',
+    type: 'feather',
     title: 'poema em 4 estrofes',
     subtitle: 'estrutura guiada com versos soltos.',
     initialTitle: 'poema em 4 estrofes: versos soltos',
@@ -179,7 +180,6 @@ export default function WritingExercises() {
   // Estados de Abas Laterais & Filtros
   const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'tags'>('textos');
   const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
-  const [activeNotebookFilter, setActiveNotebookFilter] = useState<string | null>(null);
   
   // Modo Foco (Zen Editor)
   const [isZenMode, setIsZenMode] = useState(false);
@@ -354,7 +354,7 @@ export default function WritingExercises() {
 
       alert(
         isAnonymousShare
-          ? 'texto publicado com sucesso na nossa fogueira de forma anônima! 🌿'
+          ? 'texto publicado com sucesso na nossa fogueira de forma anônima!'
           : 'texto publicado com sucesso na nossa fogueira!'
       );
       setShowShareModal(false);
@@ -414,6 +414,34 @@ export default function WritingExercises() {
     }
     return milestone;
   }, [currentWordCount]);
+
+  const renderTemplateIcon = (type: GuidedTemplate['type']) => {
+    switch (type) {
+      case 'sun':
+        return <Sun className="w-5 h-5 text-acentoTerracota" />;
+      case 'flame':
+        return <Flame className="w-5 h-5 text-acentoTerracota" />;
+      case 'sparkles':
+        return <Sparkles className="w-5 h-5 text-acentoAzul" />;
+      case 'feather':
+      default:
+        return <Feather className="w-5 h-5 text-acentoAzul" />;
+    }
+  };
+
+  const renderNotebookIcon = (type: Notebook['type']) => {
+    switch (type) {
+      case 'feather':
+        return <Feather className="w-4 h-4 text-acentoTerracota" />;
+      case 'book':
+        return <Book className="w-4 h-4 text-acentoAzul" />;
+      case 'openbook':
+        return <BookOpen className="w-4 h-4 text-acentoAzul" />;
+      case 'sparkles':
+      default:
+        return <Sparkles className="w-4 h-4 text-acentoTerracota" />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
@@ -521,7 +549,6 @@ export default function WritingExercises() {
               <button
                 onClick={() => {
                   setActiveTab('textos');
-                  setActiveNotebookFilter(null);
                   setActiveTagFilter(null);
                 }}
                 className={`flex-1 py-1.5 rounded-xl transition-all ${
@@ -630,7 +657,7 @@ export default function WritingExercises() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="text-lg">{nb.icon}</span>
+                          {renderNotebookIcon(nb.type)}
                           <h4 className="text-xs sm:text-sm font-bold text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
                             {nb.title}
                           </h4>
@@ -683,7 +710,7 @@ export default function WritingExercises() {
                 
                 {/* BARRA SUPERIOR DO EDITOR: MODO FOCO + TEMPORIZADOR DO RITUAL */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-papelKraft/40 pb-3">
-                  {/* RECURSO FUNCIONAL 1: TEMPORIZADOR DO RITUAL (SPRINT DE ESCRITA SEM COBRANÇA) */}
+                  {/* TEMPORIZADOR DO RITUAL (SPRINT DE ESCRITA SEM COBRANÇA) */}
                   <div className="flex items-center gap-2 bg-bgPlataforma/80 px-3 py-1.5 rounded-2xl border border-papelKraft/50">
                     <Timer className="w-4 h-4 text-acentoTerracota" />
                     <span className="text-xs font-bold text-acentoAzul lowercase">sprint poético:</span>
@@ -766,7 +793,7 @@ export default function WritingExercises() {
                   <div className="p-3.5 rounded-2xl bg-acentoOliva/20 border border-acentoOliva text-acentoAzul text-xs font-bold lowercase flex items-center justify-between animate-fadeIn">
                     <div className="flex items-center gap-2">
                       <Bell className="w-4 h-4 text-acentoTerracota animate-bounce" />
-                      <span>ritual concluído com presença! 🌿 pause e releia o que você escreveu sem julgamentos.</span>
+                      <span>ritual concluído com presença! pause e releia o que você escreveu sem julgamentos.</span>
                     </div>
                     <button
                       onClick={() => setTimerFinished(false)}
@@ -881,7 +908,7 @@ export default function WritingExercises() {
                       className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 hover:border-acentoAzul shadow-sm transition-all group space-y-1"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-lg">{tmpl.icon}</span>
+                        {renderTemplateIcon(tmpl.type)}
                         <h4 className="text-xs font-bold text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
                           {tmpl.title}
                         </h4>
@@ -937,7 +964,7 @@ export default function WritingExercises() {
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-xl">{tmpl.icon}</span>
+                        {renderTemplateIcon(tmpl.type)}
                         <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
                           {tmpl.title}
                         </h4>
@@ -1092,7 +1119,7 @@ export default function WritingExercises() {
                   >
                     <EyeOff className="w-4 h-4 mb-1 text-acentoTerracota" />
                     <span className="text-xs block lowercase">de forma anônima</span>
-                    <span className="text-[10px] opacity-70 block font-normal">membro anônimo 🌿</span>
+                    <span className="text-[10px] opacity-70 block font-normal">membro anônimo</span>
                   </button>
                 </div>
               </div>
