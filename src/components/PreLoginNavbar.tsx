@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, Pencil } from 'lucide-react';
+import { Menu, X, ArrowRight, Pencil, ChevronDown, BookOpen, Users, Coffee, Sparkles } from 'lucide-react';
 import { BRAND_ASSETS } from '../config/brandAssets';
 
 export default function PreLoginNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -14,7 +16,18 @@ export default function PreLoginNavbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Bloquea el scroll del cuerpo de la página cuando el menú móvil full-page está abierto
+  // Cierra el dropdown al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Bloquea el scroll del cuerpo cuando el menú móvil full-page está abierto
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -26,14 +39,32 @@ export default function PreLoginNavbar() {
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
-    { to: '/', label: 'início' },
-    { to: '/programs', label: 'programas' },
-    { to: '/about', label: 'sobre nós' },
-    { to: '/login', label: 'entrar' },
+  const productSubItems = [
+    {
+      to: '/programas/21-dias-de-escrita',
+      label: '21 dias de escrita',
+      desc: 'desafio self-paced de 21 dias',
+      icon: BookOpen,
+      price: 'R$ 77,00',
+    },
+    {
+      to: '/programas/ciclo-de-aprofundamento',
+      label: 'ciclo de aprofundamento',
+      desc: 'mentoria ao vivo & comunidade',
+      icon: Users,
+      price: 'R$ 597,00/ano',
+    },
+    {
+      to: '/programas/cafe-com-letras',
+      label: 'café com letras',
+      desc: 'rodas temáticas de escrita',
+      icon: Coffee,
+      price: 'por edição',
+    },
   ];
 
   const isActive = (path: string) => location.pathname === path;
+  const isProgramsActive = location.pathname.startsWith('/programas') || location.pathname === '/programs';
 
   return (
     <>
@@ -47,7 +78,7 @@ export default function PreLoginNavbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center transition-all duration-300">
-            {/* Logo e Ícono Master de Solta o Verbo (Mayor Tamaño) */}
+            {/* Logo e Ícono Master de Solta o Verbo */}
             <Link
               to="/"
               className="flex items-center gap-3.5 sm:gap-4 flex-shrink-0 group"
@@ -77,31 +108,140 @@ export default function PreLoginNavbar() {
               />
             </Link>
 
-            {/* Links de Navegación Desktop (Mayor Tamaño de Texto) */}
+            {/* Links de Navegación Desktop */}
             <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
-              {navLinks.map(({ to, label }) => {
-                const active = isActive(to);
-                return (
-                  <Link
-                    key={to}
-                    to={to}
-                    className={`font-medium transition-colors duration-200 lowercase relative ${
-                      scrolled ? 'text-base' : 'text-lg xl:text-xl'
-                    } ${
-                      active
-                        ? 'text-acentoAzul font-semibold'
-                        : 'text-tintaCarvao/80 hover:text-acentoAzul'
-                    }`}
-                  >
-                    {label}
-                    {active && (
-                      <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
-                    )}
-                  </Link>
-                );
-              })}
+              <Link
+                to="/"
+                className={`font-medium transition-colors duration-200 lowercase relative ${
+                  scrolled ? 'text-base' : 'text-lg xl:text-xl'
+                } ${
+                  isActive('/')
+                    ? 'text-acentoAzul font-semibold'
+                    : 'text-tintaCarvao/80 hover:text-acentoAzul'
+                }`}
+              >
+                início
+                {isActive('/') && (
+                  <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
+                )}
+              </Link>
 
-              {/* Botón CTA 'fazer parte' con Ícono de Lápiz */}
+              {/* DROPDOWN MENU PARA "PROGRAMAS" */}
+              <div
+                ref={dropdownRef}
+                className="relative"
+                onMouseEnter={() => setDropdownOpen(true)}
+                onMouseLeave={() => setDropdownOpen(false)}
+              >
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0 ${
+                    scrolled ? 'text-base' : 'text-lg xl:text-xl'
+                  } ${
+                    isProgramsActive
+                      ? 'text-acentoAzul font-semibold'
+                      : 'text-tintaCarvao/80 hover:text-acentoAzul'
+                  }`}
+                >
+                  <span>programas</span>
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      dropdownOpen ? 'rotate-180 text-acentoAzul' : 'text-tintaCarvao/60'
+                    }`}
+                  />
+                  {isProgramsActive && (
+                    <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
+                  )}
+                </button>
+
+                {/* Sub-menu Dropdown Desplegable */}
+                {dropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-80 bg-papelClaro rounded-2xl p-3 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn z-50 space-y-1">
+                    <div className="px-3 py-1.5 text-[11px] font-bold text-tintaCarvao/50 uppercase tracking-wider">
+                      nossos programas de escrita
+                    </div>
+
+                    {productSubItems.map((subItem) => {
+                      const Icon = subItem.icon;
+                      const active = location.pathname === subItem.to;
+                      return (
+                        <Link
+                          key={subItem.to}
+                          to={subItem.to}
+                          onClick={() => setDropdownOpen(false)}
+                          className={`flex items-start gap-3 p-3 rounded-xl transition-all ${
+                            active
+                              ? 'bg-acentoAzul/10 border border-acentoAzul/20'
+                              : 'hover:bg-bgPlataforma border border-transparent'
+                          }`}
+                        >
+                          <div className="w-9 h-9 rounded-lg bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Icon className="w-4 h-4 text-acentoAzul" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="font-bold text-sm text-acentoAzul lowercase truncate">
+                                {subItem.label}
+                              </span>
+                              <span className="text-[10px] font-bold text-acentoTerracota lowercase bg-acentoTerracota/10 px-2 py-0.5 rounded-full flex-shrink-0">
+                                {subItem.price}
+                              </span>
+                            </div>
+                            <p className="text-xs text-tintaCarvao/70 lowercase font-medium line-clamp-1 mt-0.5">
+                              {subItem.desc}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+
+                    <div className="pt-2 border-t border-papelKraft/40">
+                      <Link
+                        to="/programs"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-acentoAzul hover:bg-bgPlataforma transition-all lowercase"
+                      >
+                        <span>ver todos os programas</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <Link
+                to="/about"
+                className={`font-medium transition-colors duration-200 lowercase relative ${
+                  scrolled ? 'text-base' : 'text-lg xl:text-xl'
+                } ${
+                  isActive('/about')
+                    ? 'text-acentoAzul font-semibold'
+                    : 'text-tintaCarvao/80 hover:text-acentoAzul'
+                }`}
+              >
+                sobre nós
+                {isActive('/about') && (
+                  <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
+                )}
+              </Link>
+
+              <Link
+                to="/login"
+                className={`font-medium transition-colors duration-200 lowercase relative ${
+                  scrolled ? 'text-base' : 'text-lg xl:text-xl'
+                } ${
+                  isActive('/login')
+                    ? 'text-acentoAzul font-semibold'
+                    : 'text-tintaCarvao/80 hover:text-acentoAzul'
+                }`}
+              >
+                entrar
+                {isActive('/login') && (
+                  <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
+                )}
+              </Link>
+
+              {/* Botón CTA 'fazer parte' */}
               <Link
                 to="/register"
                 className={`btn-pill-primary font-medium lowercase shadow-sm hover:shadow-md transition-all flex items-center gap-2.5 rounded-full ${
@@ -113,7 +253,7 @@ export default function PreLoginNavbar() {
               </Link>
             </nav>
 
-            {/* Botón Menu Hamburguesa Mobile (Sin Fondo Circular, Solo Ícono Limpio) */}
+            {/* Botón Menu Hamburguesa Mobile */}
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="lg:hidden flex items-center justify-center p-2 text-acentoAzul hover:text-acentoAzul/80 transition-all active:scale-95 bg-transparent border-none focus:outline-none"
@@ -125,10 +265,9 @@ export default function PreLoginNavbar() {
         </div>
       </header>
 
-      {/* Menú Mobile Full-Page Modal (Imagen 3) */}
+      {/* Menú Mobile Full-Page Modal */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-50 bg-bgPlataforma flex flex-col justify-between p-6 sm:p-8 overflow-y-auto animate-menuOpen">
-          {/* Top Bar inside Full-Page Menu: Logo Mayor + Botón X Limpio (Sin Fondo Circular) */}
           <div className="flex justify-between items-center pb-6 border-b border-papelKraft/40">
             <Link
               to="/"
@@ -153,46 +292,68 @@ export default function PreLoginNavbar() {
               />
             </Link>
 
-            {/* Botón X sin fondo circular */}
             <button
               onClick={() => setMobileMenuOpen(false)}
               className="p-2 text-tintaCarvao hover:text-acentoAzul transition-colors active:scale-95 bg-transparent border-none focus:outline-none"
               aria-label="fechar menu"
             >
-              <X className="w-8 h-8 sm:w-9 sm:h-9" />
+              <X className="w-8 h-8" />
             </button>
           </div>
 
-          {/* Links de Navegación Verticales (Estilo Pílulas / Bento Cards) */}
-          <div className="my-auto py-8 space-y-4 max-w-md mx-auto w-full">
-            {navLinks.map(({ to, label }) => {
-              const active = isActive(to);
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between py-4 px-6 rounded-2xl text-xl font-medium lowercase transition-all ${
-                    active
-                      ? 'bg-papelClaro text-acentoAzul border border-papelKraft/60 shadow-kraft'
-                      : 'text-tintaCarvao/90 hover:bg-papelClaro/70 border border-transparent'
-                  }`}
-                >
-                  <span>{label}</span>
-                  <ArrowRight className={`w-5 h-5 ${active ? 'text-acentoAzul' : 'text-tintaCarvao/40'}`} />
-                </Link>
-              );
-            })}
+          <div className="py-8 space-y-6 my-auto">
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-3xl font-bold font-editorial text-acentoAzul lowercase"
+            >
+              início
+            </Link>
+
+            {/* Sub-menu de Productos en Mobile */}
+            <div className="space-y-3 pt-2 pb-2">
+              <span className="block text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                programas
+              </span>
+
+              <div className="pl-4 space-y-3 border-l-2 border-acentoTerracota/40">
+                {productSubItems.map((subItem) => (
+                  <Link
+                    key={subItem.to}
+                    to={subItem.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block text-lg font-medium text-tintaCarvao hover:text-acentoAzul lowercase"
+                  >
+                    {subItem.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <Link
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-3xl font-bold font-editorial text-acentoAzul lowercase"
+            >
+              sobre nós
+            </Link>
+
+            <Link
+              to="/login"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-3xl font-bold font-editorial text-acentoAzul lowercase"
+            >
+              entrar
+            </Link>
           </div>
 
-          {/* Botón CTA Inferior Full-Width con Lápiz */}
-          <div className="pt-6 border-t border-papelKraft/40 max-w-md mx-auto w-full">
+          <div className="pt-6 border-t border-papelKraft/40">
             <Link
               to="/register"
               onClick={() => setMobileMenuOpen(false)}
-              className="btn-pill-primary w-full text-center py-4 rounded-full text-xl flex items-center justify-center gap-3 shadow-md hover:shadow-lg transition-all"
+              className="btn-pill-primary w-full py-4 rounded-full text-center text-lg font-medium shadow-md flex items-center justify-center gap-2.5 lowercase"
             >
-              <span>fazer parte</span>
+              <span>fazer parte agora</span>
               <Pencil className="w-5 h-5" />
             </Link>
           </div>

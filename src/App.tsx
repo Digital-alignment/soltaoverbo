@@ -17,6 +17,9 @@ import Notifications from './pages/Notifications';
 import Admin from './pages/Admin';
 import AboutUs from './pages/AboutUs';
 import Programs from './pages/Programs';
+import Programa21Dias from './pages/Programa21Dias';
+import ProgramaCiclo from './pages/ProgramaCiclo';
+import ProgramaCafeComLetras from './pages/ProgramaCafeComLetras';
 import RoteiroOriginal from './pages/RoteiroOriginal';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -31,6 +34,17 @@ function AppContent() {
           <Route path="/" element={<Landing />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/programs" element={<Programs />} />
+          
+          {/* Páginas de Produtos / Programas */}
+          <Route path="/programas/21-dias-de-escrita" element={<Programa21Dias />} />
+          <Route path="/programas/ciclo-de-aprofundamento" element={<ProgramaCiclo />} />
+          <Route path="/programas/cafe-com-letras" element={<ProgramaCafeComLetras />} />
+          
+          {/* Alias de rotas curtas */}
+          <Route path="/21-dias-de-escrita" element={<Programa21Dias />} />
+          <Route path="/ciclo-de-aprofundamento" element={<ProgramaCiclo />} />
+          <Route path="/cafe-com-letras" element={<ProgramaCafeComLetras />} />
+
           <Route path="/roteirooriginal" element={<RoteiroOriginal />} />
           <Route path="/checkout-success" element={<CheckoutSuccess />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -105,28 +119,30 @@ function AppContent() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute requireRole={['admin']}>
+              <ProtectedRoute adminOnly>
                 <Admin />
               </ProtectedRoute>
             }
           />
 
+          {/* Catch-all redirect to Landing */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+      </Routes>
 
-        {showPrompt && (
-          <InstallPromptPopup
-            onInstall={handleInstall}
-            onDismiss={handleDismiss}
-            isIOS={isIOS}
-            isAndroid={isAndroid}
-          />
-        )}
-      </>
-    );
+      {/* PWA Install Prompt Banner */}
+      {showPrompt && (
+        <InstallPromptPopup
+          isIOS={isIOS}
+          isAndroid={isAndroid}
+          onInstall={handleInstall}
+          onDismiss={handleDismiss}
+        />
+      )}
+    </>
+  );
 }
 
-function App() {
+export default function App() {
   return (
     <Router>
       <AuthProvider>
@@ -135,5 +151,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
