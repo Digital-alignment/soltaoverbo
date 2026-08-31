@@ -9,9 +9,6 @@ import {
   Type,
   List,
   ListOrdered,
-  Heading1,
-  Heading2,
-  Heading3,
 } from 'lucide-react';
 
 interface RichTextEditorProps {
@@ -23,7 +20,7 @@ interface RichTextEditorProps {
 export default function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('16');
-  const [textColor, setTextColor] = useState('#000000');
+  const [textColor, setTextColor] = useState('#2C2720');
   const [currentFormat, setCurrentFormat] = useState('p');
 
   useEffect(() => {
@@ -69,104 +66,103 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
   };
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
-      <div className="bg-gray-50 border-b border-gray-300 p-3 flex flex-wrap items-center gap-2">
-        <div className="flex items-center space-x-2">
-          <select
-            value={currentFormat}
-            onChange={handleFormatChange}
-            className="px-3 py-1.5 border border-gray-300 rounded text-sm font-medium"
-            title="Formato"
-          >
-            <option value="p">Parágrafo</option>
-            <option value="h1">Título 1</option>
-            <option value="h2">Título 2</option>
-            <option value="h3">Título 3</option>
-            <option value="h4">Título 4</option>
-          </select>
-        </div>
+    <div className="border border-papelKraft/50 rounded-2xl overflow-hidden bg-papelClaro/60">
+      {/* Barra de Ferramentas com Design System Solta o Verbo */}
+      <div className="bg-bgPlataforma/80 border-b border-papelKraft/40 p-2.5 sm:p-3 flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <select
+          value={currentFormat}
+          onChange={handleFormatChange}
+          className="px-2.5 py-1.5 bg-white border border-papelKraft/50 rounded-xl text-xs font-semibold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors lowercase"
+          title="formato de parágrafo"
+        >
+          <option value="p">parágrafo</option>
+          <option value="h1">título 1</option>
+          <option value="h2">título 2</option>
+          <option value="h3">título 3</option>
+          <option value="h4">título 4</option>
+        </select>
 
-        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/50 mx-1"></div>
 
         <button
           type="button"
           onClick={() => executeCommand('bold')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Negrito"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="negrito"
         >
           <Bold className="w-4 h-4" />
         </button>
         <button
           type="button"
           onClick={() => executeCommand('italic')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Itálico"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="itálico"
         >
           <Italic className="w-4 h-4" />
         </button>
         <button
           type="button"
           onClick={() => executeCommand('underline')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Sublinhado"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="sublinhado"
         >
           <Underline className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/50 mx-1"></div>
 
         <button
           type="button"
           onClick={() => executeCommand('insertUnorderedList')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Lista com marcadores"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="lista com marcadores"
         >
           <List className="w-4 h-4" />
         </button>
         <button
           type="button"
           onClick={() => executeCommand('insertOrderedList')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Lista numerada"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="lista numerada"
         >
           <ListOrdered className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/50 mx-1"></div>
 
         <button
           type="button"
           onClick={() => executeCommand('justifyLeft')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Alinhar à esquerda"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="alinhar à esquerda"
         >
           <AlignLeft className="w-4 h-4" />
         </button>
         <button
           type="button"
           onClick={() => executeCommand('justifyCenter')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Centralizar"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="centralizar"
         >
           <AlignCenter className="w-4 h-4" />
         </button>
         <button
           type="button"
           onClick={() => executeCommand('justifyRight')}
-          className="p-2 hover:bg-gray-200 rounded transition"
-          title="Alinhar à direita"
+          className="p-1.5 bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors"
+          title="alinhar à direita"
         >
           <AlignRight className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-gray-300 mx-1"></div>
+        <div className="w-px h-5 bg-papelKraft/50 mx-1"></div>
 
-        <div className="flex items-center space-x-2">
-          <Type className="w-4 h-4 text-gray-600" />
+        <div className="flex items-center space-x-1.5">
+          <Type className="w-4 h-4 text-acentoAzul" />
           <select
             value={fontSize}
             onChange={handleFontSizeChange}
-            className="px-2 py-1 border border-gray-300 rounded text-sm"
+            className="px-2 py-1 bg-white border border-papelKraft/50 rounded-xl text-xs font-semibold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors"
           >
             <option value="12">12</option>
             <option value="14">14</option>
@@ -179,52 +175,58 @@ export default function RichTextEditor({ value, onChange, placeholder }: RichTex
           </select>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <span className="text-sm text-gray-600">Cor:</span>
+        <div className="flex items-center space-x-1.5 pl-1">
+          <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-medium text-tintaCarvao/70 lowercase">
+            <span>cor:</span>
             <input
               type="color"
               value={textColor}
               onChange={handleColorChange}
-              className="w-8 h-8 rounded cursor-pointer"
+              className="w-6 h-6 rounded-lg cursor-pointer border border-papelKraft/50 p-0.5 bg-white"
             />
           </label>
         </div>
       </div>
 
+      {/* ÁREA DE ESCRITA DE PAPEL SUAVE */}
       <div
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="p-4 min-h-[200px] focus:outline-none prose max-w-none"
-        style={{ fontSize: '16px', lineHeight: '1.6' }}
+        className="p-5 sm:p-6 min-h-[280px] focus:outline-none font-editorial text-tintaCarvao leading-relaxed text-base sm:text-lg bg-papelClaro/40"
+        style={{ fontSize: `${fontSize}px`, lineHeight: '1.7', color: textColor }}
         data-placeholder={placeholder}
       />
 
       <style>{`
         [contenteditable][data-placeholder]:empty:before {
           content: attr(data-placeholder);
-          color: #9CA3AF;
+          color: #A39682;
           pointer-events: none;
+          font-style: italic;
         }
         [contenteditable] h1 {
           font-size: 2em;
           font-weight: bold;
+          color: #140D82;
           margin: 0.67em 0;
         }
         [contenteditable] h2 {
           font-size: 1.5em;
           font-weight: bold;
+          color: #140D82;
           margin: 0.75em 0;
         }
         [contenteditable] h3 {
           font-size: 1.17em;
           font-weight: bold;
+          color: #140D82;
           margin: 0.83em 0;
         }
         [contenteditable] h4 {
           font-size: 1em;
           font-weight: bold;
+          color: #140D82;
           margin: 1em 0;
         }
         [contenteditable] ul {

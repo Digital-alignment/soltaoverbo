@@ -1066,43 +1066,50 @@ export default function WritingExercises() {
           </div>
         )}
 
-        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA */}
+        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA E SEM DISTRAÇÕES) */}
         {isZenMode && (
-          <div className="fixed inset-0 z-50 bg-bgPlataforma text-tintaCarvao p-6 sm:p-12 overflow-y-auto animate-fadeIn flex flex-col justify-between">
-            <div className="max-w-4xl mx-auto w-full space-y-6 flex-1">
+          <div className="fixed inset-0 z-[999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
+            <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
               
-              {/* Header do Modo Zen */}
-              <div className="flex items-center justify-between border-b border-papelKraft/50 pb-4">
-                <div className="flex items-center gap-2">
-                  <Feather className="w-5 h-5 text-acentoTerracota" />
-                  <span className="text-xs font-bold text-acentoAzul lowercase">modo foco imersivo</span>
-                </div>
-
+              {/* Header Superior Limpo do Modo Foco */}
+              <div className="flex items-center justify-between border-b border-papelKraft/40 pb-3">
+                {/* Lado Esquerdo: Estatísticas de Palavras & Sprint (Sem o texto 'modo foco imersivo') */}
                 <div className="flex items-center gap-3">
-                  {/* Cronômetro no Modo Foco */}
+                  <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
+                    produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
+                  </span>
+
                   {timerSeconds !== null && (
-                    <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50">
+                    <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
                       <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
                       <span className="font-gesto text-lg font-normal">{formatTimerStr(timerSeconds)}</span>
                     </span>
                   )}
+                </div>
 
-                  <span className="text-xs font-medium text-tintaCarvao/60">
-                    palavras: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong>
-                  </span>
-
+                {/* Lado Direito: Botão 'sair do modo foco' e Botão 'salvar texto' alinhados no topo */}
+                <div className="flex flex-col items-end gap-1.5">
                   <button
                     onClick={() => setIsZenMode(false)}
-                    className="btn-pill-secondary px-4 py-1.5 text-xs font-bold lowercase inline-flex items-center gap-1.5"
+                    className="btn-pill-secondary px-4 py-1.5 text-xs font-bold lowercase inline-flex items-center gap-1.5 shadow-sm"
                   >
                     <Minimize2 className="w-3.5 h-3.5" />
                     <span>sair do modo foco</span>
                   </button>
+
+                  <button
+                    onClick={handleSave}
+                    disabled={saving || !title.trim()}
+                    className="btn-pill-primary px-4 py-1.5 text-xs font-semibold lowercase shadow-sm inline-flex items-center gap-1.5 disabled:opacity-50"
+                  >
+                    <Save className="w-3.5 h-3.5 text-white" />
+                    <span>{saving ? 'salvando...' : 'salvar texto'}</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Título e Área de Escrita Limpa em Tela Cheia */}
-              <div className="bg-papelClaro rounded-3xl p-8 sm:p-12 border border-papelKraft/60 shadow-kraft-lg min-h-[70vh] space-y-6">
+              {/* Caixa Principal de Escrita (Sem sombras, 100% plana com fundo suave de papel) */}
+              <div className="bg-papelClaro rounded-3xl p-6 sm:p-10 border border-papelKraft/50 shadow-none space-y-5 flex-1 flex flex-col">
                 <input
                   type="text"
                   value={title}
@@ -1111,25 +1118,20 @@ export default function WritingExercises() {
                   className="w-full text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul bg-transparent border-none focus:outline-none placeholder:text-tintaCarvao/30 lowercase"
                 />
 
-                <RichTextEditor
-                  value={content}
-                  onChange={setContent}
-                  placeholder="escreva aqui com calma e sem interrupções..."
-                />
+                <div className="flex-1 flex flex-col min-h-[50vh]">
+                  <RichTextEditor
+                    value={content}
+                    onChange={setContent}
+                    placeholder="escreva aqui com calma e sem interrupções..."
+                  />
+                </div>
               </div>
 
-            </div>
+              {/* Rodapé discreto no Modo Foco */}
+              <div className="pt-2 text-center text-[11px] text-tintaCarvao/50 lowercase">
+                <span>solta o verbo • espaço protegido de escrita profunda</span>
+              </div>
 
-            {/* Footer do Modo Zen */}
-            <div className="max-w-4xl mx-auto w-full pt-6 flex items-center justify-between text-xs text-tintaCarvao/60 border-t border-papelKraft/40 mt-6">
-              <span>solta o verbo • espaço protegido de escrita</span>
-              <button
-                onClick={handleSave}
-                disabled={saving || !title.trim()}
-                className="btn-pill-primary px-6 py-2 text-xs font-semibold lowercase shadow-sm"
-              >
-                {saving ? 'salvando...' : 'salvar texto'}
-              </button>
             </div>
           </div>
         )}
