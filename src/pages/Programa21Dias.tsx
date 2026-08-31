@@ -294,9 +294,10 @@ export default function Programa21Dias() {
             </p>
           </div>
 
-          <div className="relative rounded-3xl bg-bgPlataforma p-4 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
+          {/* Reproductor de Video Estilo Scrapbook con Capa da Galeria */}
+          <div className="relative rounded-3xl bg-bgPlataforma p-3 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
             {/* Sticker Fita Washi Superior */}
-            <div className="absolute -top-2 left-10 w-32 h-8 pointer-events-none z-30 opacity-90">
+            <div className="absolute -top-2 left-8 sm:left-12 w-28 sm:w-36 h-7 sm:h-9 pointer-events-none z-30 opacity-90">
               <img
                 src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
                 alt="fita washi"
@@ -306,23 +307,25 @@ export default function Programa21Dias() {
 
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-papelKraft/40 shadow-inner bg-acentoAzul">
               {!isPlayingVideo ? (
+                /* Capa da Galería con Foto 100% Cobertura e Botão Play Centralizado */
                 <div
                   onClick={() => setIsPlayingVideo(true)}
-                  className="absolute inset-0 cursor-pointer group/thumb flex items-center justify-center overflow-hidden"
+                  className="absolute inset-0 cursor-pointer group/thumb w-full h-full"
                 >
                   <img
                     src="/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
                     alt="capa do video 21 dias de escrita"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover/thumb:scale-105 filter brightness-90"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover/thumb:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/80 via-transparent to-acentoAzul/30" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/85 via-acentoAzul/40 to-acentoAzul/30 transition-opacity duration-300 group-hover/thumb:opacity-90" />
 
-                  <div className="relative z-20 flex flex-col items-center gap-3">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover/thumb:scale-110 group-hover/thumb:bg-acentoTerracota/90 animate-pulse">
-                      <Play className="w-9 h-9 sm:w-11 sm:h-11 fill-white translate-x-1" />
+                  {/* Botón Play y Pill Centralizados Absolutos */}
+                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover/thumb:scale-110 group-hover/thumb:bg-acentoTerracota/90 animate-pulse mb-3">
+                      <Play className="w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 fill-white translate-x-0.5" />
                     </div>
-                    <span className="bg-papelClaro/90 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 py-2 rounded-full text-sm sm:text-base shadow-md lowercase">
-                      clique para assistir (3 min)
+                    <span className="bg-papelClaro/95 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-base shadow-lg lowercase border border-papelKraft/50">
+                      clique para assistir ao vídeo (3 min)
                     </span>
                   </div>
                 </div>
