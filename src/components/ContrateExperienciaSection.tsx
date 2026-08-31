@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageCircle, Building2, Users2, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageCircle, Building2, Users2, Compass, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { BRAND_ASSETS } from '../config/brandAssets';
 
 interface GallerySlide {
@@ -62,23 +62,26 @@ export default function ContrateExperienciaSection() {
   const highlights = [
     {
       icon: Building2,
+      badge: 'empresas & corporativo',
       title: 'oficinas corporativas',
       description: 'workshops de escrita consciente para aliviar o estresse, integrar equipes e estimular a comunicação autêntica no trabalho.',
     },
     {
       icon: Users2,
+      badge: 'coletivos & retiros',
       title: 'rodas de escrita para coletivos',
       description: 'encontros presenciais ou virtuais sob medida para festivais, comunidades, retiros e grupos de reflexão.',
     },
     {
       icon: Compass,
+      badge: 'marcas & curadoria',
       title: 'curadoria narrativa personalizada',
       description: 'criação de cadernos artesanais, temas exclusivos e dinâmicas guiadas pensadas para o propósito da sua marca.',
     },
   ];
 
   return (
-    <section id="experiencias" className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
+    <section id="experiencias" className="py-20 sm:py-28 bg-bgPlataforma relative overflow-hidden">
       {/* Elemento de Marca d'Água de Fundo */}
       <div className="absolute -right-20 -bottom-20 opacity-5 pointer-events-none select-none">
         <img
@@ -89,11 +92,11 @@ export default function ContrateExperienciaSection() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="bg-papelClaro rounded-3xl p-8 sm:p-12 lg:p-16 border border-papelKraft/60 shadow-kraft-lg">
+        <div className="bg-papelClaro rounded-3xl p-6 sm:p-10 lg:p-14 border border-papelKraft/60 shadow-kraft-lg space-y-12">
           {/* Header e Layout Dividido com o Carrossel Animado */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Texto de Apresentação */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="lg:col-span-6 space-y-5">
               <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
                 <img
                   src="/brand-assets/icons/icone_63.svg"
@@ -107,7 +110,7 @@ export default function ContrateExperienciaSection() {
                 contrate uma experiência solta o verbo
               </h2>
 
-              <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed font-medium lowercase">
+              <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
                 levamos nossas vivências, rodas de escrita consciente e oficinas narrativas sob medida para a sua equipe, retiro ou evento presencial.
               </p>
             </div>
@@ -125,7 +128,7 @@ export default function ContrateExperienciaSection() {
                 </div>
 
                 {/* Contêiner de Imagem com Transição Suave */}
-                <div className="relative h-64 sm:h-80 w-full rounded-2xl overflow-hidden shadow-sm border border-papelKraft/40">
+                <div className="relative h-60 sm:h-72 w-full rounded-2xl overflow-hidden shadow-sm border border-papelKraft/40">
                   {eventSlides.map((slide, idx) => (
                     <div
                       key={idx}
@@ -169,7 +172,7 @@ export default function ContrateExperienciaSection() {
                 </div>
 
                 {/* Indicadores de Bolinhas / Dots */}
-                <div className="flex justify-center items-center gap-2 pt-4">
+                <div className="flex justify-center items-center gap-2 pt-3.5">
                   {eventSlides.map((_, idx) => (
                     <button
                       key={idx}
@@ -187,33 +190,55 @@ export default function ContrateExperienciaSection() {
             </div>
           </div>
 
-          {/* Highlights Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {highlights.map(({ icon: Icon, title, description }, idx) => (
+          {/* Highlights Bento Grid Compacto e Dinâmico */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+            {highlights.map(({ icon: Icon, badge, title, description }, idx) => (
               <div
                 key={idx}
-                className="bg-bgPlataforma/60 rounded-2xl p-6 border border-papelKraft/50 shadow-sm transition-all hover:-translate-y-1 hover:border-papelKraft"
+                className="bg-bgPlataforma/70 rounded-2xl p-5 sm:p-6 border border-papelKraft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md group flex flex-col justify-between relative overflow-hidden"
               >
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-4">
-                  <Icon className="w-6 h-6 text-acentoAzul" />
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] font-bold text-tintaCarvao/60 uppercase tracking-wider bg-papelKraft/30 px-2.5 py-1 rounded-full">
+                      {badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                    {title}
+                  </h3>
+                  <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                    {description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2">
-                  {title}
-                </h3>
-                <p className="text-tintaCarvao/75 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  {description}
-                </p>
+
+                <div className="pt-4 mt-4 border-t border-papelKraft/30 flex items-center justify-between text-xs font-bold text-acentoAzul opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>saiba mais</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
               </div>
             ))}
           </div>
 
-          {/* CTA Box */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-6 sm:p-8 rounded-2xl bg-acentoAzul text-white shadow-kraft">
-            <div>
-              <h4 className="text-xl sm:text-2xl font-editorial font-bold lowercase mb-1 text-papelClaro">
+          {/* Banner CTA WhatsApp Elegante com Marca D'Água e Alto Contraste */}
+          <div className="relative rounded-2xl bg-[#0D0859] text-white p-6 sm:p-8 lg:p-10 shadow-kraft flex flex-col sm:flex-row items-center justify-between gap-6 border border-acentoTerracota/30 overflow-hidden group">
+            {/* Marca d'Água de Ícone Oficial no Fundo */}
+            <div className="absolute -right-8 -bottom-8 opacity-10 pointer-events-none select-none transition-transform duration-700 group-hover:scale-105">
+              <img
+                src="/brand-assets/icons/icone_63.svg"
+                alt="watermark"
+                className="w-48 h-48 object-contain filter invert"
+              />
+            </div>
+
+            <div className="space-y-1.5 relative z-10 text-center sm:text-left">
+              <h4 className="text-2xl sm:text-3xl font-editorial font-bold lowercase text-papelClaro">
                 vamos desenhar algo especial juntos?
               </h4>
-              <p className="text-papelClaro/80 text-sm sm:text-base lowercase">
+              <p className="text-papelClaro/85 text-sm sm:text-base lowercase font-medium">
                 fale diretamente conosco pelo whatsapp e receba a proposta detalhada.
               </p>
             </div>
@@ -222,9 +247,9 @@ export default function ContrateExperienciaSection() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-pill-accent px-8 py-3.5 rounded-full text-base sm:text-lg font-semibold flex items-center gap-3 transition-all hover:scale-105 shadow-md flex-shrink-0"
+              className="bg-[#BEC540] text-[#0D0859] hover:bg-[#BEC540]/90 font-bold px-8 py-3.5 rounded-full text-base sm:text-lg flex items-center gap-3 transition-all hover:scale-105 shadow-lg flex-shrink-0 cursor-pointer relative z-10 lowercase"
             >
-              <MessageCircle className="w-5 h-5" />
+              <MessageCircle className="w-5 h-5 text-[#0D0859]" />
               <span>falar no whatsapp</span>
             </a>
           </div>
