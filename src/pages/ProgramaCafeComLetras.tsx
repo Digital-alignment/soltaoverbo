@@ -11,6 +11,7 @@ import {
   Flame,
   FileText,
   Clock,
+  Calendar,
   Heart,
   Play,
   Volume2,
