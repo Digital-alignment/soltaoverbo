@@ -10,9 +10,18 @@ export default function PreLoginFooter() {
   return (
     <>
       <footer className="bg-acentoAzul text-white relative overflow-hidden border-t-4 border-acentoOliva">
+        {/* Textura Halftone Retícula de Fundo */}
+        <div
+          className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-overlay z-0 bg-repeat"
+          style={{
+            backgroundImage: "url('/brand-assets/textures/reticula-halftone-padrao-1.png')",
+            backgroundSize: '240px 240px',
+          }}
+        />
+
         {/* Marca d'água gigantesca no fundo */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-10 flex items-center justify-center overflow-hidden"
+          className="absolute inset-0 pointer-events-none opacity-10 flex items-center justify-center overflow-hidden z-0"
           style={{
             backgroundImage: `url(${BRAND_ASSETS.logos.footerWatermark})`,
             backgroundRepeat: 'no-repeat',
@@ -22,7 +31,7 @@ export default function PreLoginFooter() {
         />
 
         {/* Emblema sv giratório sutil */}
-        <div className="absolute top-6 right-6 sm:top-10 sm:right-10 pointer-events-none opacity-20 hidden sm:block">
+        <div className="absolute top-6 right-6 sm:top-10 sm:right-10 pointer-events-none opacity-20 hidden sm:block z-10">
           <img
             src={BRAND_ASSETS.logos.icon}
             alt="emblema solta o verbo"
