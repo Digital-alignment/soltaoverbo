@@ -18,16 +18,21 @@ import {
   Check,
   Maximize2,
   Minimize2,
-  Volume2,
-  VolumeX,
   Tag,
   Book,
   Lightbulb,
   Heart,
   EyeOff,
   UserCheck,
-  ChevronDown,
-  ChevronUp,
+  Timer,
+  Play,
+  Pause,
+  RotateCcw,
+  LayoutTemplate,
+  Flame,
+  Sun,
+  Smile,
+  Bell,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -39,7 +44,15 @@ interface Notebook {
   title: string;
   description: string;
   icon: string;
-  count?: number;
+}
+
+interface GuidedTemplate {
+  id: string;
+  icon: string;
+  title: string;
+  subtitle: string;
+  initialTitle: string;
+  initialContent: string;
 }
 
 // Disparadores / Prompts Poéticos Curados por Bruna & Júlia
@@ -99,6 +112,42 @@ const DEFAULT_NOTEBOOKS: Notebook[] = [
   },
 ];
 
+// Rituais Guiados & Plantillas Poéticas (Templates)
+const GUIDED_TEMPLATES: GuidedTemplate[] = [
+  {
+    id: 'matinal',
+    icon: '🌅',
+    title: 'ritual matinal',
+    subtitle: 'o que desperta no meu corpo hoje?',
+    initialTitle: 'ritual matinal: o que desperta no meu corpo hoje',
+    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“o que o seu corpo e o seu pensamento sentem ao abrir os olhos hoje?”</blockquote><p>ao acordar hoje, percebi que...</p><p></p><p>3 coisas que observo no meu ambiente agora:</p><p>1. </p><p>2. </p><p>3. </p>`,
+  },
+  {
+    id: 'desapego',
+    icon: '🔥',
+    title: 'carta de desapego',
+    subtitle: 'o que deixo ir no fogo de hoje?',
+    initialTitle: 'carta de desapego: o que deixo ir no fogo de hoje',
+    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“escreva sem medo o peso que você decide soltar no fogo de hoje.”</blockquote><p>hoje eu escolho soltar e deixar ir...</p><p></p><p>não preciso mais carregar o peso de...</p><p></p><p>em substituição, abro espaço para...</p>`,
+  },
+  {
+    id: 'gratidao',
+    icon: '✨',
+    title: 'diário de gratidão silenciosa',
+    subtitle: '3 milagres imperceptíveis do meu dia.',
+    initialTitle: 'diário de gratidão silenciosa',
+    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“escreva sobre os pequenos milagres invisíveis da sua rotina.”</blockquote><p>3 pequenos milagres imperceptíveis do meu dia de hoje:</p><p>1. </p><p>2. </p><p>3. </p>`,
+  },
+  {
+    id: 'poema',
+    icon: '🪶',
+    title: 'poema em 4 estrofes',
+    subtitle: 'estrutura guiada com versos soltos.',
+    initialTitle: 'poema em 4 estrofes: versos soltos',
+    initialContent: `<p><strong>estrofe I — a escuta do silêncio</strong></p><p>no primeiro sussurro da casa...</p><p></p><p><strong>estrofe II — a memória do corpo</strong></p><p>um gesto esquecido no tempo...</p><p></p><p><strong>estrofe III — a chama da fogueira</strong></p><p>o fogo que acolhe o peso...</p><p></p><p><strong>estrofe IV — o retorno à presença</strong></p><p>respiro fundo e me reconheço...</p>`,
+  },
+];
+
 // Tags / Etiquetas Poéticas
 const POETIC_TAGS = ['poesia', 'memória', 'desabafo', 'ritual diário', 'ensaio', 'rascunho'];
 
@@ -120,25 +169,69 @@ export default function WritingExercises() {
   const [currentExercise, setCurrentExercise] = useState<WritingExercise | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [selectedTag, setSelectedTag] = useState<string>('poesia');
-  const [selectedNotebook, setSelectedNotebook] = useState<string>('sussurros');
   const [isEditing, setIsEditing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [saving, setSaving] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isAnonymousShare, setIsAnonymousShare] = useState(false);
+  const [showTemplatesModal, setShowTemplatesModal] = useState(false);
 
-  // Estados de Recursos Avançados
+  // Estados de Abas Laterais & Filtros
   const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'tags'>('textos');
   const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
   const [activeNotebookFilter, setActiveNotebookFilter] = useState<string | null>(null);
   
   // Modo Foco (Zen Editor)
   const [isZenMode, setIsZenMode] = useState(false);
-  const [isPlayingAmbientSound, setIsPlayingAmbientSound] = useState(false);
 
   // Prompts / Disparadores Poéticos
   const [showPromptsDrawer, setShowPromptsDrawer] = useState(false);
+
+  // TEMPORIZADOR DO RITUAL (Sprint de Escrita Sem Cobrança)
+  const [timerSeconds, setTimerSeconds] = useState<number | null>(null);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [timerFinished, setTimerFinished] = useState(false);
+
+  useEffect(() => {
+    let interval: any = null;
+    if (isTimerRunning && timerSeconds !== null && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+      }, 1000);
+    } else if (timerSeconds === 0 && isTimerRunning) {
+      setIsTimerRunning(false);
+      setTimerFinished(true);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerRunning, timerSeconds]);
+
+  const startTimer = (minutes: number) => {
+    setTimerSeconds(minutes * 60);
+    setIsTimerRunning(true);
+    setTimerFinished(false);
+  };
+
+  const pauseTimer = () => {
+    setIsTimerRunning(false);
+  };
+
+  const resumeTimer = () => {
+    if (timerSeconds !== null && timerSeconds > 0) {
+      setIsTimerRunning(true);
+    }
+  };
+
+  const stopTimer = () => {
+    setIsTimerRunning(false);
+    setTimerSeconds(null);
+    setTimerFinished(false);
+  };
+
+  const formatTimerStr = (totalSec: number) => {
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     if (profile) {
@@ -160,12 +253,16 @@ export default function WritingExercises() {
     }
   };
 
-  const handleNew = (initialContent?: string, notebookId?: string) => {
+  const handleNew = (initialTitle?: string, initialContent?: string) => {
     setCurrentExercise(null);
-    setTitle('');
+    setTitle(initialTitle || '');
     setContent(initialContent || '');
-    if (notebookId) setSelectedNotebook(notebookId);
     setIsEditing(true);
+    setShowTemplatesModal(false);
+  };
+
+  const handleApplyTemplate = (tmpl: GuidedTemplate) => {
+    handleNew(tmpl.initialTitle, tmpl.initialContent);
   };
 
   const handleEdit = (exercise: WritingExercise) => {
@@ -290,15 +387,13 @@ export default function WritingExercises() {
     setShowPromptsDrawer(false);
   };
 
-  // Filtragem de Textos por Busca, Tag e Caderno
+  // Filtragem de Textos
   const filteredExercises = useMemo(() => {
     return exercises.filter((ex) => {
       const matchesSearch = ex.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesNotebook = activeNotebookFilter ? true : true; // Compatível com base de dados
-      const matchesTag = activeTagFilter ? true : true;
-      return matchesSearch && matchesNotebook && matchesTag;
+      return matchesSearch;
     });
-  }, [exercises, searchQuery, activeNotebookFilter, activeTagFilter]);
+  }, [exercises, searchQuery]);
 
   // Conteo Dinâmico de Palavras e Marco Literário Alcançado
   const currentWordCount = useMemo(() => {
@@ -329,7 +424,7 @@ export default function WritingExercises() {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoAzul/10 border border-acentoAzul/20 text-acentoAzul text-xs font-bold lowercase tracking-wider mb-1.5 shadow-sm">
               <Feather className="w-3.5 h-3.5 text-acentoAzul" />
-              <span>atelier autoral & cadernos</span>
+              <span>estúdio autoral & cadernos</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
               exercícios de escrita
@@ -339,11 +434,21 @@ export default function WritingExercises() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            {/* Botão de Rituais Guiados & Templates */}
+            <button
+              onClick={() => setShowTemplatesModal(true)}
+              className="px-3.5 py-2 rounded-2xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
+              title="rituais guiados & templates poéticos"
+            >
+              <LayoutTemplate className="w-4 h-4 text-acentoAzul" />
+              <span>rituais guiados</span>
+            </button>
+
             {/* Botão para abrir Disparadores Poéticos */}
             <button
               onClick={() => setShowPromptsDrawer(!showPromptsDrawer)}
-              className="px-4 py-2.5 rounded-2xl bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white border border-acentoTerracota/30 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
+              className="px-3.5 py-2 rounded-2xl bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white border border-acentoTerracota/30 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
               title="inspiração e disparadores poéticos"
             >
               <Lightbulb className="w-4 h-4" />
@@ -352,7 +457,7 @@ export default function WritingExercises() {
 
             <button
               onClick={() => handleNew()}
-              className="btn-pill-primary px-5 py-2.5 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
+              className="btn-pill-primary px-5 py-2 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
             >
               <Plus className="w-4 h-4 text-white" />
               <span>novo texto</span>
@@ -360,7 +465,7 @@ export default function WritingExercises() {
           </div>
         </div>
 
-        {/* RECURSO 2: GAVETA / DRAWER DE DISPARADORES & PROMPTS POÉTICOS */}
+        {/* GAVETA / DRAWER DE DISPARADORES & PROMPTS POÉTICOS */}
         {showPromptsDrawer && (
           <div className="bg-papelClaro rounded-3xl p-5 border border-acentoTerracota/40 shadow-kraft space-y-3 animate-fadeIn">
             <div className="flex items-center justify-between">
@@ -509,7 +614,7 @@ export default function WritingExercises() {
               </div>
             )}
 
-            {/* ABA 2: RECURSO 1 - CADERNOS TEMÁTICOS */}
+            {/* ABA 2: CADERNOS TEMÁTICOS */}
             {activeTab === 'cadernos' && (
               <div className="space-y-3">
                 <p className="text-xs text-tintaCarvao/75 lowercase leading-relaxed">
@@ -520,7 +625,7 @@ export default function WritingExercises() {
                   {DEFAULT_NOTEBOOKS.map((nb) => (
                     <div
                       key={nb.id}
-                      onClick={() => handleNew(undefined, nb.id)}
+                      onClick={() => handleNew(nb.title)}
                       className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-1"
                     >
                       <div className="flex items-center justify-between">
@@ -541,7 +646,7 @@ export default function WritingExercises() {
               </div>
             )}
 
-            {/* ABA 3: RECURSO 5 - ETIQUETAS POÉTICAS */}
+            {/* ABA 3: ETIQUETAS POÉTICAS */}
             {activeTab === 'tags' && (
               <div className="space-y-3">
                 <p className="text-xs text-tintaCarvao/75 lowercase leading-relaxed">
@@ -576,17 +681,79 @@ export default function WritingExercises() {
             {isEditing || currentExercise ? (
               <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-kraft space-y-5 relative">
                 
-                {/* RECURSO 3: BOTÃO MODO FOCO / ZEN EDITOR NO TOPO DIREITO DO EDITOR */}
-                <div className="flex items-center justify-between border-b border-papelKraft/40 pb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-acentoTerracota lowercase">
-                      caderno de escrita ativo
-                    </span>
+                {/* BARRA SUPERIOR DO EDITOR: MODO FOCO + TEMPORIZADOR DO RITUAL */}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-papelKraft/40 pb-3">
+                  {/* RECURSO FUNCIONAL 1: TEMPORIZADOR DO RITUAL (SPRINT DE ESCRITA SEM COBRANÇA) */}
+                  <div className="flex items-center gap-2 bg-bgPlataforma/80 px-3 py-1.5 rounded-2xl border border-papelKraft/50">
+                    <Timer className="w-4 h-4 text-acentoTerracota" />
+                    <span className="text-xs font-bold text-acentoAzul lowercase">sprint poético:</span>
+
+                    {timerSeconds === null ? (
+                      /* Seleção do Tempo de Sprint */
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => startTimer(5)}
+                          className="px-2 py-0.5 rounded-lg bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white border border-papelKraft text-[11px] font-bold lowercase transition-all"
+                        >
+                          5min
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => startTimer(10)}
+                          className="px-2 py-0.5 rounded-lg bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white border border-papelKraft text-[11px] font-bold lowercase transition-all"
+                        >
+                          10min
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => startTimer(15)}
+                          className="px-2 py-0.5 rounded-lg bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white border border-papelKraft text-[11px] font-bold lowercase transition-all"
+                        >
+                          15min
+                        </button>
+                      </div>
+                    ) : (
+                      /* Relógio Ativo em Fonte Muthazle com Controles */
+                      <div className="flex items-center gap-2">
+                        <span className="font-gesto text-xl font-normal text-acentoTerracota min-w-[50px]">
+                          {formatTimerStr(timerSeconds)}
+                        </span>
+                        {isTimerRunning ? (
+                          <button
+                            type="button"
+                            onClick={pauseTimer}
+                            className="p-1 rounded-lg hover:bg-papelKraft/40 text-acentoAzul"
+                            title="pausar sprint"
+                          >
+                            <Pause className="w-3.5 h-3.5" />
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={resumeTimer}
+                            className="p-1 rounded-lg hover:bg-papelKraft/40 text-acentoAzul"
+                            title="retomar sprint"
+                          >
+                            <Play className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={stopTimer}
+                          className="p-1 rounded-lg hover:bg-papelKraft/40 text-tintaCarvao/50"
+                          title="reiniciar cronômetro"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                   </div>
 
+                  {/* Botão Modo Foco */}
                   <button
                     onClick={() => setIsZenMode(true)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-bold lowercase transition-all shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-bold lowercase transition-all shadow-sm"
                     title="modo foco imersivo"
                   >
                     <Maximize2 className="w-3.5 h-3.5" />
@@ -594,7 +761,23 @@ export default function WritingExercises() {
                   </button>
                 </div>
 
-                {/* Título do Texto & RECURSO 4: Metas Literárias em Tempo Real */}
+                {/* Notificação de Sprint Concluído */}
+                {timerFinished && (
+                  <div className="p-3.5 rounded-2xl bg-acentoOliva/20 border border-acentoOliva text-acentoAzul text-xs font-bold lowercase flex items-center justify-between animate-fadeIn">
+                    <div className="flex items-center gap-2">
+                      <Bell className="w-4 h-4 text-acentoTerracota animate-bounce" />
+                      <span>ritual concluído com presença! 🌿 pause e releia o que você escreveu sem julgamentos.</span>
+                    </div>
+                    <button
+                      onClick={() => setTimerFinished(false)}
+                      className="p-1 rounded-lg hover:bg-acentoOliva/40"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Título do Texto & Metas Literárias em Tempo Real */}
                 <div className="space-y-3">
                   <input
                     type="text"
@@ -674,7 +857,7 @@ export default function WritingExercises() {
               </div>
             ) : (
               /* Estado Vazio de Início */
-              <div className="bg-papelClaro rounded-3xl p-10 sm:p-14 border border-papelKraft/60 shadow-kraft text-center space-y-5">
+              <div className="bg-papelClaro rounded-3xl p-8 sm:p-12 border border-papelKraft/60 shadow-kraft text-center space-y-6">
                 <div className="w-16 h-16 rounded-full bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mx-auto">
                   <Edit3 className="w-8 h-8" />
                 </div>
@@ -684,8 +867,30 @@ export default function WritingExercises() {
                     comece a escrever
                   </h3>
                   <p className="text-xs sm:text-sm text-tintaCarvao/75 lowercase font-medium leading-relaxed">
-                    crie um novo texto do zero ou selecione uma de suas memórias no menu lateral para continuar escrevendo.
+                    crie um novo texto livre ou selecione uma das nossas plantillas de rituais guiados.
                   </p>
+                </div>
+
+                {/* Seleção Rápida de Templates na Tela Inicial */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto text-left">
+                  {GUIDED_TEMPLATES.map((tmpl) => (
+                    <button
+                      key={tmpl.id}
+                      type="button"
+                      onClick={() => handleApplyTemplate(tmpl)}
+                      className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 hover:border-acentoAzul shadow-sm transition-all group space-y-1"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">{tmpl.icon}</span>
+                        <h4 className="text-xs font-bold text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                          {tmpl.title}
+                        </h4>
+                      </div>
+                      <p className="text-[11px] text-tintaCarvao/70 lowercase line-clamp-1 font-medium">
+                        {tmpl.subtitle}
+                      </p>
+                    </button>
+                  ))}
                 </div>
 
                 <div className="pt-2">
@@ -694,7 +899,7 @@ export default function WritingExercises() {
                     className="btn-pill-primary px-6 py-3 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
                   >
                     <Plus className="w-4 h-4 text-white" />
-                    <span>criar novo texto</span>
+                    <span>criar novo texto livre</span>
                   </button>
                 </div>
               </div>
@@ -703,7 +908,67 @@ export default function WritingExercises() {
 
         </div>
 
-        {/* RECURSO 3: MODO FOCO / ZEN EDITOR EM TELA CHEIA (ZEN WORKSPACE) */}
+        {/* MODAL RECURSO 2: RITUAIS GUIADOS & PLANTILLAS POÉTICAS (TEMPLATES) */}
+        {showTemplatesModal && (
+          <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-2xl w-full shadow-kraft-lg space-y-5 relative">
+              <button
+                onClick={() => setShowTemplatesModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-acentoTerracota lowercase block">
+                  estruturas poéticas guiadas
+                </span>
+                <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  escolha um ritual guiado de escrita
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                {GUIDED_TEMPLATES.map((tmpl) => (
+                  <div
+                    key={tmpl.id}
+                    onClick={() => handleApplyTemplate(tmpl)}
+                    className="p-4 rounded-2xl bg-white border border-papelKraft/60 shadow-sm hover:border-acentoTerracota transition-all cursor-pointer group space-y-2 flex flex-col justify-between"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{tmpl.icon}</span>
+                        <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                          {tmpl.title}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-tintaCarvao/80 lowercase italic font-medium leading-relaxed">
+                        “{tmpl.subtitle}”
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-end">
+                      <span className="text-xs font-bold text-acentoTerracota lowercase group-hover:underline">
+                        iniciar este ritual →
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-2 flex justify-end border-t border-papelKraft/40">
+                <button
+                  onClick={() => setShowTemplatesModal(false)}
+                  className="btn-pill-secondary px-5 py-2 text-xs font-semibold lowercase"
+                >
+                  fechar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA */}
         {isZenMode && (
           <div className="fixed inset-0 z-50 bg-bgPlataforma text-tintaCarvao p-6 sm:p-12 overflow-y-auto animate-fadeIn flex flex-col justify-between">
             <div className="max-w-4xl mx-auto w-full space-y-6 flex-1">
@@ -716,6 +981,14 @@ export default function WritingExercises() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {/* Cronômetro no Modo Foco */}
+                  {timerSeconds !== null && (
+                    <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50">
+                      <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
+                      <span className="font-gesto text-lg font-normal">{formatTimerStr(timerSeconds)}</span>
+                    </span>
+                  )}
+
                   <span className="text-xs font-medium text-tintaCarvao/60">
                     palavras: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong>
                   </span>
@@ -763,7 +1036,7 @@ export default function WritingExercises() {
           </div>
         )}
 
-        {/* RECURSO 6: MODAL DE COMPARTILHAMENTO NA FOGUEIRA (COM OPÇÃO DE PUBLICAÇÃO ANÔNIMA) */}
+        {/* MODAL DE COMPARTILHAMENTO NA FOGUEIRA */}
         {showShareModal && (
           <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-5 relative">
