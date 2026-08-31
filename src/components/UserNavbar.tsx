@@ -51,7 +51,19 @@ export default function UserNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
           
-          {/* LADO ESQUERDO: Notificações & Perfil do Usuário */}
+          {/* LADO ESQUERDO: Logo Oficial Solta o Verbo (Todas as Versões) */}
+          <Link to="/dashboard" className="flex items-center gap-3 group">
+            <img
+              src={BRAND_ASSETS.logos.horizontal}
+              alt="solta o verbo"
+              className="h-7 sm:h-9 max-w-[190px] object-contain transition-transform group-hover:scale-105"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
+              }}
+            />
+          </Link>
+
+          {/* LADO DIREITO: Notificações & Perfil do Usuário */}
           <div className="flex items-center gap-3">
             {/* Notificações com Badge */}
             <Link
@@ -89,14 +101,14 @@ export default function UserNavbar() {
                 </div>
               </button>
 
-              {/* Menu Dropdown */}
+              {/* Menu Dropdown Anclado a la Derecha */}
               {dropdownOpen && (
                 <>
                   <div
                     className="fixed inset-0 z-40"
                     onClick={() => setDropdownOpen(false)}
                   />
-                  <div className="absolute left-0 mt-3 w-56 bg-papelClaro rounded-3xl border border-papelKraft/60 shadow-kraft-lg z-50 overflow-hidden py-2 animate-fadeIn">
+                  <div className="absolute right-0 mt-3 w-56 bg-papelClaro rounded-3xl border border-papelKraft/60 shadow-kraft-lg z-50 overflow-hidden py-2 animate-fadeIn">
                     <div className="px-5 py-3 border-b border-papelKraft/40">
                       <p className="text-sm font-semibold text-acentoAzul lowercase truncate">
                         olá, {profile?.display_name || 'aluno'}
@@ -141,18 +153,6 @@ export default function UserNavbar() {
               )}
             </div>
           </div>
-
-          {/* LADO DIREITO: Logo Oficial Solta o Verbo */}
-          <Link to="/dashboard" className="flex items-center gap-3 group">
-            <img
-              src={BRAND_ASSETS.logos.horizontal}
-              alt="solta o verbo"
-              className="h-7 sm:h-9 max-w-[190px] object-contain transition-transform group-hover:scale-105"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
-              }}
-            />
-          </Link>
 
         </div>
       </div>

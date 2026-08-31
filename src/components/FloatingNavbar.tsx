@@ -35,11 +35,11 @@ export default function FloatingNavbar() {
                 className="relative group flex flex-col items-center justify-center"
                 aria-label={item.label}
               >
-                {/* Active Circle Indicator */}
+                {/* Active Circle Indicator (Apenas background azul profundo, sem borda verde) */}
                 <div
                   className={`w-12 h-12 rounded-full transition-all duration-300 flex items-center justify-center relative ${
                     active
-                      ? 'bg-acentoAzul text-white shadow-md scale-110 ring-4 ring-acentoOliva/40'
+                      ? 'bg-acentoAzul text-white shadow-md scale-110'
                       : 'bg-transparent text-tintaCarvao/70 hover:bg-papelKraft/40 hover:text-acentoAzul hover:scale-105'
                   }`}
                 >
@@ -56,7 +56,7 @@ export default function FloatingNavbar() {
         </div>
       </nav>
 
-      {/* MOBILE FLOATING NAVBAR (Ao Rodapé da Tela - Bar Horizontal com Bolha Elevada para Item Ativo) */}
+      {/* MOBILE FLOATING NAVBAR (Ao Rodapé da Tela - Bar Horizontal com Bolha Elevada sem borda verde) */}
       <nav className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-3 w-full max-w-xs pointer-events-none">
         <div className="bg-papelClaro/95 backdrop-blur-md rounded-full py-2 px-5 border border-papelKraft/70 shadow-kraft-lg flex items-center justify-between pointer-events-auto relative">
           {navItems.map((item) => {
@@ -70,11 +70,11 @@ export default function FloatingNavbar() {
                 className="flex flex-col items-center justify-center group relative py-1"
                 aria-label={item.label}
               >
-                {/* Efeito de Bolha Elevada (Raised Active Tab) inspirada nas referências */}
+                {/* Efeito de Bolha Elevada para Item Ativo (Sem borda verde) */}
                 <div
                   className={`rounded-full transition-all duration-300 flex items-center justify-center ${
                     active
-                      ? 'w-12 h-12 -mt-6 bg-acentoAzul text-white shadow-xl ring-4 ring-acentoOliva/40 scale-110'
+                      ? 'w-12 h-12 -mt-6 bg-acentoAzul text-white shadow-xl scale-110'
                       : 'w-9 h-9 bg-transparent text-tintaCarvao/70 group-hover:text-acentoAzul'
                   }`}
                 >
