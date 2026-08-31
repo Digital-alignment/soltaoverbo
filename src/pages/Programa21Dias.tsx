@@ -644,7 +644,7 @@ export default function Programa21Dias() {
             </button>
 
             {/* Grid de 3 Cards Visíveis em Desktop */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[0, 1, 2].map((offset) => {
                 const itemIndex = (carouselIndex + offset) % deploymentScreenshots.length;
                 const item = deploymentScreenshots[itemIndex];
@@ -657,10 +657,10 @@ export default function Programa21Dias() {
                   <div
                     key={itemIndex}
                     onClick={() => setSelectedScreenshot(item.src)}
-                    className="relative bg-bgPlataforma rounded-3xl p-3 sm:p-4 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none"
+                    className="relative bg-bgPlataforma rounded-3xl p-4 sm:p-5 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none flex flex-col justify-between"
                   >
                     {/* Sticker Fita Washi */}
-                    <div className="absolute -top-3 left-6 w-24 h-6 pointer-events-none z-20 opacity-90">
+                    <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
                       <img
                         src={washiTapeImage}
                         alt="fita washi"
@@ -668,23 +668,29 @@ export default function Programa21Dias() {
                       />
                     </div>
 
-                    <div className="w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-papelKraft/30 relative mb-3 bg-white flex items-center justify-center">
+                    {/* Frame com Foto 100% Visível em object-contain */}
+                    <div className="w-full h-[400px] sm:h-[440px] rounded-2xl overflow-hidden border border-papelKraft/30 relative bg-papelClaro p-2 flex items-center justify-center shadow-inner group/img mb-3">
                       <img
                         src={item.src}
                         alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-contain object-top transition-transform duration-500 group-hover/img:scale-105"
                       />
-                      <div className="absolute inset-0 bg-acentoAzul/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-papelClaro text-acentoAzul font-bold px-4 py-2 rounded-full text-xs flex items-center gap-2 shadow-lg lowercase">
+                      
+                      {/* Hint Overlay para Ampliar */}
+                      <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+                        <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
                           <ZoomIn className="w-4 h-4 text-acentoTerracota" />
-                          <span>ampliar depoimento</span>
+                          <span>ampliar depoimento em tela cheia</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="px-2 text-center">
+                    <div className="px-2 text-center pt-1 border-t border-papelKraft/30 flex items-center justify-between">
                       <span className="font-editorial text-sm font-bold text-acentoAzul lowercase">
                         {item.title}
+                      </span>
+                      <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
+                        print real
                       </span>
                     </div>
                   </div>
