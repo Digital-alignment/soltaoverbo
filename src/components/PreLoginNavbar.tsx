@@ -23,13 +23,21 @@ export default function PreLoginNavbar() {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const location = useLocation();
 
+  // Escucha el scroll con umbral de histeresis para evitar la oscilación y palpitación del header
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > 40) {
+        setScrolled(true);
+      } else if (y < 10) {
+        setScrolled(false);
+      }
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Cierra el dropdown al hacer clic fuera
+  // Cierra el dropdown al fazer clic fora
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -40,7 +48,7 @@ export default function PreLoginNavbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Bloquea el scroll del body cuando el menú móvil está abierto
+  // Bloquea el scroll del body cuando el menú móvil está aberto
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -88,34 +96,40 @@ export default function PreLoginNavbar() {
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
     setDropdownOpen(true);
   };
 
   const handleMouseLeave = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     timeoutRef.current = setTimeout(() => {
       setDropdownOpen(false);
     }, 200);
   };
 
   const handleSubItemClick = (subItem: typeof productSubItems[0]) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setDropdownOpen(false);
     setMobileMenuOpen(false);
+    if (location.pathname === subItem.to) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
     <>
-      {/* Header Desktop & Mobile Sticky que se mantiene fijo al hacer scroll */}
+      {/* Header Desktop & Mobile Sticky com dimensão fixa para eliminar palpitación */}
       <header
-        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
+        className={`sticky top-0 left-0 right-0 z-50 py-3.5 sm:py-4 transition-all duration-300 ease-in-out ${
           scrolled
-            ? 'bg-bgPlataforma/95 backdrop-blur-md shadow-kraft border-b border-papelKraft/60 py-3.5'
-            : 'bg-bgPlataforma border-b border-papelKraft/40 py-4 sm:py-6'
+            ? 'bg-bgPlataforma/95 backdrop-blur-md shadow-kraft border-b border-papelKraft/60'
+            : 'bg-bgPlataforma border-b border-papelKraft/40'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center transition-all duration-300">
+          <div className="flex justify-between items-center">
             {/* Logo de Solta o Verbo (Solo la marca horizontal sin espiral) */}
             <Link
               to="/"
@@ -125,11 +139,7 @@ export default function PreLoginNavbar() {
               <img
                 src={BRAND_ASSETS.logos.horizontal}
                 alt="solta o verbo"
-                className={`w-auto object-contain transition-all duration-300 group-hover:opacity-90 ${
-                  scrolled
-                    ? 'h-8 sm:h-9 max-w-[180px] sm:max-w-[210px]'
-                    : 'h-10 sm:h-12 max-w-[220px] sm:max-w-[260px]'
-                }`}
+                className="h-8 sm:h-9.5 w-auto max-w-[200px] sm:max-w-[240px] object-contain transition-all duration-300 group-hover:opacity-90"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
                 }}
@@ -141,9 +151,7 @@ export default function PreLoginNavbar() {
               {/* Início */}
               <Link
                 to="/"
-                className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 ${
-                  scrolled ? 'text-base' : 'text-lg xl:text-xl'
-                } ${
+                className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 text-base xl:text-lg ${
                   isActive('/')
                     ? 'text-acentoAzul font-semibold'
                     : 'text-tintaCarvao/80 hover:text-acentoAzul'
@@ -165,9 +173,7 @@ export default function PreLoginNavbar() {
               >
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 bg-transparent border-none cursor-pointer p-0 py-1 ${
-                    scrolled ? 'text-base' : 'text-lg xl:text-xl'
-                  } ${
+                  className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 bg-transparent border-none cursor-pointer p-0 py-1 text-base xl:text-lg ${
                     isProgramsActive
                       ? 'text-acentoAzul font-semibold'
                       : 'text-tintaCarvao/80 hover:text-acentoAzul'
@@ -255,9 +261,7 @@ export default function PreLoginNavbar() {
               {/* Sobre Nós */}
               <Link
                 to="/about"
-                className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 ${
-                  scrolled ? 'text-base' : 'text-lg xl:text-xl'
-                } ${
+                className={`font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 text-base xl:text-lg ${
                   isActive('/about')
                     ? 'text-acentoAzul font-semibold'
                     : 'text-tintaCarvao/80 hover:text-acentoAzul'
@@ -302,8 +306,8 @@ export default function PreLoginNavbar() {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl text-tintaCarvao hover:text-acentoAzul hover:bg-papelClaro focus:outline-none transition-colors"
-                aria-label="menu"
+                className="p-2 rounded-xl text-tintaCarvao hover:text-acentoAzul hover:bg-papelClaro border border-papelKraft/40 transition-colors cursor-pointer"
+                aria-label="Abrir menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -312,35 +316,52 @@ export default function PreLoginNavbar() {
         </div>
       </header>
 
-      {/* Menu Off-canvas Móvel */}
+      {/* Drawer do Menu Móvel Off-Canvas com Blur */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-acentoAzul/40 backdrop-blur-sm lg:hidden animate-fadeIn">
-          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-papelClaro border-l border-papelKraft/40 shadow-2xl p-6 flex flex-col justify-between overflow-y-auto">
-            <div className="space-y-6 pt-16">
-              <div className="flex justify-between items-center pb-4 border-b border-papelKraft/30">
-                <span className="font-editorial font-bold text-lg text-acentoAzul lowercase">
-                  menu de navegação
-                </span>
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Overlay Escuro com Blur */}
+          <div
+            className="fixed inset-0 bg-acentoAzul/60 backdrop-blur-sm transition-opacity animate-fadeIn"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Painel Lateral */}
+          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-papelClaro shadow-2xl p-6 flex flex-col justify-between overflow-y-auto animate-slideInRight border-l border-papelKraft/60">
+            <div className="space-y-6">
+              {/* Header do Menu Móvel */}
+              <div className="flex items-center justify-between pb-4 border-b border-papelKraft/40">
+                <img
+                  src={BRAND_ASSETS.logos.horizontal}
+                  alt="solta o verbo"
+                  className="h-7 w-auto object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
+                  }}
+                />
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-tintaCarvao/60 hover:text-acentoAzul"
+                  className="p-2 rounded-full bg-bgPlataforma text-tintaCarvao hover:text-acentoAzul border border-papelKraft/40 transition-colors"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="space-y-3">
+              {/* Links Principais Móveis */}
+              <nav className="flex flex-col space-y-3">
                 <Link
                   to="/"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-lg font-medium lowercase ${
+                  className={`p-3 rounded-xl font-medium flex items-center justify-between lowercase transition-all ${
                     isActive('/')
-                      ? 'bg-acentoAzul text-white font-bold'
+                      ? 'bg-acentoAzul text-white shadow-sm'
                       : 'text-tintaCarvao hover:bg-bgPlataforma'
                   }`}
                 >
-                  <Compass className="w-5 h-5" />
-                  <span>início</span>
+                  <div className="flex items-center gap-2.5">
+                    <Compass className="w-4 h-4" />
+                    <span>início</span>
+                  </div>
+                  {isActive('/') && <ArrowRight className="w-4 h-4 text-white" />}
                 </Link>
 
                 {/* Sub-itens de Programas no Menu Móvel */}
@@ -356,15 +377,15 @@ export default function PreLoginNavbar() {
                       <Link
                         key={subItem.to}
                         to={subItem.to}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-2xl ${
+                        onClick={() => handleSubItemClick(subItem)}
+                        className={`p-3 rounded-xl flex items-center gap-3 transition-all ${
                           active
-                            ? 'bg-acentoAzul text-white font-bold'
-                            : 'bg-bgPlataforma/70 text-tintaCarvao hover:bg-bgPlataforma'
+                            ? 'bg-acentoAzul/10 text-acentoAzul font-semibold border border-acentoAzul/30'
+                            : 'text-tintaCarvao/85 hover:bg-bgPlataforma'
                         }`}
                       >
-                        <Icon className="w-5 h-5 flex-shrink-0" />
-                        <span className="text-base font-medium lowercase">{subItem.label}</span>
+                        <Icon className="w-4 h-4 text-acentoAzul flex-shrink-0" />
+                        <span className="text-sm font-medium lowercase">{subItem.label}</span>
                       </Link>
                     );
                   })}
@@ -373,34 +394,39 @@ export default function PreLoginNavbar() {
                 <Link
                   to="/about"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-lg font-medium lowercase ${
+                  className={`p-3 rounded-xl font-medium flex items-center justify-between lowercase transition-all ${
                     isActive('/about')
-                      ? 'bg-acentoAzul text-white font-bold'
+                      ? 'bg-acentoAzul text-white shadow-sm'
                       : 'text-tintaCarvao hover:bg-bgPlataforma'
                   }`}
                 >
-                  <Users className="w-5 h-5" />
-                  <span>sobre nós</span>
+                  <div className="flex items-center gap-2.5">
+                    <Users className="w-4 h-4" />
+                    <span>sobre nós</span>
+                  </div>
+                  {isActive('/about') && <ArrowRight className="w-4 h-4 text-white" />}
                 </Link>
-              </div>
+              </nav>
             </div>
 
-            <div className="pt-6 border-t border-papelKraft/30 space-y-3">
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-3 text-center font-bold text-acentoAzul bg-bgPlataforma rounded-full border border-papelKraft/40 lowercase"
-              >
-                <LogIn className="w-4 h-4" />
-                <span>entrar na conta</span>
-              </Link>
+            {/* CTAs no Rodapé do Menu Móvel */}
+            <div className="space-y-3 pt-6 border-t border-papelKraft/40">
               <Link
                 to="/register"
                 onClick={() => setMobileMenuOpen(false)}
-                className="btn-pill-primary flex items-center justify-center gap-2 w-full py-3.5 text-center font-bold lowercase text-base"
+                className="btn-pill-primary w-full py-3.5 rounded-full flex items-center justify-center gap-2 text-center text-sm font-semibold shadow-md lowercase"
               >
                 <Pencil className="w-4 h-4 text-white" />
-                <span>criar conta gratuita</span>
+                <span>fazer parte</span>
+              </Link>
+
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-3 rounded-full flex items-center justify-center gap-2 text-center text-sm font-semibold text-tintaCarvao hover:text-acentoAzul bg-bgPlataforma border border-papelKraft/40 lowercase"
+              >
+                <LogIn className="w-4 h-4 text-acentoAzul" />
+                <span>entrar na plataforma</span>
               </Link>
             </div>
           </div>
