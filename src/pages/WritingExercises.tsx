@@ -34,6 +34,10 @@ import {
   Smile,
   Bell,
   BookOpen,
+  PanelLeftClose,
+  PanelLeftOpen,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -176,6 +180,9 @@ export default function WritingExercises() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [isAnonymousShare, setIsAnonymousShare] = useState(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
+
+  // Estado para Colapsar o Menu Lateral (Maior Largura para o Editor)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Estados de Abas Laterais & Filtros
   const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'tags'>('textos');
@@ -418,28 +425,28 @@ export default function WritingExercises() {
   const renderTemplateIcon = (type: GuidedTemplate['type']) => {
     switch (type) {
       case 'sun':
-        return <Sun className="w-5 h-5 text-acentoTerracota" />;
+        return <Sun className="w-5 h-5 text-acentoTerracota shrink-0" />;
       case 'flame':
-        return <Flame className="w-5 h-5 text-acentoTerracota" />;
+        return <Flame className="w-5 h-5 text-acentoTerracota shrink-0" />;
       case 'sparkles':
-        return <Sparkles className="w-5 h-5 text-acentoAzul" />;
+        return <Sparkles className="w-5 h-5 text-acentoAzul shrink-0" />;
       case 'feather':
       default:
-        return <Feather className="w-5 h-5 text-acentoAzul" />;
+        return <Feather className="w-5 h-5 text-acentoAzul shrink-0" />;
     }
   };
 
   const renderNotebookIcon = (type: Notebook['type']) => {
     switch (type) {
       case 'feather':
-        return <Feather className="w-4 h-4 text-acentoTerracota" />;
+        return <Feather className="w-4 h-4 text-acentoTerracota shrink-0" />;
       case 'book':
-        return <Book className="w-4 h-4 text-acentoAzul" />;
+        return <Book className="w-4 h-4 text-acentoAzul shrink-0" />;
       case 'openbook':
-        return <BookOpen className="w-4 h-4 text-acentoAzul" />;
+        return <BookOpen className="w-4 h-4 text-acentoAzul shrink-0" />;
       case 'sparkles':
       default:
-        return <Sparkles className="w-4 h-4 text-acentoTerracota" />;
+        return <Sparkles className="w-4 h-4 text-acentoTerracota shrink-0" />;
     }
   };
 
@@ -447,45 +454,23 @@ export default function WritingExercises() {
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        {/* CABEÇALHO DO ATELIER DE ESCRITA */}
+        {/* CABEÇALHO LIMPO DA PÁGINA (SEM TAG SUPERIOR, DESCRIÇÃO MAIS CURTA E FONTE MAIOR) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/40 pb-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoAzul/10 border border-acentoAzul/20 text-acentoAzul text-xs font-bold lowercase tracking-wider mb-1.5 shadow-sm">
-              <Feather className="w-3.5 h-3.5 text-acentoAzul" />
-              <span>estúdio autoral & cadernos</span>
-            </div>
+          <div className="space-y-1">
             <h1 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
               exercícios de escrita
             </h1>
-            <p className="text-xs sm:text-sm text-tintaCarvao/75 lowercase font-medium mt-1">
-              seu espaço pessoal e protegido para cultivar ideias, organizar seus cadernos e soltar a voz.
+            {/* Texto Descritivo Mais Compacto e com Fonte Maior em Editorial Serif */}
+            <p className="text-base sm:text-lg text-tintaCarvao/85 font-medium font-editorial lowercase leading-relaxed">
+              seu espaço protegido para criar, organizar seus cadernos e soltar a voz.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
-            {/* Botão de Rituais Guiados & Templates */}
-            <button
-              onClick={() => setShowTemplatesModal(true)}
-              className="px-3.5 py-2 rounded-2xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
-              title="rituais guiados & templates poéticos"
-            >
-              <LayoutTemplate className="w-4 h-4 text-acentoAzul" />
-              <span>rituais guiados</span>
-            </button>
-
-            {/* Botão para abrir Disparadores Poéticos */}
-            <button
-              onClick={() => setShowPromptsDrawer(!showPromptsDrawer)}
-              className="px-3.5 py-2 rounded-2xl bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white border border-acentoTerracota/30 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
-              title="inspiração e disparadores poéticos"
-            >
-              <Lightbulb className="w-4 h-4" />
-              <span>disparador poético</span>
-            </button>
-
+          {/* Único Botão de Ação Primário no Cabeçalho da Página */}
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <button
               onClick={() => handleNew()}
-              className="btn-pill-primary px-5 py-2 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
+              className="btn-pill-primary px-6 py-2.5 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
             >
               <Plus className="w-4 h-4 text-white" />
               <span>novo texto</span>
@@ -538,185 +523,255 @@ export default function WritingExercises() {
           </div>
         )}
 
-        {/* ESTRUTURA PRINCIPAL EM DUAS COLUNAS */}
+        {/* ESTRUTURA PRINCIPAL EM DUAS COLUNAS COM MENU LATERAL COLAPSÁVEL */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* PAINEL LATERAL: CADERNOS, LISTA DE TEXTOS E TAGS (lg:col-span-4) */}
-          <div className="lg:col-span-4 bg-papelClaro rounded-3xl p-5 border border-papelKraft/60 shadow-kraft space-y-4">
-            
-            {/* Abas de Organização: Textos | Cadernos | Tags */}
-            <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-2xl border border-papelKraft/50 text-xs font-semibold lowercase">
-              <button
-                onClick={() => {
-                  setActiveTab('textos');
-                  setActiveTagFilter(null);
-                }}
-                className={`flex-1 py-1.5 rounded-xl transition-all ${
-                  activeTab === 'textos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                textos ({exercises.length})
-              </button>
+          {/* PAINEL LATERAL COLAPSÁVEL (lg:col-span-3 quando expandido, lg:col-span-1 quando colapsado) */}
+          <div
+            className={`transition-all duration-300 ${
+              isSidebarCollapsed ? 'lg:col-span-1' : 'lg:col-span-3'
+            }`}
+          >
+            <div className="bg-papelClaro rounded-3xl p-4 sm:p-5 border border-papelKraft/60 shadow-kraft space-y-4 relative">
+              
+              {/* Botão para Colapsar/Expandir o Menu Lateral */}
+              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-2">
+                {!isSidebarCollapsed && (
+                  <span className="text-xs font-bold text-acentoAzul lowercase">
+                    estúdio de textos
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                  className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul transition-colors border border-papelKraft/40 mx-auto lg:mx-0"
+                  title={isSidebarCollapsed ? 'expandir menu' : 'colapsar menu para maior espaço de escrita'}
+                >
+                  {isSidebarCollapsed ? (
+                    <PanelLeftOpen className="w-4 h-4" />
+                  ) : (
+                    <PanelLeftClose className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
 
-              <button
-                onClick={() => setActiveTab('cadernos')}
-                className={`flex-1 py-1.5 rounded-xl transition-all ${
-                  activeTab === 'cadernos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                cadernos
-              </button>
-
-              <button
-                onClick={() => setActiveTab('tags')}
-                className={`flex-1 py-1.5 rounded-xl transition-all ${
-                  activeTab === 'tags' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                etiquetas
-              </button>
-            </div>
-
-            {/* ABA 1: LISTA DE TEXTOS E BUSCA */}
-            {activeTab === 'textos' && (
-              <div className="space-y-3">
-                <div className="relative">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="buscar nos meus textos..."
-                    className="w-full pl-10 pr-4 py-2 bg-bgPlataforma/70 border border-papelKraft/50 rounded-2xl text-xs text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/50 lowercase"
-                  />
-                </div>
-
-                <div className="space-y-2 max-h-[540px] overflow-y-auto pr-1">
-                  {filteredExercises.map((exercise) => (
-                    <div
-                      key={exercise.id}
-                      onClick={() => handleEdit(exercise)}
-                      className={`p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer group flex items-center justify-between gap-3 ${
-                        currentExercise?.id === exercise.id
-                          ? 'bg-white border-acentoAzul shadow-sm'
-                          : 'bg-bgPlataforma/60 border-papelKraft/40 hover:bg-white hover:border-papelKraft/80'
+              {/* CONTEÚDO DO MENU LATERAL QUANDO EXPANDIDO */}
+              {!isSidebarCollapsed ? (
+                <div className="space-y-4 animate-fadeIn">
+                  {/* Abas de Organização: Textos | Cadernos | Tags */}
+                  <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-2xl border border-papelKraft/50 text-xs font-semibold lowercase">
+                    <button
+                      onClick={() => {
+                        setActiveTab('textos');
+                        setActiveTagFilter(null);
+                      }}
+                      className={`flex-1 py-1.5 rounded-xl transition-all ${
+                        activeTab === 'textos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
-                      <div className="flex-1 min-w-0 space-y-1">
-                        <h3 className="font-bold text-xs sm:text-sm text-acentoAzul truncate lowercase">
-                          {exercise.title || 'texto sem título'}
-                        </h3>
-                        <div className="flex items-center gap-2 text-[10px] text-tintaCarvao/60 font-medium">
-                          <span>{new Date(exercise.updated_at).toLocaleDateString('pt-BR')}</span>
-                          {exercise.is_published && (
-                            <span className="px-2 py-0.5 rounded-full bg-acentoOliva/20 text-acentoAzul font-bold lowercase">
-                              na fogueira
-                            </span>
-                          )}
-                        </div>
+                      textos ({exercises.length})
+                    </button>
+
+                    <button
+                      onClick={() => setActiveTab('cadernos')}
+                      className={`flex-1 py-1.5 rounded-xl transition-all ${
+                        activeTab === 'cadernos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      }`}
+                    >
+                      cadernos
+                    </button>
+
+                    <button
+                      onClick={() => setActiveTab('tags')}
+                      className={`flex-1 py-1.5 rounded-xl transition-all ${
+                        activeTab === 'tags' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      }`}
+                    >
+                      etiquetas
+                    </button>
+                  </div>
+
+                  {/* ABA 1: LISTA DE TEXTOS E BUSCA */}
+                  {activeTab === 'textos' && (
+                    <div className="space-y-3">
+                      <div className="relative">
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="buscar textos..."
+                          className="w-full pl-10 pr-3 py-2 bg-bgPlataforma/70 border border-papelKraft/50 rounded-2xl text-xs text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/50 lowercase"
+                        />
                       </div>
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(exercise.id);
-                        }}
-                        className="opacity-0 group-hover:opacity-100 transition p-1.5 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-xl"
-                        title="excluir texto"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
+                      <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                        {filteredExercises.map((exercise) => (
+                          <div
+                            key={exercise.id}
+                            onClick={() => handleEdit(exercise)}
+                            className={`p-3 rounded-2xl border transition-all duration-200 cursor-pointer group flex items-center justify-between gap-2 ${
+                              currentExercise?.id === exercise.id
+                                ? 'bg-white border-acentoAzul shadow-sm'
+                                : 'bg-bgPlataforma/60 border-papelKraft/40 hover:bg-white hover:border-papelKraft/80'
+                            }`}
+                          >
+                            <div className="flex-1 min-w-0 space-y-0.5">
+                              <h3 className="font-bold text-xs text-acentoAzul truncate lowercase">
+                                {exercise.title || 'texto sem título'}
+                              </h3>
+                              <div className="flex items-center gap-1.5 text-[10px] text-tintaCarvao/60 font-medium">
+                                <span>{new Date(exercise.updated_at).toLocaleDateString('pt-BR')}</span>
+                                {exercise.is_published && (
+                                  <span className="px-1.5 py-0.2 rounded-full bg-acentoOliva/20 text-acentoAzul font-bold lowercase">
+                                    fogueira
+                                  </span>
+                                )}
+                              </div>
+                            </div>
 
-                  {filteredExercises.length === 0 && (
-                    <div className="text-center py-10 space-y-2 bg-bgPlataforma/40 rounded-2xl border border-papelKraft/30 p-4">
-                      <FileText className="w-8 h-8 text-acentoAzul/30 mx-auto" />
-                      <p className="text-xs text-tintaCarvao/60 lowercase italic">
-                        {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto criado ainda.'}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(exercise.id);
+                              }}
+                              className="opacity-0 group-hover:opacity-100 transition p-1 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-lg"
+                              title="excluir texto"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+
+                        {filteredExercises.length === 0 && (
+                          <div className="text-center py-8 space-y-2 bg-bgPlataforma/40 rounded-2xl border border-papelKraft/30 p-3">
+                            <FileText className="w-7 h-7 text-acentoAzul/30 mx-auto" />
+                            <p className="text-xs text-tintaCarvao/60 lowercase italic">
+                              {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto ainda.'}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ABA 2: CADERNOS TEMÁTICOS */}
+                  {activeTab === 'cadernos' && (
+                    <div className="space-y-3">
+                      <p className="text-[11px] text-tintaCarvao/75 lowercase leading-relaxed">
+                        organize sua produção por diários temáticos:
                       </p>
+
+                      <div className="space-y-2">
+                        {DEFAULT_NOTEBOOKS.map((nb) => (
+                          <div
+                            key={nb.id}
+                            onClick={() => handleNew(nb.title)}
+                            className="p-3 rounded-2xl bg-white border border-papelKraft/50 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-1"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                {renderNotebookIcon(nb.type)}
+                                <h4 className="text-xs font-bold text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors truncate">
+                                  {nb.title}
+                                </h4>
+                              </div>
+                              <Plus className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ABA 3: ETIQUETAS POÉTICAS */}
+                  {activeTab === 'tags' && (
+                    <div className="space-y-3">
+                      <p className="text-[11px] text-tintaCarvao/75 lowercase leading-relaxed">
+                        filtre seus textos por sentimento ou estilo:
+                      </p>
+
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {POETIC_TAGS.map((tag) => (
+                          <button
+                            key={tag}
+                            onClick={() => {
+                              setActiveTagFilter(activeTagFilter === tag ? null : tag);
+                              setActiveTab('textos');
+                            }}
+                            className={`px-2.5 py-1 rounded-full text-xs font-semibold lowercase border transition-all ${
+                              activeTagFilter === tag
+                                ? 'bg-acentoTerracota text-white border-acentoTerracota shadow-sm'
+                                : 'bg-white text-acentoAzul border-papelKraft/60 hover:bg-bgPlataforma'
+                            }`}
+                          >
+                            #{tag}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
-              </div>
-            )}
+              ) : (
+                /* CONTEÚDO REDUZIDO DO MENU LATERAL QUANDO COLAPSADO */
+                <div className="flex flex-col items-center space-y-3 pt-2">
+                  <button
+                    onClick={() => {
+                      setIsSidebarCollapsed(false);
+                      setActiveTab('textos');
+                    }}
+                    className="p-2.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoAzul hover:bg-acentoAzul hover:text-white transition-colors shadow-sm"
+                    title="ver todos os textos"
+                  >
+                    <FileText className="w-5 h-5" />
+                  </button>
 
-            {/* ABA 2: CADERNOS TEMÁTICOS */}
-            {activeTab === 'cadernos' && (
-              <div className="space-y-3">
-                <p className="text-xs text-tintaCarvao/75 lowercase leading-relaxed">
-                  organize sua produção poética por temáticas e diários de bordo:
-                </p>
+                  <button
+                    onClick={() => {
+                      setIsSidebarCollapsed(false);
+                      setActiveTab('cadernos');
+                    }}
+                    className="p-2.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoTerracota hover:bg-acentoTerracota hover:text-white transition-colors shadow-sm"
+                    title="ver cadernos temáticos"
+                  >
+                    <Book className="w-5 h-5" />
+                  </button>
 
-                <div className="space-y-2.5">
-                  {DEFAULT_NOTEBOOKS.map((nb) => (
-                    <div
-                      key={nb.id}
-                      onClick={() => handleNew(nb.title)}
-                      className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-1"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {renderNotebookIcon(nb.type)}
-                          <h4 className="text-xs sm:text-sm font-bold text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
-                            {nb.title}
-                          </h4>
-                        </div>
-                        <Plus className="w-3.5 h-3.5 text-acentoAzul" />
-                      </div>
-                      <p className="text-[11px] text-tintaCarvao/70 lowercase line-clamp-2">
-                        {nb.description}
-                      </p>
-                    </div>
-                  ))}
+                  <button
+                    onClick={() => {
+                      setIsSidebarCollapsed(false);
+                      setActiveTab('tags');
+                    }}
+                    className="p-2.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoOliva hover:bg-acentoOliva hover:text-tintaCarvao transition-colors shadow-sm"
+                    title="ver etiquetas"
+                  >
+                    <Tag className="w-5 h-5" />
+                  </button>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* ABA 3: ETIQUETAS POÉTICAS */}
-            {activeTab === 'tags' && (
-              <div className="space-y-3">
-                <p className="text-xs text-tintaCarvao/75 lowercase leading-relaxed">
-                  filtre seus textos de acordo com o sentimento ou formato:
-                </p>
-
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {POETIC_TAGS.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => {
-                        setActiveTagFilter(activeTagFilter === tag ? null : tag);
-                        setActiveTab('textos');
-                      }}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold lowercase border transition-all ${
-                        activeTagFilter === tag
-                          ? 'bg-acentoTerracota text-white border-acentoTerracota shadow-sm'
-                          : 'bg-white text-acentoAzul border-papelKraft/60 hover:bg-bgPlataforma'
-                      }`}
-                    >
-                      #{tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
+            </div>
           </div>
 
-          {/* PAINEL CENTRAL: EDITOR OU ESTADO INICIAL (lg:col-span-8) */}
-          <div className="lg:col-span-8">
+          {/* PAINEL CENTRAL: EDITOR DE ESCRITA DE LARGURA EXPANDIDA (lg:col-span-9 ou lg:col-span-11) */}
+          <div
+            className={`transition-all duration-300 ${
+              isSidebarCollapsed ? 'lg:col-span-11' : 'lg:col-span-9'
+            }`}
+          >
             {isEditing || currentExercise ? (
               <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-kraft space-y-5 relative">
                 
-                {/* BARRA SUPERIOR DO EDITOR: MODO FOCO + TEMPORIZADOR DO RITUAL */}
+                {/* BARRA DE FERRAMENTAS RE-ESTRUTURADA NO TOPO DO EDITOR:
+                    Esquerda: Sprint Poético | Direita: Rituais Guiados, Disparador Poético, Modo Foco */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-papelKraft/40 pb-3">
-                  {/* TEMPORIZADOR DO RITUAL (SPRINT DE ESCRITA SEM COBRANÇA) */}
+                  
+                  {/* Lado Esquerdo: Temporizador de Sprint Poético */}
                   <div className="flex items-center gap-2 bg-bgPlataforma/80 px-3 py-1.5 rounded-2xl border border-papelKraft/50">
                     <Timer className="w-4 h-4 text-acentoTerracota" />
                     <span className="text-xs font-bold text-acentoAzul lowercase">sprint poético:</span>
 
                     {timerSeconds === null ? (
-                      /* Seleção do Tempo de Sprint */
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
@@ -741,7 +796,6 @@ export default function WritingExercises() {
                         </button>
                       </div>
                     ) : (
-                      /* Relógio Ativo em Fonte Muthazle com Controles */
                       <div className="flex items-center gap-2">
                         <span className="font-gesto text-xl font-normal text-acentoTerracota min-w-[50px]">
                           {formatTimerStr(timerSeconds)}
@@ -777,15 +831,39 @@ export default function WritingExercises() {
                     )}
                   </div>
 
-                  {/* Botão Modo Foco */}
-                  <button
-                    onClick={() => setIsZenMode(true)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-bold lowercase transition-all shadow-sm"
-                    title="modo foco imersivo"
-                  >
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>modo foco</span>
-                  </button>
+                  {/* Lado Direito: Botões de Recursos Re-estruturados (Rituais Guiados, Disparador Poético, Modo Foco) */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowTemplatesModal(true)}
+                      className="px-3 py-1.5 rounded-2xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
+                      title="rituais guiados & templates poéticos"
+                    >
+                      <LayoutTemplate className="w-3.5 h-3.5 text-acentoAzul" />
+                      <span>rituais guiados</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPromptsDrawer(!showPromptsDrawer)}
+                      className="px-3 py-1.5 rounded-2xl bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white border border-acentoTerracota/30 text-xs font-semibold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
+                      title="inspiração e disparadores poéticos"
+                    >
+                      <Lightbulb className="w-3.5 h-3.5" />
+                      <span>disparador poético</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsZenMode(true)}
+                      className="px-3 py-1.5 rounded-2xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-acentoAzul/20 text-xs font-bold lowercase transition-all inline-flex items-center gap-1.5 shadow-sm"
+                      title="modo foco imersivo"
+                    >
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span>modo foco</span>
+                    </button>
+                  </div>
+
                 </div>
 
                 {/* Notificação de Sprint Concluído */}
@@ -831,7 +909,7 @@ export default function WritingExercises() {
                 </div>
 
                 {/* Editor RichText com Cores e Borda de Papel */}
-                <div className="min-h-[360px]">
+                <div className="min-h-[380px]">
                   <RichTextEditor
                     value={content}
                     onChange={setContent}
@@ -935,7 +1013,7 @@ export default function WritingExercises() {
 
         </div>
 
-        {/* MODAL RECURSO 2: RITUAIS GUIADOS & PLANTILLAS POÉTICAS (TEMPLATES) */}
+        {/* MODAL: RITUAIS GUIADOS & PLANTILLAS POÉTICAS */}
         {showTemplatesModal && (
           <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-2xl w-full shadow-kraft-lg space-y-5 relative">
