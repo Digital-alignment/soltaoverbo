@@ -6,12 +6,8 @@ import LoadingPage from '../components/LoadingPage';
 import {
   BookOpen,
   ArrowRight,
-  Calendar as CalendarIcon,
-  Clock,
   CheckCircle2,
-  Plus,
   Play,
-  Video,
   Sparkles,
   Lock,
   Crown,
@@ -21,11 +17,11 @@ import {
   Heart,
   Pencil,
   X,
-  ExternalLink,
   CalendarPlus,
-  BarChart3,
-  Feather,
-  Star,
+  ChevronLeft,
+  ChevronRight,
+  Book,
+  Plus,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -48,7 +44,6 @@ interface ActivityDay {
   words?: number;
   title?: string;
   excerpt?: string;
-  isMilestone?: boolean;
 }
 
 interface AgendaEvent {
@@ -93,6 +88,9 @@ export default function Dashboard() {
   const [, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Estado para Mês Selecionado no Calendário
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 7, 1)); // Agosto 2026
+
   // Estado para Modal de Reler Texto do Dia no Histórico
   const [selectedDayDetail, setSelectedDayDetail] = useState<ActivityDay | null>(null);
 
@@ -103,7 +101,6 @@ export default function Dashboard() {
   const [countdownStr, setCountdownStr] = useState('14h 22min');
 
   useEffect(() => {
-    // Simular countdown regressivo suave
     const timer = setInterval(() => {
       const now = new Date();
       const hoursLeft = 14 - (now.getMinutes() % 3);
@@ -113,31 +110,44 @@ export default function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Mock de Histórico de Atividade (28 dias com dados poéticos e números em Muthazle)
-  const [activityGrid] = useState<ActivityDay[]>(() => {
+  const handlePrevMonth = () => {
+    setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  };
+
+  const currentMonthLabel = useMemo(() => {
+    return currentMonth.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+  }, [currentMonth]);
+
+  // Gerador do Calendário do Mês Ativo
+  const monthDaysGrid = useMemo(() => {
+    const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+    const firstDayOfWeek = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+
+    const emptyLeadingSlots = Array.from({ length: firstDayOfWeek });
+
     const days: ActivityDay[] = [];
-    const today = new Date();
-    for (let i = 27; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(d.getDate() - i);
-      const isToday = i === 0;
-      const active = isToday || i % 3 !== 0 || i % 5 === 0;
-      const isMilestone = i === 7 || i === 14 || i === 21;
+    for (let day = 1; day <= daysInMonth; day++) {
+      const active = day === 5 || day === 8 || day === 9 || day === 11 || day === 12 || day === 14 || day === 15 || day === 16 || day === 17 || day === 21 || day === 23 || day === 27 || day === 29 || day === 31;
+      const wordCount = active ? 280 + ((day * 37) % 350) : 0;
       days.push({
-        dayNum: String(d.getDate()).padStart(2, '0'),
-        dateStr: d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' }),
+        dayNum: String(day).padStart(2, '0'),
+        dateStr: `${day} de ${currentMonth.toLocaleDateString('pt-BR', { month: 'short' })}`,
         active,
-        level: active ? (i % 2 === 0 ? 3 : 2) : 0,
-        words: active ? 250 + (i * 35) % 400 : 0,
-        title: active ? `dia ${28 - i}: escutar o silêncio e dar forma ao sussurro` : 'sem prática gravada',
+        level: active ? 3 : 0,
+        words: wordCount,
+        title: active ? `dia ${day}: escutar o silêncio e dar forma ao sussurro` : 'sem prática gravada',
         excerpt: active
-          ? 'escrever é dar forma ao que vive dentro e criar pontes de presença sem a obrigação de ser autor...'
+          ? 'um ritual diário de presença para organizar o caos interno sem a pressão de ser autor...'
           : undefined,
-        isMilestone,
       });
     }
-    return days;
-  });
+
+    return { emptyLeadingSlots, days };
+  }, [currentMonth]);
 
   // Agenda Integrada (Café com letras, eventos admin, pessoais, lançamentos)
   const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([
@@ -332,95 +342,141 @@ export default function Dashboard() {
           
           {/* ========================================================
               ITEM 1 DO BENTO: HISTÓRICO DE ESCRITA & AGENDA E ENCONTROS
-              (Hero Hub Principal - md:col-span-12)
+              (Hero Hub - 1A tem col-span-7 no Desktop para maior largura)
              ======================================================== */}
           <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            {/* 1A: Histórico de Escrita e Atividade (Com Métricas Poéticas & Números em Muthazle) */}
-            <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 flex flex-col justify-between">
+            {/* 1A: Histórico de Escrita e Atividade (Ampliado no Desktop: lg:col-span-7) */}
+            <div className="lg:col-span-7 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5 flex flex-col justify-between">
               <div className="space-y-4">
+                
+                {/* Cabeçalho Sem Frase Superior, Apenas Título e Badge de Dias Ativos */}
                 <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-[11px] text-tintaCarvao/60 font-medium lowercase block">
-                      ritmo e constância do ritual
-                    </span>
-                    <h2 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase">
-                      histórico de escrita & atividade
-                    </h2>
-                  </div>
+                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                    histórico de escrita & atividade
+                  </h2>
 
-                  {/* Contador de Dias Ativos com Ícone de Coroa / Estrela (Sem Fogo) */}
-                  <div className="flex items-center gap-1.5 bg-acentoOliva/25 px-3 py-1 rounded-full border border-acentoOliva/40 text-tintaCarvao text-xs font-bold lowercase shadow-sm">
-                    <Sparkles className="w-3.5 h-3.5 text-acentoAzul" />
+                  {/* Badge de Dias Ativos Estilizado e Limpo */}
+                  <div className="flex items-center gap-1.5 bg-acentoTerracota/10 px-3.5 py-1 rounded-full border border-acentoTerracota/25 text-acentoTerracota text-xs font-bold lowercase shadow-sm">
+                    <Sparkles className="w-3.5 h-3.5 text-acentoTerracota" />
                     <span>12 dias ativos</span>
                   </div>
                 </div>
 
-                {/* Métricas Poéticas e Humanas */}
-                <div className="grid grid-cols-3 gap-2 bg-bgPlataforma/70 p-3 rounded-2xl border border-papelKraft/40 text-center">
-                  <div>
-                    <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">palavras soltas</span>
-                    <span className="font-gesto text-lg sm:text-xl font-normal text-acentoAzul">4.250</span>
+                {/* Seleção do Mês Ativo (< Mês Ano >) e Aviso de Clique Mais Visível */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-bgPlataforma/60 p-2.5 rounded-2xl border border-papelKraft/40">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handlePrevMonth}
+                      className="p-1 rounded-lg hover:bg-papelKraft/40 text-acentoAzul transition-colors"
+                      title="mês anterior"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <span className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase min-w-[110px] text-center">
+                      {currentMonthLabel}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleNextMonth}
+                      className="p-1 rounded-lg hover:bg-papelKraft/40 text-acentoAzul transition-colors"
+                      title="próximo mês"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">rituais concluídos</span>
-                    <span className="font-gesto text-lg sm:text-xl font-normal text-acentoTerracota">14</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">frequência</span>
-                    <span className="font-gesto text-lg sm:text-xl font-normal text-acentoAzul">85%</span>
+
+                  {/* Aviso "clique em um dia para releer" Bem Visível */}
+                  <div className="inline-flex items-center gap-1.5 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 text-acentoAzul text-[11px] font-semibold lowercase">
+                    <BookOpen className="w-3 h-3 text-acentoAzul" />
+                    <span>clique em um dia para releer</span>
                   </div>
                 </div>
 
-                {/* Grid do Calendário com Números em Muthazle (font-gesto) */}
-                <div className="space-y-2 pt-1">
-                  <div className="flex items-center justify-between text-xs text-tintaCarvao/60 font-medium lowercase">
-                    <span>últimos 28 dias</span>
-                    <span className="text-[11px] text-tintaCarvao/50 italic">clique em um dia para releer</span>
+                {/* Grid do Calendário Mensal Completo (Dias Ativos em Terracota com Número Branco) */}
+                <div className="space-y-1.5 pt-1">
+                  {/* Cabeçalho dos Dias da Semana */}
+                  <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-mono text-tintaCarvao/50 lowercase pb-1">
+                    <span>dom</span>
+                    <span>seg</span>
+                    <span>ter</span>
+                    <span>qua</span>
+                    <span>qui</span>
+                    <span>sex</span>
+                    <span>sáb</span>
                   </div>
 
                   <div className="grid grid-cols-7 gap-1.5">
-                    {activityGrid.map((day, idx) => (
+                    {/* Espaços vazios iniciais */}
+                    {monthDaysGrid.emptyLeadingSlots.map((_, idx) => (
+                      <div key={`empty-${idx}`} className="h-9 sm:h-10 rounded-xl bg-transparent" />
+                    ))}
+
+                    {/* Dias do Mês */}
+                    {monthDaysGrid.days.map((day, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => setSelectedDayDetail(day)}
-                        className="flex flex-col items-center gap-0.5 group/day relative cursor-pointer focus:outline-none"
+                        className="flex flex-col items-center justify-center group/day relative focus:outline-none"
                       >
-                        {/* Número do dia formatado na fonte Muthazle */}
+                        {/* Tile do Dia: Fundo Terracota e Número Branco se Houve Atividade */}
                         <div
-                          className={`w-full h-8 sm:h-9 rounded-xl transition-all duration-300 flex items-center justify-center font-gesto text-base sm:text-lg relative ${
+                          className={`w-full h-9 sm:h-10 rounded-xl transition-all duration-300 flex items-center justify-center font-gesto text-base sm:text-lg relative ${
                             day.active
-                              ? day.level === 3
-                                ? 'bg-acentoAzul text-white shadow-sm scale-105'
-                                : 'bg-acentoOliva text-tintaCarvao'
-                              : 'bg-papelKraft/30 text-tintaCarvao/40'
+                              ? 'bg-acentoTerracota text-white shadow-sm hover:scale-105'
+                              : 'bg-papelKraft/25 text-tintaCarvao/50 hover:bg-papelKraft/40'
                           }`}
                         >
                           {day.dayNum}
-                          {day.isMilestone && (
-                            <Star className="w-2.5 h-2.5 text-acentoTerracota fill-acentoTerracota absolute top-0.5 right-0.5" />
+                          {/* Ponto indicador de atividade */}
+                          {day.active && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-acentoOliva absolute bottom-1" />
                           )}
                         </div>
 
-                        {/* Tooltip do dia */}
-                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-tintaCarvao text-papelClaro text-[10px] font-medium lowercase rounded-lg opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity whitespace-nowrap z-30 shadow-md">
-                          {day.dateStr} • {day.active ? `${day.words} palavras` : 'sem registro'}
+                        {/* Tooltip no Hover (Texto Maior, Palavras e Número em Muthazle) */}
+                        <div className="absolute bottom-11 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-tintaCarvao text-papelClaro text-xs font-medium lowercase rounded-xl opacity-0 pointer-events-none group-hover/day:opacity-100 transition-opacity whitespace-nowrap z-30 shadow-md space-x-1">
+                          <span className="font-gesto text-sm sm:text-base text-acentoOliva font-normal">{day.words}</span>
+                          <span>palavras escritas</span>
                         </div>
                       </button>
                     ))}
                   </div>
                 </div>
+
               </div>
 
-              <div className="flex items-center justify-between text-xs text-tintaCarvao/70 pt-2 border-t border-papelKraft/30">
-                <span className="lowercase">sequência ativa: 12 dias</span>
-                <span className="lowercase font-bold text-acentoAzul">recorde: 21 dias</span>
+              {/* Botões de Ação Compactos com Ícones Debaixo do Calendário */}
+              <div className="pt-3 border-t border-papelKraft/30 flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs text-tintaCarvao/60 lowercase">
+                  sequência ativa: <strong className="text-acentoAzul">12 dias</strong>
+                </span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/exercises"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-semibold lowercase border border-acentoAzul/20 shadow-sm"
+                  >
+                    <Book className="w-3.5 h-3.5" />
+                    <span>meus cadernos</span>
+                  </Link>
+
+                  <Link
+                    to="/exercises?new=true"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-xs font-semibold lowercase shadow-sm"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-white" />
+                    <span>novo texto</span>
+                  </Link>
+                </div>
               </div>
+
             </div>
 
-            {/* 1B: Agenda Integrada (Café com Letras, Convites Exclusivos Admin, Abas de Filtro & Countdown) */}
-            <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 flex flex-col justify-between">
+            {/* 1B: Agenda Integrada (lg:col-span-5 no Desktop) */}
+            <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
@@ -527,7 +583,6 @@ export default function Dashboard() {
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        {/* Exportar para Google Calendar */}
                         <a
                           href={generateGoogleCalendarUrl(ev.title, ev.time)}
                           target="_blank"
@@ -559,7 +614,7 @@ export default function Dashboard() {
 
               <div className="pt-1 text-center">
                 <span className="text-[10px] text-tintaCarvao/50 lowercase italic">
-                  clique no círculo para concluir compromissos ou no ícone + para exportar ao calendário
+                  clique para concluir compromissos da semana
                 </span>
               </div>
             </div>
@@ -890,7 +945,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* MODAL DE RELEER TEXTO DO DIA SELECIONADO NO HISTÓRICO */}
+        {/* MODAL / POPOVER DE RELEER TEXTO DO DIA SELECIONADO (Exibe data, palavras com Muthazle, título e botão) */}
         {selectedDayDetail && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tintaCarvao/60 backdrop-blur-sm animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg relative space-y-4">
@@ -903,10 +958,14 @@ export default function Dashboard() {
               </button>
 
               <div className="space-y-1">
-                <span className="text-xs font-bold text-acentoTerracota lowercase block">
-                  {selectedDayDetail.dateStr} • {selectedDayDetail.words} palavras escritas
-                </span>
-                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+                <div className="text-xs font-bold text-acentoTerracota lowercase flex items-center gap-1.5">
+                  <span>data: {selectedDayDetail.dateStr}</span>
+                  <span>•</span>
+                  <span>
+                    total de palavras escritas: <strong className="font-gesto text-lg font-normal text-acentoAzul">{selectedDayDetail.words}</strong> palavras escritas
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight pt-1">
                   {selectedDayDetail.title}
                 </h3>
               </div>
@@ -938,7 +997,7 @@ export default function Dashboard() {
                     onClick={() => setSelectedDayDetail(null)}
                     className="btn-pill-primary px-5 py-2 text-xs font-semibold shadow-sm inline-flex items-center gap-1.5"
                   >
-                    <span>reler meu texto no caderno →</span>
+                    <span>reler caderno →</span>
                   </Link>
                 )}
               </div>
