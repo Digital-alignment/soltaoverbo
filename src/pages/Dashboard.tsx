@@ -24,6 +24,7 @@ import {
   Plus,
   Feather,
   Clock,
+  Maximize2,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -122,8 +123,11 @@ export default function Dashboard() {
   // Estado de Filtro de Abas na Agenda
   const [agendaTab, setAgendaTab] = useState<'todos' | 'cafe' | 'admin' | 'personal'>('todos');
 
+  // Estado para Modal Pop-Up de Agenda Completa
+  const [isFullAgendaOpen, setIsFullAgendaOpen] = useState(false);
+
   // Countdown Fictício para a próxima live do Café com Letras
-  const [countdownStr, setCountdownStr] = useState('12h 55min');
+  const [countdownStr, setCountdownStr] = useState('12h 19min');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -378,17 +382,17 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* BENTO GRID PRINCIPAL */}
+        {/* BENTO GRID PRINCIPAL (items-start para desacoplar a altura dos cards) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* ========================================================
               ITEM 1 DO BENTO: HISTÓRICO DE ESCRITA & AGENDA E ENCONTROS
-              (Hero Hub - 1A tem col-span-7 no Desktop para maior largura)
+              (Hero Hub - items-start para alturas independentes)
              ======================================================== */}
-          <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* 1A: Histórico de Escrita e Atividade (Ampliado no Desktop: lg:col-span-7) */}
-            <div className="lg:col-span-7 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5 flex flex-col justify-between">
+            {/* 1A: Histórico de Escrita e Atividade (lg:col-span-7 no Desktop) */}
+            <div className="lg:col-span-7 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5">
               <div className="space-y-4">
                 
                 {/* Título Limpo Sem Frase Superior e Sem Tag Lateral */}
@@ -555,23 +559,23 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (lg:col-span-5 no Desktop, Sem Texto Superior, Sem Gradientes, UI & Fontes Ampliadas) */}
-            <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 flex flex-col justify-between">
+            {/* 1B: Agenda Integrada (lg:col-span-5 no Desktop, Exibe 3 Eventos Máximo + Botão de Expandir Pop-Up, Sem Bordas Grossas, Sem Gradientes) */}
+            <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4">
               <div className="space-y-4">
                 
-                {/* Header Limpo Sem Frase Superior, com Título e Abas de Filtro */}
+                {/* Header Limpo Sem Frase Superior, com Título e Abas de Filtro com Layout Ajustado Sem Quebra */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
                   <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
                     agenda & encontros
                   </h2>
 
-                  {/* Abas de Filtro da Agenda */}
-                  <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-[11px] font-bold lowercase self-start sm:self-auto">
+                  {/* Abas de Filtro da Agenda sem Quebra de Texto */}
+                  <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-medium lowercase self-start sm:self-auto overflow-x-auto">
                     <button
                       type="button"
                       onClick={() => setAgendaTab('todos')}
-                      className={`px-3 py-1 rounded-full transition-all ${
-                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       todos
@@ -579,8 +583,8 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setAgendaTab('cafe')}
-                      className={`px-3 py-1 rounded-full transition-all ${
-                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       ao vivo
@@ -588,8 +592,8 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setAgendaTab('admin')}
-                      className={`px-3 py-1 rounded-full transition-all ${
-                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       convites
@@ -598,19 +602,19 @@ export default function Dashboard() {
                 </div>
 
                 {/* Banner Destacado para o Próximo Café com Letras Ao Vivo (Fundo Azul Sólido - SEM GRADIENTE) */}
-                <div className="bg-acentoAzul text-papelClaro p-4 sm:p-5 rounded-2xl border border-acentoAzul/80 shadow-md space-y-3 relative overflow-hidden">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="bg-acentoAzul text-papelClaro p-4 sm:p-5 rounded-2xl border border-acentoAzul/80 shadow-md space-y-3 relative">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                     <span className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-acentoOliva lowercase">
                       <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
                       <span>ao vivo em {countdownStr}</span>
                     </span>
-                    <span className="text-xs sm:text-sm font-semibold font-mono text-papelClaro/90 bg-white/10 px-3 py-1 rounded-lg">
+                    <span className="text-xs font-mono text-papelClaro/90 bg-white/15 px-2.5 py-0.5 rounded-md">
                       segunda-feira • 08h00
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <h3 className="text-base sm:text-lg font-bold font-editorial text-papelClaro lowercase leading-tight">
+                    <h3 className="text-base sm:text-lg font-bold font-editorial text-papelClaro lowercase leading-snug">
                       café com letras (roda de partilha poética)
                     </h3>
                     <p className="text-xs text-papelClaro/80 lowercase leading-relaxed">
@@ -619,24 +623,24 @@ export default function Dashboard() {
                   </div>
 
                   <div className="pt-1 flex items-center justify-between">
-                    <span className="text-xs text-acentoOliva font-mono font-medium">sala virtual meet</span>
+                    <span className="text-xs text-acentoOliva font-mono">sala virtual meet</span>
                     <Link
                       to="/cafe-com-letras"
-                      className="px-4 py-2 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs sm:text-sm font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1.5"
+                      className="px-4 py-1.5 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1.5"
                     >
                       <span>entrar ao vivo →</span>
                     </Link>
                   </div>
                 </div>
 
-                {/* Lista de Eventos com Fundo Sólido (SEM GRADIENTE) & UI/Fontes Aumentadas */}
+                {/* Lista de Eventos no Card Limitada a Apenas 3 Itens */}
                 <div className="space-y-2.5">
-                  {filteredEvents.map((ev) => (
+                  {filteredEvents.slice(0, 3).map((ev) => (
                     <div
                       key={ev.id}
                       className={`p-3.5 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 relative ${
                         ev.isExclusiveAdmin
-                          ? 'bg-papelClaro border-2 border-acentoTerracota/60 shadow-sm'
+                          ? 'bg-papelClaro border border-acentoTerracota/40 shadow-sm'
                           : ev.completed
                           ? 'bg-bgPlataforma/50 border-papelKraft/30 opacity-60'
                           : 'bg-white border-papelKraft/60 shadow-sm hover:border-acentoAzul'
@@ -702,6 +706,17 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
+
+                {/* Botão de Expandir Agenda Completa em Modal Pop-up Tela Cheia */}
+                <button
+                  type="button"
+                  onClick={() => setIsFullAgendaOpen(true)}
+                  className="w-full py-2.5 px-4 rounded-2xl bg-bgPlataforma/80 hover:bg-papelKraft/40 text-acentoAzul text-xs font-bold lowercase transition-all flex items-center justify-center gap-2 border border-papelKraft/50 shadow-sm"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>ver agenda completa ({agendaEvents.length} encontros) →</span>
+                </button>
+
               </div>
 
               <div className="pt-2 text-center border-t border-papelKraft/30">
@@ -1037,6 +1052,146 @@ export default function Dashboard() {
 
         </div>
 
+        {/* MODAL POP-UP AGENDA COMPLETA (Sem Cobrir Menus Laterais / Rodapé) */}
+        {isFullAgendaOpen && (
+          <div className="fixed inset-0 z-40 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 lg:pl-24 pb-20 lg:pb-6 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-3xl w-full max-h-[85vh] overflow-y-auto shadow-kraft-lg relative space-y-5">
+              <button
+                type="button"
+                onClick={() => setIsFullAgendaOpen(false)}
+                className="absolute top-4 right-4 p-2.5 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/40 pb-3 pr-10">
+                <div>
+                  <span className="text-xs font-bold text-acentoTerracota lowercase block">
+                    agenda completa & rituais do mês
+                  </span>
+                  <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                    todos os encontros agendados ({agendaEvents.length})
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-medium lowercase">
+                  <button
+                    type="button"
+                    onClick={() => setAgendaTab('todos')}
+                    className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                      agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70'
+                    }`}
+                  >
+                    todos
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAgendaTab('cafe')}
+                    className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                      agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70'
+                    }`}
+                  >
+                    ao vivo
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAgendaTab('admin')}
+                    className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                      agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-bold' : 'text-tintaCarvao/70'
+                    }`}
+                  >
+                    convites
+                  </button>
+                </div>
+              </div>
+
+              {/* Lista Completa de Todos os Eventos */}
+              <div className="space-y-3 pt-1">
+                {filteredEvents.map((ev) => (
+                  <div
+                    key={ev.id}
+                    className={`p-4 rounded-2xl border transition-all duration-300 flex items-center justify-between gap-3 ${
+                      ev.isExclusiveAdmin
+                        ? 'bg-papelClaro border border-acentoTerracota/40 shadow-sm'
+                        : ev.completed
+                        ? 'bg-bgPlataforma/50 border-papelKraft/30 opacity-60'
+                        : 'bg-white border-papelKraft/60 shadow-sm hover:border-acentoAzul'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => toggleEventComplete(ev.id)}
+                        className="focus:outline-none shrink-0"
+                      >
+                        <CheckCircle2
+                          className={`w-5 h-5 transition-colors ${
+                            ev.completed ? 'text-acentoOliva fill-acentoOliva/20' : 'text-tintaCarvao/30 hover:text-acentoAzul'
+                          }`}
+                        />
+                      </button>
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2">
+                          <h4
+                            className={`text-sm font-bold lowercase transition-all ${
+                              ev.completed ? 'line-through text-tintaCarvao/50' : 'text-acentoAzul'
+                            }`}
+                          >
+                            {ev.title}
+                          </h4>
+                          {ev.isExclusiveAdmin && (
+                            <Crown className="w-4 h-4 text-acentoTerracota shrink-0" title="convite exclusivo" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs font-mono text-tintaCarvao/80 font-semibold">
+                          <Clock className="w-3.5 h-3.5 text-acentoTerracota" />
+                          <span>{ev.time}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <a
+                        href={generateGoogleCalendarUrl(ev.title, ev.time)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 rounded-xl bg-bgPlataforma hover:bg-papelKraft/30 text-tintaCarvao/70 hover:text-acentoAzul transition-colors"
+                        title="adicionar ao meu google calendar"
+                      >
+                        <CalendarPlus className="w-4 h-4" />
+                      </a>
+
+                      <span
+                        className={`text-[11px] font-bold px-3 py-1 rounded-full lowercase whitespace-nowrap ${
+                          ev.category === 'cafe'
+                            ? 'bg-acentoAzul text-white'
+                            : ev.category === 'admin'
+                            ? 'bg-acentoTerracota text-white'
+                            : ev.category === 'launch'
+                            ? 'bg-acentoOliva text-tintaCarvao'
+                            : 'bg-papelKraft/40 text-tintaCarvao'
+                        }`}
+                      >
+                        {ev.categoryLabel}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-3 border-t border-papelKraft/40 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsFullAgendaOpen(false)}
+                  className="btn-pill-secondary px-6 py-2 text-xs font-bold lowercase"
+                >
+                  fechar agenda
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* MODAL / POPOVER COM LARGURA AMPLIADA (max-w-2xl) AO CLICAR EM UM DIA */}
         {selectedDayDetail && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tintaCarvao/60 backdrop-blur-sm animate-fadeIn">
@@ -1044,7 +1199,7 @@ export default function Dashboard() {
               <button
                 type="button"
                 onClick={() => setSelectedDayDetail(null)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40"
               >
                 <X className="w-5 h-5" />
               </button>
