@@ -185,7 +185,7 @@ export default function RoteiroOriginal() {
   const slide = heroSlides[currentSlide];
 
   return (
-    <div className="min-h-screen bg-paper overflow-x-hidden">
+    <div className="min-h-screen bg-paper overflow-x-clip">
       <PreLoginNavbar />
 
       {/* Hero Slider Section */}

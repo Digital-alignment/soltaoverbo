@@ -18,7 +18,7 @@ export default function Programs() {
   };
 
   return (
-    <div className="min-h-screen bg-paper overflow-x-hidden">
+    <div className="min-h-screen bg-paper overflow-x-clip">
       <PreLoginNavbar />
 
       {/* Hero Section */}

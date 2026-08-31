@@ -86,7 +86,7 @@ export default function AboutUs() {
   ];
 
   return (
-    <div ref={pageRef} className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul relative overflow-x-hidden">
+    <div ref={pageRef} className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul relative overflow-x-clip">
       {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
