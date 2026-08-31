@@ -1,63 +1,602 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, CheckCircle2, Sparkles, Pencil } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  BookOpen,
+  CheckCircle2,
+  XCircle,
+  Pencil,
+  ArrowRight,
+  ShieldCheck,
+  Headphones,
+  Flame,
+  FileText,
+  Clock,
+  ChevronDown,
+  Quote,
+  Heart,
+} from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
+import FoundersSection from '../components/FoundersSection';
+
+interface WeekPhase {
+  number: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  bullets: string[];
+  color: string;
+}
+
+const journeyPhases: WeekPhase[] = [
+  {
+    number: '01',
+    title: 'semana 1: soltar as amarras (dias 1 a 7)',
+    subtitle: 'desbloquear a voz e silenciar a crítica interna',
+    description: 'nos primeiros sete dias, o foco é perder o medo da folha em branco. você aprende a escrever sem julgar a própria palavra, liberando o fluxo espontâneo de consciência.',
+    bullets: [
+      'dia 1 ao 3: quebrando o gelo e escrevendo sem filtro',
+      'dia 4 e 5: identificando e silenciando o censor interno',
+      'dia 6 e 7: criando o seu primeiro ritual diário de presença',
+    ],
+    color: 'bg-acentoAzul/10 text-acentoAzul border-acentoAzul/30',
+  },
+  {
+    number: '02',
+    title: 'semana 2: aprofundar e reorganizar (dias 8 a 14)',
+    subtitle: 'mapear memórias e dar forma ao caos emocional',
+    description: 'na segunda semana, navegamos em camadas mais profundas. a escrita passa a funcionar como uma bússola interna para organizar pensamentos soltos e dar novo significado a cenas vividas.',
+    bullets: [
+      'dia 8 ao 10: escrita afetiva e ressignificação de memórias',
+      'dia 11 e 12: organizando o caos mental em frases curtas',
+      'dia 13 e 14: transformando preocupação e angústia em movimento',
+    ],
+    color: 'bg-acentoTerracota/10 text-acentoTerracota border-acentoTerracota/30',
+  },
+  {
+    number: '03',
+    title: 'semana 3: autoria e consolidação (dias 15 a 21)',
+    subtitle: 'afirmar sua voz autêntica e sustentar o hábito',
+    description: 'na reta final, você consolida a escrita como uma prática viva e sustentável. um convite para assumir a autoria da própria história com clareza, liberdade e coragem.',
+    bullets: [
+      'dia 15 ao 17: encontrando o seu tom e ritmo autoral único',
+      'dia 18 e 19: o poder do manifesto pessoal e metas poéticas',
+      'dia 20 e 21: ritual de encerramento e continuidade da prática',
+    ],
+    color: 'bg-acentoOliva/20 text-tintaCarvao border-acentoOliva/40',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'quanto tempo preciso dedicar por dia?',
+    a: 'apenas 15 a 20 minutos diários! o programa foi desenhado para se encaixar com leveza na sua rotina, sem pesar como obrigação.',
+  },
+  {
+    q: 'e se eu me atrasar ou perder algum dia?',
+    a: 'não se preocupe! o desafio é 100% self-paced. todo o conteúdo fica gravado e acessível na sua área de membros para você fazer no seu próprio ritmo.',
+  },
+  {
+    q: 'preciso mostrar meus textos para outras pessoas?',
+    a: 'jamais! a escrita é sua e de mais ninguém. a nossa fogueira de partilha é um espaço seguro e totalmente opcional para quem sente o desejo de compartilhar.',
+  },
+  {
+    q: 'como funciona a garantia de 7 dias?',
+    a: 'você pode entrar, experimentar os primeiros exercícios e áudios durante 7 dias. se sentir que não é o momento para você, devolvemos 100% do valor investido sem perguntas.',
+  },
+];
 
 export default function Programa21Dias() {
-  return (
-    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul flex flex-col justify-between">
-      <div>
-        <PreLoginNavbar />
+  const [activePhaseIndex, setActivePhaseIndex] = useState(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const navigate = useNavigate();
 
-        <main className="py-20 sm:py-28 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-papelClaro rounded-3xl p-8 sm:p-14 border border-papelKraft/60 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
-            {/* Tag Superior */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs sm:text-sm font-semibold lowercase">
-              <BookOpen className="w-4 h-4" />
-              <span>programa self-paced • 21 dias</span>
+  const handleEnroll = () => {
+    localStorage.setItem('checkout_intent', '21dias');
+    navigate('/register?product=21dias');
+  };
+
+  return (
+    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul">
+      {/* 1. Header Navbar Sticky */}
+      <PreLoginNavbar />
+
+      {/* 2. HERO SECTION DE VENDAS (High Conversion Hero) */}
+      <section className="relative pt-12 pb-20 sm:pt-16 sm:pb-28 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            {/* Coluna Esquerda: Copy Persuasivo & Oferta */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider shadow-sm">
+                <img
+                  src="/brand-assets/icons/icone_63.svg"
+                  alt="chama viva"
+                  className="w-5 h-5 object-contain"
+                />
+                <span>jornada self-paced de escrita guiada</span>
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
+                21 dias de escrita: <br className="hidden sm:inline" />
+                <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
+                  sua história tem valor.
+                </span>
+              </h1>
+
+              <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
+                um método simples e acolhedor de 21 dias para destravar sua voz, organizar o caos mental e criar um hábito diário de presença — sem pressão ou perfeccionismo.
+              </p>
+
+              {/* Destaque de Preço & Garantia */}
+              <div className="p-5 bg-papelClaro rounded-2xl border border-papelKraft/50 shadow-sm max-w-xl space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-papelKraft/30">
+                  <div>
+                    <span className="text-[11px] font-bold text-tintaCarvao/60 uppercase tracking-wider block">
+                      investimento promocional
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
+                        R$ 77,00
+                      </span>
+                      <span className="text-xs sm:text-sm text-tintaCarvao/70 lowercase font-medium">
+                        à vista (ou 2x R$ 38,50)
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs font-semibold text-acentoOliva bg-acentoOliva/10 px-3.5 py-1.5 rounded-full border border-acentoOliva/30 w-fit">
+                    <ShieldCheck className="w-4 h-4 text-acentoOliva" />
+                    <span>garantia de 7 dias</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs text-tintaCarvao/80 font-medium lowercase">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
+                    <span>acesso imediato</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
+                    <span>15 min por dia</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Botões CTA Principais */}
+              <div className="pt-2 flex flex-wrap items-center gap-4">
+                <button
+                  onClick={handleEnroll}
+                  className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
+                >
+                  <span>garantir minha vaga por R$ 77</span>
+                  <Pencil className="w-5 h-5 text-white" />
+                </button>
+
+                <a
+                  href="#trilha"
+                  className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base px-7 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2 cursor-pointer lowercase"
+                >
+                  <span>ver como funciona</span>
+                  <ArrowRight className="w-4 h-4 text-acentoAzul" />
+                </a>
+              </div>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase">
-              21 dias de escrita (sua história tem valor)
-            </h1>
+            {/* Coluna Direita: Scrapbook Bento Card com Arte Retro */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-3xl bg-papelClaro p-6 sm:p-8 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group">
+                {/* Sticker Fita Washi */}
+                <div className="absolute -top-2 right-8 w-28 h-7 pointer-events-none z-20 opacity-90">
+                  <img
+                    src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
+                    alt="fita washi"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
 
-            <p className="text-tintaCarvao/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
-              página oficial de vendas e informações do programa 21 dias de escrita.
+                <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
+                  <img
+                    src="/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png"
+                    alt="21 dias de escrita solta o verbo"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg';
+                    }}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
+                    “em 21 dias, você não aprende apenas a escrever: aprende a se ouvir com compaixão.”
+                  </blockquote>
+                  <p className="text-xs text-tintaCarvao/60 font-mono lowercase pt-2 border-t border-papelKraft/30">
+                    método autoral // solta o verbo colectivo
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. ENTREGÁVEIS & O QUE ESTÁ INCLUÍDO (Bento Grid) */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+              <img
+                src="/brand-assets/icons/icone_63.svg"
+                alt="icone"
+                className="w-5 h-5 object-contain"
+              />
+              <span>tudo o que você recebe</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              uma experiência completa para sua jornada de escrita
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              quatro pilares desenhados para acolher o seu ritmo e garantir o seu hábito.
             </p>
+          </div>
 
-            <div className="p-6 bg-bgPlataforma rounded-2xl border border-papelKraft/40 max-w-xl mx-auto text-left space-y-3">
-              <p className="text-sm font-bold text-acentoAzul uppercase tracking-wider">
-                detalhes do programa:
-              </p>
-              <ul className="space-y-2 text-sm text-tintaCarvao/80 font-medium lowercase">
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0" />
-                  <span>21 exercícios diários liberados passo a passo</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Bento Card 1 */}
+            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                  21 exercícios guiados
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  liberados dia a dia na plataforma com comandos poéticos e reflexões práticas para aplicar em 15 minutos.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
+                <span>01 // plataforma própria</span>
+              </div>
+            </div>
+
+            {/* Bento Card 2 */}
+            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
+                  <Headphones className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                  pílulas em áudio
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  áudios inspiradores conduzidos pelas facilitadoras em formato de podcast interno para ouvir onde e quando quiser.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
+                <span>02 // podcast interno</span>
+              </div>
+            </div>
+
+            {/* Bento Card 3 */}
+            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
+                  <Flame className="w-6 h-6 text-acentoAzul" />
+                </div>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                  fogueira comunitária
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  acesso ilimitado ao espaço seguro de partilha durante todo o desafio para ler e trocar com outras leitoras.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
+                <span>03 // comunidade viva</span>
+              </div>
+            </div>
+
+            {/* Bento Card 4 */}
+            <div className="bg-bgPlataforma/70 rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                  <BookOpen className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                  diário de bordo em pdf
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  material gráfico artesanal para baixar, imprimir ou usar digitalmente como guia durante e após os 21 dias.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
+                <span>04 // caderno artesanal</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. A TRILHA DOS 21 DIAS (Detalhamento por Semanas) */}
+      <section id="trilha" className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+              <Clock className="w-4 h-4 text-acentoTerracota" />
+              <span>a sua jornada passo a passo</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              como a mágica acontece em 3 semanas
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              três fases evolutivas desenhadas para transformar a sua relação com as palavras.
+            </p>
+          </div>
+
+          {/* Abas e Painel Interativo das 3 Fases */}
+          <div className="space-y-6 max-w-4xl mx-auto">
+            {journeyPhases.map((phase, idx) => {
+              const isActive = activePhaseIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  onClick={() => setActivePhaseIndex(idx)}
+                  className={`rounded-3xl border p-6 sm:p-8 transition-all duration-300 cursor-pointer select-none ${
+                    isActive
+                      ? 'bg-papelClaro border-acentoTerracota/50 shadow-kraft-lg'
+                      : 'bg-papelClaro/60 border-papelKraft/40 hover:bg-papelClaro/90'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-3">
+                      <span className="font-editorial text-2xl font-bold text-acentoTerracota">
+                        {phase.number}
+                      </span>
+                      <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                        {phase.title}
+                      </h3>
+                    </div>
+
+                    <ChevronDown
+                      className={`w-5 h-5 text-acentoAzul transition-transform duration-300 ${
+                        isActive ? 'rotate-180 text-acentoTerracota' : ''
+                      }`}
+                    />
+                  </div>
+
+                  <p className="font-gesto text-acentoTerracota text-2xl font-normal mb-3">
+                    {phase.subtitle}
+                  </p>
+
+                  <p className="text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase mb-4">
+                    {phase.description}
+                  </p>
+
+                  <div className="pt-4 border-t border-papelKraft/30 space-y-2">
+                    {phase.bullets.map((b, bIdx) => (
+                      <div key={bIdx} className="flex items-center gap-3 text-sm text-tintaCarvao/90 font-medium lowercase">
+                        <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0" />
+                        <span>{b}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. PARA QUEM É X PARA QUEM NÃO É */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              este programa é para você?
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              transparência e respeito com o seu tempo e investimento.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* SIM / PARA QUEM É */}
+            <div className="bg-bgPlataforma rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold uppercase tracking-wider">
+                <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
+                <span>este programa É para você se:</span>
+              </div>
+
+              <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span>deseja destravar a escrita e criar um hábito constante sem cobranças</span>
                 </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0" />
-                  <span>áudios de inspiração e formato podcast</span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span>busca organizar pensamentos dispersos e aliviar o estresse diário</span>
                 </li>
-                <li className="flex items-center gap-2.5">
-                  <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0" />
-                  <span>acesso total à fogueira comunitária</span>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span>quer um espaço seguro para sentir, refletir e ressignificar histórias</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span>prefere aprender no seu próprio ritmo com apenas 15 minutos por dia</span>
                 </li>
               </ul>
             </div>
 
-            <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
-              <Link
-                to="/register?product=21dias"
-                className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:scale-105 transition-all flex items-center gap-2.5"
-              >
-                <span>garantir minha vaga — R$ 77,00</span>
-                <Pencil className="w-5 h-5 text-white" />
-              </Link>
+            {/* NÃO / PARA QUEM NÃO É */}
+            <div className="bg-bgPlataforma rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold uppercase tracking-wider">
+                <XCircle className="w-4 h-4 text-acentoTerracota" />
+                <span>NÃO é para você se:</span>
+              </div>
+
+              <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
+                  <span>procura um curso técnico de gramática acadêmica ou regras rígidas</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
+                  <span>busca fórmulas mágicas de publicação de livros sem dedicação pessoal</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
+                  <span>não está disposta a olhar para dentro com afeto e escuta genuína</span>
+                </li>
+              </ul>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </section>
 
+      {/* 6. FACILITADORAS DO PROGRAMA */}
+      <FoundersSection />
+
+      {/* 7. DEPOIMENTOS DE ALUNOS DOS 21 DIAS */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
+              <Heart className="w-4 h-4 text-acentoTerracota" />
+              <span>vozes de quem já viveu os 21 dias</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              transformações reais de ex-alunas
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                quote: 'os 21 dias foram o meu divisor de águas. eu tinha pavor da página em branco e hoje escrevo todas as manhãs com um café do lado.',
+                author: 'marina silva',
+                city: 'florianópolis / sc',
+              },
+              {
+                quote: 'o formato em áudio é maravilhoso! eu ouvia no caminho para o trabalho e usava meus 15 minutos da noite para colocar no caderno.',
+                author: 'camila mendes',
+                city: 'são paulo / sp',
+              },
+              {
+                quote: 'a fogueira é um abraço quente. ver que outras mulheres sentem o mesmo me deu coragem para assumir minha autoria.',
+                author: 'beatriz ribeiro',
+                city: 'belo horizonte / mg',
+              },
+            ].map((t, idx) => (
+              <div key={idx} className="bg-bgPlataforma rounded-3xl p-8 border border-papelKraft/40 shadow-kraft flex flex-col justify-between">
+                <Quote className="w-8 h-8 text-acentoAzul/20 mb-4" />
+                <p className="text-tintaCarvao/90 text-base sm:text-lg leading-relaxed lowercase font-medium italic mb-6">
+                  “{t.quote}”
+                </p>
+                <div className="pt-4 border-t border-papelKraft/30">
+                  <h4 className="font-bold text-acentoAzul text-base lowercase">{t.author}</h4>
+                  <p className="text-xs text-tintaCarvao/60 font-mono lowercase">{t.city}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. BOX FINAL DE OFERTA & CHECKOUT */}
+      <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-14 border border-white/20 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold uppercase tracking-wider">
+              <span>inscrições abertas com preço promocional</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase">
+              pronta para soltar o verbo e escrever sua história?
+            </h2>
+
+            <p className="text-papelClaro/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
+              garanta seu acesso imediato aos 21 dias de exercícios, áudios inspiradores e à fogueira de partilha comunitária.
+            </p>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
+              <span className="text-xs font-bold text-papelClaro/70 uppercase tracking-wider block">
+                investimento único com acesso completo
+              </span>
+
+              <div className="flex justify-center items-baseline gap-2">
+                <span className="text-4xl sm:text-5xl font-bold font-editorial text-white">
+                  R$ 77,00
+                </span>
+                <span className="text-sm text-papelClaro/80 lowercase">
+                  à vista (ou 2x R$ 38,50)
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center gap-2 text-xs font-bold text-acentoOliva pt-2 border-t border-white/15">
+                <ShieldCheck className="w-4 h-4 text-acentoOliva" />
+                <span>garantia incondicional de 7 dias sem riscos</span>
+              </div>
+            </div>
+
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={handleEnroll}
+                className="btn-pill-accent text-lg px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3 w-full sm:w-auto lowercase cursor-pointer"
+              >
+                <span>sim! quero garantir minha vaga agora</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. FAQ DO PROGRAMA */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase mb-3">
+              perguntas frequentes sobre os 21 dias
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {faqItems.map((item, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={index}
+                  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    isOpen
+                      ? 'bg-papelClaro border-acentoTerracota/50 shadow-kraft-lg'
+                      : 'bg-bgPlataforma/70 border-papelKraft/40 hover:border-acentoAzul/40'
+                  }`}
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    className="w-full p-5 sm:p-6 text-left flex justify-between items-center gap-4 cursor-pointer focus:outline-none select-none"
+                  >
+                    <span className="font-bold text-lg sm:text-xl font-editorial text-acentoAzul lowercase">
+                      {item.q}
+                    </span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-acentoAzul transition-transform duration-300 ${
+                        isOpen ? 'rotate-180 text-acentoTerracota' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-5 sm:px-6 pb-6 pt-2 border-t border-papelKraft/30 text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase">
+                      {item.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. PreLoginFooter Poético com Shader WebGL */}
       <PreLoginFooter />
     </div>
   );
