@@ -185,52 +185,64 @@ export default function PreLoginNavbar() {
                   )}
                 </button>
 
-                {/* Sub-menu Dropdown Desplegable */}
+                {/* Sub-menu Dropdown Desplegable Mega Menu (2 Items por Fila) */}
                 {dropdownOpen && (
                   <div
-                    className="absolute top-full left-0 pt-2.5 w-96 sm:w-[420px] z-50"
+                    className="absolute top-full -left-12 sm:-left-20 pt-2.5 w-[620px] sm:w-[680px] z-50"
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className="bg-papelClaro rounded-3xl p-4 sm:p-5 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn space-y-1.5">
-                      <div className="px-3 py-1.5 text-xs font-bold text-tintaCarvao/60 uppercase tracking-wider">
-                        nossos programas de escrita
+                    <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/70 shadow-kraft-lg animate-fadeIn space-y-4">
+                      <div className="flex items-center justify-between px-1 border-b border-papelKraft/30 pb-2.5">
+                        <div className="text-xs font-bold text-acentoAzul uppercase tracking-wider flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-acentoTerracota" />
+                          <span>nossos programas de escrita</span>
+                        </div>
+                        <span className="text-[11px] font-medium text-tintaCarvao/60 lowercase">
+                          4 jornadas disponíveis
+                        </span>
                       </div>
 
-                      {productSubItems.map((subItem) => {
-                        const Icon = subItem.icon;
-                        const active = location.pathname === subItem.to;
-                        return (
-                          <Link
-                            key={subItem.to}
-                            to={subItem.to}
-                            onClick={() => handleSubItemClick(subItem)}
-                            className={`flex items-start gap-4 p-3.5 sm:p-4 rounded-2xl transition-all ${
-                              active
-                                ? 'bg-acentoAzul/10 border border-acentoAzul/20 shadow-xs'
-                                : 'hover:bg-bgPlataforma border border-transparent hover:border-papelKraft/40'
-                            }`}
-                          >
-                            <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs">
-                              <Icon className="w-6 h-6 text-acentoAzul" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className="font-bold text-base sm:text-lg font-editorial text-acentoAzul lowercase block truncate">
-                                {subItem.label}
-                              </span>
-                              <p className="text-xs sm:text-sm text-tintaCarvao/80 lowercase font-medium mt-0.5">
-                                {subItem.desc}
-                              </p>
-                            </div>
-                          </Link>
-                        );
-                      })}
+                      {/* Grilla de 2 Columnas */}
+                      <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
+                        {productSubItems.map((subItem) => {
+                          const Icon = subItem.icon;
+                          const active = location.pathname === subItem.to;
+                          return (
+                            <Link
+                              key={subItem.to}
+                              to={subItem.to}
+                              onClick={() => handleSubItemClick(subItem)}
+                              className={`flex items-start gap-4 p-4 rounded-2xl transition-all group ${
+                                active
+                                  ? 'bg-acentoAzul/10 border border-acentoAzul/30 shadow-xs'
+                                  : 'bg-bgPlataforma/60 hover:bg-bgPlataforma border border-papelKraft/40 hover:border-acentoAzul/40 hover:shadow-sm'
+                              }`}
+                            >
+                              <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-papelClaro border border-papelKraft/40 text-acentoAzul flex items-center justify-center flex-shrink-0 group-hover:bg-acentoAzul group-hover:text-white group-hover:border-acentoAzul transition-all shadow-xs mt-0.5">
+                                <Icon className="w-6 h-6 transition-transform duration-300 group-hover:scale-110" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <span className="font-bold text-base sm:text-lg font-editorial text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase block leading-snug">
+                                  {subItem.label}
+                                </span>
+                                <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase font-medium leading-snug mt-1">
+                                  {subItem.desc}
+                                </p>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
 
-                      <div className="pt-2 mt-1 border-t border-papelKraft/40">
+                      <div className="pt-3 border-t border-papelKraft/40 flex items-center justify-between px-1">
+                        <span className="text-xs text-tintaCarvao/70 font-medium lowercase">
+                          dúvidas sobre qual escolher?
+                        </span>
                         <Link
                           to="/programs"
                           onClick={() => handleSubItemClick(productSubItems[0])}
-                          className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-bold text-acentoAzul hover:bg-acentoAzul/10 transition-colors lowercase"
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-acentoAzul bg-acentoAzul/10 hover:bg-acentoAzul hover:text-white transition-all lowercase shadow-xs"
                         >
                           <span>ver todos os programas</span>
                           <ArrowRight className="w-4 h-4" />
