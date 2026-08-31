@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useScroll } from 'framer-motion';
 import { Heart, Users, Pencil, ArrowRight, CheckCircle2, BookOpen, Compass } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import { LinePath } from '../components/ui/svg-follow-scroll';
 
 interface EventPhoto {
   image: string;
@@ -52,7 +54,13 @@ const eventGallery: EventPhoto[] = [
 ];
 
 export default function AboutUs() {
+  const pageRef = useRef<HTMLDivElement>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<EventPhoto | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: pageRef,
+    offset: ['start start', 'end end'],
+  });
 
   const pillars = [
     {
@@ -78,12 +86,22 @@ export default function AboutUs() {
   ];
 
   return (
-    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul">
+    <div ref={pageRef} className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul relative overflow-x-hidden">
       {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
+      {/* SVG Stroke Animado que Acompanha o Scroll */}
+      <div className="absolute top-0 right-0 w-full h-full pointer-events-none z-0 overflow-hidden opacity-30">
+        <LinePath
+          scrollYProgress={scrollYProgress}
+          color="#FF6B35"
+          strokeWidth={14}
+          className="absolute -right-20 top-20 max-w-5xl"
+        />
+      </div>
+
       {/* 2. HERO SECTION SOBRE NÓS */}
-      <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
+      <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             {/* Coluna Esquerda: Texto de Manifesto */}
@@ -158,7 +176,7 @@ export default function AboutUs() {
       </section>
 
       {/* 3. A ARTE DE VIVER MELHOR & NOSSOS PILARES (Versão Compacta & Elegante) */}
-      <section className="py-16 sm:py-20 bg-papelClaro border-t border-b border-papelKraft/40">
+      <section className="py-16 sm:py-20 bg-papelClaro border-t border-b border-papelKraft/40 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
@@ -212,12 +230,12 @@ export default function AboutUs() {
       </section>
 
       {/* 4. AS CRIADORAS & FACILITADORAS (Bruna Riedel & Júlia Alvim) */}
-      <div id="criadoras">
+      <div id="criadoras" className="relative z-10">
         <FoundersSection />
       </div>
 
       {/* 5. GALERIA DE ENCONTROS & VIVÊNCIAS (Scrapbook Grid) */}
-      <section id="galeria" className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+      <section id="galeria" className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold uppercase tracking-wider mb-4 shadow-sm">
@@ -308,7 +326,7 @@ export default function AboutUs() {
       )}
 
       {/* 6. PLATAFORMA DIGITAL & ÁREA DE MEMBROS */}
-      <section className="py-20 sm:py-28 bg-bgPlataforma relative overflow-hidden">
+      <section className="py-20 sm:py-28 bg-bgPlataforma relative overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-12 lg:p-16 border border-white/20 shadow-kraft-lg relative overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
