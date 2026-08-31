@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Instagram, MessageCircle, Mail, Pencil } from 'lucide-react';
 import { useState } from 'react';
 import ContactPopup from './ContactPopup';
+import HalftoneDotsCanvas from './HalftoneDotsCanvas';
 import { BRAND_ASSETS } from '../config/brandAssets';
 
 export default function PreLoginFooter() {
@@ -10,14 +11,8 @@ export default function PreLoginFooter() {
   return (
     <>
       <footer className="bg-acentoAzul text-white relative overflow-hidden border-t-4 border-acentoOliva">
-        {/* Textura Halftone Retícula de Fundo */}
-        <div
-          className="absolute inset-0 opacity-[0.08] pointer-events-none mix-blend-overlay z-0 bg-repeat"
-          style={{
-            backgroundImage: "url('/brand-assets/textures/reticula-halftone-padrao-1.png')",
-            backgroundSize: '240px 240px',
-          }}
-        />
+        {/* Animated WebGL Halftone Shader Texture Overlay */}
+        <HalftoneDotsCanvas />
 
         {/* Marca d'água gigantesca no fundo */}
         <div
