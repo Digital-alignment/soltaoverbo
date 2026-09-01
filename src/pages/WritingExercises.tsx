@@ -332,7 +332,13 @@ export default function WritingExercises() {
   };
 
   const handleSave = async () => {
-    if (!profile || !title.trim()) return;
+    if (!profile) return;
+
+    // Se o título estiver em branco mas houver conteúdo, gerar um título padrão poético com a data
+    const finalTitle = title.trim() || `texto sem título • ${new Date().toLocaleDateString('pt-BR')}`;
+    if (!title.trim()) {
+      setTitle(finalTitle);
+    }
 
     setSaving(true);
     try {
@@ -340,31 +346,45 @@ export default function WritingExercises() {
         const { error } = await supabase
           .from('writing_exercises')
           .update({
-            title: title.trim(),
+            title: finalTitle,
             content: content,
           })
           .eq('id', currentExercise.id);
 
         if (error) throw error;
       } else {
-        const { error } = await supabase.from('writing_exercises').insert({
+        const { data, error } = await supabase.from('writing_exercises').insert({
           user_id: profile.id,
-          title: title.trim(),
+          title: finalTitle,
           content: content,
           is_published: false,
-        });
+        }).select().single();
 
         if (error) throw error;
+        if (data) {
+          setCurrentExercise(data);
+        }
       }
 
       await loadExercises();
       setIsEditing(false);
     } catch (error) {
       console.error('erro ao salvar:', error);
-      alert('erro ao salvar o texto. tente novamente.');
     } finally {
       setSaving(false);
     }
+  };
+
+  // AO SAIR DO MODO FOCO -> SALVA O TEXTO AUTOMATICAMENTE SE HOUVER CONTEÚDO
+  const handleExitZenMode = async () => {
+    const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+    const hasTitle = title.trim().length > 0;
+
+    if (cleanContent.length > 0 || hasTitle) {
+      await handleSave();
+    }
+
+    setIsZenMode(false);
   };
 
   const handleDownload = () => {
@@ -973,7 +993,7 @@ export default function WritingExercises() {
                     {/* Ícone de Sair do Modo Foco */}
                     <div className="relative group">
                       <button
-                        onClick={() => setIsZenMode(false)}
+                        onClick={handleExitZenMode}
                         className="p-2.5 rounded-full bg-acentoAzul hover:bg-acentoAzul/90 text-white border border-acentoAzul/40 transition-all shadow-sm active:scale-95 flex items-center justify-center"
                       >
                         <Minimize2 className="w-4 h-4 text-white" />
