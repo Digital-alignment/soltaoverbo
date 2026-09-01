@@ -191,184 +191,191 @@ export default function RichTextEditor({
         data-placeholder={placeholder}
       />
 
-      {/* BARRA FLUTUANTE DE FERRAMENTAS NO BOTTOM DA PÁGINA (DOCK BOTTOM BAR DA REFERÊNCIA) - RESPONSIVA EM MOBILE */}
-      <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100000] bg-papelClaro/95 backdrop-blur-md border border-papelKraft/60 shadow-kraft-lg rounded-3xl p-1.5 sm:p-2.5 flex items-center gap-1 sm:gap-2 max-w-[95vw] sm:max-w-fit overflow-x-auto no-scrollbar">
+      {/* CONTAINER EXTERNO DA BARRA FLUTUANTE (OVERFLOW-VISIBLE PARA O MENU POPUP SER 100% VISÍVEL) */}
+      <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100000] max-w-[95vw] sm:max-w-fit overflow-visible">
         
-        {/* DESFAZER / REFAZER */}
-        <button
-          type="button"
-          onClick={() => executeCommand('undo')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="desfazer"
-        >
-          <Undo className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('redo')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="refazer"
-        >
-          <Redo className="w-4 h-4" />
-        </button>
+        {/* MENU POPUP POP-UP DE OPÇÕES DE TEXTO (DESPLEGADO ACIMA DO BOTÃO SEM SER RECORTADO POR OVERFLOW) */}
+        {showFormatMenu && (
+          <div
+            ref={formatMenuRef}
+            className="absolute bottom-full mb-3 left-2 sm:left-12 z-[100001] w-52 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-2 space-y-1 animate-fadeIn"
+          >
+            {FORMAT_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => selectFormat(opt.value)}
+                className={`w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold lowercase transition-all flex items-center justify-between ${
+                  currentFormat === opt.value
+                    ? 'bg-acentoAzul text-white shadow-sm font-extrabold'
+                    : 'text-tintaCarvao hover:bg-bgPlataforma font-semibold'
+                }`}
+              >
+                <span>{opt.label}</span>
+                {currentFormat === opt.value && <Check className="w-4 h-4 text-white shrink-0" />}
+              </button>
+            ))}
+          </div>
+        )}
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+        {/* ESTRUTURA INTERNA DA BARRA COM COMPORTAMENTO DE SCROLL TÁTIL EM MOBILE */}
+        <div className="bg-papelClaro/95 backdrop-blur-md border border-papelKraft/60 shadow-kraft-lg rounded-3xl p-1.5 sm:p-2.5 flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar">
+          
+          {/* DESFAZER / REFAZER */}
+          <button
+            type="button"
+            onClick={() => executeCommand('undo')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="desfazer"
+          >
+            <Undo className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('redo')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="refazer"
+          >
+            <Redo className="w-4 h-4" />
+          </button>
 
-        {/* MENU POPUP EM BOTÃO NO BOTTOM (ABRE PARA CIMA NA BARRA FLUTUANTE DE BAIXO) */}
-        <div className="relative shrink-0" ref={formatMenuRef}>
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* BOTÃO DISPARADOR DO MENU POPUP DE OPÇÕES DE TEXTO */}
           <button
             type="button"
             onClick={() => setShowFormatMenu(!showFormatMenu)}
-            className="px-2.5 sm:px-3 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1 sm:gap-1.5 shadow-sm transition-all lowercase active:scale-95"
+            className="px-2.5 sm:px-3 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1 sm:gap-1.5 shadow-sm transition-all lowercase active:scale-95 shrink-0"
             title="selecionar tipo de texto"
           >
             <span>{FORMAT_OPTIONS.find((o) => o.value === currentFormat)?.label || 'parágrafo'}</span>
             <ChevronUp className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
           </button>
 
-          {showFormatMenu && (
-            <div className="absolute bottom-full left-0 mb-2 z-50 w-44 sm:w-48 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-1.5 space-y-1 animate-fadeIn">
-              {FORMAT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => selectFormat(opt.value)}
-                  className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold lowercase transition-colors flex items-center justify-between ${
-                    currentFormat === opt.value
-                      ? 'bg-acentoAzul text-white shadow-sm'
-                      : 'text-tintaCarvao hover:bg-bgPlataforma'
-                  }`}
-                >
-                  <span>{opt.label}</span>
-                  {currentFormat === opt.value && <Check className="w-3.5 h-3.5" />}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-        {/* FORMATAÇÃO DE TEXTO: NEGRITO, ITÁLICO, TACHADO, SUBLINHADO, CITAÇÃO */}
-        <button
-          type="button"
-          onClick={() => executeCommand('bold')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold shrink-0 active:scale-95"
-          title="negrito"
-        >
-          <Bold className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('italic')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic shrink-0 active:scale-95"
-          title="itálico"
-        >
-          <Italic className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('strikeThrough')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="tachado"
-        >
-          <Strikethrough className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('underline')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="sublinhado"
-        >
-          <Underline className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => selectFormat('blockquote')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="citação poética"
-        >
-          <Quote className="w-4 h-4" />
-        </button>
-
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-        {/* LISTAS E ALINHAMENTO */}
-        <button
-          type="button"
-          onClick={() => executeCommand('insertUnorderedList')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="lista com marcadores"
-        >
-          <List className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('insertOrderedList')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="lista numerada"
-        >
-          <ListOrdered className="w-4 h-4" />
-        </button>
-
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-        <button
-          type="button"
-          onClick={() => executeCommand('justifyLeft')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="alinhar à esquerda"
-        >
-          <AlignLeft className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('justifyCenter')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="centralizar"
-        >
-          <AlignCenter className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={() => executeCommand('justifyRight')}
-          className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-          title="alinhar à direita"
-        >
-          <AlignRight className="w-4 h-4" />
-        </button>
-
-        <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-        {/* TAMANHO DE FONTE E COR */}
-        <div className="flex items-center space-x-1 shrink-0">
-          <Type className="w-4 h-4 text-acentoAzul shrink-0" />
-          <select
-            value={fontSize}
-            onChange={handleFontSizeChange}
-            className="px-2 py-1 bg-white/90 border border-papelKraft/40 rounded-xl text-xs font-bold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors cursor-pointer"
+          {/* FORMATAÇÃO DE TEXTO: NEGRITO, ITÁLICO, TACHADO, SUBLINHADO, CITAÇÃO */}
+          <button
+            type="button"
+            onClick={() => executeCommand('bold')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold shrink-0 active:scale-95"
+            title="negrito"
           >
-            <option value="12">12</option>
-            <option value="14">14</option>
-            <option value="16">16</option>
-            <option value="18">18</option>
-            <option value="20">20</option>
-            <option value="24">24</option>
-            <option value="28">28</option>
-            <option value="32">32</option>
-          </select>
-        </div>
+            <Bold className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('italic')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic shrink-0 active:scale-95"
+            title="itálico"
+          >
+            <Italic className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('strikeThrough')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="tachado"
+          >
+            <Strikethrough className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('underline')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="sublinhado"
+          >
+            <Underline className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => selectFormat('blockquote')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="citação poética"
+          >
+            <Quote className="w-4 h-4" />
+          </button>
 
-        <div className="flex items-center space-x-1.5 pl-1 shrink-0">
-          <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-semibold text-tintaCarvao/80 lowercase">
-            <span className="hidden sm:inline">cor:</span>
-            <input
-              type="color"
-              value={textColor}
-              onChange={handleColorChange}
-              className="w-6 h-6 rounded-lg cursor-pointer border border-papelKraft/40 p-0.5 bg-white shadow-sm"
-            />
-          </label>
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* LISTAS E ALINHAMENTO */}
+          <button
+            type="button"
+            onClick={() => executeCommand('insertUnorderedList')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="lista com marcadores"
+          >
+            <List className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('insertOrderedList')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="lista numerada"
+          >
+            <ListOrdered className="w-4 h-4" />
+          </button>
+
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          <button
+            type="button"
+            onClick={() => executeCommand('justifyLeft')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="alinhar à esquerda"
+          >
+            <AlignLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('justifyCenter')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="centralizar"
+          >
+            <AlignCenter className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => executeCommand('justifyRight')}
+            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
+            title="alinhar à direita"
+          >
+            <AlignRight className="w-4 h-4" />
+          </button>
+
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* TAMANHO DE FONTE E COR */}
+          <div className="flex items-center space-x-1 shrink-0">
+            <Type className="w-4 h-4 text-acentoAzul shrink-0" />
+            <select
+              value={fontSize}
+              onChange={handleFontSizeChange}
+              className="px-2 py-1 bg-white/90 border border-papelKraft/40 rounded-xl text-xs font-bold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors cursor-pointer"
+            >
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="24">24</option>
+              <option value="28">28</option>
+              <option value="32">32</option>
+            </select>
+          </div>
+
+          <div className="flex items-center space-x-1.5 pl-1 shrink-0">
+            <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-semibold text-tintaCarvao/80 lowercase">
+              <span className="hidden sm:inline">cor:</span>
+              <input
+                type="color"
+                value={textColor}
+                onChange={handleColorChange}
+                className="w-6 h-6 rounded-lg cursor-pointer border border-papelKraft/40 p-0.5 bg-white shadow-sm"
+              />
+            </label>
+          </div>
+
         </div>
 
       </div>
