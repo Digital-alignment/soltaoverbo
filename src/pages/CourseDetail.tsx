@@ -706,22 +706,18 @@ export default function CourseDetail() {
       {isZenModeOpen && selectedLesson && createPortal(
         <div className="fixed inset-0 top-0 left-0 w-screen h-screen z-[999999] bg-bgPlataforma text-tintaCarvao flex flex-col justify-between p-4 sm:p-8 animate-fadeIn overflow-y-auto">
           
-          {/* BARRA SUPERIOR DO MODO FOCO */}
-          <div className="max-w-5xl mx-auto w-full flex items-center justify-between border-b border-papelKraft/40 pb-4 gap-4 flex-wrap">
-            {/* TÍTULO LIMPO DA AULA (SEM TEXTO DE MODO FOCO ACIMA) */}
-            <h3 className="text-lg sm:text-2xl font-bold font-editorial text-acentoAzul lowercase truncate max-w-xs sm:max-w-md">
-              {selectedLesson.title}
-            </h3>
-
+          {/* BARRA SUPERIOR DO MODO FOCO (SEM TÍTULO DUPLICADO À ESQUERDA, APENAS CONTROLES FLUTUANTES MINIMALISTAS) */}
+          <div className="max-w-5xl mx-auto w-full flex items-center justify-center sm:justify-end pb-2">
+            
             {/* BARRA DE CONTROLES E FERRAMENTAS MINIMALISTAS DO MODO FOCO */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
               
               {/* PORCENTAGEM DE PROGRESSO DO CURSO EM MUTHASLE */}
-              <span className="font-gesto text-lg sm:text-2xl text-acentoTerracota lowercase px-1" title="progresso do curso">
+              <span className="font-gesto text-xl sm:text-2xl text-acentoTerracota lowercase px-1" title="progresso do curso">
                 {progressPercent}%
               </span>
 
-              {/* CONTROLE NAVEGAÇÃO DE AULAS (< 2/3 >) */}
+              {/* CONTROLE NAVEGAÇÃO DE AULAS (< 1/3 >) */}
               <div className="flex items-center gap-1.5 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
                 <button
                   type="button"
@@ -805,7 +801,20 @@ export default function CourseDetail() {
                   <MessageCircle className="w-4 h-4" />
                 </button>
 
-                {/* 4. MARCAR COMO CONCLUÍDA */}
+                {/* 4. ESCREVER NO ATELIER */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsZenModeOpen(false);
+                    handleOpenAtelierWithPrompt();
+                  }}
+                  className="p-2 rounded-full text-acentoTerracota hover:bg-papelKraft/30 transition-colors cursor-pointer"
+                  title="escrever no atelier"
+                >
+                  <Pencil className="w-4 h-4 text-acentoTerracota" />
+                </button>
+
+                {/* 5. MARCAR COMO CONCLUÍDA */}
                 <button
                   type="button"
                   onClick={() => {
@@ -887,68 +896,6 @@ export default function CourseDetail() {
               }`}
               dangerouslySetInnerHTML={{ __html: selectedLesson.description || '' }}
             />
-          </div>
-
-          {/* RODAPÉ DO MODO FOCO COM NAVEGAÇÃO, STATUS E ESCREVER NO ATELIER */}
-          <div className="max-w-4xl mx-auto w-full border-t border-papelKraft/40 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <button
-                type="button"
-                onClick={handlePrevLesson}
-                disabled={currentLessonIndex === 0}
-                className="p-3 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul disabled:opacity-30 shadow-sm hover:bg-papelKraft/30 transition-all flex items-center justify-center cursor-pointer"
-                title="aula anterior"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (selectedLesson) {
-                    setCompletedLessonIds((prev) =>
-                      prev.includes(selectedLesson.id)
-                        ? prev.filter((id) => id !== selectedLesson.id)
-                        : [...prev, selectedLesson.id]
-                    );
-                  }
-                }}
-                className={`px-5 py-2.5 rounded-2xl font-gesto text-[22px] sm:text-[25px] lowercase transition-all inline-flex items-center justify-center gap-2 shadow-sm cursor-pointer ${
-                  selectedLesson && completedLessonIds.includes(selectedLesson.id)
-                    ? 'bg-acentoOliva text-white border border-acentoOliva'
-                    : 'bg-white text-tintaCarvao border border-papelKraft/45 hover:bg-papelKraft/20'
-                }`}
-              >
-                <CheckCircle className={`w-5 h-5 ${selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'text-white' : 'text-acentoOliva'}`} />
-                <span>
-                  {selectedLesson && completedLessonIds.includes(selectedLesson.id)
-                    ? 'aula concluída ✓'
-                    : 'marcar como concluída'}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleNextLesson}
-                disabled={currentLessonIndex === lessons.length - 1}
-                className="p-3 rounded-2xl bg-acentoAzul text-white disabled:opacity-30 shadow-sm hover:bg-acentoAzul/90 transition-all flex items-center justify-center cursor-pointer"
-                title="próxima aula"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setIsZenModeOpen(false);
-                handleOpenAtelierWithPrompt();
-              }}
-              className="px-6 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[24px] sm:text-[26px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-transform hover:scale-105 inline-flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Pencil className="w-4 h-4 text-white" />
-              <span>escrever →</span>
-            </button>
           </div>
 
           {/* GAVETAS DESLIZANTES LATERAIS NO MODO FOCO */}
