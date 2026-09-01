@@ -915,59 +915,73 @@ export default function WritingExercises() {
             <div className="fixed inset-0 z-[999999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
               <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
                 
-                {/* Header Superior Limpo do Modo Foco com Botão de Configurações no Canto Superior Esquerdo */}
+                {/* Header Superior Limpo do Modo Foco (Métricas à esquerda, Apenas Ícones de Ação à direita) */}
                 <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                   
-                  {/* Lado Esquerdo: ÍCONE DE CONFIGURAÇÃO + Estatísticas de Palavras & Sprint */}
+                  {/* Lado Esquerdo: Contador de Palavras, Timer de Sprint & Selos Poéticos */}
                   <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => setShowSettingsModal(true)}
-                      className="p-2 rounded-xl bg-white hover:bg-bgPlataforma text-acentoAzul border border-papelKraft/50 transition-colors shadow-sm inline-flex items-center gap-1.5"
-                      title="configurações do editor"
-                    >
-                      <Settings className="w-4 h-4 text-acentoAzul" />
-                      <span className="text-xs font-bold lowercase hidden sm:inline">configurações</span>
-                    </button>
-
                     {editorSettings.showWordCount && (
                       <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
-                        produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
+                        produção: <strong className="font-editorial text-lg font-bold text-acentoAzul">{currentWordCount}</strong> palavras
                       </span>
                     )}
 
                     {editorSettings.showTimer && timerSeconds !== null && (
-                      <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
+                      <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-papelKraft/50 shadow-sm">
                         <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
-                        <span className="font-gesto text-lg font-normal">{formatTimerStr(timerSeconds)}</span>
+                        <span className="font-editorial text-sm font-bold">{formatTimerStr(timerSeconds)}</span>
                       </span>
                     )}
 
                     {currentMilestone && (
-                      <span className="text-[11px] font-bold text-acentoAzul bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 lowercase hidden md:inline-flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-acentoAzul" />
-                        <span>{currentMilestone.title}</span>
+                      <span className="text-[11px] font-bold text-acentoAzul bg-acentoAzul/10 px-3 py-1.5 rounded-full border border-acentoAzul/20 lowercase hidden md:inline-flex items-center gap-1">
+                        <Sparkles className="w-3.5 h-3.5 text-acentoAzul" />
+                        <span className="font-editorial">{currentMilestone.title}</span>
                       </span>
                     )}
                   </div>
 
-                  {/* Lado Direito: Botão 'sair do modo foco' e Botão 'salvar texto' alinhados no topo */}
-                  <div className="flex flex-col items-end gap-1.5">
-                    <button
-                      onClick={() => setIsZenMode(false)}
-                      className="btn-pill-secondary px-4 py-1.5 text-xs font-bold lowercase inline-flex items-center gap-1.5 shadow-sm"
-                    >
-                      <Minimize2 className="w-3.5 h-3.5" />
-                      <span>sair do modo foco</span>
-                    </button>
+                  {/* Lado Direito: Apenas Ícones de Ação Arredondados com Tooltips em Hover */}
+                  <div className="flex items-center gap-2">
+                    {/* Ícone de Configurações do Editor */}
+                    <div className="relative group">
+                      <button
+                        onClick={() => setShowSettingsModal(true)}
+                        className="p-2.5 rounded-full bg-white hover:bg-bgPlataforma text-acentoAzul border border-papelKraft/50 transition-all shadow-sm active:scale-95 flex items-center justify-center"
+                      >
+                        <Settings className="w-4 h-4 text-acentoAzul" />
+                      </button>
+                      <div className="absolute top-full mt-2 right-0 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2.5 py-1 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
+                        configurações do editor
+                      </div>
+                    </div>
 
-                    <button
-                      onClick={handleSave}
-                      disabled={saving || !title.trim()}
-                      className="btn-pill-primary px-4 py-1.5 text-xs font-semibold lowercase shadow-sm inline-flex items-center gap-1.5 disabled:opacity-50"
-                    >
-                      <Save className="w-3.5 h-3.5 text-white" />
-                      <span>{saving ? 'salvando...' : 'salvar texto'}</span>
-                    </button>
+                    {/* Ícone de Salvar Texto */}
+                    <div className="relative group">
+                      <button
+                        onClick={handleSave}
+                        disabled={saving || !title.trim()}
+                        className="p-2.5 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white border border-acentoTerracota/40 transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center"
+                      >
+                        <Save className="w-4 h-4 text-white" />
+                      </button>
+                      <div className="absolute top-full mt-2 right-0 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2.5 py-1 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
+                        {saving ? 'salvando...' : 'salvar texto (ctrl+s)'}
+                      </div>
+                    </div>
+
+                    {/* Ícone de Sair do Modo Foco */}
+                    <div className="relative group">
+                      <button
+                        onClick={() => setIsZenMode(false)}
+                        className="p-2.5 rounded-full bg-acentoAzul hover:bg-acentoAzul/90 text-white border border-acentoAzul/40 transition-all shadow-sm active:scale-95 flex items-center justify-center"
+                      >
+                        <Minimize2 className="w-4 h-4 text-white" />
+                      </button>
+                      <div className="absolute top-full mt-2 right-0 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2.5 py-1 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
+                        sair do modo foco
+                      </div>
+                    </div>
                   </div>
                 </div>
 
