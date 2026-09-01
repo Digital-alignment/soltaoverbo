@@ -627,14 +627,20 @@ export default function CourseDetail() {
           {/* COLUNA DA DIREITA (4 COLS): ÍNDICE DO CURSO COM BARRA DE PROGRESSO NO TOPO */}
           <div className="lg:col-span-4 bg-white rounded-3xl p-5 border border-papelKraft/30 shadow-sm space-y-4 sticky top-6">
             
-            {/* BARRA DE PROGRESSO DO CURSO ANTES DO TÍTULO DO SUMÁRIO */}
-            <div className="bg-bgPlataforma/80 rounded-2xl p-3.5 border border-papelKraft/35 space-y-2">
-              <div className="flex items-center justify-between text-xs font-normal font-corpo lowercase">
-                <span className="text-acentoAzul font-medium">aula {currentLessonIndex + 1} de {lessons.length}</span>
-                <span className="text-acentoTerracota font-medium">{progressPercent}% concluído</span>
+            {/* BARRA DE PROGRESSO DO CURSO ANTES DO TÍTULO DO SUMÁRIO (FUNDO INTEGRADO SEM CAIXA, MUTHASLE 20px/25px, BARRA DINÂMICA) */}
+            <div className="space-y-2 pb-1">
+              <div className="flex items-center justify-end">
+                <span className="font-gesto text-[20px] sm:text-[25px] font-normal text-acentoTerracota lowercase tracking-wide">
+                  {progressPercent}% concluído
+                </span>
               </div>
-              <div className="w-full bg-papelKraft/40 h-2 rounded-full overflow-hidden">
-                <div className="bg-acentoOliva h-full rounded-full transition-all duration-500" style={{ width: `${progressPercent}%` }} />
+              <div className="w-full bg-papelKraft/30 h-2 rounded-full overflow-hidden p-[1px]">
+                <div
+                  className="bg-acentoOliva h-full rounded-full transition-all duration-700 ease-out relative shadow-sm"
+                  style={{ width: `${progressPercent}%` }}
+                >
+                  <div className="absolute inset-0 bg-white/25 animate-pulse rounded-full" />
+                </div>
               </div>
             </div>
 
