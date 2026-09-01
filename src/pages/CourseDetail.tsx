@@ -68,6 +68,17 @@ export default function CourseDetail() {
   const isInitialLoad = useRef(true);
 
   useEffect(() => {
+    if (isZenModeOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isZenModeOpen]);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (materialsRef.current && !materialsRef.current.contains(event.target as Node)) {
         setShowMaterials(false);
@@ -693,7 +704,7 @@ export default function CourseDetail() {
 
       {/* MODO FOCO DA AULA (ZEN READER FULLSCREEN OVERLAY) */}
       {isZenModeOpen && selectedLesson && createPortal(
-        <div className="fixed inset-0 z-[999999] bg-bgPlataforma text-tintaCarvao flex flex-col justify-between p-4 sm:p-8 animate-fadeIn overflow-y-auto relative">
+        <div className="fixed inset-0 top-0 left-0 w-screen h-screen z-[999999] bg-bgPlataforma text-tintaCarvao flex flex-col justify-between p-4 sm:p-8 animate-fadeIn overflow-y-auto">
           
           {/* BARRA SUPERIOR DO MODO FOCO */}
           <div className="max-w-5xl mx-auto w-full flex items-center justify-between border-b border-papelKraft/40 pb-4 gap-4 flex-wrap">
