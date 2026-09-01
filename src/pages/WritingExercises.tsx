@@ -41,6 +41,7 @@ import {
   Send,
   MessageSquare,
   Settings,
+  Hourglass,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -225,10 +226,25 @@ export default function WritingExercises() {
   const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'tags'>('textos');
   const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
 
-  // TEMPORIZADOR DO RITUAL (Sprint de Escrita Sem Cobrança)
+  // TEMPORIZADOR DO RITUAL (Sprint de Escrita Manual)
   const [timerSeconds, setTimerSeconds] = useState<number | null>(null);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
+  const [showTimerPopover, setShowTimerPopover] = useState(false);
+  const [customHours, setCustomHours] = useState('0');
+  const [customMinutes, setCustomMinutes] = useState('15');
+  const timerPopoverRef = useRef<HTMLDivElement>(null);
+
+  // Fechar popover do temporizador ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (timerPopoverRef.current && !timerPopoverRef.current.contains(event.target as Node)) {
+        setShowTimerPopover(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Congelar o scroll do body quando o Modo Foco estiver ativo
   useEffect(() => {
@@ -278,8 +294,12 @@ export default function WritingExercises() {
   };
 
   const formatTimerStr = (totalSec: number) => {
-    const m = Math.floor(totalSec / 60);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
     const s = totalSec % 60;
+    if (h > 0) {
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
 
@@ -946,11 +966,111 @@ export default function WritingExercises() {
                       </span>
                     )}
 
-                    {editorSettings.showTimer && timerSeconds !== null && (
-                      <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-papelKraft/50 shadow-sm">
-                        <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
-                        <span className="font-editorial text-sm font-bold">{formatTimerStr(timerSeconds)}</span>
-                      </span>
+                    {/* TEMPORIZADOR DE SPRINT COM ÍCONE DE AMPULHETA (REFERÊNCIA media_1788224288012.png) */}
+                    {editorSettings.showTimer && (
+                      <div className="relative" ref={timerPopoverRef}>
+                        {timerSeconds === null ? (
+                          // ESTADO INICIAL: BOTÃO DE AMPULHETA PARA DEFINIR TEMPO MANUALMENTE
+                          <button
+                            onClick={() => setShowTimerPopover(!showTimerPopover)}
+                            className="px-3 py-1.5 rounded-full bg-white hover:bg-bgPlataforma text-acentoTerracota border border-papelKraft/50 transition-all shadow-sm flex items-center gap-1.5 text-xs font-bold font-editorial lowercase active:scale-95"
+                            title="definir tempo do sprint"
+                          >
+                            <Hourglass className="w-4 h-4 text-acentoTerracota" />
+                            <span>definir tempo</span>
+                          </button>
+                        ) : (
+                          // ESTADO ATIVO OU PAUSADO: MOSTRA O CRONÔMETRO COM AMPULHETA E CONTROLES
+                          <div className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
+                            <Hourglass className={`w-4 h-4 text-acentoTerracota ${isTimerRunning ? 'animate-spin' : ''}`} />
+                            <span className="font-editorial text-sm font-bold text-acentoTerracota">
+                              {formatTimerStr(timerSeconds)}
+                            </span>
+
+                            {isTimerRunning ? (
+                              <button
+                                onClick={pauseTimer}
+                                className="p-1 hover:bg-papelKraft/20 rounded-full text-acentoTerracota"
+                                title="pausar"
+                              >
+                                <Pause className="w-3.5 h-3.5" />
+                              </button>
+                            ) : (
+                              <button
+                                onClick={resumeTimer}
+                                className="p-1 hover:bg-papelKraft/20 rounded-full text-acentoTerracota"
+                                title="continuar"
+                              >
+                                <Play className="w-3.5 h-3.5 fill-current" />
+                              </button>
+                            )}
+
+                            <button
+                              onClick={stopTimer}
+                              className="p-1 hover:bg-papelKraft/20 rounded-full text-tintaCarvao/50 hover:text-acentoTerracota"
+                              title="parar sprint"
+                            >
+                              <RotateCcw className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+
+                        {/* CARD POPOVER DE TEMPO MANUAL DA REFERÊNCIA media_1788224288012.png */}
+                        {showTimerPopover && (
+                          <div className="absolute top-full mt-2 left-0 z-50 bg-[#EDE6D4] rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-3.5 space-y-3 w-64 animate-fadeIn">
+                            <div className="text-xs font-bold font-editorial text-acentoAzul lowercase flex items-center gap-1.5 border-b border-papelKraft/30 pb-1.5">
+                              <Hourglass className="w-4 h-4 text-acentoTerracota" />
+                              <span>temporizador de sprint poético</span>
+                            </div>
+
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex-1 space-y-1 text-center">
+                                <span className="text-[10px] font-bold font-editorial text-tintaCarvao/70 lowercase block">horas</span>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="23"
+                                  value={customHours}
+                                  onChange={(e) => setCustomHours(e.target.value)}
+                                  className="w-full text-center px-2 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-bold font-editorial text-acentoAzul focus:outline-none"
+                                  placeholder="0"
+                                />
+                              </div>
+
+                              <span className="text-sm font-bold text-tintaCarvao/50 pt-4">:</span>
+
+                              <div className="flex-1 space-y-1 text-center">
+                                <span className="text-[10px] font-bold font-editorial text-tintaCarvao/70 lowercase block">minutos</span>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="59"
+                                  value={customMinutes}
+                                  onChange={(e) => setCustomMinutes(e.target.value)}
+                                  className="w-full text-center px-2 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-bold font-editorial text-acentoAzul focus:outline-none"
+                                  placeholder="15"
+                                />
+                              </div>
+                            </div>
+
+                            <button
+                              onClick={() => {
+                                const h = Math.max(0, parseInt(customHours) || 0);
+                                const m = Math.max(0, parseInt(customMinutes) || 0);
+                                const totalMins = h * 60 + m;
+                                if (totalMins > 0) {
+                                  startTimer(totalMins);
+                                  setShowTimerPopover(false);
+                                }
+                              }}
+                              className="w-full btn-pill-primary py-2 text-xs font-bold lowercase shadow-sm flex items-center justify-center gap-1.5"
+                            >
+                              <Play className="w-3.5 h-3.5 fill-current text-white" />
+                              <span>iniciar sprint</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     )}
 
                     {currentMilestone && (
