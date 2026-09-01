@@ -303,11 +303,11 @@ export default function CourseDetail() {
           <div className="lg:col-span-8 space-y-6" ref={desktopContentRef}>
             {selectedLesson && (
               <>
-                {/* CANVAS DA AULA EM PAPEL FINO BRANCO */}
-                <div className="bg-white rounded-3xl p-6 sm:p-9 border border-papelKraft/30 shadow-sm space-y-6">
+                {/* CANVAS DA AULA EM PAPEL CREME CÁLIDO */}
+                <div className="bg-papelClaro rounded-3xl p-6 sm:p-9 border border-papelKraft/40 shadow-sm space-y-6">
 
                   {/* CABEÇALHO DA AULA SELECIONADA */}
-                  <div className="space-y-2.5 border-b border-papelKraft/25 pb-5">
+                  <div className="space-y-2 border-b border-papelKraft/25 pb-4">
                     <div className="flex items-center justify-between gap-3">
                       <span className="text-xs font-light font-corpo text-acentoTerracota lowercase tracking-wide">
                         capítulo {currentLessonIndex + 1} de {lessons.length}
@@ -317,7 +317,7 @@ export default function CourseDetail() {
                           {selectedLesson.tags.map((tag, tIdx) => (
                             <span
                               key={tIdx}
-                              className="px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo bg-bgPlataforma text-acentoAzul border border-papelKraft/40 lowercase"
+                              className="px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo bg-white text-acentoAzul border border-papelKraft/40 lowercase shadow-sm"
                             >
                               {tag}
                             </span>
@@ -326,7 +326,7 @@ export default function CourseDetail() {
                       )}
                     </div>
 
-                    <h2 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+                    <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
                       {selectedLesson.title}
                     </h2>
                   </div>
@@ -364,9 +364,9 @@ export default function CourseDetail() {
                   {(selectedLesson.zoom_link || selectedLesson.recording_url) && (
                     <div className="space-y-3">
                       {selectedLesson.zoom_link && (
-                        <div className="bg-bgPlataforma rounded-2xl p-4 border border-papelKraft/40 flex items-center justify-between shadow-sm">
+                        <div className="bg-white rounded-2xl p-4 border border-papelKraft/40 flex items-center justify-between shadow-sm">
                           <div className="flex items-center gap-3">
-                            <div className="p-2.5 rounded-xl bg-white border border-papelKraft/40 text-acentoAzul">
+                            <div className="p-2.5 rounded-xl bg-bgPlataforma border border-papelKraft/40 text-acentoAzul">
                               <Video className="w-4 h-4 text-acentoAzul" />
                             </div>
                             <div>
@@ -432,7 +432,7 @@ export default function CourseDetail() {
                       <button
                         type="button"
                         onClick={() => setIsZenModeOpen(true)}
-                        className="px-4 py-2 rounded-2xl bg-bgPlataforma hover:bg-papelKraft/30 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase border border-papelKraft/40 shadow-sm transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="px-4 py-2 rounded-2xl bg-white hover:bg-papelKraft/30 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase border border-papelKraft/40 shadow-sm transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer"
                         title="modo foco"
                       >
                         <Maximize2 className="w-4 h-4" />
@@ -467,7 +467,7 @@ export default function CourseDetail() {
 
                 {/* MATERIAIS DE APOIO */}
                 {materials.length > 0 && (
-                  <div className="bg-white rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm space-y-3">
+                  <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm space-y-3">
                     <h3 className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 border-b border-papelKraft/25 pb-2.5">
                       <Download className="w-4 h-4 text-acentoTerracota" />
                       <span>materiais de apoio ({materials.length})</span>
@@ -480,7 +480,7 @@ export default function CourseDetail() {
                           href={mat.file_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between p-3 bg-bgPlataforma rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
+                          className="flex items-center justify-between p-3 bg-white rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
                         >
                           <div className="flex items-center gap-2.5 truncate">
                             <Download className="w-4 h-4 text-acentoTerracota shrink-0 group-hover:scale-110 transition-transform" />
@@ -497,9 +497,9 @@ export default function CourseDetail() {
                   </div>
                 )}
 
-                {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA (COM TEXTAREA LIMPO SEM TOOLBAR FLUTUANTE) */}
-                <div className="bg-white rounded-3xl p-6 sm:p-7 border border-papelKraft/30 shadow-sm space-y-5">
-                  <div className="flex items-center justify-between border-b border-papelKraft/25 pb-3">
+                {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA (COLAPSADA POR PADRÃO SEM LINHA INFERIOR INTERNA) */}
+                <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm">
+                  <div className={`flex items-center justify-between transition-all ${showComments ? 'border-b border-papelKraft/25 pb-3 mb-4' : ''}`}>
                     <button
                       type="button"
                       onClick={() => setShowComments(!showComments)}
@@ -514,7 +514,7 @@ export default function CourseDetail() {
                       onClick={() => setShowComments(!showComments)}
                       className="text-xs font-normal font-gesto text-acentoAzul hover:underline lowercase cursor-pointer"
                     >
-                      {showComments ? 'ocultar ▲' : 'ver partilhas ▼'}
+                      {showComments ? 'ocultar ▲' : 'mostrar ▼'}
                     </button>
                   </div>
 

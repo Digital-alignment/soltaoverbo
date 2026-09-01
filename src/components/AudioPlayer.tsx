@@ -169,53 +169,42 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className={`bg-bgPlataforma rounded-2xl border border-papelKraft/40 p-3.5 sm:p-4 shadow-sm space-y-3 ${className}`}>
+    <div className={`bg-bgPlataforma/70 rounded-2xl border border-papelKraft/40 p-3 shadow-sm space-y-2 ${className}`}>
       <audio ref={audioRef} src={currentAudio.audio_file_url} preload="metadata" />
 
-      {/* Header do Player */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 truncate">
-          <Volume2 className="w-4 h-4 text-acentoAzul shrink-0" />
-          <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase truncate">
-            {currentAudio.title}
-          </h4>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            const rates = [1, 1.25, 1.5, 2];
-            const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
-            setPlaybackRate(rates[nextIdx]);
-          }}
-          className="px-2.5 py-0.5 rounded-full bg-white border border-papelKraft/50 text-xs font-normal font-corpo text-acentoAzul hover:bg-papelKraft/30 transition-colors lowercase shrink-0 cursor-pointer shadow-sm"
-          title="velocidade de reprodução"
-        >
-          {playbackRate}x
-        </button>
-      </div>
-
-      {/* Player Minimalista de Onda Sonora */}
-      <div className="flex items-center gap-3 bg-white p-2.5 sm:p-3 rounded-xl border border-papelKraft/40">
+      {/* Linha Única Integrada de Áudio: Play + Título + Onda Sonora + Timers + Velocidade */}
+      <div className="flex items-center gap-3">
+        {/* Play Button */}
         <button
           type="button"
           onClick={togglePlay}
           disabled={isLoading}
-          className="w-10 h-10 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-sm hover:scale-105 transition-transform shrink-0 cursor-pointer disabled:opacity-50"
+          className="w-9 h-9 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-sm hover:scale-105 transition-transform shrink-0 cursor-pointer disabled:opacity-50"
           aria-label={isPlaying ? 'pausar áudio' : 'reproduzir áudio'}
         >
           {isPlaying ? (
-            <Pause className="w-4 h-4 fill-white" />
+            <Pause className="w-3.5 h-3.5 fill-white" />
           ) : (
-            <Play className="w-4 h-4 fill-white ml-0.5" />
+            <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
           )}
         </button>
 
+        {/* Título e Onda Sonora */}
         <div className="flex-1 space-y-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 text-xs">
+            <span className="font-bold font-editorial text-acentoAzul lowercase truncate">
+              {currentAudio.title}
+            </span>
+            <span className="font-light font-corpo text-tintaCarvao/60 text-[11px] shrink-0">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+          </div>
+
+          {/* Progress Waveform Bar */}
           <div
             ref={progressRef}
             onClick={handleProgressClick}
-            className="h-6 rounded-lg bg-bgPlataforma border border-papelKraft/40 flex items-center px-1.5 cursor-pointer relative overflow-hidden"
+            className="h-5 rounded-md bg-white border border-papelKraft/40 flex items-center px-1.5 cursor-pointer relative overflow-hidden"
           >
             <div
               className="absolute left-0 top-0 bottom-0 bg-acentoTerracota/15 transition-all"
@@ -223,32 +212,41 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             />
 
             <div className="w-full flex items-center justify-between gap-0.5 z-10">
-              {[...Array(30)].map((_, i) => {
-                const isPast = (i / 30) * 100 <= progressPercent;
+              {[...Array(28)].map((_, i) => {
+                const isPast = (i / 28) * 100 <= progressPercent;
                 return (
                   <div
                     key={i}
-                    className={`w-1 rounded-full transition-all ${
-                      isPast ? 'bg-acentoTerracota' : 'bg-papelKraft/50'
+                    className={`w-0.5 sm:w-1 rounded-full transition-all ${
+                      isPast ? 'bg-acentoTerracota' : 'bg-papelKraft/40'
                     } ${isPlaying && isPast ? 'animate-pulse' : ''}`}
                     style={{
-                      height: `${8 + Math.abs(Math.sin(i * 0.7)) * 12}px`,
+                      height: `${6 + Math.abs(Math.sin(i * 0.7)) * 10}px`,
                     }}
                   />
                 );
               })}
             </div>
           </div>
-
-          <div className="flex justify-between items-center text-[11px] font-light font-corpo text-tintaCarvao/60">
-            <span>{formatTime(currentTime)}</span>
-            <span>{formatTime(duration)}</span>
-          </div>
         </div>
+
+        {/* Velocidade (1x, 1.25x, 1.5x) */}
+        <button
+          type="button"
+          onClick={() => {
+            const rates = [1, 1.25, 1.5, 2];
+            const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
+            setPlaybackRate(rates[nextIdx]);
+          }}
+          className="px-2.5 py-1 rounded-full bg-white border border-papelKraft/40 text-[11px] font-normal font-corpo text-acentoAzul hover:bg-papelKraft/20 transition-colors lowercase shrink-0 cursor-pointer shadow-sm"
+          title="velocidade de reprodução"
+        >
+          {playbackRate}x
+        </button>
       </div>
 
       {hasMultiple && (
-        <div className="flex items-center justify-between text-xs font-light font-corpo text-tintaCarvao/70 pt-1">
+        <div className="flex items-center justify-between text-[11px] font-light font-corpo text-tintaCarvao/60 pt-0.5 border-t border-papelKraft/20">
           <button
             type="button"
             onClick={handlePrevious}
@@ -257,7 +255,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
           >
             ← anterior
           </button>
-          <span className="text-tintaCarvao/50 text-[10px]">
+          <span>
             {currentIndex + 1} de {audioFiles.length}
           </span>
           <button
