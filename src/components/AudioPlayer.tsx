@@ -169,21 +169,18 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className={`bg-white rounded-3xl border border-papelKraft/60 p-4 sm:p-6 shadow-kraft space-y-4 ${className}`}>
+    <div className={`bg-bgPlataforma rounded-2xl border border-papelKraft/40 p-3.5 sm:p-4 shadow-sm space-y-3 ${className}`}>
       <audio ref={audioRef} src={currentAudio.audio_file_url} preload="metadata" />
 
-      {/* Título do Áudio & Contador de Playlist */}
-      <div className="flex items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
-        <div>
-          <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
-            {hasMultiple ? `áudio ${currentIndex + 1} de ${audioFiles.length}` : 'áudio da aula'}
-          </span>
-          <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase">
+      {/* Header do Player */}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 truncate">
+          <Volume2 className="w-4 h-4 text-acentoAzul shrink-0" />
+          <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase truncate">
             {currentAudio.title}
           </h4>
         </div>
 
-        {/* Velocidade de Reprodução (1x, 1.25x, 1.5x) */}
         <button
           type="button"
           onClick={() => {
@@ -191,56 +188,51 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
             setPlaybackRate(rates[nextIdx]);
           }}
-          className="px-3 py-1 rounded-full bg-bgPlataforma border border-papelKraft/50 text-xs font-normal font-corpo text-acentoAzul hover:bg-papelKraft/30 transition-colors lowercase"
+          className="px-2.5 py-0.5 rounded-full bg-white border border-papelKraft/50 text-xs font-normal font-corpo text-acentoAzul hover:bg-papelKraft/30 transition-colors lowercase shrink-0 cursor-pointer shadow-sm"
           title="velocidade de reprodução"
         >
           {playbackRate}x
         </button>
       </div>
 
-      {/* Visual da Barra de Onda Sonora (Inspirado na Referência media_1788227772415.png) */}
-      <div className="flex items-center gap-3 bg-bgPlataforma p-3 sm:p-4 rounded-2xl border border-papelKraft/40">
-        {/* Botão Play/Pause Circular Minimalista */}
+      {/* Player Minimalista de Onda Sonora */}
+      <div className="flex items-center gap-3 bg-white p-2.5 sm:p-3 rounded-xl border border-papelKraft/40">
         <button
           type="button"
           onClick={togglePlay}
           disabled={isLoading}
-          className="w-12 h-12 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-md hover:scale-105 transition-transform shrink-0 cursor-pointer disabled:opacity-50"
+          className="w-10 h-10 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-sm hover:scale-105 transition-transform shrink-0 cursor-pointer disabled:opacity-50"
           aria-label={isPlaying ? 'pausar áudio' : 'reproduzir áudio'}
         >
           {isPlaying ? (
-            <Pause className="w-5 h-5 fill-white" />
+            <Pause className="w-4 h-4 fill-white" />
           ) : (
-            <Play className="w-5 h-5 fill-white ml-0.5" />
+            <Play className="w-4 h-4 fill-white ml-0.5" />
           )}
         </button>
 
-        {/* Linha da Barra de Onda Sonora e Barra de Progresso Arrastável */}
-        <div className="flex-1 space-y-1.5 min-w-0">
+        <div className="flex-1 space-y-1 min-w-0">
           <div
             ref={progressRef}
             onClick={handleProgressClick}
-            className="h-7 rounded-xl bg-white border border-papelKraft/40 flex items-center px-2 cursor-pointer relative overflow-hidden group/bar"
+            className="h-6 rounded-lg bg-bgPlataforma border border-papelKraft/40 flex items-center px-1.5 cursor-pointer relative overflow-hidden"
           >
-            {/* Preenchimento de Progresso */}
             <div
               className="absolute left-0 top-0 bottom-0 bg-acentoTerracota/15 transition-all"
               style={{ width: `${progressPercent}%` }}
             />
 
-            {/* Barras de Onda Animadas */}
             <div className="w-full flex items-center justify-between gap-0.5 z-10">
-              {[...Array(32)].map((_, i) => {
-                const isPast = (i / 32) * 100 <= progressPercent;
+              {[...Array(30)].map((_, i) => {
+                const isPast = (i / 30) * 100 <= progressPercent;
                 return (
                   <div
                     key={i}
                     className={`w-1 rounded-full transition-all ${
-                      isPast ? 'bg-acentoTerracota' : 'bg-papelKraft/60'
+                      isPast ? 'bg-acentoTerracota' : 'bg-papelKraft/50'
                     } ${isPlaying && isPast ? 'animate-pulse' : ''}`}
                     style={{
-                      height: `${12 + Math.abs(Math.sin(i * 0.8)) * 14}px`,
-                      animationDelay: `${i * 0.04}s`,
+                      height: `${8 + Math.abs(Math.sin(i * 0.7)) * 12}px`,
                     }}
                   />
                 );
@@ -248,78 +240,36 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             </div>
           </div>
 
-          {/* Timers (Atual / Total) em Helvetica font-corpo min 14px */}
-          <div className="flex justify-between items-center text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70">
+          <div className="flex justify-between items-center text-[11px] font-light font-corpo text-tintaCarvao/60">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
           </div>
         </div>
       </div>
 
-      {/* Controles Adicionais: Avançar/Voltar 10s e Controle de Volume */}
-      <div className="flex items-center justify-between pt-1 text-xs font-light font-corpo text-tintaCarvao/70">
-        <div className="flex items-center gap-2">
-          {hasMultiple && (
-            <>
-              <button
-                type="button"
-                onClick={handlePrevious}
-                disabled={currentIndex === 0}
-                className="px-3 py-1 rounded-xl bg-bgPlataforma border border-papelKraft/40 text-acentoAzul disabled:opacity-40 hover:bg-papelKraft/30 transition-colors lowercase"
-              >
-                ← áudio anterior
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={currentIndex === audioFiles.length - 1}
-                className="px-3 py-1 rounded-xl bg-bgPlataforma border border-papelKraft/40 text-acentoAzul disabled:opacity-40 hover:bg-papelKraft/30 transition-colors lowercase"
-              >
-                próximo áudio →
-              </button>
-            </>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
+      {hasMultiple && (
+        <div className="flex items-center justify-between text-xs font-light font-corpo text-tintaCarvao/70 pt-1">
           <button
             type="button"
-            onClick={toggleMute}
-            className="p-1.5 rounded-lg hover:bg-bgPlataforma text-tintaCarvao/70 transition-colors"
-            title={isMuted ? 'ativar som' : 'silenciar'}
+            onClick={handlePrevious}
+            disabled={currentIndex === 0}
+            className="text-acentoAzul disabled:opacity-40 hover:underline lowercase"
           >
-            {isMuted || volume === 0 ? (
-              <VolumeX className="w-4 h-4 text-acentoTerracota" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-acentoAzul" />
-            )}
+            ← anterior
           </button>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value={isMuted ? 0 : volume}
-          />
-        </div>
-
-        {/* Playback Speed */}
-        <div className="flex items-center space-x-2">
-          <span className="text-xs sm:text-sm text-gray-600">Velocidade:</span>
-          <select
-            value={playbackRate}
-            onChange={(e) => setPlaybackRate(parseFloat(e.target.value))}
-            className="text-xs sm:text-sm px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+          <span className="text-tintaCarvao/50 text-[10px]">
+            {currentIndex + 1} de {audioFiles.length}
+          </span>
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={currentIndex === audioFiles.length - 1}
+            className="text-acentoAzul disabled:opacity-40 hover:underline lowercase"
           >
-            <option value="0.5">0.5x</option>
-            <option value="0.75">0.75x</option>
-            <option value="1">1x</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2x</option>
-          </select>
+            próximo →
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

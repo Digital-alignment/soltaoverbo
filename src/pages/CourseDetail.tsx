@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingPage from '../components/LoadingPage';
 import YouTubeEmbed from '../components/YouTubeEmbed';
-import RichTextEditor from '../components/RichTextEditor';
 import AudioPlayer from '../components/AudioPlayer';
 import { isYouTubeUrl } from '../lib/youtubeUtils';
 import {
@@ -24,8 +23,6 @@ import {
   Sparkles,
   ChevronRight,
   ChevronLeft,
-  Type,
-  Heart,
   Crown,
   List
 } from 'lucide-react';
@@ -54,7 +51,7 @@ export default function CourseDetail() {
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showComments, setShowComments] = useState(true);
+  const [showComments, setShowComments] = useState(false);
 
   // MODO FOCO DA AULA (ZEN READER)
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
@@ -220,7 +217,7 @@ export default function CourseDetail() {
   if (!course) {
     return (
       <div className="min-h-screen bg-bgPlataforma text-tintaCarvao flex items-center justify-center p-6">
-        <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/60 shadow-kraft max-w-md w-full text-center space-y-4">
+        <div className="bg-white rounded-3xl p-8 border border-papelKraft/40 shadow-sm max-w-md w-full text-center space-y-4">
           <BookOpen className="w-12 h-12 text-acentoAzul mx-auto" />
           <h2 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">curso não encontrado</h2>
           <Link
@@ -299,20 +296,20 @@ export default function CourseDetail() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
 
-        {/* 3. LAYOUT MASTER EM 2 COLUNAS DE ALTA ELEGÂNCIA */}
+        {/* 2. LAYOUT MASTER EM 2 COLUNAS DE ALTA ELEGÂNCIA */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
           {/* COLUNA DA ESQUERDA (8 COLS): HUB PRINCIPAL DA AULA */}
           <div className="lg:col-span-8 space-y-6" ref={desktopContentRef}>
             {selectedLesson && (
               <>
-                {/* CANVAS DA AULA EM BRANCO PURO / PAPEL FINO */}
-                <div className="bg-white rounded-3xl p-6 sm:p-10 border border-papelKraft/40 shadow-kraft space-y-8">
+                {/* CANVAS DA AULA EM PAPEL FINO BRANCO */}
+                <div className="bg-white rounded-3xl p-6 sm:p-9 border border-papelKraft/30 shadow-sm space-y-6">
 
                   {/* CABEÇALHO DA AULA SELECIONADA */}
-                  <div className="space-y-3 border-b border-papelKraft/30 pb-6">
+                  <div className="space-y-2.5 border-b border-papelKraft/25 pb-5">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs font-light font-corpo text-acentoTerracota tracking-wide lowercase">
+                      <span className="text-xs font-light font-corpo text-acentoTerracota lowercase tracking-wide">
                         capítulo {currentLessonIndex + 1} de {lessons.length}
                       </span>
                       {selectedLesson.tags && selectedLesson.tags.length > 0 && (
@@ -329,14 +326,14 @@ export default function CourseDetail() {
                       )}
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+                    <h2 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
                       {selectedLesson.title}
                     </h2>
                   </div>
 
-                  {/* REPRODUTOR DE ÁUDIO DE ESTÚDIO (Se existirem áudios) */}
+                  {/* REPRODUTOR DE ÁUDIO DE ESTÚDIO */}
                   {audioFiles.length > 0 && (
-                    <div className="py-2">
+                    <div>
                       <AudioPlayer
                         audioFiles={audioFiles.map((a) => ({
                           id: a.id,
@@ -349,7 +346,7 @@ export default function CourseDetail() {
                   )}
 
                   {!audioFiles.length && selectedLesson.audio_url && (
-                    <div className="py-2">
+                    <div>
                       <AudioPlayer
                         audioFiles={[
                           {
@@ -365,15 +362,15 @@ export default function CourseDetail() {
 
                   {/* TRANSMISSÃO AO VIVO / VÍDEO DA AULA */}
                   {(selectedLesson.zoom_link || selectedLesson.recording_url) && (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {selectedLesson.zoom_link && (
-                        <div className="bg-bgPlataforma rounded-2xl p-5 border border-papelKraft/50 flex items-center justify-between shadow-sm">
+                        <div className="bg-bgPlataforma rounded-2xl p-4 border border-papelKraft/40 flex items-center justify-between shadow-sm">
                           <div className="flex items-center gap-3">
-                            <div className="p-3 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul">
-                              <Video className="w-5 h-5 text-acentoAzul" />
+                            <div className="p-2.5 rounded-xl bg-white border border-papelKraft/40 text-acentoAzul">
+                              <Video className="w-4 h-4 text-acentoAzul" />
                             </div>
                             <div>
-                              <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase">encontro ao vivo</h4>
+                              <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase">encontro ao vivo</h4>
                               <p className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase">transmissão síncrona meet/zoom</p>
                             </div>
                           </div>
@@ -381,7 +378,7 @@ export default function CourseDetail() {
                             href={selectedLesson.zoom_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-5 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-colors"
+                            className="px-4 py-1.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-colors"
                           >
                             entrar na sala →
                           </a>
@@ -389,7 +386,7 @@ export default function CourseDetail() {
                       )}
 
                       {selectedLesson.recording_url && (
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">gravação de vídeo</span>
                           {isYouTubeUrl(selectedLesson.recording_url) ? (
                             <YouTubeEmbed
@@ -413,20 +410,20 @@ export default function CourseDetail() {
                   )}
 
                   {/* PROSA & CONTEÚDO EDITORIAL DA AULA */}
-                  <div className="space-y-6 pt-2">
+                  <div className="space-y-4 pt-1">
                     <div
-                      className="prose prose-stone max-w-none text-tintaCarvao/90 font-light font-corpo text-base sm:text-lg leading-[1.85] lowercase space-y-4"
+                      className="prose prose-stone max-w-none text-tintaCarvao/90 font-light font-corpo text-base sm:text-lg leading-[1.8] lowercase space-y-3"
                       dangerouslySetInnerHTML={{ __html: selectedLesson.description || '' }}
                     />
                   </div>
 
                   {/* BARRA DE AÇÕES FLUTUANTE DA AULA */}
-                  <div className="pt-8 border-t border-papelKraft/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="pt-6 border-t border-papelKraft/25 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3 w-full sm:w-auto">
                       <button
                         type="button"
                         onClick={handleOpenAtelierWithPrompt}
-                        className="flex-1 sm:flex-initial px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm transition-all hover:scale-105 inline-flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-initial px-6 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm transition-all hover:scale-105 inline-flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <Pencil className="w-4 h-4 text-white" />
                         <span>escrever no atelier →</span>
@@ -435,7 +432,7 @@ export default function CourseDetail() {
                       <button
                         type="button"
                         onClick={() => setIsZenModeOpen(true)}
-                        className="px-4 py-2.5 rounded-2xl bg-bgPlataforma hover:bg-papelKraft/30 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase border border-papelKraft/50 shadow-sm transition-colors inline-flex items-center justify-center gap-1.5"
+                        className="px-4 py-2 rounded-2xl bg-bgPlataforma hover:bg-papelKraft/30 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase border border-papelKraft/40 shadow-sm transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer"
                         title="modo foco"
                       >
                         <Maximize2 className="w-4 h-4" />
@@ -443,12 +440,12 @@ export default function CourseDetail() {
                       </button>
                     </div>
 
-                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
                       <button
                         type="button"
                         onClick={handlePrevLesson}
                         disabled={currentLessonIndex === 0}
-                        className="px-4 py-2 rounded-2xl bg-white border border-papelKraft/50 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-bgPlataforma transition-all inline-flex items-center gap-1"
+                        className="px-4 py-1.5 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-bgPlataforma transition-all inline-flex items-center gap-1 cursor-pointer"
                       >
                         <ChevronLeft className="w-4 h-4" />
                         <span>anterior</span>
@@ -458,7 +455,7 @@ export default function CourseDetail() {
                         type="button"
                         onClick={handleNextLesson}
                         disabled={currentLessonIndex === lessons.length - 1}
-                        className="px-5 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-acentoAzul/90 transition-all inline-flex items-center gap-1"
+                        className="px-5 py-1.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-acentoAzul/90 transition-all inline-flex items-center gap-1 cursor-pointer"
                       >
                         <span>próxima</span>
                         <ChevronRight className="w-4 h-4" />
@@ -470,24 +467,24 @@ export default function CourseDetail() {
 
                 {/* MATERIAIS DE APOIO */}
                 {materials.length > 0 && (
-                  <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/50 shadow-kraft space-y-4">
-                    <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 border-b border-papelKraft/30 pb-3">
-                      <Download className="w-5 h-5 text-acentoTerracota" />
+                  <div className="bg-white rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm space-y-3">
+                    <h3 className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 border-b border-papelKraft/25 pb-2.5">
+                      <Download className="w-4 h-4 text-acentoTerracota" />
                       <span>materiais de apoio ({materials.length})</span>
                     </h3>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {materials.map((mat) => (
                         <a
                           key={mat.id}
                           href={mat.file_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between p-4 bg-white rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
+                          className="flex items-center justify-between p-3 bg-bgPlataforma rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
                         >
-                          <div className="flex items-center gap-3 truncate">
+                          <div className="flex items-center gap-2.5 truncate">
                             <Download className="w-4 h-4 text-acentoTerracota shrink-0 group-hover:scale-110 transition-transform" />
-                            <span className="text-sm font-semibold font-corpo text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors truncate">
+                            <span className="text-xs sm:text-sm font-semibold font-corpo text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors truncate">
                               {mat.title}
                             </span>
                           </div>
@@ -500,32 +497,32 @@ export default function CourseDetail() {
                   </div>
                 )}
 
-                {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA */}
-                <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/50 shadow-kraft space-y-6">
-                  <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
+                {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA (COM TEXTAREA LIMPO SEM TOOLBAR FLUTUANTE) */}
+                <div className="bg-white rounded-3xl p-6 sm:p-7 border border-papelKraft/30 shadow-sm space-y-5">
+                  <div className="flex items-center justify-between border-b border-papelKraft/25 pb-3">
                     <button
                       type="button"
                       onClick={() => setShowComments(!showComments)}
-                      className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 hover:text-acentoTerracota transition-colors"
+                      className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 hover:text-acentoTerracota transition-colors cursor-pointer"
                     >
-                      <MessageCircle className="w-5 h-5 text-acentoAzul" />
+                      <MessageCircle className="w-4 h-4 text-acentoAzul" />
                       <span>partilhas da aula ({comments.length})</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={() => setShowComments(!showComments)}
-                      className="text-xs font-normal font-gesto text-acentoAzul hover:underline lowercase"
+                      className="text-xs font-normal font-gesto text-acentoAzul hover:underline lowercase cursor-pointer"
                     >
-                      {showComments ? 'ocultar ▲' : 'mostrar ▼'}
+                      {showComments ? 'ocultar ▲' : 'ver partilhas ▼'}
                     </button>
                   </div>
 
                   {showComments && (
-                    <div className="space-y-6">
+                    <div className="space-y-5 pt-1">
                       <form onSubmit={handleCommentSubmit} className="space-y-3">
                         {replyTo && (
-                          <div className="text-xs font-corpo text-acentoTerracota flex items-center justify-between bg-white p-2.5 rounded-xl border border-papelKraft/50">
+                          <div className="text-xs font-corpo text-acentoTerracota flex items-center justify-between bg-bgPlataforma p-2 rounded-xl border border-papelKraft/40">
                             <span>respondendo ao comentário...</span>
                             <button
                               type="button"
@@ -536,42 +533,43 @@ export default function CourseDetail() {
                             </button>
                           </div>
                         )}
-                        <RichTextEditor
+                        <textarea
                           value={newComment}
-                          onChange={setNewComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          rows={3}
                           placeholder="deixe sua partilha ou reflexão sobre esta aula..."
+                          className="w-full bg-bgPlataforma rounded-2xl border border-papelKraft/40 p-4 font-corpo text-sm text-tintaCarvao placeholder:text-tintaCarvao/50 focus:outline-none focus:border-acentoAzul focus:ring-1 focus:ring-acentoAzul shadow-sm transition-all"
                         />
                         <div className="flex justify-end">
                           <button
                             type="submit"
-                            className="px-6 py-2.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-colors"
+                            className="px-5 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-colors cursor-pointer"
                           >
                             enviar partilha →
                           </button>
                         </div>
                       </form>
 
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {comments.length === 0 ? (
-                          <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/60 italic text-center py-4">
+                          <p className="text-xs font-light font-corpo text-tintaCarvao/60 italic text-center py-3">
                             seja a primeira a partilhar uma reflexão sobre esta aula.
                           </p>
                         ) : (
                           comments.map((comment) => (
-                            <div key={comment.id} className="p-4 rounded-2xl bg-white border border-papelKraft/40 space-y-3 shadow-sm">
+                            <div key={comment.id} className="p-3.5 rounded-2xl bg-bgPlataforma border border-papelKraft/40 space-y-2 shadow-sm">
                               <div className="flex items-center justify-between text-xs font-light font-corpo">
                                 <span className="font-normal font-corpo text-acentoAzul lowercase">
                                   {comment.user_profile?.display_name || 'aluna solta o verbo'}
                                 </span>
-                                <span className="text-tintaCarvao/50">
+                                <span className="text-tintaCarvao/50 text-[11px]">
                                   {new Date(comment.created_at).toLocaleDateString('pt-BR')}
                                 </span>
                               </div>
 
-                              <div
-                                className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: comment.content }}
-                              />
+                              <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase leading-relaxed">
+                                {comment.content}
+                              </p>
 
                               <button
                                 type="button"
@@ -582,21 +580,20 @@ export default function CourseDetail() {
                               </button>
 
                               {comment.replies && comment.replies.length > 0 && (
-                                <div className="pl-4 border-l-2 border-papelKraft/40 space-y-2 pt-2">
+                                <div className="pl-3 border-l-2 border-papelKraft/40 space-y-2 pt-1">
                                   {comment.replies.map((reply) => (
-                                    <div key={reply.id} className="p-3 rounded-xl bg-bgPlataforma border border-papelKraft/40 space-y-1">
+                                    <div key={reply.id} className="p-2.5 rounded-xl bg-white border border-papelKraft/30 space-y-1">
                                       <div className="flex items-center justify-between text-xs font-light font-corpo">
                                         <span className="font-normal text-acentoAzul lowercase">
                                           {reply.user_profile?.display_name || 'aluna'}
                                         </span>
-                                        <span className="text-tintaCarvao/50">
+                                        <span className="text-tintaCarvao/50 text-[10px]">
                                           {new Date(reply.created_at).toLocaleDateString('pt-BR')}
                                         </span>
                                       </div>
-                                      <div
-                                        className="text-xs font-light font-corpo text-tintaCarvao/85 lowercase"
-                                        dangerouslySetInnerHTML={{ __html: reply.content }}
-                                      />
+                                      <p className="text-xs font-light font-corpo text-tintaCarvao/85 lowercase">
+                                        {reply.content}
+                                      </p>
                                     </div>
                                   ))}
                                 </div>
@@ -612,11 +609,11 @@ export default function CourseDetail() {
             )}
           </div>
 
-          {/* COLUNA DA DIREITA (4 COLS): ÍNDICE DO CURSO & SUMÁRIO ESTILO LIVRO */}
-          <div className="lg:col-span-4 bg-papelClaro rounded-3xl p-6 border border-papelKraft/50 shadow-kraft space-y-5 sticky top-20">
-            <div className="flex items-center justify-between border-b border-papelKraft/40 pb-3">
-              <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2">
-                <List className="w-5 h-5 text-acentoAzul" />
+          {/* COLUNA DA DIREITA (4 COLS): ÍNDICE DO CURSO ULTRA-LIMPO & COMPACTO ESTILO SUMÁRIO DE LIVRO */}
+          <div className="lg:col-span-4 bg-white rounded-3xl p-5 border border-papelKraft/30 shadow-sm space-y-4 sticky top-6">
+            <div className="flex items-center justify-between border-b border-papelKraft/25 pb-2.5">
+              <h3 className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2">
+                <List className="w-4 h-4 text-acentoAzul" />
                 <span>sumário de aulas</span>
               </h3>
               <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase">
@@ -624,8 +621,8 @@ export default function CourseDetail() {
               </span>
             </div>
 
-            {/* LISTA ELEGANTE DE AULAS ESTILO SUMÁRIO DE LIVRO */}
-            <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
+            {/* LISTA ULTRA-LIMPA E COMPACTA DE AULAS */}
+            <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
               {lessons.map((lesson, idx) => {
                 const isSelected = selectedLesson?.id === lesson.id;
                 return (
@@ -633,47 +630,26 @@ export default function CourseDetail() {
                     key={lesson.id}
                     type="button"
                     onClick={() => setSelectedLesson(lesson)}
-                    className={`w-full text-left p-4 rounded-2xl transition-all duration-200 border flex items-start gap-3.5 group cursor-pointer ${
+                    className={`w-full text-left p-3 rounded-2xl transition-all duration-200 border flex items-center justify-between gap-3 group cursor-pointer ${
                       isSelected
-                        ? 'bg-acentoAzul text-white border-acentoAzul shadow-md'
-                        : 'bg-white text-tintaCarvao hover:bg-bgPlataforma border-papelKraft/40 shadow-sm'
+                        ? 'bg-acentoAzul text-white border-acentoAzul shadow-sm'
+                        : 'bg-bgPlataforma hover:bg-papelKraft/20 text-tintaCarvao border-papelKraft/30'
                     }`}
                   >
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-normal font-gesto shrink-0 mt-0.5 ${
-                        isSelected
-                          ? 'bg-white/20 text-white'
-                          : 'bg-bgPlataforma text-acentoAzul border border-papelKraft/40'
-                      }`}
-                    >
-                      {String(idx + 1).padStart(2, '0')}
-                    </div>
-
-                    <div className="flex-1 min-w-0 space-y-1">
-                      <p className={`text-sm font-semibold font-editorial lowercase leading-snug ${
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <span className={`text-xs font-normal font-gesto shrink-0 ${
+                        isSelected ? 'text-white/80' : 'text-acentoAzul'
+                      }`}>
+                        {String(idx + 1).padStart(2, '0')}.
+                      </span>
+                      <p className={`text-xs sm:text-sm font-semibold font-editorial lowercase truncate ${
                         isSelected ? 'text-white' : 'text-acentoAzul group-hover:text-acentoTerracota'
                       }`}>
                         {lesson.title}
                       </p>
-                      {lesson.tags && lesson.tags.length > 0 && (
-                        <div className="flex items-center gap-1 flex-wrap pt-0.5">
-                          {lesson.tags.map((tag, tIdx) => (
-                            <span
-                              key={tIdx}
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-normal font-corpo lowercase ${
-                                isSelected
-                                  ? 'bg-white/20 text-white'
-                                  : 'bg-bgPlataforma text-acentoAzul border border-papelKraft/30'
-                              }`}
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
                     </div>
 
-                    {isSelected && <CheckCircle className="w-4 h-4 text-acentoOliva shrink-0 mt-1" />}
+                    {isSelected && <CheckCircle className="w-4 h-4 text-acentoOliva shrink-0" />}
                   </button>
                 );
               })}
