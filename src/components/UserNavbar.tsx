@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Bell, LogOut, ShieldCheck } from 'lucide-react';
+import { User, Bell, LogOut, ShieldCheck, Crown } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -9,6 +9,19 @@ export default function UserNavbar() {
   const { profile, signOut } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const getRoleLabel = () => {
+    switch (profile?.role) {
+      case 'admin':
+        return 'administrador';
+      case 'paid':
+        return 'membro premium';
+      default:
+        return 'membro registrado';
+    }
+  };
+
+  const isPremiumOrAdmin = profile?.role === 'paid' || profile?.role === 'admin';
 
   useEffect(() => {
     if (!profile) return;
@@ -51,7 +64,7 @@ export default function UserNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
           
-          {/* LADO ESQUERDO: Logo Oficial Solta o Verbo (Todas as Versões) */}
+          {/* LADO ESQUERDO: Logo Oficial Solta o Verbo */}
           <Link to="/dashboard" className="flex items-center gap-3 group">
             <img
               src={BRAND_ASSETS.logos.horizontal}
@@ -63,7 +76,7 @@ export default function UserNavbar() {
             />
           </Link>
 
-          {/* LADO DIREITO: Notificações & Perfil do Usuário */}
+          {/* LADO DIREITO: Notificações, Ícone de Corona Premium & Perfil do Usuário */}
           <div className="flex items-center gap-3">
             {/* Notificações com Badge */}
             <Link
@@ -78,6 +91,16 @@ export default function UserNavbar() {
                 </span>
               )}
             </Link>
+
+            {/* Ícone de Corona Premium ao Lado do Ícone do Perfil */}
+            {isPremiumOrAdmin && (
+              <div
+                className="p-2.5 rounded-full bg-acentoTerracota/15 border border-acentoTerracota/30 text-acentoTerracota shadow-sm flex items-center justify-center"
+                title={getRoleLabel()}
+              >
+                <Crown className="w-5 h-5 text-acentoTerracota" />
+              </div>
+            )}
 
             {/* User Avatar Dropdown */}
             <div className="relative">
@@ -110,11 +133,12 @@ export default function UserNavbar() {
                   />
                   <div className="absolute right-0 mt-3 w-56 bg-papelClaro rounded-3xl border border-papelKraft/60 shadow-kraft-lg z-50 overflow-hidden py-2 animate-fadeIn">
                     <div className="px-5 py-3 border-b border-papelKraft/40">
-                      <p className="text-sm font-semibold text-acentoAzul lowercase truncate">
-                        olá, {profile?.display_name || 'aluno'}
+                      <p className="text-sm font-semibold font-corpo text-acentoAzul lowercase truncate">
+                        olá, {profile?.display_name || 'aluna'}
                       </p>
-                      <p className="text-xs text-tintaCarvao/60 lowercase">
-                        {profile?.role === 'admin' ? 'administrador' : 'aluno solta o verbo'}
+                      <p className="text-xs font-normal font-corpo text-acentoTerracota lowercase flex items-center gap-1 mt-0.5">
+                        <Crown className="w-3.5 h-3.5 text-acentoTerracota inline shrink-0" />
+                        <span>{getRoleLabel()}</span>
                       </p>
                     </div>
 

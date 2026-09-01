@@ -417,18 +417,11 @@ export default function Dashboard() {
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        {/* CABEÇALHO DO DASHBOARD (Muthazle no Saludo, Badges em Helvetica/font-corpo) */}
-        <div className="flex items-center justify-between border-b border-papelKraft/40 pb-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoTerracota/15 border border-acentoTerracota/30 text-acentoTerracota text-xs sm:text-sm font-normal font-corpo lowercase tracking-wider mb-1.5 shadow-sm">
-              <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
-              <span>{getRoleLabel()}</span>
-            </div>
-            {/* Saludo Principal em Muthazle (font-gesto) */}
-            <h1 className="text-3xl sm:text-4xl font-normal font-gesto text-acentoAzul lowercase">
-              {welcomeMessage}
-            </h1>
-          </div>
+        {/* CABEÇALHO DO DASHBOARD (Saludo Limpo em Muthazle font-size: 2.3rem sem badge superior) */}
+        <div className="border-b border-papelKraft/40 pb-3">
+          <h1 className="text-[2.3rem] leading-tight font-normal font-gesto text-acentoAzul lowercase">
+            {welcomeMessage}
+          </h1>
         </div>
 
         {/* BENTO GRID PRINCIPAL (items-start para desacoplar a altura dos cards) */}
@@ -444,9 +437,9 @@ export default function Dashboard() {
             <div className="lg:col-span-7 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5">
               <div className="space-y-4">
                 
-                {/* Título de Card em Muthazle (font-gesto) */}
+                {/* Título de Card em Muthazle font-size: 2.2rem */}
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                  <h2 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                     histórico de escrita & atividade
                   </h2>
                 </div>
@@ -631,7 +624,7 @@ export default function Dashboard() {
                 
                 {/* Header Limpo com Título em Muthazle e Abas de Filtro em Muthazle */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3 pr-12">
-                  <h2 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                  <h2 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                     agenda & encontros
                   </h2>
 
@@ -834,7 +827,7 @@ export default function Dashboard() {
                 <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   comunidade ativa
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                   nossa fogueira (últimas partilhas)
                 </h3>
               </div>
@@ -897,7 +890,7 @@ export default function Dashboard() {
                 <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   seus textos & memórias
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                   meu caderno de escrita
                 </h3>
               </div>
@@ -951,7 +944,7 @@ export default function Dashboard() {
                 <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   recomendado pelas facilitadoras
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                   descubra & novidades
                 </h3>
               </div>
@@ -1006,7 +999,7 @@ export default function Dashboard() {
                 <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   todas as jornadas da plataforma
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                   cursos & oficinas disponíveis
                 </h3>
               </div>
@@ -1102,7 +1095,7 @@ export default function Dashboard() {
                   <span className="text-xs font-light font-corpo text-acentoTerracota lowercase block">
                     agenda completa & rituais do mês
                   </span>
-                  <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                  <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                     todos os encontros agendados ({agendaEvents.length})
                   </h3>
                 </div>
