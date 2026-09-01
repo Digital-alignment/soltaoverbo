@@ -57,6 +57,9 @@ export default function CourseDetail() {
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
   const [zenFontSize, setZenFontSize] = useState<'sm' | 'md' | 'lg'>('md');
 
+  // CONCLUÍDOS DE AULAS
+  const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([]);
+
   const desktopContentRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
 
@@ -237,49 +240,22 @@ export default function CourseDetail() {
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao pb-16">
       
-      {/* 1. CABEÇALHO UNIFICADO E FLUIDO (SEM CAIXAS OU BORDES, FUNDO IGUAL À PÁGINA) */}
+      {/* 1. CABEÇALHO UNIFICADO E FLUIDO */}
       <div className="bg-bgPlataforma pt-4 pb-3 px-4 sm:px-6 lg:px-8 border-b border-papelKraft/30 transition-all">
         <div className="max-w-7xl mx-auto space-y-2.5">
           
-          {/* Linha 1: Voltar + Metadatos & Ações */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Linha 1: Voltar (apenas a palavra 'voltar' com tamanho maior) */}
+          <div className="flex items-center justify-between">
             <Link
               to="/programs"
-              className="inline-flex items-center gap-2 text-acentoAzul hover:text-acentoTerracota transition-colors text-[20px] sm:text-[23px] font-normal font-gesto lowercase shrink-0"
+              className="inline-flex items-center gap-2 text-acentoAzul hover:text-acentoTerracota transition-colors text-[24px] sm:text-[28px] font-normal font-gesto lowercase shrink-0"
             >
-              <ArrowLeft className="w-4 h-4 text-acentoAzul" />
-              <span>voltar às oficinas</span>
+              <ArrowLeft className="w-5 h-5 text-acentoAzul shrink-0" />
+              <span>voltar</span>
             </Link>
-
-            <div className="flex items-center gap-2.5 flex-wrap shrink-0">
-              <span className="px-3 py-0.5 rounded-full text-xs font-normal font-corpo bg-white border border-papelKraft/50 text-acentoTerracota lowercase shadow-sm inline-flex items-center gap-1">
-                <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
-                <span>{course.course_type === 'free' ? 'gratuito' : 'exclusivo premium'}</span>
-              </span>
-
-              <div className="flex items-center gap-2 bg-white px-3.5 py-0.5 rounded-full border border-papelKraft/50 shadow-sm">
-                <span className="text-xs font-normal font-corpo text-acentoAzul lowercase">
-                  aula {currentLessonIndex + 1} de {lessons.length}
-                </span>
-                <span className="text-tintaCarvao/30 text-xs">•</span>
-                <span className="text-xs font-normal font-corpo text-acentoTerracota lowercase">
-                  {progressPercent}% concluído
-                </span>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsZenModeOpen(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase hover:bg-acentoAzul/90 transition-all shadow-sm cursor-pointer"
-                title="abrir modo foco em tela cheia"
-              >
-                <Maximize2 className="w-3.5 h-3.5 text-white" />
-                <span>modo foco</span>
-              </button>
-            </div>
           </div>
 
-          {/* Linha 2: Título e Descrição Compacta no Próprio Fundo da Página */}
+          {/* Linha 2: Título e Descrição Compacta do Curso */}
           <div className="space-y-1 pt-1">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
               {course.title}
@@ -300,32 +276,27 @@ export default function CourseDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
           {/* COLUNA DA ESQUERDA (8 COLS): HUB PRINCIPAL DA AULA */}
-          <div className="lg:col-span-8 space-y-6" ref={desktopContentRef}>
+          <div className="lg:col-span-8 space-y-4" ref={desktopContentRef}>
             {selectedLesson && (
               <>
+                {/* BOTÃO FOCO FORA DO CARD (ACIMA DA AULA SELECIONADA) */}
+                <div className="flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setIsZenModeOpen(true)}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-2xl bg-white hover:bg-papelKraft/30 text-acentoAzul font-gesto text-[22px] sm:text-[24px] lowercase border border-papelKraft/40 shadow-sm transition-all cursor-pointer"
+                    title="modo foco"
+                  >
+                    <Maximize2 className="w-4 h-4 text-acentoAzul shrink-0" />
+                    <span>foco</span>
+                  </button>
+                </div>
+
                 {/* CANVAS DA AULA EM PAPEL CREME CÁLIDO */}
                 <div className="bg-papelClaro rounded-3xl p-6 sm:p-9 border border-papelKraft/40 shadow-sm space-y-6">
 
-                  {/* CABEÇALHO DA AULA SELECIONADA */}
-                  <div className="space-y-2 border-b border-papelKraft/25 pb-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-xs font-light font-corpo text-acentoTerracota lowercase tracking-wide">
-                        capítulo {currentLessonIndex + 1} de {lessons.length}
-                      </span>
-                      {selectedLesson.tags && selectedLesson.tags.length > 0 && (
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {selectedLesson.tags.map((tag, tIdx) => (
-                            <span
-                              key={tIdx}
-                              className="px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo bg-white text-acentoAzul border border-papelKraft/40 lowercase shadow-sm"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
+                  {/* CABEÇALHO DA AULA SELECIONADA (APENAS O TÍTULO DA AULA) */}
+                  <div className="border-b border-papelKraft/25 pb-4">
                     <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
                       {selectedLesson.title}
                     </h2>
@@ -417,37 +388,25 @@ export default function CourseDetail() {
                     />
                   </div>
 
-                  {/* BARRA DE AÇÕES FLUTUANTE DA AULA */}
+                  {/* BARRA DE AÇÕES DA AULA (ESCREVER NO ATELIER + ANTERIOR/PRÓXIMA COM FONTE MAIOR) */}
                   <div className="pt-6 border-t border-papelKraft/25 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-3 w-full sm:w-auto">
-                      <button
-                        type="button"
-                        onClick={handleOpenAtelierWithPrompt}
-                        className="flex-1 sm:flex-initial px-6 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm transition-all hover:scale-105 inline-flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <Pencil className="w-4 h-4 text-white" />
-                        <span>escrever no atelier →</span>
-                      </button>
+                    <button
+                      type="button"
+                      onClick={handleOpenAtelierWithPrompt}
+                      className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[24px] sm:text-[26px] lowercase shadow-sm transition-all hover:scale-105 inline-flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Pencil className="w-4 h-4 text-white shrink-0" />
+                      <span>escrever →</span>
+                    </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setIsZenModeOpen(true)}
-                        className="px-4 py-2 rounded-2xl bg-white hover:bg-papelKraft/30 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase border border-papelKraft/40 shadow-sm transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer"
-                        title="modo foco"
-                      >
-                        <Maximize2 className="w-4 h-4" />
-                        <span>foco</span>
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
+                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
                       <button
                         type="button"
                         onClick={handlePrevLesson}
                         disabled={currentLessonIndex === 0}
-                        className="px-4 py-1.5 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-bgPlataforma transition-all inline-flex items-center gap-1 cursor-pointer"
+                        className="px-5 py-2 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul font-gesto text-[24px] sm:text-[26px] lowercase disabled:opacity-40 shadow-sm hover:bg-bgPlataforma transition-all inline-flex items-center gap-1.5 cursor-pointer"
                       >
-                        <ChevronLeft className="w-4 h-4" />
+                        <ChevronLeft className="w-5 h-5 shrink-0" />
                         <span>anterior</span>
                       </button>
 
@@ -455,12 +414,40 @@ export default function CourseDetail() {
                         type="button"
                         onClick={handleNextLesson}
                         disabled={currentLessonIndex === lessons.length - 1}
-                        className="px-5 py-1.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-acentoAzul/90 transition-all inline-flex items-center gap-1 cursor-pointer"
+                        className="px-6 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[24px] sm:text-[26px] lowercase disabled:opacity-40 shadow-sm hover:bg-acentoAzul/90 transition-all inline-flex items-center gap-1.5 cursor-pointer"
                       >
                         <span>próxima</span>
-                        <ChevronRight className="w-4 h-4" />
+                        <ChevronRight className="w-5 h-5 shrink-0" />
                       </button>
                     </div>
+                  </div>
+
+                  {/* SEÇÃO PARA MARCAR AULA COMO CONCLUÍDA */}
+                  <div className="pt-4 border-t border-papelKraft/25 flex items-center justify-between gap-4 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (selectedLesson) {
+                          setCompletedLessonIds((prev) =>
+                            prev.includes(selectedLesson.id)
+                              ? prev.filter((id) => id !== selectedLesson.id)
+                              : [...prev, selectedLesson.id]
+                          );
+                        }
+                      }}
+                      className={`px-5 py-2 rounded-2xl font-gesto text-[22px] sm:text-[25px] lowercase transition-all inline-flex items-center gap-2 shadow-sm cursor-pointer ${
+                        selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                          ? 'bg-acentoOliva text-white border border-acentoOliva'
+                          : 'bg-white text-tintaCarvao/80 border border-papelKraft/40 hover:bg-papelKraft/20'
+                      }`}
+                    >
+                      <CheckCircle className={`w-5 h-5 ${selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'text-white' : 'text-tintaCarvao/40'}`} />
+                      <span>
+                        {selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                          ? 'aula concluída ✓'
+                          : 'marcar como concluída'}
+                      </span>
+                    </button>
                   </div>
 
                 </div>
@@ -497,7 +484,7 @@ export default function CourseDetail() {
                   </div>
                 )}
 
-                {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA (COLAPSADA POR PADRÃO SEM LINHA INFERIOR INTERNA) */}
+                {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA */}
                 <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm">
                   <div className={`flex items-center justify-between transition-all ${showComments ? 'border-b border-papelKraft/25 pb-3 mb-4' : ''}`}>
                     <button
@@ -609,16 +596,25 @@ export default function CourseDetail() {
             )}
           </div>
 
-          {/* COLUNA DA DIREITA (4 COLS): ÍNDICE DO CURSO ULTRA-LIMPO & COMPACTO ESTILO SUMÁRIO DE LIVRO */}
+          {/* COLUNA DA DIREITA (4 COLS): ÍNDICE DO CURSO COM BARRA DE PROGRESSO NO TOPO */}
           <div className="lg:col-span-4 bg-white rounded-3xl p-5 border border-papelKraft/30 shadow-sm space-y-4 sticky top-6">
-            <div className="flex items-center justify-between border-b border-papelKraft/25 pb-2.5">
+            
+            {/* BARRA DE PROGRESSO DO CURSO ANTES DO TÍTULO DO SUMÁRIO */}
+            <div className="bg-bgPlataforma/80 rounded-2xl p-3.5 border border-papelKraft/35 space-y-2">
+              <div className="flex items-center justify-between text-xs font-normal font-corpo lowercase">
+                <span className="text-acentoAzul font-medium">aula {currentLessonIndex + 1} de {lessons.length}</span>
+                <span className="text-acentoTerracota font-medium">{progressPercent}% concluído</span>
+              </div>
+              <div className="w-full bg-papelKraft/40 h-2 rounded-full overflow-hidden">
+                <div className="bg-acentoOliva h-full rounded-full transition-all duration-500" style={{ width: `${progressPercent}%` }} />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between border-b border-papelKraft/25 pb-2.5 pt-1">
               <h3 className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2">
                 <List className="w-4 h-4 text-acentoAzul" />
                 <span>sumário de aulas</span>
               </h3>
-              <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase">
-                {currentLessonIndex + 1} de {lessons.length}
-              </span>
             </div>
 
             {/* LISTA ULTRA-LIMPA E COMPACTA DE AULAS ESTILO ÍNDICE DE LIVRO */}
