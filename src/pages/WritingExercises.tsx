@@ -988,6 +988,7 @@ export default function WritingExercises() {
                       placeholder="escreva aqui com calma e sem interrupções..."
                       flat={true}
                       zoomLevel={editorSettings.zoomLevel}
+                      fontFamily={editorSettings.fontFamily}
                     />
                   </div>
                 </div>

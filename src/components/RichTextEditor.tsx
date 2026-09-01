@@ -16,6 +16,7 @@ import {
   Undo,
   Redo,
 } from 'lucide-react';
+import type { EditorFontFamily } from './EditorSettingsModal';
 
 interface RichTextEditorProps {
   value: string;
@@ -23,6 +24,7 @@ interface RichTextEditorProps {
   placeholder?: string;
   flat?: boolean;
   zoomLevel?: number;
+  fontFamily?: EditorFontFamily;
 }
 
 const FORMAT_OPTIONS = [
@@ -34,12 +36,21 @@ const FORMAT_OPTIONS = [
   { value: 'blockquote', label: 'cita poética' },
 ];
 
+const FONT_FAMILY_MAP: Record<EditorFontFamily, string> = {
+  editorial: '"Editorial Serif", Georgia, Garamond, serif',
+  sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  garamond: 'Garamond, "Baskerville Old Face", "Hoefler Text", Merriweather, Georgia, serif',
+  handwriting: '"Caveat", "Patrick Hand", "Comic Sans MS", cursive, sans-serif',
+  palatino: '"Palatino Linotype", "Book Antiqua", Palatino, Lora, serif',
+};
+
 export default function RichTextEditor({
   value,
   onChange,
   placeholder,
   flat = false,
   zoomLevel = 100,
+  fontFamily = 'editorial',
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const formatMenuRef = useRef<HTMLDivElement>(null);
@@ -107,13 +118,18 @@ export default function RichTextEditor({
   return (
     <div className="relative min-h-[350px] flex flex-col justify-between">
       
-      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE COM ZOOM APLICADO */}
+      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE COM FONTE E ZOOM APLICADOS */}
       <div
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="p-4 sm:p-6 min-h-[300px] focus:outline-none font-editorial text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-24 transition-all"
-        style={{ fontSize: `${scaledFontSize}px`, lineHeight: '1.7', color: textColor }}
+        className="p-4 sm:p-6 min-h-[300px] focus:outline-none text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-24 transition-all"
+        style={{
+          fontFamily: FONT_FAMILY_MAP[fontFamily] || FONT_FAMILY_MAP.editorial,
+          fontSize: `${scaledFontSize}px`,
+          lineHeight: '1.7',
+          color: textColor,
+        }}
         data-placeholder={placeholder}
       />
 

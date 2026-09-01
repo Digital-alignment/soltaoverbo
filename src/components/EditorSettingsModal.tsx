@@ -1,4 +1,6 @@
-import { Settings, X, Check } from 'lucide-react';
+import { Settings, X, Check, Type } from 'lucide-react';
+
+export type EditorFontFamily = 'editorial' | 'sans' | 'garamond' | 'handwriting' | 'palatino';
 
 export interface EditorSettings {
   showTimer: boolean;
@@ -9,7 +11,46 @@ export interface EditorSettings {
   markdownShortcuts: boolean;
   doubleSpacePeriod: boolean;
   zoomLevel: number; // 90, 100, 110, 125
+  fontFamily: EditorFontFamily;
 }
+
+export const FONT_OPTIONS: { id: EditorFontFamily; name: string; description: string; sample: string; css: string }[] = [
+  {
+    id: 'editorial',
+    name: 'editorial serif (solta o verbo)',
+    description: 'fonte poética oficial da marca, ideal para literatura e rituais.',
+    sample: 'Solta o Verbo • Atelier Autoral',
+    css: 'font-editorial',
+  },
+  {
+    id: 'sans',
+    name: 'sans-serif moderna',
+    description: 'tipografia limpa e neutra, ideal para anotações e diário rápido.',
+    sample: 'Solta o Verbo • Atelier Autoral',
+    css: 'font-sans',
+  },
+  {
+    id: 'garamond',
+    name: 'garamond clássica',
+    description: 'serifa clássica de livros, inspirada em romances e contos.',
+    sample: 'Solta o Verbo • Atelier Autoral',
+    css: 'font-serif',
+  },
+  {
+    id: 'handwriting',
+    name: 'manuscrita orgânica',
+    description: 'estilo de caligrafia manual, acolhedor para diários íntimos.',
+    sample: 'Solta o Verbo • Atelier Autoral',
+    css: 'font-editorial italic',
+  },
+  {
+    id: 'palatino',
+    name: 'palatino humanista',
+    description: 'tipografia nobre e equilibrada para ensaios e crônicas.',
+    sample: 'Solta o Verbo • Atelier Autoral',
+    css: 'font-serif font-medium',
+  },
+];
 
 export const DEFAULT_EDITOR_SETTINGS: EditorSettings = {
   showTimer: true,
@@ -20,6 +61,7 @@ export const DEFAULT_EDITOR_SETTINGS: EditorSettings = {
   markdownShortcuts: true,
   doubleSpacePeriod: false,
   zoomLevel: 100,
+  fontFamily: 'editorial',
 };
 
 interface EditorSettingsModalProps {
@@ -66,6 +108,51 @@ export default function EditorSettingsModal({
         {/* CORPO DE OPÇÕES DE CONFIGURAÇÃO DA REFERÊNCIA */}
         <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
           
+          {/* SEÇÃO NOVA: TIPOGRAFIA DA FOLHA (5 FONTES POPULARES) */}
+          <div className="bg-white/80 p-4 rounded-2xl border border-papelKraft/50 space-y-3.5 shadow-sm">
+            <div className="flex items-center justify-between border-b border-papelKraft/30 pb-2">
+              <div className="flex items-center gap-2">
+                <Type className="w-4 h-4 text-acentoAzul" />
+                <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase">
+                  tipo de letra (fonte da folha)
+                </h4>
+              </div>
+              <span className="text-[10px] text-tintaCarvao/60 lowercase font-medium">
+                5 estilos selecionados
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2 pt-1">
+              {FONT_OPTIONS.map((font) => (
+                <button
+                  key={font.id}
+                  type="button"
+                  onClick={() => onUpdateSettings({ fontFamily: font.id })}
+                  className={`p-3 rounded-2xl border text-left transition-all flex items-center justify-between gap-3 ${
+                    settings.fontFamily === font.id
+                      ? 'bg-white border-acentoAzul shadow-sm text-acentoAzul'
+                      : 'bg-bgPlataforma/50 border-papelKraft/40 text-tintaCarvao/80 hover:bg-white'
+                  }`}
+                >
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="text-xs font-bold lowercase block">
+                      {font.name}
+                    </span>
+                    <span className="text-[11px] text-tintaCarvao/70 lowercase block truncate">
+                      {font.description}
+                    </span>
+                  </div>
+
+                  {settings.fontFamily === font.id && (
+                    <div className="w-5 h-5 rounded-full bg-acentoAzul text-white flex items-center justify-center shrink-0">
+                      <Check className="w-3 h-3" />
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* SEÇÃO 1: VISUALIZAÇÃO & MÉTRICAS */}
           <div className="bg-white/80 p-4 rounded-2xl border border-papelKraft/50 space-y-3.5 shadow-sm">
             <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase border-b border-papelKraft/30 pb-2">
