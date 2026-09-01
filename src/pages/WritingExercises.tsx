@@ -989,6 +989,7 @@ export default function WritingExercises() {
                       placeholder="escreva aqui com calma e sem interrupções..."
                       flat={true}
                       zoomLevel={editorSettings.zoomLevel}
+                      onZoomChange={(newZoom) => handleUpdateSettings({ zoomLevel: newZoom })}
                       fontFamily={editorSettings.fontFamily}
                     />
                   </div>
