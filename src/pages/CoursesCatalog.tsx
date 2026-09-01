@@ -133,9 +133,10 @@ export default function CoursesCatalog() {
               </p>
             </div>
           ) : (
-            filteredCourses.map((course, idx) => {
+            filteredCourses.map((course) => {
               const hasAccess = canAccessCourse(course);
-              const isStarted = hasAccess && idx === 0;
+              const savedLastLessonId = localStorage.getItem(`soltaoverbo_last_lesson_${course.id}`);
+              const isStarted = hasAccess && Boolean(savedLastLessonId);
 
               // Card Container com Link Dinâmico
               const CardContent = (

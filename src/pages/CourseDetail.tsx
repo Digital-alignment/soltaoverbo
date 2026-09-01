@@ -25,7 +25,11 @@ import {
   ChevronLeft,
   ChevronDown,
   Crown,
-  List
+  List,
+  Bookmark,
+  Quote,
+  FileText,
+  Trash2
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 
@@ -36,6 +40,13 @@ type AudioFile = Database['public']['Tables']['lesson_audio_files']['Row'];
 type Comment = Database['public']['Tables']['comments']['Row'] & {
   user_profile?: Database['public']['Tables']['users_profiles']['Row'];
   replies?: Comment[];
+};
+
+type SavedQuote = {
+  id: string;
+  text: string;
+  lessonTitle: string;
+  createdAt: string;
 };
 
 export default function CourseDetail() {
@@ -57,12 +68,23 @@ export default function CourseDetail() {
   // MODO FOCO DA AULA (ZEN READER)
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
   const [zenFontSize, setZenFontSize] = useState<'sm' | 'md' | 'lg'>('md');
-  const [activeZenDrawer, setActiveZenDrawer] = useState<'none' | 'sumario' | 'materiais' | 'partilhas'>('none');
+  const [activeZenDrawer, setActiveZenDrawer] = useState<'none' | 'sumario' | 'materiais' | 'partilhas' | 'rascunho' | 'citacoes'>('none');
 
   // CONCLUÍDOS DE AULAS & MATERIAIS COLAPSÁVEIS
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([]);
   const [showMaterials, setShowMaterials] = useState(false);
   const materialsRef = useRef<HTMLDivElement>(null);
+
+  // RESUME & BOOKMARK (MARCADOR DE LEITURA)
+  const [lastReadLessonId, setLastReadLessonId] = useState<string | null>(null);
+
+  // CADERNO RÁPIDO DE NOTAS (INLINE DRAFT)
+  const [quickDraft, setQuickDraft] = useState('');
+
+  // MEU LIVRO DE CITAÇÕES SALVAS
+  const [savedQuotes, setSavedQuotes] = useState<SavedQuote[]>([]);
+  const [selectedText, setSelectedText] = useState<{ text: string; x: number; y: number } | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const desktopContentRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
@@ -93,21 +115,107 @@ export default function CourseDetail() {
   useEffect(() => {
     if (courseId) {
       loadCourse();
+
+      // Carregar marcadores de leitura e citações salvas do curso
+      const savedLastLesson = localStorage.getItem(`soltaoverbo_last_lesson_${courseId}`);
+      if (savedLastLesson) {
+        setLastReadLessonId(savedLastLesson);
+      }
+
+      const rawQuotes = localStorage.getItem(`soltaoverbo_quotes_${courseId}`);
+      if (rawQuotes) {
+        try {
+          setSavedQuotes(JSON.parse(rawQuotes));
+        } catch (e) {
+          console.error('Erro ao ler citações:', e);
+        }
+      }
     }
   }, [courseId]);
 
   useEffect(() => {
-    if (selectedLesson) {
+    if (selectedLesson && courseId) {
       loadMaterials(selectedLesson.id);
       loadAudioFiles(selectedLesson.id);
       loadComments(selectedLesson.id);
+
+      // Salvar marcador de última aula lida
+      localStorage.setItem(`soltaoverbo_last_lesson_${courseId}`, selectedLesson.id);
+      setLastReadLessonId(selectedLesson.id);
+
+      // Carregar rascunho rápido da lição ativa
+      const draft = localStorage.getItem(`soltaoverbo_draft_${selectedLesson.id}`) || '';
+      setQuickDraft(draft);
 
       if (isInitialLoad.current) {
         isInitialLoad.current = false;
         return;
       }
     }
-  }, [selectedLesson]);
+  }, [selectedLesson, courseId]);
+
+  // SUPORTE A SELEÇÃO DE TEXTO PARA GUARDAR CITAÇÕES OU LEVAR AO ATELIER
+  const handleTextMouseUp = () => {
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim().length > 3) {
+      const text = selection.toString().trim();
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      setSelectedText({
+        text,
+        x: Math.min(window.innerWidth - 120, Math.max(120, rect.left + rect.width / 2)),
+        y: Math.max(20, rect.top - 10),
+      });
+    }
+  };
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handleSaveQuote = (textToSave: string) => {
+    if (!selectedLesson || !courseId) return;
+    const newQuote: SavedQuote = {
+      id: Date.now().toString(),
+      text: textToSave,
+      lessonTitle: selectedLesson.title,
+      createdAt: new Date().toLocaleDateString('pt-BR'),
+    };
+    const updated = [newQuote, ...savedQuotes];
+    setSavedQuotes(updated);
+    localStorage.setItem(`soltaoverbo_quotes_${courseId}`, JSON.stringify(updated));
+    setSelectedText(null);
+    showToast('citação guardada no seu acervo! ✨');
+  };
+
+  const handleTransferQuoteToAtelier = (textToTransfer: string) => {
+    setSelectedText(null);
+    setIsZenModeOpen(false);
+    const prompt = `[citação inspiradora da aula "${selectedLesson?.title}"]:\n"${textToTransfer}"\n\nminha reflexão sobre este trecho:`;
+    navigate('/exercises?new=true', { state: { prompt } });
+  };
+
+  const handleDeleteQuote = (idToDelete: string) => {
+    if (!courseId) return;
+    const updated = savedQuotes.filter((q) => q.id !== idToDelete);
+    setSavedQuotes(updated);
+    localStorage.setItem(`soltaoverbo_quotes_${courseId}`, JSON.stringify(updated));
+    showToast('citação removida.');
+  };
+
+  const handleQuickDraftChange = (val: string) => {
+    setQuickDraft(val);
+    if (selectedLesson) {
+      localStorage.setItem(`soltaoverbo_draft_${selectedLesson.id}`, val);
+    }
+  };
+
+  const handleTransferDraftToAtelier = () => {
+    setIsZenModeOpen(false);
+    const prompt = `[rascunho da aula "${selectedLesson?.title}"]:\n${quickDraft}`;
+    navigate('/exercises?new=true', { state: { prompt } });
+  };
 
   const loadCourse = async () => {
     try {
@@ -271,8 +379,8 @@ export default function CourseDetail() {
       <div className="bg-bgPlataforma pt-4 pb-3 px-4 sm:px-6 lg:px-8 border-b border-papelKraft/30 transition-all">
         <div className="w-full lg:w-[80%] mx-auto space-y-2.5">
           
-          {/* Linha 1: Voltar (apenas a palavra 'voltar' com tamanho maior) */}
-          <div className="flex items-center justify-between">
+          {/* Linha 1: Voltar & Marcador de Leitura (Continuar de onde parou) */}
+          <div className="flex items-center justify-between gap-4 flex-wrap">
             <Link
               to="/programs"
               className="inline-flex items-center gap-2 text-acentoAzul hover:text-acentoTerracota transition-colors text-[24px] sm:text-[28px] font-normal font-gesto lowercase shrink-0"
@@ -280,6 +388,23 @@ export default function CourseDetail() {
               <ArrowLeft className="w-5 h-5 text-acentoAzul shrink-0" />
               <span>voltar</span>
             </Link>
+
+            {lastReadLessonId && (
+              <button
+                type="button"
+                onClick={() => {
+                  const target = lessons.find((l) => l.id === lastReadLessonId);
+                  if (target) setSelectedLesson(target);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-all hover:scale-105 cursor-pointer"
+                title="retomar a última aula lida"
+              >
+                <Bookmark className="w-4 h-4 text-white" />
+                <span>
+                  continuar aula {lessons.findIndex((l) => l.id === lastReadLessonId) + 1} →
+                </span>
+              </button>
+            )}
           </div>
 
           {/* Linha 2: Título e Descrição Compacta do Curso */}
@@ -740,7 +865,27 @@ export default function CourseDetail() {
                 <MessageCircle className="w-4 h-4" />
               </button>
 
-              {/* 4. ESCREVER */}
+              {/* 4. CADERNO DE RASCUNHOS */}
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'rascunho' ? 'none' : 'rascunho')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'rascunho' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="caderno de rascunhos"
+              >
+                <FileText className="w-4 h-4" />
+              </button>
+
+              {/* 5. LIVRO DE CITAÇÕES SALVAS */}
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'citacoes' ? 'none' : 'citacoes')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'citacoes' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="minhas citações salvas"
+              >
+                <Quote className="w-4 h-4" />
+              </button>
+
+              {/* 6. ESCREVER NO ATELIER */}
               <button
                 type="button"
                 onClick={() => {
@@ -796,7 +941,7 @@ export default function CourseDetail() {
             </div>
           </div>
 
-          {/* CANVAS DE LEITURA EDITORIAL DE ALTA IMERSÃO (80% LARGURA EM DESKTOP) */}
+          {/* PALCO CENTRAL DA AULA */}
           <div className="w-full lg:w-[80%] mx-auto py-6 space-y-6 flex-1">
             <div className="text-center pb-3">
               <h1 className="text-2xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
@@ -843,7 +988,10 @@ export default function CourseDetail() {
               </div>
             )}
 
+            {/* CONTEÚDO DA AULA COM SUPORTE A SELEÇÃO DE CITAÇÃO */}
             <div
+              onMouseUp={handleTextMouseUp}
+              onTouchEnd={handleTextMouseUp}
               className={`prose prose-stone max-w-4xl mx-auto text-tintaCarvao/90 font-light font-corpo lowercase leading-[1.85] space-y-4 ${
                 zenFontSize === 'sm'
                   ? 'text-sm sm:text-base'
@@ -854,6 +1002,46 @@ export default function CourseDetail() {
               dangerouslySetInnerHTML={{ __html: selectedLesson.description || '' }}
             />
           </div>
+
+          {/* POPOVER FLUTUANTE DE SELEÇÃO DE TEXTO PARA CITAÇÃO OU ATELIER */}
+          {selectedText && (
+            <div
+              className="fixed z-[99999999] -translate-x-1/2 -translate-y-full mb-3 bg-tintaCarvao text-white p-1.5 rounded-2xl shadow-2xl flex items-center gap-1.5 animate-fadeIn border border-papelKraft/40"
+              style={{ left: `${selectedText.x}px`, top: `${selectedText.y}px` }}
+            >
+              <button
+                type="button"
+                onClick={() => handleSaveQuote(selectedText.text)}
+                className="px-3 py-1.5 rounded-xl bg-acentoAzul text-white font-gesto text-sm sm:text-base hover:bg-acentoAzul/90 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+              >
+                <Quote className="w-3.5 h-3.5" />
+                <span>guardar citação</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTransferQuoteToAtelier(selectedText.text)}
+                className="px-3 py-1.5 rounded-xl bg-acentoTerracota text-white font-gesto text-sm sm:text-base hover:bg-acentoTerracota/90 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                <span>usar no atelier</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedText(null)}
+                className="px-2 py-1 rounded-full hover:bg-white/20 text-white/70 text-xs cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
+          {/* BANNER TOAST DE NOTIFICAÇÃO */}
+          {toastMessage && (
+            <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[99999999] bg-acentoAzul text-white px-5 py-2.5 rounded-2xl shadow-xl font-gesto text-[20px] lowercase animate-fadeIn border border-white/20 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-papelClaro" />
+              <span>{toastMessage}</span>
+            </div>
+          )}
 
           {/* BARRA INFERIOR NO DESKTOP */}
           <div className="hidden sm:flex w-full lg:w-[80%] mx-auto items-center justify-between pt-4 border-t border-papelKraft/30">
@@ -944,6 +1132,24 @@ export default function CourseDetail() {
 
               <button
                 type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'rascunho' ? 'none' : 'rascunho')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'rascunho' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="caderno de rascunhos"
+              >
+                <FileText className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'citacoes' ? 'none' : 'citacoes')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'citacoes' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="minhas citações salvas"
+              >
+                <Quote className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
                 onClick={() => {
                   setIsZenModeOpen(false);
                   handleOpenAtelierWithPrompt();
@@ -982,7 +1188,7 @@ export default function CourseDetail() {
                 </span>
               </button>
 
-              <div className="flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
+              <div className="flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm shrink-0">
                 <button
                   type="button"
                   onClick={handlePrevLesson}
@@ -1025,10 +1231,14 @@ export default function CourseDetail() {
                       {activeZenDrawer === 'sumario' && <List className="w-6 h-6 text-acentoAzul" />}
                       {activeZenDrawer === 'materiais' && <Download className="w-6 h-6 text-acentoAzul" />}
                       {activeZenDrawer === 'partilhas' && <MessageCircle className="w-6 h-6 text-acentoAzul" />}
+                      {activeZenDrawer === 'rascunho' && <FileText className="w-6 h-6 text-acentoAzul" />}
+                      {activeZenDrawer === 'citacoes' && <Quote className="w-6 h-6 text-acentoAzul" />}
                       <h3 className="text-[2.2rem] leading-none font-normal font-gesto text-acentoAzul lowercase">
                         {activeZenDrawer === 'sumario' && 'sumário de aulas'}
                         {activeZenDrawer === 'materiais' && 'materiais de apoio'}
                         {activeZenDrawer === 'partilhas' && 'partilhas da aula'}
+                        {activeZenDrawer === 'rascunho' && 'caderno de rascunhos'}
+                        {activeZenDrawer === 'citacoes' && 'minhas citações salvas'}
                       </h3>
                     </div>
 
@@ -1060,6 +1270,7 @@ export default function CourseDetail() {
                       <div className="space-y-2.5 max-h-[70vh] overflow-y-auto pr-1">
                         {lessons.map((lesson, idx) => {
                           const isSelected = selectedLesson?.id === lesson.id;
+                          const isLastRead = lastReadLessonId === lesson.id;
                           return (
                             <button
                               key={lesson.id}
@@ -1078,9 +1289,16 @@ export default function CourseDetail() {
                                 <span className={`text-sm font-bold font-gesto shrink-0 ${isSelected ? 'text-white/80' : 'text-acentoAzul'}`}>
                                   {String(idx + 1).padStart(2, '0')}.
                                 </span>
-                                <p className={`text-sm sm:text-base font-light font-corpo lowercase leading-snug ${isSelected ? 'text-white font-medium' : 'text-tintaCarvao/90 group-hover:text-acentoAzul'}`}>
-                                  {lesson.title}
-                                </p>
+                                <div>
+                                  <p className={`text-sm sm:text-base font-light font-corpo lowercase leading-snug ${isSelected ? 'text-white font-medium' : 'text-tintaCarvao/90 group-hover:text-acentoAzul'}`}>
+                                    {lesson.title}
+                                  </p>
+                                  {isLastRead && !isSelected && (
+                                    <span className="text-[11px] font-corpo font-medium text-acentoTerracota block lowercase pt-0.5">
+                                      sua última aula lida
+                                    </span>
+                                  )}
+                                </div>
                               </div>
 
                               {isSelected && <CheckCircle className="w-5 h-5 text-acentoOliva shrink-0" />}
@@ -1151,6 +1369,97 @@ export default function CourseDetail() {
                               <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase leading-relaxed">
                                 {comment.content}
                               </p>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PAINEL 4: CADERNO DE RASCUNHOS (INLINE DRAFT) */}
+                  {activeZenDrawer === 'rascunho' && (
+                    <div className="space-y-4">
+                      <div className="bg-white/80 p-3.5 rounded-2xl border border-papelKraft/35 text-xs font-corpo text-tintaCarvao/75 lowercase">
+                        anote suas impressões e pensamentos enquanto lê. seu rascunho é salvo automaticamente.
+                      </div>
+
+                      <textarea
+                        value={quickDraft}
+                        onChange={(e) => handleQuickDraftChange(e.target.value)}
+                        rows={10}
+                        placeholder="escreva aqui seu rascunho livre..."
+                        className="w-full bg-white rounded-2xl border border-papelKraft/40 p-4 font-corpo text-sm sm:text-base text-tintaCarvao placeholder:text-tintaCarvao/40 focus:outline-none focus:border-acentoAzul focus:ring-1 focus:ring-acentoAzul shadow-sm leading-relaxed"
+                      />
+
+                      <div className="flex items-center justify-between pt-2">
+                        <button
+                          type="button"
+                          onClick={() => handleQuickDraftChange('')}
+                          className="px-3 py-1.5 rounded-xl border border-papelKraft/40 text-tintaCarvao/60 hover:text-acentoTerracota hover:border-acentoTerracota text-xs font-corpo lowercase transition-colors cursor-pointer"
+                        >
+                          limpar rascunho
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleTransferDraftToAtelier}
+                          disabled={!quickDraft.trim()}
+                          className="px-5 py-2 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoTerracota/90 disabled:opacity-40 transition-all cursor-pointer"
+                        >
+                          enviar para o atelier →
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PAINEL 5: MINHAS CITAÇÕES SALVAS */}
+                  {activeZenDrawer === 'citacoes' && (
+                    <div className="space-y-4">
+                      <div className="bg-white/80 p-3.5 rounded-2xl border border-papelKraft/35 text-xs font-corpo text-tintaCarvao/75 lowercase">
+                        para guardar trechos, basta selecionar qualquer frase durante a leitura e clicar em "guardar citação".
+                      </div>
+
+                      <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+                        {savedQuotes.length === 0 ? (
+                          <div className="text-center py-8 space-y-2">
+                            <Quote className="w-8 h-8 text-acentoAzul/40 mx-auto" />
+                            <p className="text-xs font-light font-corpo text-tintaCarvao/60 italic">
+                              você ainda não guardou citações neste curso.
+                            </p>
+                          </div>
+                        ) : (
+                          savedQuotes.map((q) => (
+                            <div key={q.id} className="p-4 rounded-2xl bg-white border border-papelKraft/40 space-y-3 shadow-sm relative group">
+                              <div className="flex items-center justify-between text-xs font-corpo text-acentoAzul">
+                                <span className="font-bold lowercase truncate max-w-[240px]">
+                                  {q.lessonTitle}
+                                </span>
+                                <span className="text-tintaCarvao/40 text-[11px] shrink-0">
+                                  {q.createdAt}
+                                </span>
+                              </div>
+
+                              <p className="text-xs sm:text-sm font-editorial italic text-tintaCarvao/90 lowercase leading-relaxed border-l-2 border-acentoTerracota pl-3 py-1">
+                                "{q.text}"
+                              </p>
+
+                              <div className="flex items-center justify-end gap-2 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() => handleTransferQuoteToAtelier(q.text)}
+                                  className="px-3 py-1 rounded-xl bg-acentoTerracota/10 text-acentoTerracota hover:bg-acentoTerracota hover:text-white font-gesto text-base lowercase transition-all cursor-pointer"
+                                >
+                                  usar no atelier →
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteQuote(q.id)}
+                                  className="p-1.5 rounded-xl hover:bg-papelKraft/30 text-tintaCarvao/40 hover:text-acentoTerracota transition-colors cursor-pointer"
+                                  title="excluir citação"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
                             </div>
                           ))
                         )}
