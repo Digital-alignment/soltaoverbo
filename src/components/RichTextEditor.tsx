@@ -82,15 +82,73 @@ export default function RichTextEditor({
     }
   };
 
-  const executeCommand = (command: string, value?: string) => {
-    document.execCommand(command, false, value);
-    editorRef.current?.focus();
+  const executeCommand = (command: string, val?: string) => {
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+    try {
+      document.execCommand(command, false, val);
+    } catch (err) {
+      console.warn('execCommand warning:', err);
+    }
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
   };
 
+  // SELEÇÃO ROBUSTA DE TIPO DE TEXTO (PARÁGRAFO, TÍTULOS H1-H4, CITAÇÃO)
   const selectFormat = (format: string) => {
     setCurrentFormat(format);
     setShowFormatMenu(false);
-    executeCommand('formatBlock', format);
+
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+
+    const tagWithAngle = `<${format.toLowerCase()}>`;
+    const tagUpper = format.toUpperCase();
+
+    let success = false;
+
+    // 1. Tentar sintaxe com parênteses angulares <h1...>, <h2>... (Padrão moderno WebKit/Blink)
+    try {
+      success = document.execCommand('formatBlock', false, tagWithAngle);
+    } catch {}
+
+    // 2. Tentar sintaxe maiúscula H1, H2, BLOCKQUOTE
+    if (!success) {
+      try {
+        success = document.execCommand('formatBlock', false, tagUpper);
+      } catch {}
+    }
+
+    // 3. Tentar sintaxe simples h1, h2, blockquote
+    if (!success) {
+      try {
+        success = document.execCommand('formatBlock', false, format);
+      } catch {}
+    }
+
+    // 4. Fallback direto no DOM caso a seleção do execCommand não aplique
+    if (!success && editorRef.current) {
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        let container: Node | null = range.commonAncestorContainer;
+        if (container.nodeType === 3) {
+          container = container.parentNode;
+        }
+        if (container && container !== editorRef.current && container.parentNode) {
+          const newElem = document.createElement(format);
+          newElem.innerHTML = (container as HTMLElement).innerHTML || container.textContent || '';
+          container.parentNode.replaceChild(newElem, container);
+        }
+      }
+    }
+
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
   };
 
   const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
