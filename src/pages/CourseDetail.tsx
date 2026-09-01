@@ -23,6 +23,7 @@ import {
   Sparkles,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   Crown,
   List
 } from 'lucide-react';
@@ -57,11 +58,25 @@ export default function CourseDetail() {
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
   const [zenFontSize, setZenFontSize] = useState<'sm' | 'md' | 'lg'>('md');
 
-  // CONCLUÍDOS DE AULAS
+  // CONCLUÍDOS DE AULAS & MATERIAIS COLAPSÁVEIS
   const [completedLessonIds, setCompletedLessonIds] = useState<string[]>([]);
+  const [showMaterials, setShowMaterials] = useState(false);
+  const materialsRef = useRef<HTMLDivElement>(null);
 
   const desktopContentRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (materialsRef.current && !materialsRef.current.contains(event.target as Node)) {
+        setShowMaterials(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (courseId) {
@@ -454,35 +469,46 @@ export default function CourseDetail() {
 
                 </div>
 
-                {/* MATERIAIS DE APOIO */}
+                {/* MATERIAIS DE APOIO (FUNDO AZUL ACENTO, EXPANDÍVEL/COLAPSÁVEL NO CLIQUE, FECHA AO CLICAR FORA) */}
                 {materials.length > 0 && (
-                  <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm space-y-3">
-                    <h3 className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 border-b border-papelKraft/25 pb-2.5">
-                      <Download className="w-4 h-4 text-acentoTerracota" />
-                      <span>materiais de apoio ({materials.length})</span>
-                    </h3>
+                  <div
+                    ref={materialsRef}
+                    className="bg-acentoAzul text-white rounded-3xl p-5 sm:p-6 shadow-md transition-all cursor-pointer"
+                    onClick={() => setShowMaterials(!showMaterials)}
+                  >
+                    {/* CABEÇALHO DO CARD EM FONTE EXPANDIDA SEM CONTAGEM E ÍCONE DO LADO DIREITO */}
+                    <div className={`flex items-center justify-between gap-4 transition-all ${showMaterials ? 'border-b border-white/20 pb-3 mb-4' : ''}`}>
+                      <div className="flex items-center gap-3">
+                        <Download className="w-6 h-6 sm:w-7 sm:h-7 text-white shrink-0" />
+                        <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-white lowercase">
+                          materiais de apoio
+                        </h3>
+                      </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {materials.map((mat) => (
-                        <a
-                          key={mat.id}
-                          href={mat.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between p-3 bg-white rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
-                        >
-                          <div className="flex items-center gap-2.5 truncate">
-                            <Download className="w-4 h-4 text-acentoTerracota shrink-0 group-hover:scale-110 transition-transform" />
-                            <span className="text-xs sm:text-sm font-semibold font-corpo text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors truncate">
+                      <div className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all shrink-0">
+                        <ChevronDown className={`w-5 h-5 text-white transition-transform duration-300 ${showMaterials ? 'rotate-180' : ''}`} />
+                      </div>
+                    </div>
+
+                    {/* CONTEÚDO MINIMALISTA DOS ELEMENTOS DISPONÍVEIS */}
+                    {showMaterials && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1" onClick={(e) => e.stopPropagation()}>
+                        {materials.map((mat) => (
+                          <a
+                            key={mat.id}
+                            href={mat.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-3 p-3.5 bg-white rounded-2xl border border-white/30 hover:bg-papelClaro transition-all shadow-sm group"
+                          >
+                            <Download className="w-5 h-5 text-acentoAzul shrink-0 group-hover:scale-110 transition-transform" />
+                            <span className="text-xs sm:text-sm font-medium font-corpo text-acentoAzul lowercase truncate">
                               {mat.title}
                             </span>
-                          </div>
-                          <span className="text-xs font-normal font-gesto text-acentoTerracota lowercase shrink-0">
-                            baixar →
-                          </span>
-                        </a>
-                      ))}
-                    </div>
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
 
