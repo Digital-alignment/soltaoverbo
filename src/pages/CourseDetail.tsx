@@ -267,9 +267,9 @@ export default function CourseDetail() {
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao pb-16">
       
-      {/* 1. CABEÇALHO UNIFICADO E FLUIDO */}
+      {/* 1. CABEÇALHO UNIFICADO E FLUIDO (LARGURA DE 80% EM DESKTOP) */}
       <div className="bg-bgPlataforma pt-4 pb-3 px-4 sm:px-6 lg:px-8 border-b border-papelKraft/30 transition-all">
-        <div className="max-w-7xl mx-auto space-y-2.5">
+        <div className="w-full lg:w-[80%] mx-auto space-y-2.5">
           
           {/* Linha 1: Voltar (apenas a palavra 'voltar' com tamanho maior) */}
           <div className="flex items-center justify-between">
@@ -297,7 +297,7 @@ export default function CourseDetail() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
+      <div className="w-full lg:w-[80%] mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
 
         {/* 2. LAYOUT MASTER EM 2 COLUNAS DE ALTA ELEGÂNCIA */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -706,42 +706,62 @@ export default function CourseDetail() {
       {isZenModeOpen && selectedLesson && createPortal(
         <div className="fixed inset-0 top-0 left-0 w-screen h-screen z-[999999] bg-bgPlataforma text-tintaCarvao flex flex-col justify-between p-4 sm:p-8 animate-fadeIn overflow-y-auto">
           
-          {/* BARRA SUPERIOR DO MODO FOCO (SEM TÍTULO DUPLICADO À ESQUERDA, APENAS CONTROLES FLUTUANTES MINIMALISTAS) */}
-          <div className="max-w-5xl mx-auto w-full flex items-center justify-center sm:justify-end pb-2">
+          {/* BARRA SUPERIOR DO MODO FOCO */}
+          <div className="w-full lg:w-[80%] mx-auto flex items-center justify-between pb-4 gap-4">
             
-            {/* BARRA DE CONTROLES E FERRAMENTAS MINIMALISTAS DO MODO FOCO */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
-              
-              {/* PORCENTAGEM DE PROGRESSO DO CURSO EM MUTHASLE */}
-              <span className="font-gesto text-xl sm:text-2xl text-acentoTerracota lowercase px-1" title="progresso do curso">
-                {progressPercent}%
-              </span>
+            {/* ESQUERDA (DESKTOP): FERRAMENTAS MINIMALISTAS EM ÍCONES */}
+            <div className="hidden sm:flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
+              {/* 1. SUMÁRIO */}
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'sumario' ? 'none' : 'sumario')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'sumario' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="sumário de aulas"
+              >
+                <List className="w-4 h-4" />
+              </button>
 
-              {/* CONTROLE NAVEGAÇÃO DE AULAS (< 1/3 >) */}
-              <div className="flex items-center gap-1.5 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
+              {/* 2. MATERIAIS */}
+              {materials.length > 0 && (
                 <button
                   type="button"
-                  onClick={handlePrevLesson}
-                  disabled={currentLessonIndex === 0}
-                  className="p-1.5 rounded-full hover:bg-bgPlataforma text-acentoAzul disabled:opacity-30 transition-colors cursor-pointer"
-                  title="aula anterior"
+                  onClick={() => setActiveZenDrawer(activeZenDrawer === 'materiais' ? 'none' : 'materiais')}
+                  className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'materiais' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                  title="materiais de apoio"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <Download className="w-4 h-4" />
                 </button>
-                <span className="text-xs font-normal font-corpo text-acentoAzul px-1">
-                  {currentLessonIndex + 1} / {lessons.length}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleNextLesson}
-                  disabled={currentLessonIndex === lessons.length - 1}
-                  className="p-1.5 rounded-full hover:bg-bgPlataforma text-acentoAzul disabled:opacity-30 transition-colors cursor-pointer"
-                  title="próxima aula"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
+              )}
 
+              {/* 3. PARTILHAS */}
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'partilhas' ? 'none' : 'partilhas')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'partilhas' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="partilhas da aula"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </button>
+
+              {/* 4. ESCREVER */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsZenModeOpen(false);
+                  handleOpenAtelierWithPrompt();
+                }}
+                className="p-2 rounded-full text-acentoTerracota hover:bg-papelKraft/30 transition-colors cursor-pointer"
+                title="escrever no atelier"
+              >
+                <Pencil className="w-4 h-4 text-acentoTerracota" />
+              </button>
+            </div>
+
+            {/* ESPAÇADOR FLEX NO MOBILE */}
+            <div className="sm:hidden flex-1" />
+
+            {/* DIREITA (DESKTOP & MOBILE): TAMANHO DA FONTE E BOTÃO SAIR */}
+            <div className="flex items-center gap-2 sm:gap-3">
               {/* SELECTOR DE TAMANHO DE FONTE (a- a a+) */}
               <div className="inline-flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm text-xs font-corpo">
                 <button
@@ -767,76 +787,6 @@ export default function CourseDetail() {
                 </button>
               </div>
 
-              {/* FERRAMENTAS EM ÍCONES DO MODO FOCO */}
-              <div className="flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
-                {/* 1. SUMÁRIO DE AULAS */}
-                <button
-                  type="button"
-                  onClick={() => setActiveZenDrawer(activeZenDrawer === 'sumario' ? 'none' : 'sumario')}
-                  className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'sumario' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
-                  title="sumário de aulas"
-                >
-                  <List className="w-4 h-4" />
-                </button>
-
-                {/* 2. MATERIAIS DE APOIO */}
-                {materials.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveZenDrawer(activeZenDrawer === 'materiais' ? 'none' : 'materiais')}
-                    className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'materiais' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
-                    title="materiais de apoio"
-                  >
-                    <Download className="w-4 h-4" />
-                  </button>
-                )}
-
-                {/* 3. PARTILHAS / COMENTÁRIOS */}
-                <button
-                  type="button"
-                  onClick={() => setActiveZenDrawer(activeZenDrawer === 'partilhas' ? 'none' : 'partilhas')}
-                  className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'partilhas' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
-                  title="partilhas da aula"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                </button>
-
-                {/* 4. ESCREVER NO ATELIER */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsZenModeOpen(false);
-                    handleOpenAtelierWithPrompt();
-                  }}
-                  className="p-2 rounded-full text-acentoTerracota hover:bg-papelKraft/30 transition-colors cursor-pointer"
-                  title="escrever no atelier"
-                >
-                  <Pencil className="w-4 h-4 text-acentoTerracota" />
-                </button>
-
-                {/* 5. MARCAR COMO CONCLUÍDA */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (selectedLesson) {
-                      setCompletedLessonIds((prev) =>
-                        prev.includes(selectedLesson.id)
-                          ? prev.filter((id) => id !== selectedLesson.id)
-                          : [...prev, selectedLesson.id]
-                      );
-                    }
-                  }}
-                  className={`p-2 rounded-full transition-colors cursor-pointer ${
-                    selectedLesson && completedLessonIds.includes(selectedLesson.id)
-                      ? 'bg-acentoOliva text-white'
-                      : 'text-tintaCarvao/50 hover:bg-bgPlataforma'
-                  }`}
-                  title={selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'aula concluída ✓' : 'marcar como concluída'}
-                >
-                  <CheckCircle className="w-4 h-4" />
-                </button>
-              </div>
-
               {/* BOTÃO SAIR DO MODO FOCO */}
               <button
                 type="button"
@@ -849,17 +799,17 @@ export default function CourseDetail() {
             </div>
           </div>
 
-          {/* CANVAS DE LEITURA EDITORIAL DE ALTA IMERSÃO */}
-          <div className="max-w-2xl mx-auto w-full py-8 space-y-6 flex-1">
+          {/* CANVAS DE LEITURA EDITORIAL DE ALTA IMERSÃO (80% LARGURA EM DESKTOP) */}
+          <div className="w-full lg:w-[80%] mx-auto py-6 space-y-6 flex-1">
             <div className="text-center pb-3">
-              <h1 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase">
+              <h1 className="text-2xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
                 {selectedLesson.title}
               </h1>
             </div>
 
             {/* ÁUDIO PLAYER NO MODO FOCO */}
             {audioFiles.length > 0 && (
-              <div className="py-2">
+              <div className="py-2 max-w-3xl mx-auto">
                 <AudioPlayer
                   audioFiles={audioFiles.map((a) => ({
                     id: a.id,
@@ -872,7 +822,7 @@ export default function CourseDetail() {
             )}
 
             {!audioFiles.length && selectedLesson.audio_url && (
-              <div className="py-2">
+              <div className="py-2 max-w-3xl mx-auto">
                 <AudioPlayer
                   audioFiles={[
                     {
@@ -887,7 +837,7 @@ export default function CourseDetail() {
             )}
 
             <div
-              className={`prose prose-stone max-w-none text-tintaCarvao/90 font-light font-corpo lowercase leading-[1.85] space-y-4 ${
+              className={`prose prose-stone max-w-4xl mx-auto text-tintaCarvao/90 font-light font-corpo lowercase leading-[1.85] space-y-4 ${
                 zenFontSize === 'sm'
                   ? 'text-sm sm:text-base'
                   : zenFontSize === 'lg'
@@ -896,6 +846,157 @@ export default function CourseDetail() {
               }`}
               dangerouslySetInnerHTML={{ __html: selectedLesson.description || '' }}
             />
+          </div>
+
+          {/* BARRA INFERIOR NO DESKTOP */}
+          <div className="hidden sm:flex w-full lg:w-[80%] mx-auto items-center justify-between pt-4 border-t border-papelKraft/30">
+            {/* ESQUERDA: MARCAR COMO CONCLUÍDA */}
+            <button
+              type="button"
+              onClick={() => {
+                if (selectedLesson) {
+                  setCompletedLessonIds((prev) =>
+                    prev.includes(selectedLesson.id)
+                      ? prev.filter((id) => id !== selectedLesson.id)
+                      : [...prev, selectedLesson.id]
+                  );
+                }
+              }}
+              className={`px-5 py-2 rounded-2xl font-gesto text-[22px] sm:text-[25px] lowercase transition-all inline-flex items-center gap-2 shadow-sm cursor-pointer ${
+                selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                  ? 'bg-acentoOliva text-white border border-acentoOliva'
+                  : 'bg-white text-tintaCarvao border border-papelKraft/45 hover:bg-papelKraft/20'
+              }`}
+            >
+              <CheckCircle className={`w-5 h-5 ${selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'text-white' : 'text-acentoOliva'}`} />
+              <span>
+                {selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                  ? 'aula concluída ✓'
+                  : 'marcar como concluída'}
+              </span>
+            </button>
+
+            {/* DIREITA: SELETOR DE NAVEGAÇÃO (< 1/3 >) */}
+            <div className="flex items-center gap-1.5 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
+              <button
+                type="button"
+                onClick={handlePrevLesson}
+                disabled={currentLessonIndex === 0}
+                className="p-1.5 rounded-full hover:bg-bgPlataforma text-acentoAzul disabled:opacity-30 transition-colors cursor-pointer"
+                title="aula anterior"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="text-xs font-normal font-corpo text-acentoAzul px-1">
+                {currentLessonIndex + 1} / {lessons.length}
+              </span>
+              <button
+                type="button"
+                onClick={handleNextLesson}
+                disabled={currentLessonIndex === lessons.length - 1}
+                className="p-1.5 rounded-full hover:bg-bgPlataforma text-acentoAzul disabled:opacity-30 transition-colors cursor-pointer"
+                title="próxima aula"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* BARRA INFERIOR NO MOBILE (ESTILO APP MODERNO E DINÂMICO) */}
+          <div className="sm:hidden w-full space-y-3 pt-3 border-t border-papelKraft/30 bg-bgPlataforma/95 backdrop-blur-sm sticky bottom-0">
+            {/* LINHA 1: ÍCONES DAS FERRAMENTAS CENTRALIZADOS */}
+            <div className="flex items-center justify-center gap-2 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm max-w-xs mx-auto">
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'sumario' ? 'none' : 'sumario')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'sumario' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="sumário de aulas"
+              >
+                <List className="w-4 h-4" />
+              </button>
+
+              {materials.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setActiveZenDrawer(activeZenDrawer === 'materiais' ? 'none' : 'materiais')}
+                  className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'materiais' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                  title="materiais de apoio"
+                >
+                  <Download className="w-4 h-4" />
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setActiveZenDrawer(activeZenDrawer === 'partilhas' ? 'none' : 'partilhas')}
+                className={`p-2 rounded-full transition-colors cursor-pointer ${activeZenDrawer === 'partilhas' ? 'bg-acentoAzul text-white' : 'text-acentoAzul hover:bg-bgPlataforma'}`}
+                title="partilhas da aula"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsZenModeOpen(false);
+                  handleOpenAtelierWithPrompt();
+                }}
+                className="p-2 rounded-full text-acentoTerracota hover:bg-papelKraft/30 transition-colors cursor-pointer"
+                title="escrever no atelier"
+              >
+                <Pencil className="w-4 h-4 text-acentoTerracota" />
+              </button>
+            </div>
+
+            {/* LINHA 2: MARCAR COMO CONCLUÍDA + NAVEGAÇÃO (< 1/3 >) */}
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (selectedLesson) {
+                    setCompletedLessonIds((prev) =>
+                      prev.includes(selectedLesson.id)
+                        ? prev.filter((id) => id !== selectedLesson.id)
+                        : [...prev, selectedLesson.id]
+                    );
+                  }
+                }}
+                className={`px-3 py-1.5 rounded-2xl font-gesto text-[18px] lowercase transition-all inline-flex items-center gap-1.5 shadow-sm cursor-pointer ${
+                  selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                    ? 'bg-acentoOliva text-white border border-acentoOliva'
+                    : 'bg-white text-tintaCarvao border border-papelKraft/45'
+                }`}
+              >
+                <CheckCircle className={`w-4 h-4 ${selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'text-white' : 'text-acentoOliva'}`} />
+                <span>
+                  {selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                    ? 'concluída ✓'
+                    : 'marcar concluída'}
+                </span>
+              </button>
+
+              <div className="flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
+                <button
+                  type="button"
+                  onClick={handlePrevLesson}
+                  disabled={currentLessonIndex === 0}
+                  className="p-1 rounded-full text-acentoAzul disabled:opacity-30"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-[11px] font-normal font-corpo text-acentoAzul px-1">
+                  {currentLessonIndex + 1}/{lessons.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleNextLesson}
+                  disabled={currentLessonIndex === lessons.length - 1}
+                  className="p-1 rounded-full text-acentoAzul disabled:opacity-30"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* GAVETAS DESLIZANTES LATERAIS NO MODO FOCO */}
