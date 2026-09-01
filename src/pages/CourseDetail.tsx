@@ -999,149 +999,161 @@ export default function CourseDetail() {
             </div>
           </div>
 
-          {/* GAVETAS DESLIZANTES LATERAIS NO MODO FOCO */}
+          {/* GAVETAS DESLIZANTES LATERAIS NO MODO FOCO (DESIGN EDITORIAL DE LUXO) */}
           {activeZenDrawer !== 'none' && (
-            <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-[9999999] border-l border-papelKraft/40 p-6 overflow-y-auto animate-fadeIn space-y-5">
-              
-              {/* CABEÇALHO DA GAVETA */}
-              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
-                <h3 className="text-xl font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2">
-                  {activeZenDrawer === 'sumario' && <List className="w-5 h-5 text-acentoAzul" />}
-                  {activeZenDrawer === 'materiais' && <Download className="w-5 h-5 text-acentoAzul" />}
-                  {activeZenDrawer === 'partilhas' && <MessageCircle className="w-5 h-5 text-acentoAzul" />}
-                  <span>
-                    {activeZenDrawer === 'sumario' && 'sumário de aulas'}
-                    {activeZenDrawer === 'materiais' && 'materiais de apoio'}
-                    {activeZenDrawer === 'partilhas' && 'partilhas da aula'}
-                  </span>
-                </h3>
+            <>
+              {/* BACKDROP TRANSLÚCIDO E SUAVE */}
+              <div
+                className="fixed inset-0 z-[9999998] bg-tintaCarvao/20 backdrop-blur-sm transition-opacity animate-fadeIn"
+                onClick={() => setActiveZenDrawer('none')}
+              />
 
-                <button
-                  type="button"
-                  onClick={() => setActiveZenDrawer('none')}
-                  className="p-1.5 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-acentoAzul transition-colors cursor-pointer"
-                  title="fechar"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* PAINEL 1: SUMÁRIO DE AULAS */}
-              {activeZenDrawer === 'sumario' && (
-                <div className="space-y-4">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-end">
-                      <span className="font-gesto text-xl text-acentoTerracota lowercase">
-                        {progressPercent}% concluído
-                      </span>
+              {/* CONTAINER DA GAVETA LATERAL (LARGURA EXPANDIDA EM ESCRITÓRIO: 540px, PAPEL CREME LUXURY) */}
+              <div className="fixed inset-y-0 right-0 w-full sm:w-[480px] lg:w-[540px] bg-papelClaro text-tintaCarvao shadow-[0_20px_50px_rgba(0,0,0,0.18)] z-[9999999] border-l border-papelKraft/40 p-6 sm:p-8 overflow-y-auto animate-slideInRight space-y-6 flex flex-col justify-between">
+                
+                <div className="space-y-6">
+                  {/* CABEÇALHO EDITORIAL DE LUXO */}
+                  <div className="flex items-center justify-between border-b border-papelKraft/30 pb-4">
+                    <div className="flex items-center gap-3">
+                      {activeZenDrawer === 'sumario' && <List className="w-6 h-6 text-acentoAzul" />}
+                      {activeZenDrawer === 'materiais' && <Download className="w-6 h-6 text-acentoAzul" />}
+                      {activeZenDrawer === 'partilhas' && <MessageCircle className="w-6 h-6 text-acentoAzul" />}
+                      <h3 className="text-[2.2rem] leading-none font-normal font-gesto text-acentoAzul lowercase">
+                        {activeZenDrawer === 'sumario' && 'sumário de aulas'}
+                        {activeZenDrawer === 'materiais' && 'materiais de apoio'}
+                        {activeZenDrawer === 'partilhas' && 'partilhas da aula'}
+                      </h3>
                     </div>
-                    <div className="w-full bg-papelKraft/30 h-2 rounded-full overflow-hidden">
-                      <div className="bg-acentoOliva h-full rounded-full transition-all duration-500" style={{ width: `${progressPercent}%` }} />
-                    </div>
-                  </div>
 
-                  <div className="space-y-2 max-h-[75vh] overflow-y-auto pr-1">
-                    {lessons.map((lesson, idx) => {
-                      const isSelected = selectedLesson?.id === lesson.id;
-                      return (
-                        <button
-                          key={lesson.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedLesson(lesson);
-                            setActiveZenDrawer('none');
-                          }}
-                          className={`w-full text-left p-3 rounded-2xl transition-all duration-200 border flex items-center justify-between gap-3 group cursor-pointer ${
-                            isSelected
-                              ? 'bg-acentoAzul text-white border-acentoAzul shadow-sm'
-                              : 'bg-bgPlataforma/60 hover:bg-papelKraft/20 text-tintaCarvao border-papelKraft/30'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <span className={`text-xs font-normal font-gesto shrink-0 ${isSelected ? 'text-white/80' : 'text-acentoAzul'}`}>
-                              {String(idx + 1).padStart(2, '0')}.
-                            </span>
-                            <p className={`text-xs sm:text-sm font-light font-corpo lowercase truncate ${isSelected ? 'text-white font-medium' : 'text-tintaCarvao/85'}`}>
-                              {lesson.title}
-                            </p>
-                          </div>
-
-                          {isSelected && <CheckCircle className="w-4 h-4 text-acentoOliva shrink-0" />}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {/* PAINEL 2: MATERIAIS DE APOIO */}
-              {activeZenDrawer === 'materiais' && (
-                <div className="space-y-3">
-                  {materials.map((mat) => (
-                    <a
-                      key={mat.id}
-                      href={mat.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3.5 bg-bgPlataforma rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
+                    <button
+                      type="button"
+                      onClick={() => setActiveZenDrawer('none')}
+                      className="p-2 rounded-full bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/40 shadow-sm transition-all cursor-pointer"
+                      title="fechar"
                     >
-                      <Download className="w-5 h-5 text-acentoAzul shrink-0 group-hover:scale-110 transition-transform" />
-                      <span className="text-xs sm:text-sm font-medium font-corpo text-acentoAzul lowercase truncate">
-                        {mat.title}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              {/* PAINEL 3: PARTILHAS DA AULA */}
-              {activeZenDrawer === 'partilhas' && (
-                <div className="space-y-4">
-                  <form onSubmit={handleCommentSubmit} className="space-y-2">
-                    <textarea
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      rows={3}
-                      placeholder="deixe sua partilha..."
-                      className="w-full bg-bgPlataforma rounded-2xl border border-papelKraft/40 p-3 font-corpo text-xs text-tintaCarvao placeholder:text-tintaCarvao/50 focus:outline-none focus:border-acentoAzul shadow-sm"
-                    />
-                    <div className="flex justify-end">
-                      <button
-                        type="submit"
-                        className="px-4 py-1.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-colors cursor-pointer"
-                      >
-                        enviar partilha →
-                      </button>
-                    </div>
-                  </form>
-
-                  <div className="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1">
-                    {comments.length === 0 ? (
-                      <p className="text-xs font-light font-corpo text-tintaCarvao/60 italic text-center py-2">
-                        seja a primeira a partilhar.
-                      </p>
-                    ) : (
-                      comments.map((comment) => (
-                        <div key={comment.id} className="p-3 rounded-2xl bg-bgPlataforma border border-papelKraft/40 space-y-1">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-medium text-acentoAzul lowercase">
-                              {comment.user_profile?.display_name || 'aluna'}
-                            </span>
-                            <span className="text-tintaCarvao/50 text-[10px]">
-                              {new Date(comment.created_at).toLocaleDateString('pt-BR')}
-                            </span>
-                          </div>
-                          <p className="text-xs font-light text-tintaCarvao/85 lowercase">
-                            {comment.content}
-                          </p>
-                        </div>
-                      ))
-                    )}
+                      <span className="text-sm font-bold font-corpo px-1">✕</span>
+                    </button>
                   </div>
-                </div>
-              )}
 
-            </div>
+                  {/* PAINEL 1: SUMÁRIO DE AULAS */}
+                  {activeZenDrawer === 'sumario' && (
+                    <div className="space-y-5">
+                      <div className="space-y-2 bg-white/80 p-4 rounded-2xl border border-papelKraft/30 shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-normal font-corpo text-acentoAzul lowercase">progresso do curso</span>
+                          <span className="font-gesto text-2xl text-acentoTerracota lowercase">
+                            {progressPercent}% concluído
+                          </span>
+                        </div>
+                        <div className="w-full bg-papelKraft/30 h-2 rounded-full overflow-hidden p-[1px]">
+                          <div className="bg-acentoOliva h-full rounded-full transition-all duration-700 ease-out" style={{ width: `${progressPercent}%` }} />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2.5 max-h-[70vh] overflow-y-auto pr-1">
+                        {lessons.map((lesson, idx) => {
+                          const isSelected = selectedLesson?.id === lesson.id;
+                          return (
+                            <button
+                              key={lesson.id}
+                              type="button"
+                              onClick={() => {
+                                setSelectedLesson(lesson);
+                                setActiveZenDrawer('none');
+                              }}
+                              className={`w-full text-left p-4 rounded-2xl transition-all duration-200 border flex items-center justify-between gap-3 group cursor-pointer shadow-sm ${
+                                isSelected
+                                  ? 'bg-acentoAzul text-white border-acentoAzul'
+                                  : 'bg-white hover:bg-papelKraft/20 text-tintaCarvao border-papelKraft/35'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <span className={`text-sm font-bold font-gesto shrink-0 ${isSelected ? 'text-white/80' : 'text-acentoAzul'}`}>
+                                  {String(idx + 1).padStart(2, '0')}.
+                                </span>
+                                <p className={`text-sm sm:text-base font-light font-corpo lowercase leading-snug ${isSelected ? 'text-white font-medium' : 'text-tintaCarvao/90 group-hover:text-acentoAzul'}`}>
+                                  {lesson.title}
+                                </p>
+                              </div>
+
+                              {isSelected && <CheckCircle className="w-5 h-5 text-acentoOliva shrink-0" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PAINEL 2: MATERIAIS DE APOIO */}
+                  {activeZenDrawer === 'materiais' && (
+                    <div className="space-y-3">
+                      {materials.map((mat) => (
+                        <a
+                          key={mat.id}
+                          href={mat.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3.5 p-4 bg-white rounded-2xl border border-papelKraft/40 hover:border-acentoAzul transition-all shadow-sm group"
+                        >
+                          <Download className="w-5 h-5 text-acentoAzul shrink-0 group-hover:scale-110 transition-transform" />
+                          <span className="text-sm font-medium font-corpo text-acentoAzul lowercase truncate">
+                            {mat.title}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* PAINEL 3: PARTILHAS DA AULA */}
+                  {activeZenDrawer === 'partilhas' && (
+                    <div className="space-y-5">
+                      <form onSubmit={handleCommentSubmit} className="space-y-3">
+                        <textarea
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          rows={3}
+                          placeholder="deixe sua partilha..."
+                          className="w-full bg-white rounded-2xl border border-papelKraft/40 p-4 font-corpo text-sm text-tintaCarvao placeholder:text-tintaCarvao/50 focus:outline-none focus:border-acentoAzul focus:ring-1 focus:ring-acentoAzul shadow-sm"
+                        />
+                        <div className="flex justify-end">
+                          <button
+                            type="submit"
+                            className="px-6 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[22px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-colors cursor-pointer"
+                          >
+                            enviar partilha →
+                          </button>
+                        </div>
+                      </form>
+
+                      <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+                        {comments.length === 0 ? (
+                          <p className="text-xs font-light font-corpo text-tintaCarvao/60 italic text-center py-4">
+                            seja a primeira a partilhar uma reflexão sobre esta aula.
+                          </p>
+                        ) : (
+                          comments.map((comment) => (
+                            <div key={comment.id} className="p-4 rounded-2xl bg-white border border-papelKraft/35 space-y-2 shadow-sm">
+                              <div className="flex items-center justify-between text-xs font-light font-corpo">
+                                <span className="font-medium text-acentoAzul lowercase">
+                                  {comment.user_profile?.display_name || 'aluna solta o verbo'}
+                                </span>
+                                <span className="text-tintaCarvao/50 text-[11px]">
+                                  {new Date(comment.created_at).toLocaleDateString('pt-BR')}
+                                </span>
+                              </div>
+                              <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase leading-relaxed">
+                                {comment.content}
+                              </p>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </>
           )}
 
         </div>,
