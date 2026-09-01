@@ -25,8 +25,11 @@ import RoteiroOriginal from './pages/RoteiroOriginal';
 import CheckoutSuccess from './pages/CheckoutSuccess';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import CoursesCatalog from './pages/CoursesCatalog';
+import { useAuth } from './contexts/AuthContext';
 
 function AppContent() {
+  const { user } = useAuth();
   const { showPrompt, isIOS, isAndroid, handleInstall, handleDismiss } = useInstallPrompt();
 
   return (
@@ -34,7 +37,9 @@ function AppContent() {
       <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/programs" element={<Programs />} />
+          <Route path="/programs" element={user ? <CoursesCatalog /> : <Programs />} />
+          <Route path="/oficinas" element={user ? <CoursesCatalog /> : <Programs />} />
+          <Route path="/courses" element={user ? <CoursesCatalog /> : <Programs />} />
           
           {/* Páginas de Produtos / Programas */}
           <Route path="/programas/21-dias-de-escrita" element={<Programa21Dias />} />

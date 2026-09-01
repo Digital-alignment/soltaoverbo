@@ -248,7 +248,7 @@ export default function CourseDetail() {
               className="inline-flex items-center gap-2 text-acentoAzul hover:text-acentoTerracota transition-colors text-[20px] sm:text-[23px] font-normal font-gesto lowercase shrink-0"
             >
               <ArrowLeft className="w-4 h-4 text-acentoAzul" />
-              <span>voltar aos cursos</span>
+              <span>voltar às oficinas</span>
             </Link>
 
             <div className="flex items-center gap-2.5 flex-wrap shrink-0">
