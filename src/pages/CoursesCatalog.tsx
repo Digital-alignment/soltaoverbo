@@ -74,7 +74,7 @@ export default function CoursesCatalog() {
       <UserNavbar />
       <FloatingNavbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pl-28 pt-8 space-y-8">
         
         {/* CABEÇALHO DO CATÁLOGO DE OFICINAS */}
         <div className="space-y-3 border-b border-papelKraft/40 pb-6">

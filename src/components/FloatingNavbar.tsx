@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, PenTool, Flame, Sparkles } from 'lucide-react';
+import { LayoutDashboard, PenTool, Flame, BookOpen } from 'lucide-react';
 
 export default function FloatingNavbar() {
   const location = useLocation();
@@ -8,7 +8,7 @@ export default function FloatingNavbar() {
     { to: '/dashboard', label: 'dashboard', icon: LayoutDashboard },
     { to: '/exercises', label: 'escrita', icon: PenTool },
     { to: '/fogueira', label: 'fogueira', icon: Flame },
-    { to: '/programs', label: 'oficinas', icon: Sparkles },
+    { to: '/programs', label: 'oficinas', icon: BookOpen },
   ];
 
   const isActive = (path: string) => {

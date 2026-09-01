@@ -415,7 +415,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pl-28 space-y-6">
         
         {/* CABEÇALHO DO DASHBOARD (Saludo Limpo em Muthazle font-size: 2.3rem sem badge superior) */}
         <div className="border-b border-papelKraft/40 pb-3">
