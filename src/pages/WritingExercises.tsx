@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -303,11 +304,29 @@ export default function WritingExercises() {
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
 
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     if (profile) {
       loadExercises();
     }
   }, [profile]);
+
+  useEffect(() => {
+    const isNewRequested = searchParams.get('new') === 'true' || location.state?.new === true;
+    const promptState = location.state?.prompt;
+
+    if (isNewRequested || promptState) {
+      if (promptState) {
+        const formattedPrompt = `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">${promptState.replace(/\n/g, '<br/>')}</blockquote><p></p>`;
+        handleNew('reflexão da aula', formattedPrompt);
+      } else {
+        handleNew();
+      }
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, searchParams]);
 
   const loadExercises = async () => {
     if (!profile) return;
