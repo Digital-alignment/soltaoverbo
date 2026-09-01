@@ -125,12 +125,12 @@ export default function CoursesCatalog() {
             </div>
           </div>
 
-          {/* COLLAGE DA ILUSTRAÇÃO NO LADO DIREITO EM DESKTOP */}
-          <div className="hidden md:flex justify-end shrink-0">
+          {/* COLLAGE DA ILUSTRAÇÃO NO LADO DIREITO EM DESKTOP (MAIOR E COLADA AO BORDE DIREITO) */}
+          <div className="hidden md:flex justify-end shrink-0 -mr-4 lg:-mr-8">
             <img
               src="/brand-assets/elements/collages/png-person-reading-book-flower-sitting-person.png"
               alt="pessoa lendo livro"
-              className="h-28 lg:h-36 max-w-[220px] object-contain"
+              className="h-36 sm:h-44 lg:h-52 max-w-[280px] object-contain drop-shadow-sm"
             />
           </div>
         </div>
@@ -173,14 +173,14 @@ export default function CoursesCatalog() {
                     <div className="absolute top-2.5 left-2.5">
                       {course.course_type === 'paid' ? (
                         <div
-                          className="p-1.5 rounded-full bg-white/95 text-acentoTerracota border border-papelKraft/40 shadow-sm flex items-center justify-center"
+                          className="p-1.5 rounded-full bg-white/95 text-acentoTerracota border border-papelKraft/40 shadow-md flex items-center justify-center"
                           title="exclusivo premium"
                         >
                           <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
                         </div>
                       ) : (
                         <div
-                          className="p-1.5 rounded-full bg-white/95 text-acentoAzul border border-papelKraft/40 shadow-sm flex items-center justify-center"
+                          className="p-1.5 rounded-full bg-white/95 text-acentoAzul border border-papelKraft/40 shadow-md flex items-center justify-center"
                           title="oficina gratuita"
                         >
                           <Sparkles className="w-3.5 h-3.5 text-acentoAzul" />
@@ -188,16 +188,16 @@ export default function CoursesCatalog() {
                       )}
                     </div>
 
-                    {/* TAG INFERIOR DIREITO: ÍCONE + APENAS 1 PALAVRA ('liberado' OU 'bloquear') */}
+                    {/* TAG INFERIOR DIREITO: ALTO CONTRASTE (FUNDO SÓLIDO + PALAVRA 'liberado' OU 'bloquear') */}
                     <div className="absolute bottom-2.5 right-2.5">
                       {hasAccess ? (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-light font-corpo bg-white/95 text-acentoOliva border border-papelKraft/40 lowercase shadow-sm inline-flex items-center gap-1">
-                          <CheckCircle className="w-3.5 h-3.5 text-acentoOliva shrink-0" />
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold font-corpo bg-acentoOliva text-white border border-white/80 lowercase shadow-md inline-flex items-center gap-1.5">
+                          <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
                           <span>liberado</span>
                         </span>
                       ) : (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-light font-corpo bg-white/95 text-acentoTerracota border border-papelKraft/40 lowercase shadow-sm inline-flex items-center gap-1">
-                          <Lock className="w-3.5 h-3.5 text-acentoTerracota shrink-0" />
+                        <span className="px-3 py-1 rounded-full text-xs font-semibold font-corpo bg-acentoTerracota text-white border border-white/80 lowercase shadow-md inline-flex items-center gap-1.5">
+                          <Lock className="w-3.5 h-3.5 text-white shrink-0" />
                           <span>bloquear</span>
                         </span>
                       )}
@@ -218,33 +218,33 @@ export default function CoursesCatalog() {
                       )}
                     </div>
 
-                    {/* BOTÕES DE AÇÃO DINÂMICOS COM TEXTO DE 1 PALAVRA E ÍCONE NO LADO DIREITO */}
+                    {/* BOTÕES DE AÇÃO DINÂMICOS COM FONTE EXPANDIDA E ÍCONE À DIREITA */}
                     <div className="pt-3 border-t border-papelKraft/30">
                       {isStarted ? (
-                        /* CASO B: JÁ COMEOU (CONTINUAR -> TERRACOTA, TEXTO MAIOR, ÍCONE DIREITA) */
+                        /* CASO B: JÁ COMEOU (CONTINUAR -> TERRACOTA, TEXTO MAIOR FONTE 26-28PX, ÍCONE DIREITA) */
                         <Link
                           to={`/course/${course.id}`}
-                          className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[22px] sm:text-[24px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-transform hover:scale-[1.02] cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[26px] sm:text-[28px] lowercase shadow-md hover:bg-acentoTerracota/90 transition-transform hover:scale-[1.02] cursor-pointer"
                         >
                           <span>continuar</span>
                           <Play className="w-4 h-4 text-white fill-white shrink-0" />
                         </Link>
                       ) : hasAccess ? (
-                        /* CASO A: NÃO COMEOU E LIBERADO (COMEÇAR -> VERDE OLIVA, TEXTO BRANCO, ÍCONE DIREITA) */
+                        /* CASO A: NÃO COMEOU E LIBERADO (COMEÇAR -> VERDE OLIVA, TEXTO BRANCO 24-26PX, ÍCONE DIREITA) */
                         <Link
                           to={`/course/${course.id}`}
-                          className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-acentoOliva text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-sm hover:bg-acentoOliva/90 transition-transform hover:scale-[1.02] cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-acentoOliva text-white font-gesto text-[24px] sm:text-[26px] lowercase shadow-md hover:bg-acentoOliva/90 transition-transform hover:scale-[1.02] cursor-pointer"
                         >
                           <span>começar</span>
                           <ArrowRight className="w-4 h-4 text-white shrink-0" />
                         </Link>
                       ) : (
-                        /* CASO C: BLOQUEADO PARA UPGRADE (DESBLOQUEAR -> AZUL, TEXTO BRANCO, ÍCONE DIREITA) */
+                        /* CASO C: BLOQUEADO PARA UPGRADE (DESBLOQUEAR -> AZUL 24-26PX, TEXTO BRANCO, ÍCONE DIREITA) */
                         <a
                           href={course.stripe_payment_link || '/profile'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-transform hover:scale-[1.02] cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[24px] sm:text-[26px] lowercase shadow-md hover:bg-acentoAzul/90 transition-transform hover:scale-[1.02] cursor-pointer"
                         >
                           <span>desbloquear</span>
                           <Lock className="w-4 h-4 text-white shrink-0" />
