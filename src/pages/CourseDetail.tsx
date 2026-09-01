@@ -833,6 +833,16 @@ export default function CourseDetail() {
               </div>
             )}
 
+            {/* VÍDEO DO YOUTUBE NO MODO FOCO */}
+            {selectedLesson.recording_url && isYouTubeUrl(selectedLesson.recording_url) && (
+              <div className="py-2 max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-sm border border-papelKraft/35">
+                <YouTubeEmbed
+                  videoUrl={selectedLesson.recording_url}
+                  title={`vídeo - ${selectedLesson.title}`}
+                />
+              </div>
+            )}
+
             <div
               className={`prose prose-stone max-w-4xl mx-auto text-tintaCarvao/90 font-light font-corpo lowercase leading-[1.85] space-y-4 ${
                 zenFontSize === 'sm'
