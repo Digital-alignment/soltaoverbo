@@ -664,18 +664,44 @@ export default function CourseDetail() {
       {isZenModeOpen && selectedLesson && createPortal(
         <div className="fixed inset-0 z-[999999] bg-bgPlataforma text-tintaCarvao flex flex-col justify-between p-4 sm:p-8 animate-fadeIn overflow-y-auto">
           {/* BARRA SUPERIOR DO MODO FOCO */}
-          <div className="max-w-3xl mx-auto w-full flex items-center justify-between border-b border-papelKraft/40 pb-4">
+          <div className="max-w-4xl mx-auto w-full flex items-center justify-between border-b border-papelKraft/40 pb-4">
             <div>
               <span className="text-xs font-light font-corpo text-acentoTerracota lowercase block">
                 modo foco da aula • {course.title}
               </span>
-              <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase truncate max-w-md">
+              <h3 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase truncate max-w-md">
                 {selectedLesson.title}
               </h3>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="inline-flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/60 shadow-sm text-xs font-corpo">
+              {/* Botões de Navegação Entre Aulas no Topo */}
+              <div className="flex items-center gap-1.5 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm">
+                <button
+                  type="button"
+                  onClick={handlePrevLesson}
+                  disabled={currentLessonIndex === 0}
+                  className="p-1.5 rounded-full hover:bg-bgPlataforma text-acentoAzul disabled:opacity-30 transition-colors"
+                  title="aula anterior"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <span className="text-xs font-normal font-corpo text-acentoAzul px-1">
+                  {currentLessonIndex + 1} / {lessons.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleNextLesson}
+                  disabled={currentLessonIndex === lessons.length - 1}
+                  className="p-1.5 rounded-full hover:bg-bgPlataforma text-acentoAzul disabled:opacity-30 transition-colors"
+                  title="próxima aula"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Selector de Tamanho de Fonte */}
+              <div className="inline-flex items-center gap-1 bg-white p-1 rounded-full border border-papelKraft/50 shadow-sm text-xs font-corpo">
                 <button
                   type="button"
                   onClick={() => setZenFontSize('sm')}
@@ -699,28 +725,30 @@ export default function CourseDetail() {
                 </button>
               </div>
 
+              {/* Botão Sair do Modo Foco */}
               <button
                 type="button"
                 onClick={() => setIsZenModeOpen(false)}
-                className="p-2.5 rounded-full bg-white text-tintaCarvao border border-papelKraft/60 shadow-sm hover:bg-papelKraft/30 transition-colors"
-                title="fechar modo foco"
+                className="p-2 rounded-full bg-white text-tintaCarvao border border-papelKraft/60 shadow-sm hover:bg-papelKraft/30 transition-colors cursor-pointer"
+                title="sair do modo foco"
               >
-                <Minimize2 className="w-5 h-5 text-acentoAzul" />
+                <Minimize2 className="w-4 h-4 text-acentoAzul" />
               </button>
             </div>
           </div>
 
           {/* CANVAS DE LEITURA EDITORIAL DE ALTA IMERSÃO */}
           <div className="max-w-2xl mx-auto w-full py-8 space-y-6 flex-1">
-            <div className="text-center space-y-2 border-b border-papelKraft/30 pb-6">
+            <div className="text-center space-y-1.5 border-b border-papelKraft/30 pb-5">
               <span className="text-xs font-light font-corpo text-acentoTerracota lowercase block">
                 capítulo {currentLessonIndex + 1} de {lessons.length}
               </span>
-              <h1 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
+              <h1 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase">
                 {selectedLesson.title}
               </h1>
             </div>
 
+            {/* ÁUDIO PLAYER NO MODO FOCO (SUPORTE COMPLETO A AUDIOFILES E LEGACY AUDIO_URL) */}
             {audioFiles.length > 0 && (
               <div className="py-2">
                 <AudioPlayer
@@ -734,8 +762,23 @@ export default function CourseDetail() {
               </div>
             )}
 
+            {!audioFiles.length && selectedLesson.audio_url && (
+              <div className="py-2">
+                <AudioPlayer
+                  audioFiles={[
+                    {
+                      id: 'zen-legacy-audio',
+                      title: 'áudio da aula',
+                      audio_file_url: selectedLesson.audio_url,
+                      duration_seconds: 0,
+                    },
+                  ]}
+                />
+              </div>
+            )}
+
             <div
-              className={`prose prose-stone max-w-none text-tintaCarvao/90 font-light font-corpo lowercase leading-[1.85] space-y-5 ${
+              className={`prose prose-stone max-w-none text-tintaCarvao/90 font-light font-corpo lowercase leading-[1.85] space-y-4 ${
                 zenFontSize === 'sm'
                   ? 'text-sm sm:text-base'
                   : zenFontSize === 'lg'
@@ -746,18 +789,28 @@ export default function CourseDetail() {
             />
           </div>
 
-          {/* RODAPÉ DO MODO FOCO */}
-          <div className="max-w-3xl mx-auto w-full border-t border-papelKraft/40 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* RODAPÉ DO MODO FOCO COM NAVEGAÇÃO & CTA ATELIER */}
+          <div className="max-w-4xl mx-auto w-full border-t border-papelKraft/40 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-32 bg-papelKraft/30 h-2 rounded-full overflow-hidden">
-                <div
-                  className="bg-acentoTerracota h-full rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <span className="text-xs font-light font-corpo text-tintaCarvao/70 lowercase">
-                {progressPercent}% concluído • aula {currentLessonIndex + 1} de {lessons.length}
-              </span>
+              <button
+                type="button"
+                onClick={handlePrevLesson}
+                disabled={currentLessonIndex === 0}
+                className="px-4 py-1.5 rounded-2xl bg-white border border-papelKraft/50 text-acentoAzul font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-papelKraft/30 transition-all inline-flex items-center gap-1 cursor-pointer"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>aula anterior</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextLesson}
+                disabled={currentLessonIndex === lessons.length - 1}
+                className="px-4 py-1.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase disabled:opacity-40 shadow-sm hover:bg-acentoAzul/90 transition-all inline-flex items-center gap-1 cursor-pointer"
+              >
+                <span>próxima aula</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
 
             <button
@@ -766,7 +819,7 @@ export default function CourseDetail() {
                 setIsZenModeOpen(false);
                 handleOpenAtelierWithPrompt();
               }}
-              className="px-5 py-2 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-transform hover:scale-105 inline-flex items-center justify-center gap-1.5"
+              className="px-5 py-2 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-transform hover:scale-105 inline-flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Pencil className="w-4 h-4 text-white" />
               <span>escrever no atelier →</span>
