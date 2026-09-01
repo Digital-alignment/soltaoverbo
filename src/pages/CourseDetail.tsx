@@ -345,7 +345,8 @@ export default function CourseDetail() {
 
   const handleOpenAtelierWithPrompt = () => {
     if (!selectedLesson) return;
-    navigate('/exercises?new=true');
+    const prompt = `[exercício da aula "${selectedLesson.title}"]:\n\n`;
+    navigate('/exercises?new=true', { state: { prompt } });
   };
 
   if (loading) {
@@ -1006,29 +1007,29 @@ export default function CourseDetail() {
           {/* POPOVER FLUTUANTE DE SELEÇÃO DE TEXTO PARA CITAÇÃO OU ATELIER */}
           {selectedText && (
             <div
-              className="fixed z-[99999999] -translate-x-1/2 -translate-y-full mb-3 bg-tintaCarvao text-white p-1.5 rounded-2xl shadow-2xl flex items-center gap-1.5 animate-fadeIn border border-papelKraft/40"
+              className="fixed z-[99999999] -translate-x-1/2 -translate-y-full mb-3 bg-tintaCarvao text-white p-2 rounded-2xl shadow-2xl flex items-center gap-2 animate-fadeIn border border-papelKraft/40"
               style={{ left: `${selectedText.x}px`, top: `${selectedText.y}px` }}
             >
               <button
                 type="button"
                 onClick={() => handleSaveQuote(selectedText.text)}
-                className="px-3 py-1.5 rounded-xl bg-acentoAzul text-white font-gesto text-sm sm:text-base hover:bg-acentoAzul/90 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                className="px-4 py-2 rounded-xl bg-acentoAzul text-white font-gesto text-[19px] sm:text-[22px] font-normal hover:bg-acentoAzul/90 transition-all flex items-center gap-2 cursor-pointer shadow-sm shrink-0"
               >
-                <Quote className="w-3.5 h-3.5" />
+                <Quote className="w-4 h-4" />
                 <span>guardar citação</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleTransferQuoteToAtelier(selectedText.text)}
-                className="px-3 py-1.5 rounded-xl bg-acentoTerracota text-white font-gesto text-sm sm:text-base hover:bg-acentoTerracota/90 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                className="px-4 py-2 rounded-xl bg-acentoTerracota text-white font-gesto text-[19px] sm:text-[22px] font-normal hover:bg-acentoTerracota/90 transition-all flex items-center gap-2 cursor-pointer shadow-sm shrink-0"
               >
-                <Pencil className="w-3.5 h-3.5" />
+                <Pencil className="w-4 h-4" />
                 <span>usar no atelier</span>
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedText(null)}
-                className="px-2 py-1 rounded-full hover:bg-white/20 text-white/70 text-xs cursor-pointer"
+                className="px-2.5 py-1 rounded-full hover:bg-white/20 text-white/70 text-sm cursor-pointer"
               >
                 ✕
               </button>
