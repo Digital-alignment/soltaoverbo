@@ -417,15 +417,15 @@ export default function Dashboard() {
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        {/* CABEÇALHO DO DASHBOARD (Título Curto em Muthazle, Badge Sem Botão Lateral) */}
+        {/* CABEÇALHO DO DASHBOARD (Muthazle no Saludo, Badges em Helvetica/font-corpo) */}
         <div className="flex items-center justify-between border-b border-papelKraft/40 pb-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoTerracota/15 border border-acentoTerracota/30 text-acentoTerracota text-xs font-bold lowercase tracking-wider mb-1.5 shadow-sm">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-acentoTerracota/15 border border-acentoTerracota/30 text-acentoTerracota text-xs sm:text-sm font-normal font-corpo lowercase tracking-wider mb-1.5 shadow-sm">
               <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
               <span>{getRoleLabel()}</span>
             </div>
-            {/* Título mais pequeno na fonte Muthazle (font-gesto) */}
-            <h1 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+            {/* Saludo Principal em Muthazle (font-gesto) */}
+            <h1 className="text-3xl sm:text-4xl font-normal font-gesto text-acentoAzul lowercase">
               {welcomeMessage}
             </h1>
           </div>
@@ -444,9 +444,9 @@ export default function Dashboard() {
             <div className="lg:col-span-7 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5">
               <div className="space-y-4">
                 
-                {/* Título Limpo Sem Frase Superior e Sem Tag Lateral */}
+                {/* Título de Card em Muthazle (font-gesto) */}
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  <h2 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                     histórico de escrita & atividade
                   </h2>
                 </div>
@@ -462,7 +462,7 @@ export default function Dashboard() {
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </button>
-                    <span className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase min-w-[110px] text-center">
+                    <span className="text-sm font-normal font-corpo text-acentoAzul lowercase min-w-[110px] text-center">
                       {currentMonthLabel}
                     </span>
                     <button
@@ -475,17 +475,17 @@ export default function Dashboard() {
                     </button>
                   </div>
 
-                  {/* Aviso "clique em um dia para releer" Bem Visível */}
-                  <div className="inline-flex items-center gap-1.5 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 text-acentoAzul text-[11px] font-semibold lowercase">
-                    <BookOpen className="w-3 h-3 text-acentoAzul" />
+                  {/* Aviso "clique em um dia para releer" em Helvetica (font-corpo min 14px) */}
+                  <div className="inline-flex items-center gap-1.5 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 text-acentoAzul text-xs sm:text-sm font-light font-corpo lowercase">
+                    <BookOpen className="w-3.5 h-3.5 text-acentoAzul" />
                     <span>clique em um dia para releer</span>
                   </div>
                 </div>
 
                 {/* Grid do Calendário Mensal Completo (Dias Ativos em Terracota com Número Branco) */}
                 <div className="space-y-1.5 pt-1">
-                  {/* Cabeçalho dos Dias da Semana */}
-                  <div className="grid grid-cols-7 gap-1.5 text-center text-[10px] font-medium text-tintaCarvao/50 lowercase pb-1">
+                  {/* Cabeçalho dos Dias da Semana em Helvetica (font-corpo) */}
+                  <div className="grid grid-cols-7 gap-1.5 text-center text-xs sm:text-sm font-normal font-corpo text-tintaCarvao/50 lowercase pb-1">
                     <span>dom</span>
                     <span>seg</span>
                     <span>ter</span>
@@ -501,7 +501,7 @@ export default function Dashboard() {
                       <div key={`empty-${idx}`} className="h-9 sm:h-10 rounded-xl bg-transparent" />
                     ))}
 
-                    {/* Dias do Mês */}
+                    {/* Dias do Mês (Números em Muthazle) */}
                     {monthDaysGrid.days.map((day, idx) => (
                       <button
                         key={idx}
@@ -524,10 +524,10 @@ export default function Dashboard() {
                           )}
                         </div>
 
-                        {/* Tooltip no Hover Melhora UI: Fundo Branco, Texto Azul, Número em Muthazle */}
-                        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-3.5 py-1.5 bg-white text-acentoAzul border border-papelKraft/80 text-xs sm:text-sm font-semibold lowercase rounded-2xl opacity-0 pointer-events-none group-hover/day:opacity-100 transition-all duration-200 whitespace-nowrap z-30 shadow-lg flex items-center gap-1.5">
+                        {/* Tooltip no Hover: Fundo Branco, Texto em Helvetica font-corpo min 14px, Número em Muthazle */}
+                        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-3.5 py-1.5 bg-white text-acentoAzul border border-papelKraft/80 text-xs sm:text-sm font-light font-corpo lowercase rounded-2xl opacity-0 pointer-events-none group-hover/day:opacity-100 transition-all duration-200 whitespace-nowrap z-30 shadow-lg flex items-center gap-1.5">
                           <span className="font-gesto text-base sm:text-lg text-acentoTerracota font-normal">{day.words}</span>
-                          <span className="text-acentoAzul font-bold">palavras escritas</span>
+                          <span className="text-acentoAzul font-light">palavras escritas</span>
                         </div>
                       </button>
                     ))}
@@ -536,7 +536,7 @@ export default function Dashboard() {
 
               </div>
 
-              {/* SEÇÃO INFERIOR REORGANIZADA: Preenche o espaço antes em branco com Palavras Totais, Sequência Ativa, Chancela Literária e Botões */}
+              {/* SEÇÃO INFERIOR: Palavras Totais, Sequência Ativa, Chancela Literária e Botões em Muthazle */}
               <div className="pt-4 border-t border-papelKraft/40 space-y-4">
                 
                 {/* Produção Escrita Acumulada & Dias Consecutivos lado a lado */}
@@ -546,12 +546,12 @@ export default function Dashboard() {
                       <Feather className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">produção escrita total</span>
+                      <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">produção escrita total</span>
                       <div className="flex items-baseline gap-1.5">
                         <span className="font-gesto text-2xl font-normal text-acentoAzul">
                           {totalWordsAccumulated.toLocaleString('pt-BR')}
                         </span>
-                        <span className="text-xs text-tintaCarvao/70 font-semibold lowercase">palavras soltas</span>
+                        <span className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70 lowercase">palavras soltas</span>
                       </div>
                     </div>
                   </div>
@@ -561,23 +561,23 @@ export default function Dashboard() {
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase block">frequência sustentada</span>
+                      <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">frequência sustentada</span>
                       <div className="flex items-baseline gap-1.5">
                         <span className="font-gesto text-2xl font-normal text-acentoTerracota">
                           12
                         </span>
-                        <span className="text-xs text-tintaCarvao/70 font-semibold lowercase">dias de sequência ativa</span>
+                        <span className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70 lowercase">dias de sequência ativa</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Chancela Poética / Equivalência Literária de Palavras Escritas (SEM GRADIENTE) */}
+                {/* Chancela Poética / Equivalência Literária de Palavras Escritas */}
                 <div className="bg-bgPlataforma/70 p-3.5 sm:p-4 rounded-2xl border border-papelKraft/60 flex items-center gap-3">
                   <div className="p-2 rounded-xl bg-acentoOliva/20 text-acentoAzul shrink-0">
                     <BookMarked className="w-5 h-5" />
                   </div>
-                  <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase leading-relaxed">
+                  <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase leading-relaxed">
                     você já escreveu a mesma quantidade de palavras que{' '}
                     <strong className="text-acentoTerracota font-bold font-editorial text-sm sm:text-base">
                       {currentMilestone.title}
@@ -585,11 +585,11 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                {/* Botões de Ação Compactos */}
+                {/* Botões de Ação em Muthazle (font-gesto) */}
                 <div className="flex items-center justify-end gap-2 pt-1">
                   <Link
                     to="/exercises"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-semibold lowercase border border-acentoAzul/20 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-sm font-normal font-gesto lowercase border border-acentoAzul/20 shadow-sm"
                   >
                     <Book className="w-3.5 h-3.5" />
                     <span>meus cadernos</span>
@@ -597,10 +597,10 @@ export default function Dashboard() {
 
                   <Link
                     to="/exercises?new=true"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-xs font-semibold lowercase shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-sm font-normal font-gesto lowercase shadow-sm"
                   >
                     <Plus className="w-3.5 h-3.5 text-white" />
-                    <span>novo texto</span>
+                    <span>+ novo texto</span>
                   </Link>
                 </div>
 
@@ -608,7 +608,7 @@ export default function Dashboard() {
 
             </div>
 
-            {/* 1B: Agenda Integrada (BOTÃO EXPANDER APENAS ÍCONE NO CANTO SUPERIOR DIREITO COM TOOLTIP 'ver agenda completa') */}
+            {/* 1B: Agenda Integrada (Muthazle no Título, Editorial Serif no Título do Evento, Helvetica no Corpo) */}
             <div className="lg:col-span-5 bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/60 shadow-kraft space-y-4 relative">
               
               {/* BOTÃO EXPANDER: APENAS ÍCONE NO CANTO SUPERIOR DIREITO SOBRE TODOS OS ELEMENTOS + TOOLTIP NO HOVER */}
@@ -621,27 +621,27 @@ export default function Dashboard() {
                 >
                   <Maximize2 className="w-4 h-4" />
                 </button>
-                {/* Tooltip no Hover */}
-                <div className="absolute top-10 right-0 px-3 py-1.5 bg-white text-acentoAzul text-xs font-bold lowercase rounded-xl opacity-0 pointer-events-none group-hover/expander:opacity-100 transition-all duration-200 whitespace-nowrap shadow-lg border border-papelKraft/80 z-30">
+                {/* Tooltip no Hover em Helvetica (font-corpo min 14px) */}
+                <div className="absolute top-10 right-0 px-3 py-1.5 bg-white text-acentoAzul text-xs sm:text-sm font-light font-corpo lowercase rounded-xl opacity-0 pointer-events-none group-hover/expander:opacity-100 transition-all duration-200 whitespace-nowrap shadow-lg border border-papelKraft/80 z-30">
                   ver agenda completa
                 </div>
               </div>
 
               <div className="space-y-4">
                 
-                {/* Header Limpo com Título e Abas de Filtro */}
+                {/* Header Limpo com Título em Muthazle e Abas de Filtro em Muthazle */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3 pr-12">
-                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  <h2 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                     agenda & encontros
                   </h2>
 
-                  {/* Abas de Filtro 100% Visíveis Sem Scrollbar */}
-                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-semibold lowercase shrink-0 self-start sm:self-auto">
+                  {/* Abas de Filtro 100% Visíveis em Muthazle (font-gesto) */}
+                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-sm font-normal font-gesto lowercase shrink-0 self-start sm:self-auto">
                     <button
                       type="button"
                       onClick={() => setAgendaTab('todos')}
                       className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       todos
@@ -650,7 +650,7 @@ export default function Dashboard() {
                       type="button"
                       onClick={() => setAgendaTab('cafe')}
                       className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       ao vivo
@@ -659,7 +659,7 @@ export default function Dashboard() {
                       type="button"
                       onClick={() => setAgendaTab('admin')}
                       className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       convites
@@ -667,7 +667,7 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* CARDS DE EVENTOS COM DESIGN HOMOGÊNEO (FUNDO BRANCO, BORDAS ESTÁTICAS E CORES DE DATA DINÂMICAS) */}
+                {/* CARDS DE EVENTOS COM DESIGN HOMOGÊNEO */}
                 <div className="space-y-3">
                   {filteredEvents.slice(0, 3).map((ev) => (
                     <div
@@ -676,11 +676,11 @@ export default function Dashboard() {
                         ev.isExclusiveAdmin ? 'bg-white/95' : ''
                       }`}
                     >
-                      {/* Top Row: Countdown (Left) + Type Icon (Right - TAMANHO UNIFORME w-5 h-5) */}
-                      <div className="flex items-center justify-between text-xs">
+                      {/* Top Row: Countdown (Left) + Type Icon (Right) */}
+                      <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
-                          <span className="font-bold text-acentoTerracota lowercase">
+                          <span className="font-normal text-acentoTerracota lowercase">
                             ao vivo em {ev.countdownStr || countdownStr}
                           </span>
                         </div>
@@ -693,32 +693,32 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Middle Row: Left = Date Tile (COR DINÂMICA: TERRACOTA, AZUL, VERDE LIMÃO, KRAFT), Right = Title & Description */}
+                      {/* Middle Row: Left = Date Tile (Número em Muthazle), Right = Title em Editorial Serif & Description em Helvetica */}
                       <div className="flex items-center gap-3.5">
-                        {/* Bloco de Data com Cor Dinâmica */}
+                        {/* Bloco de Data com Número em Muthazle */}
                         <div className={`rounded-2xl px-3.5 py-2.5 text-center shrink-0 min-w-[70px] shadow-sm ${getDateTileClass(ev.category)}`}>
                           <span className="font-gesto text-3xl font-normal block leading-none">
                             {String(ev.dayOfMonth).padStart(2, '0')}
                           </span>
-                          <span className="text-[10px] font-bold lowercase tracking-wider block mt-1">
+                          <span className="text-[10px] font-normal font-corpo lowercase tracking-wider block mt-1">
                             {ev.monthName}
                           </span>
                         </div>
 
-                        {/* Conteúdo de Título & Descrição */}
+                        {/* Conteúdo: Título de Evento em PP Editorial Serif e Descrição em Helvetica */}
                         <div className="space-y-0.5 flex-1 min-w-0">
-                          <h3 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase leading-snug truncate">
+                          <h3 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase leading-snug truncate">
                             {ev.title}
                           </h3>
-                          <p className="text-xs text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed font-medium">
+                          <p className="text-xs sm:text-sm text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed font-light font-corpo">
                             {ev.description}
                           </p>
                         </div>
                       </div>
 
-                      {/* Bottom Row: Left = Modality, Right = Calendar Export + Entrar CTA */}
-                      <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs">
-                        <span className="text-tintaCarvao/70 font-semibold lowercase">
+                      {/* Bottom Row: Left = Modality em Helvetica, Right = Calendar Export + Entrar CTA em Muthazle */}
+                      <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
+                        <span className="text-tintaCarvao/70 font-light lowercase">
                           {ev.modality}
                         </span>
 
@@ -735,7 +735,7 @@ export default function Dashboard() {
 
                           <Link
                             to={ev.linkUrl || '/cafe-com-letras'}
-                            className="px-4 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
+                            className="px-4 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-sm font-normal font-gesto lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
                           >
                             <span>entrar →</span>
                           </Link>
@@ -745,11 +745,11 @@ export default function Dashboard() {
                   ))}
                 </div>
 
-                {/* Botão de Expandir Agenda Completa no Rodapé */}
+                {/* Botão de Expandir Agenda Completa em Muthazle */}
                 <button
                   type="button"
                   onClick={() => setIsFullAgendaOpen(true)}
-                  className="w-full py-2.5 px-4 rounded-2xl bg-bgPlataforma/80 hover:bg-papelKraft/40 text-acentoAzul text-xs font-bold lowercase transition-all flex items-center justify-center gap-2 border border-papelKraft/50 shadow-sm"
+                  className="w-full py-2.5 px-4 rounded-2xl bg-bgPlataforma/80 hover:bg-papelKraft/40 text-acentoAzul text-sm sm:text-base font-normal font-gesto lowercase transition-all flex items-center justify-center gap-2 border border-papelKraft/50 shadow-sm"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>ver agenda completa ({agendaEvents.length} encontros) →</span>
@@ -762,14 +762,14 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 2 DO BENTO: CARD RETOMAR CURSOS / TALLERES
-              (Dia em Muthazle, % DEBAIXO DA BARRA, sem tempo estimado, botão só "retomar")
+              (Dia em Muthazle, Título de Curso em Editorial Serif, Botão "retomar" em Muthazle)
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft relative overflow-hidden space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-acentoAzul/70 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 lowercase">
+              <span className="text-xs sm:text-sm font-normal font-corpo lowercase text-acentoAzul/80 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20">
                 em andamento
               </span>
-              <span className="text-xs font-bold text-acentoTerracota lowercase">21 dias de escrita online</span>
+              <span className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase">21 dias de escrita online</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
@@ -784,7 +784,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Título da Leção com Dia e Número em Muthazle (font-gesto) */}
+              {/* Título da Leção com Dia em Muthazle (font-gesto) e Título da Leção em PP Editorial Serif */}
               <div className="sm:col-span-8 space-y-1">
                 <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
                   <span className="font-gesto text-2xl sm:text-3xl text-acentoTerracota font-normal mr-1.5">
@@ -792,13 +792,13 @@ export default function Dashboard() {
                   </span>
                   escutar o silêncio e dar forma ao sussurro
                 </h3>
-                <p className="text-xs text-tintaCarvao/80 font-medium lowercase line-clamp-2">
+                <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase line-clamp-2 leading-relaxed">
                   um ritual diário de presença para organizar o caos interno sem a pressão de ser autor.
                 </p>
               </div>
             </div>
 
-            {/* Barra de Progresso com % de Concluído DEBAIXO DA BARRA */}
+            {/* Barra de Progresso com % em Helvetica (font-corpo min 14px) */}
             <div className="space-y-1.5 pt-1">
               <div className="w-full bg-papelKraft/40 rounded-full h-2.5 overflow-hidden">
                 <div
@@ -806,17 +806,17 @@ export default function Dashboard() {
                   style={{ width: '38%' }}
                 />
               </div>
-              <div className="flex justify-between items-center text-[11px] text-tintaCarvao/60 pt-0.5">
+              <div className="flex justify-between items-center text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70 pt-0.5">
                 <span>progresso da jornada</span>
-                <span className="font-bold text-acentoAzul">38% concluído</span>
+                <span className="font-normal font-corpo text-acentoAzul">38% concluído</span>
               </div>
             </div>
 
-            {/* Apenas Botão "retomar" com Ícone de Play */}
+            {/* Botão "retomar" em Muthazle (font-gesto) */}
             <div className="pt-1">
               <Link
                 to="/exercises"
-                className="btn-pill-primary px-6 py-2.5 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform"
+                className="btn-pill-primary px-6 py-2.5 text-sm sm:text-base font-normal font-gesto shadow-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform"
               >
                 <Play className="w-4 h-4 text-white fill-white" />
                 <span>retomar</span>
@@ -826,22 +826,22 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 3 DO BENTO: NOSSA FOGUEIRA (COMUNIDADE)
-              (Últimas entradas e partilhas da comunidade)
+              (Muthazle no Título, Editorial Serif nos Posts, Helvetica no Corpo)
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-tintaCarvao/60 font-medium lowercase block">
+                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   comunidade ativa
                 </span>
-                <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase">
+                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                   nossa fogueira (últimas partilhas)
                 </h3>
               </div>
 
               <Link
                 to="/fogueira"
-                className="text-xs font-bold text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
+                className="text-sm sm:text-base font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
               >
                 <span>ver fogueira</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -855,24 +855,24 @@ export default function Dashboard() {
                   key={post.id}
                   className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 shadow-sm space-y-2 hover:border-acentoAzul transition-colors"
                 >
-                  <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full overflow-hidden border border-papelKraft">
                         <img src={post.avatar} alt={post.author} className="w-full h-full object-cover" />
                       </div>
-                      <span className="font-bold text-acentoAzul lowercase">{post.author}</span>
+                      <span className="font-normal font-corpo text-acentoAzul lowercase">{post.author}</span>
                     </div>
-                    <span className="text-[10px] text-tintaCarvao/50">{post.timeAgo}</span>
+                    <span className="text-xs font-light font-corpo text-tintaCarvao/50">{post.timeAgo}</span>
                   </div>
 
-                  <h4 className="text-xs sm:text-sm font-bold text-tintaCarvao lowercase leading-snug">
+                  <h4 className="text-sm sm:text-base font-bold font-editorial text-tintaCarvao lowercase leading-snug">
                     {post.title}
                   </h4>
-                  <p className="text-xs text-tintaCarvao/75 lowercase line-clamp-1 font-medium">
+                  <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/75 lowercase line-clamp-1 leading-relaxed">
                     {post.excerpt}
                   </p>
 
-                  <div className="flex items-center gap-3 pt-1 text-[11px] text-tintaCarvao/60">
+                  <div className="flex items-center gap-3 pt-1 text-xs font-light font-corpo text-tintaCarvao/60">
                     <span className="flex items-center gap-1">
                       <Heart className="w-3.5 h-3.5 text-acentoTerracota fill-acentoTerracota/20" />
                       {post.likes}
@@ -889,22 +889,22 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 4 DO BENTO: MEU CADERNO
-              (Lista de cadernos já escritos + botão para escrever algo novo)
+              (Muthazle no Título e Botões, Editorial Serif nos Títulos de Cadernos)
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-tintaCarvao/60 font-medium lowercase block">
+                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   seus textos & memórias
                 </span>
-                <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase">
+                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                   meu caderno de escrita
                 </h3>
               </div>
 
               <Link
                 to="/exercises"
-                className="btn-pill-primary px-3.5 py-1.5 text-xs font-semibold shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
+                className="btn-pill-primary px-3.5 py-1.5 text-sm font-normal font-gesto shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
               >
                 <Pencil className="w-3.5 h-3.5" />
                 <span>escrever algo novo</span>
@@ -921,10 +921,10 @@ export default function Dashboard() {
                   <div className="flex items-center gap-3">
                     <BookMarked className="w-5 h-5 text-acentoAzul" />
                     <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-acentoAzul lowercase">
+                      <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase">
                         {nb.title}
                       </h4>
-                      <span className="text-[10px] text-tintaCarvao/50 block">
+                      <span className="text-xs font-light font-corpo text-tintaCarvao/50 block">
                         atualizado {nb.updatedAt} • {nb.wordCount} palavras
                       </span>
                     </div>
@@ -932,7 +932,7 @@ export default function Dashboard() {
 
                   <Link
                     to="/exercises"
-                    className="text-xs text-acentoTerracota font-bold hover:underline lowercase"
+                    className="text-xs sm:text-sm font-normal font-gesto text-acentoTerracota hover:underline lowercase"
                   >
                     abrir →
                   </Link>
@@ -943,22 +943,22 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 5 DO BENTO: DESCUBRA (CURADORIA DO ADMIN)
-              (Cursos, blogs e conteúdos selecionados pelas facilitadoras)
+              (Muthazle no Título, Editorial Serif nos Títulos Recomendados)
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-tintaCarvao/60 font-medium lowercase block">
+                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   recomendado pelas facilitadoras
                 </span>
-                <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase">
+                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                   descubra & novidades
                 </h3>
               </div>
 
               <Link
                 to="/programs"
-                className="text-xs font-bold text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
+                className="text-sm sm:text-base font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
               >
                 <Compass className="w-3.5 h-3.5 text-acentoTerracota" />
                 <span>explorar tudo</span>
@@ -980,14 +980,14 @@ export default function Dashboard() {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute top-2 left-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-acentoAzul text-white lowercase shadow-sm">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo bg-acentoAzul text-white lowercase shadow-sm">
                         {disc.category}
                       </span>
                     </div>
                   </div>
 
                   <div className="p-3">
-                    <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors line-clamp-2">
+                    <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors line-clamp-2">
                       {disc.title}
                     </h4>
                   </div>
@@ -998,14 +998,15 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 6 DO BENTO: CURSOS DISPONÍVEIS COMPLETO
+              (Muthazle nos Títulos de Seção e Botões, Editorial Serif nos Títulos de Cursos)
              ======================================================== */}
           <div className="lg:col-span-12 bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-kraft space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <span className="text-xs text-tintaCarvao/60 font-medium lowercase block">
+                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
                   todas as jornadas da plataforma
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                   cursos & oficinas disponíveis
                 </h3>
               </div>
@@ -1014,7 +1015,7 @@ export default function Dashboard() {
             {courses.length === 0 ? (
               <div className="rounded-2xl border border-papelKraft/50 p-8 text-center bg-bgPlataforma/50 space-y-2">
                 <BookOpen className="w-12 h-12 text-acentoAzul/40 mx-auto" />
-                <h4 className="text-base font-bold text-acentoAzul lowercase">nenhum curso disponível ainda</h4>
+                <h4 className="text-base font-bold font-editorial text-acentoAzul lowercase">nenhum curso disponível ainda</h4>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1043,13 +1044,13 @@ export default function Dashboard() {
                           <div className="absolute inset-0 bg-tintaCarvao/75 backdrop-blur-[2px] flex items-center justify-center">
                             <div className="text-center text-papelClaro">
                               <Lock className="w-7 h-7 mx-auto mb-1 text-acentoOliva" />
-                              <p className="text-[11px] font-bold lowercase">exclusivo premium</p>
+                              <p className="text-xs font-normal font-corpo lowercase">exclusivo premium</p>
                             </div>
                           </div>
                         )}
                         <div className="absolute top-2.5 right-2.5">
                           <span
-                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold lowercase shadow-sm ${
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo lowercase shadow-sm ${
                               course.course_type === 'free'
                                 ? 'bg-acentoOliva text-tintaCarvao'
                                 : 'bg-acentoTerracota text-white'
@@ -1062,16 +1063,16 @@ export default function Dashboard() {
 
                       <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                         <div>
-                          <h4 className="text-base font-bold font-editorial text-acentoAzul lowercase mb-1 group-hover:text-acentoTerracota transition-colors">
+                          <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase mb-1 group-hover:text-acentoTerracota transition-colors">
                             {course.title}
                           </h4>
                           <div
-                            className="text-xs text-tintaCarvao/80 line-clamp-2 leading-relaxed lowercase"
+                            className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 line-clamp-2 leading-relaxed lowercase"
                             dangerouslySetInnerHTML={{ __html: course.description || '' }}
                           />
                         </div>
 
-                        <div className="pt-2 border-t border-papelKraft/40 flex items-center justify-between text-xs font-bold text-acentoAzul lowercase">
+                        <div className="pt-2 border-t border-papelKraft/40 flex items-center justify-between text-sm sm:text-base font-normal font-gesto text-acentoAzul lowercase">
                           <span>{hasAccess ? 'acessar aulas →' : 'conhecer programa →'}</span>
                         </div>
                       </div>
@@ -1084,7 +1085,7 @@ export default function Dashboard() {
 
         </div>
 
-        {/* MODAL POP-UP AGENDA COMPLETA COM ESTRUTURA REFINADA E VISTA CALENDÁRIO */}
+        {/* MODAL POP-UP AGENDA COMPLETA (Muthazle nos Títulos de Seção e Botões) */}
         {isFullAgendaOpen && (
           <div className="fixed inset-0 z-40 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 lg:pl-24 pb-20 lg:pb-6 animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-4xl w-full max-h-[85vh] overflow-y-auto shadow-kraft-lg relative space-y-5">
@@ -1098,21 +1099,21 @@ export default function Dashboard() {
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/40 pb-4 pr-10">
                 <div>
-                  <span className="text-xs font-bold text-acentoTerracota lowercase block">
+                  <span className="text-xs font-light font-corpo text-acentoTerracota lowercase block">
                     agenda completa & rituais do mês
                   </span>
-                  <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
                     todos os encontros agendados ({agendaEvents.length})
                   </h3>
                 </div>
 
-                {/* Alternador entre Vista Lista e Vista Calendário */}
-                <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-2xl border border-papelKraft/50 text-xs font-semibold lowercase self-start sm:self-auto">
+                {/* Alternador entre Vista Lista e Vista Calendário em Muthazle */}
+                <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-2xl border border-papelKraft/50 text-sm font-normal font-gesto lowercase self-start sm:self-auto">
                   <button
                     type="button"
                     onClick={() => setAgendaModalView('list')}
                     className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
-                      agendaModalView === 'list' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      agendaModalView === 'list' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                     }`}
                   >
                     <List className="w-3.5 h-3.5" />
@@ -1123,7 +1124,7 @@ export default function Dashboard() {
                     type="button"
                     onClick={() => setAgendaModalView('calendar')}
                     className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
-                      agendaModalView === 'calendar' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
+                      agendaModalView === 'calendar' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                     }`}
                   >
                     <CalendarIcon className="w-3.5 h-3.5" />
@@ -1132,16 +1133,16 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* VISTA 1: LISTA DE ENCONTROS COM DESIGN HOMOGÊNEO REFINADO */}
+              {/* VISTA 1: LISTA DE ENCONTROS */}
               {agendaModalView === 'list' && (
                 <div className="space-y-4">
-                  {/* Abas de Filtro da Agenda sem Scrollbar */}
-                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs font-semibold lowercase">
+                  {/* Abas de Filtro da Agenda em Muthazle */}
+                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-sm font-normal font-gesto lowercase">
                     <button
                       type="button"
                       onClick={() => setAgendaTab('todos')}
                       className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70'
+                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70'
                       }`}
                     >
                       todos
@@ -1150,7 +1151,7 @@ export default function Dashboard() {
                       type="button"
                       onClick={() => setAgendaTab('cafe')}
                       className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70'
+                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70'
                       }`}
                     >
                       ao vivo
@@ -1159,7 +1160,7 @@ export default function Dashboard() {
                       type="button"
                       onClick={() => setAgendaTab('admin')}
                       className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-bold' : 'text-tintaCarvao/70'
+                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-normal' : 'text-tintaCarvao/70'
                       }`}
                     >
                       convites
@@ -1174,11 +1175,11 @@ export default function Dashboard() {
                           ev.isExclusiveAdmin ? 'bg-white/95' : ''
                         }`}
                       >
-                        {/* Top Row: Countdown (Left) + Type Icon (Right - TAMANHO UNIFORME w-5 h-5) */}
-                        <div className="flex items-center justify-between text-xs">
+                        {/* Top Row */}
+                        <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
                           <div className="flex items-center gap-2">
                             <span className="w-2.5 h-2.5 rounded-full bg-acentoTerracota animate-ping" />
-                            <span className="font-bold text-acentoTerracota lowercase">
+                            <span className="font-normal text-acentoTerracota lowercase">
                               ao vivo em {ev.countdownStr || countdownStr}
                             </span>
                           </div>
@@ -1191,30 +1192,30 @@ export default function Dashboard() {
                           </div>
                         </div>
 
-                        {/* Middle Row: Left = Date Tile (COR DINÂMICA), Right = Title & Description */}
+                        {/* Middle Row */}
                         <div className="flex items-center gap-4">
                           <div className={`rounded-2xl px-4 py-3 text-center shrink-0 min-w-[76px] shadow-sm ${getDateTileClass(ev.category)}`}>
                             <span className="font-gesto text-3.5xl font-normal block leading-none">
                               {String(ev.dayOfMonth).padStart(2, '0')}
                             </span>
-                            <span className="text-[10px] font-bold lowercase tracking-wider block mt-1">
+                            <span className="text-[10px] font-normal font-corpo lowercase tracking-wider block mt-1">
                               {ev.monthName}
                             </span>
                           </div>
 
                           <div className="space-y-0.5 flex-1 min-w-0">
-                            <h4 className="text-base font-bold font-editorial text-acentoAzul lowercase leading-snug">
+                            <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase leading-snug">
                               {ev.title}
                             </h4>
-                            <p className="text-xs text-tintaCarvao/80 lowercase leading-relaxed font-medium">
+                            <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase leading-relaxed">
                               {ev.description}
                             </p>
                           </div>
                         </div>
 
-                        {/* Bottom Row: Left = Modality, Right = Calendar Export + Entrar CTA */}
-                        <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs">
-                          <span className="text-tintaCarvao/70 font-semibold lowercase">
+                        {/* Bottom Row */}
+                        <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
+                          <span className="text-tintaCarvao/70 font-light lowercase">
                             {ev.modality}
                           </span>
 
@@ -1231,7 +1232,7 @@ export default function Dashboard() {
 
                             <Link
                               to={ev.linkUrl || '/cafe-com-letras'}
-                              className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-bold lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
+                              className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-sm font-normal font-gesto lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
                             >
                               <span>entrar →</span>
                             </Link>
@@ -1243,18 +1244,18 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* VISTA 2: CALENDÁRIO COMPLETO DO MÊS COM EVENTOS FIXADOS NOS DIAS */}
+              {/* VISTA 2: CALENDÁRIO COMPLETO */}
               {agendaModalView === 'calendar' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between bg-bgPlataforma/60 p-3 rounded-2xl border border-papelKraft/40">
-                    <span className="text-sm font-bold font-editorial text-acentoAzul lowercase">
+                    <span className="text-sm font-normal font-corpo text-acentoAzul lowercase">
                       {currentMonthLabel} • encontros agendados
                     </span>
-                    <span className="text-xs font-bold text-tintaCarvao/60">agosto 2026</span>
+                    <span className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/60">agosto 2026</span>
                   </div>
 
                   <div className="space-y-2">
-                    <div className="grid grid-cols-7 gap-2 text-center text-xs font-medium text-tintaCarvao/60 lowercase pb-1 border-b border-papelKraft/30">
+                    <div className="grid grid-cols-7 gap-2 text-center text-xs sm:text-sm font-normal font-corpo text-tintaCarvao/60 lowercase pb-1 border-b border-papelKraft/30">
                       <span>dom</span>
                       <span>seg</span>
                       <span>ter</span>
@@ -1282,7 +1283,7 @@ export default function Dashboard() {
                                 : 'bg-bgPlataforma/40 border-papelKraft/30'
                             }`}
                           >
-                            <div className="flex items-center justify-between text-xs">
+                            <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
                               <span className="font-gesto text-lg font-normal text-acentoAzul">{day.dayNum}</span>
                               {matchedEvents.length > 0 && (
                                 <span className="w-2 h-2 rounded-full bg-acentoTerracota" />
@@ -1296,7 +1297,7 @@ export default function Dashboard() {
                                   href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className={`block p-1 rounded-lg text-[9px] font-bold lowercase line-clamp-2 transition-transform hover:scale-105 ${
+                                  className={`block p-1 rounded-lg text-[11px] font-bold font-editorial lowercase line-clamp-2 transition-transform hover:scale-105 ${
                                     ev.category === 'cafe'
                                       ? 'bg-acentoAzul text-white'
                                       : ev.category === 'admin'
@@ -1323,7 +1324,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setIsFullAgendaOpen(false)}
-                  className="btn-pill-secondary px-6 py-2 text-xs font-bold lowercase"
+                  className="btn-pill-secondary px-6 py-2 text-base font-normal font-gesto lowercase"
                 >
                   fechar agenda
                 </button>
@@ -1332,7 +1333,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* MODAL / POPOVER COM LARGURA AMPLIADA (max-w-2xl) AO CLICAR EM UM DIA */}
+        {/* MODAL POPOVER AO CLICAR EM UM DIA DO HISTÓRICO */}
         {selectedDayDetail && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tintaCarvao/60 backdrop-blur-sm animate-fadeIn">
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-2xl w-full shadow-kraft-lg relative space-y-5">
@@ -1345,7 +1346,7 @@ export default function Dashboard() {
               </button>
 
               <div className="space-y-1.5">
-                <div className="text-xs font-bold text-acentoTerracota lowercase flex items-center gap-1.5">
+                <div className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase flex items-center gap-1.5">
                   <span>data: {selectedDayDetail.dateStr}</span>
                   <span>•</span>
                   <span>
@@ -1359,12 +1360,12 @@ export default function Dashboard() {
 
               {selectedDayDetail.excerpt ? (
                 <div className="p-5 rounded-2xl bg-bgPlataforma border border-papelKraft/40 space-y-2">
-                  <p className="text-xs sm:text-sm text-tintaCarvao/85 lowercase italic font-medium relaxed">
+                  <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase italic leading-relaxed">
                     “{selectedDayDetail.excerpt}”
                   </p>
                 </div>
               ) : (
-                <p className="text-xs text-tintaCarvao/60 lowercase italic">
+                <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/60 lowercase italic">
                   nenhum registro gravado neste dia.
                 </p>
               )}
@@ -1373,7 +1374,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setSelectedDayDetail(null)}
-                  className="text-xs font-semibold text-tintaCarvao/60 hover:text-tintaCarvao lowercase"
+                  className="text-sm font-normal font-gesto text-tintaCarvao/60 hover:text-tintaCarvao lowercase"
                 >
                   fechar
                 </button>
@@ -1382,7 +1383,7 @@ export default function Dashboard() {
                   <Link
                     to="/exercises"
                     onClick={() => setSelectedDayDetail(null)}
-                    className="btn-pill-primary px-6 py-2.5 text-xs sm:text-sm font-semibold shadow-sm inline-flex items-center gap-1.5"
+                    className="btn-pill-primary px-6 py-2.5 text-sm sm:text-base font-normal font-gesto shadow-sm inline-flex items-center gap-1.5"
                   >
                     <span>reler caderno →</span>
                   </Link>

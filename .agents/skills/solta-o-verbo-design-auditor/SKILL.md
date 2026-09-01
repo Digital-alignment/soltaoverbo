@@ -11,10 +11,10 @@ Esta skill atua como **Auditor e Guardião Supremo do Design System de Solta o V
 
 ## 📜 Regras Estritas de Design (Contrato Inviolável)
 
-### 1. 🔤 Tipografia Aprovada da Marca (Somente 3 Fontes Aprovadas)
-- **Muthazle (`font-gesto`)**: Usada exclusivamente para números (datas do calendário, estatísticas, contagem de palavras do editor e sprint) e acentos manuscritos poéticos.
-- **Editorial Serif (`font-editorial`)**: Usada exclusivamente para títulos principas (`h1`, `h2`, `h3`), cabeçalhos de cards e citações poéticas destacadas.
-- **Body / Corpo (`font-corpo` ou sans-serif padrão da marca)**: Usada para descrições, textos de corpo, modalidades, botões e etiquetas.
+### 1. 🔤 Sistema de Tipografia da Área do Aluno (Contrato Estrito)
+- **Muthazle (`font-gesto`)**: Usada para Saudações principais (`olá, aluna!`), Títulos de Cards Bento (`histórico de escrita & atividade`, `agenda & encontros`, `meus cadernos`, etc.), Botões de Ação (`+ novo texto`, `meus cadernos`, `entrar →`, `ver todos`), Abas de Filtro, e Números (datas e estatísticas).
+- **Helvetica / Sans Contemporânea (`font-corpo`)**: Usada em **tamanho mínimo 14px (`text-sm`)**, em sua maioria **light/normal (`font-light` ou `font-normal`)** e bold apenas quando estritamente necessário. Aplica-se a Tooltips, descrições, corpo de texto, etiquetas (tags), badges e metadados.
+- **PP Editorial Serif (`font-editorial`)**: Usada exclusivamente para Títulos de eventos específicos (`café com letras`), Cursos/Oficinas (`21 dias de escrita`), Títulos de publicações e provocações poéticas da comunidade.
 - 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar `font-mono`, fontes monospace genéricas, ou fontes não aprovadas (Playpen Sans, Inter, Arial, etc.).
 
 ---
