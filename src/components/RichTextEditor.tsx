@@ -72,10 +72,14 @@ export default function RichTextEditor({
   const [textColor, setTextColor] = useState('#2C2720');
   const [highlightColor, setHighlightColor] = useState('#F5E6A3');
   const [currentFormat, setCurrentFormat] = useState('p');
+  const [hoveredTooltip, setHoveredTooltip] = useState<string | null>(null);
 
   const [showFormatMenu, setShowFormatMenu] = useState(false);
   const [showFontSizeMenu, setShowFontSizeMenu] = useState(false);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
+
+  const isMac = typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const cmdStr = isMac ? 'cmd' : 'ctrl';
 
   useEffect(() => {
     if (editorRef.current && value && !editorRef.current.innerHTML) {
@@ -108,7 +112,6 @@ export default function RichTextEditor({
 
   // HANDLER DE ATALHOS DE TECLADO (CTRL+B, CTRL+I, CTRL+U, CTRL+S, CMD+B, ETC)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
     const modifier = isMac ? e.metaKey : e.ctrlKey;
 
     if (modifier) {
@@ -264,6 +267,13 @@ export default function RichTextEditor({
       {/* CONTAINER EXTERNO DA BARRA FLUTUANTE (90% LARGURA EM DESKTOP, COR #EDE6D4, TIPOGRAFIA EDITORIAL SERIF) */}
       <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100000] w-[92vw] md:w-[90vw] max-w-5xl overflow-visible">
         
+        {/* TOOLTIP FLUTUANTE ELEGANTE E UNIFICADO DA BARRA (100% VISÍVEL, SEM NENHUM CORTE DE OVERFLOW) */}
+        {hoveredTooltip && !showFormatMenu && !showFontSizeMenu && !showZoomMenu && (
+          <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[100002] bg-tintaCarvao text-white text-xs font-editorial font-semibold px-3 py-1 rounded-xl shadow-md border border-papelKraft/40 whitespace-nowrap animate-fadeIn lowercase flex items-center gap-1.5 pointer-events-none">
+            <span>{hoveredTooltip}</span>
+          </div>
+        )}
+
         {/* MENU POPUP DE TIPO DE TEXTO */}
         {showFormatMenu && (
           <div
@@ -288,7 +298,7 @@ export default function RichTextEditor({
           </div>
         )}
 
-        {/* MENU POPUP DE TAMANHO DE FONTE (FONTE EDITORIAL SERIF) */}
+        {/* MENU POPUP DE TAMANHO DE FONTE */}
         {showFontSizeMenu && (
           <div
             ref={fontSizeMenuRef}
@@ -312,7 +322,7 @@ export default function RichTextEditor({
           </div>
         )}
 
-        {/* MENU POPUP DE ZOOM (FONTE EDITORIAL SERIF) */}
+        {/* MENU POPUP DE ZOOM */}
         {showZoomMenu && (
           <div
             ref={zoomMenuRef}
@@ -342,297 +352,267 @@ export default function RichTextEditor({
         {/* BARRA FLUTUANTE COM COR DE FUNDO #EDE6D4 E REORGANIZADA DE ESQUERDA A DIREITA POR PRIORIDADE */}
         <div className="bg-[#EDE6D4] backdrop-blur-md border border-papelKraft/60 shadow-kraft-lg rounded-3xl p-2 sm:p-2.5 flex items-center justify-between sm:justify-center gap-1.5 sm:gap-2.5 overflow-x-auto custom-compact-scrollbar">
           
-          {/* GRUPO 1: DESFAZER / REFAZER (AÇÕES MAIS USADAS) */}
+          {/* GRUPO 1: DESFAZER / REFAZER */}
           <div className="flex items-center gap-1 shrink-0">
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('undo')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <Undo className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                desfazer (ctrl+z)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('undo')}
+              onMouseEnter={() => setHoveredTooltip(`desfazer • ${cmdStr}+z`)}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title={`desfazer • ${cmdStr}+z`}
+            >
+              <Undo className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('redo')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <Redo className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                refazer (ctrl+y)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('redo')}
+              onMouseEnter={() => setHoveredTooltip(`refazer • ${cmdStr}+y`)}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title={`refazer • ${cmdStr}+y`}
+            >
+              <Redo className="w-4 h-4" />
+            </button>
           </div>
 
           <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-          {/* GRUPO 2: ESTILO DE TEXTO (PARÁGRAFO, TÍTULOS 1-4, CITAÇÃO) */}
-          <div className="relative group shrink-0">
+          {/* GRUPO 2: ESTILO DE TEXTO */}
+          <div className="shrink-0">
             <button
               type="button"
               onClick={() => setShowFormatMenu(!showFormatMenu)}
+              onMouseEnter={() => setHoveredTooltip('tipo de texto')}
+              onMouseLeave={() => setHoveredTooltip(null)}
               className="px-3 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-editorial font-bold text-acentoAzul flex items-center gap-1.5 shadow-sm transition-all lowercase active:scale-95"
+              title="tipo de texto"
             >
               <span className="font-editorial text-xs">{FORMAT_OPTIONS.find((o) => o.value === currentFormat)?.label || 'parágrafo'}</span>
               <ChevronUp className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
             </button>
-            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-              tipo de texto
-            </div>
           </div>
 
           <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
           {/* GRUPO 3: FORMATAÇÃO BÁSICA (NEGRITO, ITÁLICO, SUBLINHADO, TACHADO) */}
           <div className="flex items-center gap-1 shrink-0">
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('bold')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold active:scale-95"
-              >
-                <Bold className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                negrito (ctrl+b)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('bold')}
+              onMouseEnter={() => setHoveredTooltip(`negrito • ${cmdStr}+b`)}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold active:scale-95"
+              title={`negrito • ${cmdStr}+b`}
+            >
+              <Bold className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('italic')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic active:scale-95"
-              >
-                <Italic className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                itálico (ctrl+i)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('italic')}
+              onMouseEnter={() => setHoveredTooltip(`itálico • ${cmdStr}+i`)}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic active:scale-95"
+              title={`itálico • ${cmdStr}+i`}
+            >
+              <Italic className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('underline')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <Underline className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                sublinhado (ctrl+u)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('underline')}
+              onMouseEnter={() => setHoveredTooltip(`sublinhado • ${cmdStr}+u`)}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title={`sublinhado • ${cmdStr}+u`}
+            >
+              <Underline className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('strikeThrough')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <Strikethrough className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                tachado
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('strikeThrough')}
+              onMouseEnter={() => setHoveredTooltip('tachado')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="tachado"
+            >
+              <Strikethrough className="w-4 h-4" />
+            </button>
           </div>
 
           <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-          {/* GRUPO 4: DESTAQUE & COR (HIGHLIGHT & TEXT COLOR) */}
+          {/* GRUPO 4: DESTAQUE & COR */}
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* DESTACADOR DE TEXTO (MARCADOR) */}
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => handleHighlight(highlightColor)}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoTerracota text-acentoTerracota hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <Highlighter className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                destacar texto
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => handleHighlight(highlightColor)}
+              onMouseEnter={() => setHoveredTooltip('destacar texto')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoTerracota text-acentoTerracota hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="destacar texto"
+            >
+              <Highlighter className="w-4 h-4" />
+            </button>
 
-            {/* SELETOR DE COR DE TEXTO */}
-            <div className="relative group">
-              <label className="flex items-center gap-1 cursor-pointer text-xs font-editorial font-bold text-tintaCarvao/80 lowercase bg-white/90 px-2 py-1 rounded-xl border border-papelKraft/40 shadow-sm shrink-0">
-                <span className="hidden sm:inline font-editorial">cor:</span>
-                <input
-                  type="color"
-                  value={textColor}
-                  onChange={handleColorChange}
-                  className="w-4 h-4 rounded-md cursor-pointer border-none p-0 bg-transparent"
-                />
-              </label>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                cor da fonte
-              </div>
-            </div>
+            <label
+              onMouseEnter={() => setHoveredTooltip('cor da fonte')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="flex items-center gap-1 cursor-pointer text-xs font-editorial font-bold text-tintaCarvao/80 lowercase bg-white/90 px-2 py-1 rounded-xl border border-papelKraft/40 shadow-sm shrink-0"
+              title="cor da fonte"
+            >
+              <span className="hidden sm:inline font-editorial">cor:</span>
+              <input
+                type="color"
+                value={textColor}
+                onChange={handleColorChange}
+                className="w-4 h-4 rounded-md cursor-pointer border-none p-0 bg-transparent"
+              />
+            </label>
           </div>
 
           <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-          {/* GRUPO 5: INSERÇÃO DE MÍDIA (LINK & IMAGEM) */}
+          {/* GRUPO 5: INSERÇÃO DE MÍDIA */}
           <div className="flex items-center gap-1 shrink-0">
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={handleInsertLink}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <LinkIcon className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                inserir link (url)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={handleInsertLink}
+              onMouseEnter={() => setHoveredTooltip('inserir link url')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="inserir link url"
+            >
+              <LinkIcon className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={handleInsertImage}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <ImageIcon className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                inserir imagem (url)
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={handleInsertImage}
+              onMouseEnter={() => setHoveredTooltip('inserir imagem url')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="inserir imagem url"
+            >
+              <ImageIcon className="w-4 h-4" />
+            </button>
           </div>
 
           <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
           {/* GRUPO 6: ESTRUTURA (CITAÇÃO, LISTAS, ALINHAMENTO) */}
           <div className="flex items-center gap-1 shrink-0">
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => selectFormat('blockquote')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <Quote className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                citação poética
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => selectFormat('blockquote')}
+              onMouseEnter={() => setHoveredTooltip('citação poética')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="citação poética"
+            >
+              <Quote className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('insertUnorderedList')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <List className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                lista com marcadores
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('insertUnorderedList')}
+              onMouseEnter={() => setHoveredTooltip('lista com marcadores')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="lista com marcadores"
+            >
+              <List className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('insertOrderedList')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <ListOrdered className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                lista numerada
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('insertOrderedList')}
+              onMouseEnter={() => setHoveredTooltip('lista numerada')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="lista numerada"
+            >
+              <ListOrdered className="w-4 h-4" />
+            </button>
 
             <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('justifyLeft')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <AlignLeft className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                alinhar à esquerda
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyLeft')}
+              onMouseEnter={() => setHoveredTooltip('alinhar à esquerda')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="alinhar à esquerda"
+            >
+              <AlignLeft className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('justifyCenter')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <AlignCenter className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                centralizar
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyCenter')}
+              onMouseEnter={() => setHoveredTooltip('centralizar')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="centralizar"
+            >
+              <AlignCenter className="w-4 h-4" />
+            </button>
 
-            <div className="relative group">
-              <button
-                type="button"
-                onClick={() => executeCommand('justifyRight')}
-                className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
-              >
-                <AlignRight className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                alinhar à direita
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyRight')}
+              onMouseEnter={() => setHoveredTooltip('alinhar à direita')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="alinhar à direita"
+            >
+              <AlignRight className="w-4 h-4" />
+            </button>
           </div>
 
           <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
 
-          {/* GRUPO 7: TAMANHO DE FONTE & ZOOM (TIPOGRAFIA EDITORIAL SERIF) */}
+          {/* GRUPO 7: TAMANHO DE FONTE & ZOOM */}
           <div className="flex items-center gap-1.5 shrink-0">
-            
-            {/* TAMANHO DE FONTE */}
-            <div className="relative group shrink-0" ref={fontSizeMenuRef}>
+            <div
+              className="relative shrink-0"
+              ref={fontSizeMenuRef}
+              onMouseEnter={() => setHoveredTooltip('tamanho da fonte')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+            >
               <button
                 type="button"
                 onClick={() => setShowFontSizeMenu(!showFontSizeMenu)}
                 className="px-2.5 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-editorial font-bold text-acentoAzul flex items-center gap-1 shadow-sm transition-all active:scale-95"
+                title="tamanho da fonte"
               >
                 <Type className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
                 <span className="font-editorial text-xs sm:text-sm font-bold">{fontSize}px</span>
                 <ChevronUp className="w-3 h-3 text-acentoAzul shrink-0" />
               </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                tamanho da fonte
-              </div>
             </div>
 
-            {/* SELETOR DE ZOOM */}
-            <div className="relative group shrink-0" ref={zoomMenuRef}>
+            <div
+              className="relative shrink-0"
+              ref={zoomMenuRef}
+              onMouseEnter={() => setHoveredTooltip('zoom da folha')}
+              onMouseLeave={() => setHoveredTooltip(null)}
+            >
               <button
                 type="button"
                 onClick={() => setShowZoomMenu(!showZoomMenu)}
                 className="px-2.5 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-editorial font-bold text-acentoAzul flex items-center gap-1 shadow-sm transition-all active:scale-95"
+                title="zoom da folha"
               >
                 <ZoomIn className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
                 <span className="font-editorial text-xs sm:text-sm font-bold">{zoomLevel}%</span>
                 <ChevronUp className="w-3 h-3 text-acentoAzul shrink-0" />
               </button>
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2 py-0.5 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                zoom da folha
-              </div>
             </div>
-
           </div>
 
         </div>
