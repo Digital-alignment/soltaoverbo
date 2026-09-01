@@ -388,8 +388,9 @@ export default function CourseDetail() {
                     />
                   </div>
 
-                  {/* BARRA DE AÇÕES DA AULA (ESCREVER NO ATELIER + ANTERIOR/PRÓXIMA COM FONTE MAIOR) */}
+                  {/* BARRA UNIFICADA DE AÇÕES DA AULA */}
                   <div className="pt-6 border-t border-papelKraft/25 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    {/* BOTÃO ESQUERDO: ESCREVER NO ATELIER */}
                     <button
                       type="button"
                       onClick={handleOpenAtelierWithPrompt}
@@ -399,55 +400,56 @@ export default function CourseDetail() {
                       <span>escrever →</span>
                     </button>
 
-                    <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    {/* GRUPO DIREITO: NAVEGAÇÃO DE AULAS COM MARCAR COMO CONCLUÍDA EM DESTAQUE NO CENTRO */}
+                    <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
+                      {/* ÍCONE DA AULA ANTERIOR (ESQUERDA DO CONCLUÍDO) */}
                       <button
                         type="button"
                         onClick={handlePrevLesson}
                         disabled={currentLessonIndex === 0}
-                        className="px-5 py-2 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul font-gesto text-[24px] sm:text-[26px] lowercase disabled:opacity-40 shadow-sm hover:bg-bgPlataforma transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                        className="p-3 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul disabled:opacity-30 shadow-sm hover:bg-bgPlataforma transition-all flex items-center justify-center cursor-pointer shrink-0"
+                        title="aula anterior"
                       >
-                        <ChevronLeft className="w-5 h-5 shrink-0" />
-                        <span>anterior</span>
+                        <ChevronLeft className="w-5 h-5 text-acentoAzul" />
                       </button>
 
+                      {/* BOTÃO EM DESTAQUE: MARCAR COMO CONCLUÍDA */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (selectedLesson) {
+                            setCompletedLessonIds((prev) =>
+                              prev.includes(selectedLesson.id)
+                                ? prev.filter((id) => id !== selectedLesson.id)
+                                : [...prev, selectedLesson.id]
+                            );
+                          }
+                        }}
+                        className={`px-5 sm:px-6 py-2.5 rounded-2xl font-gesto text-[24px] sm:text-[26px] lowercase transition-all inline-flex items-center justify-center gap-2 shadow-md cursor-pointer ${
+                          selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                            ? 'bg-acentoOliva text-white border border-acentoOliva'
+                            : 'bg-white text-tintaCarvao border border-papelKraft/45 hover:bg-papelKraft/20'
+                        }`}
+                      >
+                        <CheckCircle className={`w-5 h-5 ${selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'text-white' : 'text-acentoOliva'}`} />
+                        <span>
+                          {selectedLesson && completedLessonIds.includes(selectedLesson.id)
+                            ? 'aula concluída ✓'
+                            : 'marcar como concluída'}
+                        </span>
+                      </button>
+
+                      {/* ÍCONE DA PRÓXIMA AULA (DIREITA DO CONCLUÍDO) */}
                       <button
                         type="button"
                         onClick={handleNextLesson}
                         disabled={currentLessonIndex === lessons.length - 1}
-                        className="px-6 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[24px] sm:text-[26px] lowercase disabled:opacity-40 shadow-sm hover:bg-acentoAzul/90 transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                        className="p-3 rounded-2xl bg-acentoAzul text-white disabled:opacity-30 shadow-sm hover:bg-acentoAzul/90 transition-all flex items-center justify-center cursor-pointer shrink-0"
+                        title="próxima aula"
                       >
-                        <span>próxima</span>
-                        <ChevronRight className="w-5 h-5 shrink-0" />
+                        <ChevronRight className="w-5 h-5 text-white" />
                       </button>
                     </div>
-                  </div>
-
-                  {/* SEÇÃO PARA MARCAR AULA COMO CONCLUÍDA */}
-                  <div className="pt-4 border-t border-papelKraft/25 flex items-center justify-between gap-4 flex-wrap">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (selectedLesson) {
-                          setCompletedLessonIds((prev) =>
-                            prev.includes(selectedLesson.id)
-                              ? prev.filter((id) => id !== selectedLesson.id)
-                              : [...prev, selectedLesson.id]
-                          );
-                        }
-                      }}
-                      className={`px-5 py-2 rounded-2xl font-gesto text-[22px] sm:text-[25px] lowercase transition-all inline-flex items-center gap-2 shadow-sm cursor-pointer ${
-                        selectedLesson && completedLessonIds.includes(selectedLesson.id)
-                          ? 'bg-acentoOliva text-white border border-acentoOliva'
-                          : 'bg-white text-tintaCarvao/80 border border-papelKraft/40 hover:bg-papelKraft/20'
-                      }`}
-                    >
-                      <CheckCircle className={`w-5 h-5 ${selectedLesson && completedLessonIds.includes(selectedLesson.id) ? 'text-white' : 'text-tintaCarvao/40'}`} />
-                      <span>
-                        {selectedLesson && completedLessonIds.includes(selectedLesson.id)
-                          ? 'aula concluída ✓'
-                          : 'marcar como concluída'}
-                      </span>
-                    </button>
                   </div>
 
                 </div>
