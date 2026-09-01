@@ -169,7 +169,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className={`bg-bgPlataforma/70 rounded-2xl border border-papelKraft/40 p-3 shadow-sm space-y-2 ${className}`}>
+    <div className={`bg-white/80 rounded-2xl border border-papelKraft/35 p-3 sm:p-3.5 shadow-sm space-y-2 ${className}`}>
       <audio ref={audioRef} src={currentAudio.audio_file_url} preload="metadata" />
 
       {/* Linha Única Integrada de Áudio: Play + Título + Onda Sonora + Timers + Velocidade */}
@@ -204,7 +204,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
           <div
             ref={progressRef}
             onClick={handleProgressClick}
-            className="h-5 rounded-md bg-white border border-papelKraft/40 flex items-center px-1.5 cursor-pointer relative overflow-hidden"
+            className="h-5 rounded-md bg-papelClaro/70 border border-papelKraft/30 flex items-center px-1.5 cursor-pointer relative overflow-hidden"
           >
             <div
               className="absolute left-0 top-0 bottom-0 bg-acentoTerracota/15 transition-all"

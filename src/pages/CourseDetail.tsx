@@ -364,9 +364,9 @@ export default function CourseDetail() {
                   {(selectedLesson.zoom_link || selectedLesson.recording_url) && (
                     <div className="space-y-3">
                       {selectedLesson.zoom_link && (
-                        <div className="bg-white rounded-2xl p-4 border border-papelKraft/40 flex items-center justify-between shadow-sm">
+                        <div className="bg-white/80 rounded-2xl p-3.5 sm:p-4 border border-papelKraft/35 flex items-center justify-between shadow-sm">
                           <div className="flex items-center gap-3">
-                            <div className="p-2.5 rounded-xl bg-bgPlataforma border border-papelKraft/40 text-acentoAzul">
+                            <div className="p-2 rounded-xl bg-bgPlataforma border border-papelKraft/30 text-acentoAzul">
                               <Video className="w-4 h-4 text-acentoAzul" />
                             </div>
                             <div>
@@ -621,7 +621,7 @@ export default function CourseDetail() {
               </span>
             </div>
 
-            {/* LISTA ULTRA-LIMPA E COMPACTA DE AULAS */}
+            {/* LISTA ULTRA-LIMPA E COMPACTA DE AULAS ESTILO ÍNDICE DE LIVRO */}
             <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1">
               {lessons.map((lesson, idx) => {
                 const isSelected = selectedLesson?.id === lesson.id;
@@ -633,7 +633,7 @@ export default function CourseDetail() {
                     className={`w-full text-left p-3 rounded-2xl transition-all duration-200 border flex items-center justify-between gap-3 group cursor-pointer ${
                       isSelected
                         ? 'bg-acentoAzul text-white border-acentoAzul shadow-sm'
-                        : 'bg-bgPlataforma hover:bg-papelKraft/20 text-tintaCarvao border-papelKraft/30'
+                        : 'bg-bgPlataforma/60 hover:bg-papelKraft/20 text-tintaCarvao border-papelKraft/30'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -642,8 +642,8 @@ export default function CourseDetail() {
                       }`}>
                         {String(idx + 1).padStart(2, '0')}.
                       </span>
-                      <p className={`text-xs sm:text-sm font-semibold font-editorial lowercase truncate ${
-                        isSelected ? 'text-white' : 'text-acentoAzul group-hover:text-acentoTerracota'
+                      <p className={`text-xs sm:text-sm font-light font-corpo lowercase truncate ${
+                        isSelected ? 'text-white font-medium' : 'text-tintaCarvao/85 group-hover:text-acentoAzul'
                       }`}>
                         {lesson.title}
                       </p>
