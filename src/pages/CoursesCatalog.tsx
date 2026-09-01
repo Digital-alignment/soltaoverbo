@@ -5,22 +5,23 @@ import { useAuth } from '../contexts/AuthContext';
 import UserNavbar from '../components/UserNavbar';
 import FloatingNavbar from '../components/FloatingNavbar';
 import LoadingPage from '../components/LoadingPage';
-import { BookOpen, Sparkles, Crown, ArrowRight, Play, CheckCircle } from 'lucide-react';
+import { BookOpen, Crown, ArrowRight, Play, Lock, CheckCircle } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 
 type Course = Database['public']['Tables']['courses']['Row'] & {
   lessonCount?: number;
+  userProgress?: number;
 };
 
 export default function CoursesCatalog() {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'free' | 'paid'>('all');
 
   useEffect(() => {
     loadCourses();
-  }, []);
+  }, [user]);
 
   const loadCourses = async () => {
     try {
@@ -31,22 +32,23 @@ export default function CoursesCatalog() {
 
       if (coursesError) throw coursesError;
 
-      // Buscar a quantidade de aulas por curso
-      const coursesWithLessons = await Promise.all(
+      // Carregar total de aulas e progresso por curso
+      const coursesWithStats = await Promise.all(
         (coursesData || []).map(async (course) => {
-          const { count } = await supabase
+          const { count: lessonCount } = await supabase
             .from('course_lessons')
             .select('*', { count: 'exact', head: true })
             .eq('course_id', course.id);
 
           return {
             ...course,
-            lessonCount: count || 0,
+            lessonCount: lessonCount || 0,
+            userProgress: 0, // Pode ser expandido com histórico do usuário
           };
         })
       );
 
-      setCourses(coursesWithLessons);
+      setCourses(coursesWithStats);
     } catch (error) {
       console.error('Erro ao carregar catálogo de oficinas:', error);
     } finally {
@@ -74,26 +76,17 @@ export default function CoursesCatalog() {
       <UserNavbar />
       <FloatingNavbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pl-28 pt-8 space-y-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pl-28 pt-8 space-y-6">
         
-        {/* CABEÇALHO DO CATÁLOGO DE OFICINAS */}
-        <div className="space-y-3 border-b border-papelKraft/40 pb-6">
-          <div className="flex items-center gap-2 text-acentoTerracota text-xs font-normal font-corpo lowercase tracking-wide">
-            <Sparkles className="w-4 h-4 text-acentoTerracota" />
-            <span>catálogo de oficinas & cursos</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+        {/* CABEÇALHO DO CATÁLOGO DE OFICINAS (TÍTULO EM MUTHAZLE font-gesto, SEM TEXTO SUPERIOR OU PARÁGRAFO) */}
+        <div className="border-b border-papelKraft/40 pb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-gesto text-acentoAzul lowercase leading-tight">
             nossas oficinas & cursos
           </h1>
-
-          <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed max-w-3xl">
-            explore os caminhos de escrita, ciclos de aprofundamento poético e imersões da nossa comunidade. cada oficina é um convite para soltar o verbo sem cobrança.
-          </p>
         </div>
 
         {/* ABAS DE FILTRO EM HELVETICA (MIN 14PX) */}
-        <div className="flex items-center gap-2 flex-wrap pb-2">
+        <div className="flex items-center gap-2 flex-wrap pb-1">
           <button
             type="button"
             onClick={() => setActiveFilter('all')}
@@ -131,26 +124,28 @@ export default function CoursesCatalog() {
           </button>
         </div>
 
-        {/* GRID DE CARDS DAS OFICINAS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        {/* GRID COMPACTO DE CARDS DAS OFICINAS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
           {filteredCourses.length === 0 ? (
-            <div className="col-span-full bg-papelClaro rounded-3xl p-12 text-center space-y-3 border border-papelKraft/40 shadow-sm">
+            <div className="col-span-full bg-papelClaro rounded-3xl p-10 text-center space-y-3 border border-papelKraft/40 shadow-sm">
               <BookOpen className="w-10 h-10 text-acentoAzul mx-auto" />
               <p className="text-sm font-light font-corpo text-tintaCarvao/70 lowercase">
                 nenhuma oficina encontrada para este filtro no momento.
               </p>
             </div>
           ) : (
-            filteredCourses.map((course) => {
+            filteredCourses.map((course, idx) => {
               const hasAccess = canAccessCourse(course);
+              // Simular estado de retomar para o primeiro curso ou com progresso ativo
+              const isRetomar = hasAccess && idx === 0;
 
               return (
                 <div
                   key={course.id}
-                  className="bg-papelClaro rounded-3xl border border-papelKraft/50 shadow-kraft hover:border-acentoAzul transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                  className="bg-papelClaro rounded-3xl border border-papelKraft/45 shadow-kraft hover:border-acentoAzul transition-all duration-300 flex flex-col justify-between overflow-hidden group"
                 >
-                  {/* IMAGEM / CAPA DO CURSO */}
-                  <div className="relative h-48 sm:h-52 bg-papelKraft/30 overflow-hidden">
+                  {/* CAPA COMPACTA DO CURSO */}
+                  <div className="relative h-36 sm:h-40 bg-papelKraft/30 overflow-hidden shrink-0">
                     {course.thumbnail_url ? (
                       <img
                         src={course.thumbnail_url}
@@ -158,25 +153,24 @@ export default function CoursesCatalog() {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-papelKraft/40 to-acentoAzul/20 flex items-center justify-center p-6 text-center">
-                        <BookOpen className="w-12 h-12 text-acentoAzul opacity-40" />
+                      <div className="w-full h-full bg-gradient-to-br from-papelKraft/40 to-acentoAzul/20 flex items-center justify-center p-4 text-center">
+                        <BookOpen className="w-10 h-10 text-acentoAzul opacity-40" />
                       </div>
                     )}
 
                     {/* BADGE SUPERIOR DE STATUS DE ACESSO */}
-                    <div className="absolute top-3 left-3 flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-xs font-normal font-corpo bg-white/95 text-acentoTerracota border border-papelKraft/40 lowercase shadow-sm inline-flex items-center gap-1">
+                    <div className="absolute top-2.5 left-2.5 flex items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo bg-white/95 text-acentoTerracota border border-papelKraft/40 lowercase shadow-sm inline-flex items-center gap-1">
                         <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
                         <span>{course.course_type === 'free' ? 'gratuito' : 'exclusivo premium'}</span>
                       </span>
                     </div>
                   </div>
 
-                  {/* CONTEÚDO EDITORIAL DO CARD */}
-                  <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                    <div className="space-y-2">
+                  {/* CONTEÚDO EDITORIAL COMPACTO DO CARD */}
+                  <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
+                    <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs font-light font-corpo text-tintaCarvao/60 lowercase">
-                        <span>{course.lessonCount || 0} aulas disponíveis</span>
                         {hasAccess ? (
                           <span className="text-acentoOliva font-normal flex items-center gap-1">
                             <CheckCircle className="w-3.5 h-3.5 text-acentoOliva inline" />
@@ -187,24 +181,33 @@ export default function CoursesCatalog() {
                         )}
                       </div>
 
-                      <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-snug group-hover:text-acentoTerracota transition-colors">
+                      <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase leading-snug group-hover:text-acentoTerracota transition-colors line-clamp-2">
                         {course.title}
                       </h3>
 
                       {course.description && (
-                        <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed line-clamp-3">
+                        <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed line-clamp-2">
                           {course.description}
                         </p>
                       )}
                     </div>
 
-                    {/* BOTÃO DE AÇÃO PRINCIPAL EM MUTHAZLE (23PX DESKTOP / 20PX MOBILE) */}
-                    <div className="pt-4 border-t border-papelKraft/30">
-                      {hasAccess ? (
+                    {/* BOTÃO DINÂMICO DE ACORDO COM O ESTADO (LIBERADO / RETOMAR / DESBLOQUEAR) */}
+                    <div className="pt-3 border-t border-papelKraft/30">
+                      {isRetomar ? (
                         <Link
                           to={`/course/${course.id}`}
-                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-transform hover:scale-[1.02] cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-acentoOliva text-tintaCarvao font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoOliva/90 transition-transform hover:scale-[1.02] cursor-pointer"
                         >
+                          <Play className="w-4 h-4 text-tintaCarvao fill-tintaCarvao" />
+                          <span>retomar oficina →</span>
+                        </Link>
+                      ) : hasAccess ? (
+                        <Link
+                          to={`/course/${course.id}`}
+                          className="w-full inline-flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoAzul/90 transition-transform hover:scale-[1.02] cursor-pointer"
+                        >
+                          <ArrowRight className="w-4 h-4 text-white" />
                           <span>entrar na oficina →</span>
                         </Link>
                       ) : (
@@ -212,8 +215,9 @@ export default function CoursesCatalog() {
                           href={course.stripe_payment_link || '/profile'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-transform hover:scale-[1.02] cursor-pointer"
+                          className="w-full inline-flex items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm hover:bg-acentoTerracota/90 transition-transform hover:scale-[1.02] cursor-pointer"
                         >
+                          <Lock className="w-4 h-4 text-white" />
                           <span>desbloquear oficina →</span>
                         </a>
                       )}
