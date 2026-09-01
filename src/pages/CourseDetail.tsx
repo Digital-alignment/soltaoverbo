@@ -240,76 +240,64 @@ export default function CourseDetail() {
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao pb-16">
       
-      {/* 1. TOP BAR MINIMALISTA & FLUTUANTE DE NAVEGAÇÃO */}
-      <div className="sticky top-0 z-30 bg-bgPlataforma/90 backdrop-blur-md border-b border-papelKraft/40 px-4 sm:px-8 py-3 transition-all">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <Link
-            to="/programs"
-            className="inline-flex items-center gap-2 text-acentoAzul hover:text-acentoTerracota transition-colors text-[20px] sm:text-[23px] font-normal font-gesto lowercase shrink-0"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>voltar aos cursos</span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-3 truncate">
-            <span className="text-xs font-light font-corpo text-acentoTerracota lowercase shrink-0">curso em andamento:</span>
-            <span className="text-base font-normal font-editorial text-acentoAzul lowercase truncate">{course.title}</span>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <span className="px-3 py-1 rounded-full text-xs font-normal font-corpo bg-white border border-papelKraft/60 text-acentoAzul shadow-sm lowercase">
-              aula {currentLessonIndex + 1} de {lessons.length}
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsZenModeOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase hover:bg-acentoAzul/90 transition-all shadow-sm"
-              title="abrir modo foco em tela cheia"
+      {/* 1. CABEÇALHO UNIFICADO E FLUIDO (SEM CAIXAS OU BORDES, FUNDO IGUAL À PÁGINA) */}
+      <div className="bg-bgPlataforma pt-4 pb-3 px-4 sm:px-6 lg:px-8 border-b border-papelKraft/30 transition-all">
+        <div className="max-w-7xl mx-auto space-y-2.5">
+          
+          {/* Linha 1: Voltar + Metadatos & Ações */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <Link
+              to="/programs"
+              className="inline-flex items-center gap-2 text-acentoAzul hover:text-acentoTerracota transition-colors text-[20px] sm:text-[23px] font-normal font-gesto lowercase shrink-0"
             >
-              <Maximize2 className="w-3.5 h-3.5 text-white" />
-              <span>modo foco</span>
-            </button>
+              <ArrowLeft className="w-4 h-4 text-acentoAzul" />
+              <span>voltar aos cursos</span>
+            </Link>
+
+            <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+              <span className="px-3 py-0.5 rounded-full text-xs font-normal font-corpo bg-white border border-papelKraft/50 text-acentoTerracota lowercase shadow-sm inline-flex items-center gap-1">
+                <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
+                <span>{course.course_type === 'free' ? 'gratuito' : 'exclusivo premium'}</span>
+              </span>
+
+              <div className="flex items-center gap-2 bg-white px-3.5 py-0.5 rounded-full border border-papelKraft/50 shadow-sm">
+                <span className="text-xs font-normal font-corpo text-acentoAzul lowercase">
+                  aula {currentLessonIndex + 1} de {lessons.length}
+                </span>
+                <span className="text-tintaCarvao/30 text-xs">•</span>
+                <span className="text-xs font-normal font-corpo text-acentoTerracota lowercase">
+                  {progressPercent}% concluído
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsZenModeOpen(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-acentoAzul text-white font-gesto text-[20px] sm:text-[23px] lowercase hover:bg-acentoAzul/90 transition-all shadow-sm cursor-pointer"
+                title="abrir modo foco em tela cheia"
+              >
+                <Maximize2 className="w-3.5 h-3.5 text-white" />
+                <span>modo foco</span>
+              </button>
+            </div>
           </div>
+
+          {/* Linha 2: Título e Descrição Compacta no Próprio Fundo da Página */}
+          <div className="space-y-1 pt-1">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+              {course.title}
+            </h1>
+            {course.description && (
+              <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed max-w-4xl">
+                {course.description}
+              </p>
+            )}
+          </div>
+
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
-
-        {/* 2. CARD HERO COMPACTO DO CURSO */}
-        <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/50 shadow-kraft space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="px-3 py-0.5 rounded-full text-xs font-normal font-corpo bg-white text-acentoTerracota border border-papelKraft/50 shadow-sm lowercase flex items-center gap-1">
-                <Crown className="w-3 h-3 text-acentoTerracota" />
-                <span>{course.course_type === 'free' ? 'gratuito' : 'exclusivo premium'}</span>
-              </span>
-              <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase">
-                jornada poética • {lessons.length} aulas
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-28 sm:w-36 bg-papelKraft/30 h-1.5 rounded-full overflow-hidden">
-                <div
-                  className="bg-acentoTerracota h-full rounded-full transition-all duration-500"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <span className="text-xs font-normal font-corpo text-acentoAzul lowercase">
-                {progressPercent}% concluído
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
-              {course.title}
-            </h1>
-            <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase leading-relaxed max-w-4xl">
-              {course.description}
-            </p>
-          </div>
-        </div>
 
         {/* 3. LAYOUT MASTER EM 2 COLUNAS DE ALTA ELEGÂNCIA */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
