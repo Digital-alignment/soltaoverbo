@@ -169,123 +169,137 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className={`bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-lg border border-gray-200 p-4 sm:p-6 ${className}`}>
+    <div className={`bg-white rounded-3xl border border-papelKraft/60 p-4 sm:p-6 shadow-kraft space-y-4 ${className}`}>
       <audio ref={audioRef} src={currentAudio.audio_file_url} preload="metadata" />
 
-      {/* Audio Title */}
-      <div className="mb-3 sm:mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">{currentAudio.title}</h3>
-        {hasMultiple && (
-          <p className="text-xs sm:text-sm text-gray-500">
-            Áudio {currentIndex + 1} de {audioFiles.length}
-          </p>
-        )}
-      </div>
-
-      {/* Waveform Visual */}
-      <div className="mb-3 sm:mb-4 h-16 sm:h-20 rounded-lg flex items-center justify-center overflow-hidden relative" style={{ background: 'linear-gradient(to right, rgba(252, 94, 50, 0.1), rgba(252, 94, 50, 0.2), rgba(252, 94, 50, 0.1))' }}>
-        {isPlaying && (
-          <div className="flex items-center justify-center space-x-0.5 sm:space-x-1 h-full">
-            {[...Array(window.innerWidth < 640 ? 25 : 40)].map((_, i) => (
-              <div
-                key={i}
-                className="w-0.5 sm:w-1 rounded-full animate-pulse"
-                style={{
-                  background: 'linear-gradient(to top, #fc5e32, rgba(252, 94, 50, 0.6))',
-                  height: `${Math.random() * 60 + 20}%`,
-                  animationDelay: `${i * 0.05}s`,
-                  animationDuration: `${0.8 + Math.random() * 0.4}s`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-        {!isPlaying && (
-          <div className="flex items-center justify-center space-x-0.5 sm:space-x-1 h-full opacity-40">
-            {[...Array(window.innerWidth < 640 ? 25 : 40)].map((_, i) => (
-              <div
-                key={i}
-                className="w-0.5 sm:w-1 rounded-full"
-                style={{
-                  background: '#fc5e32',
-                  height: `${Math.random() * 60 + 20}%`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Progress Bar */}
-      <div className="mb-3 sm:mb-4">
-        <div
-          ref={progressRef}
-          onClick={handleProgressClick}
-          className="h-3 sm:h-2 bg-gray-200 rounded-full cursor-pointer relative overflow-hidden group"
-        >
-          <div
-            className="h-full rounded-full transition-all duration-100"
-            style={{ background: '#fc5e32', width: `${progressPercent}%` }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{ borderColor: '#fc5e32', left: `calc(${progressPercent}% - 8px)` }}
-          />
+      {/* Título do Áudio & Contador de Playlist */}
+      <div className="flex items-center justify-between gap-3 border-b border-papelKraft/30 pb-3">
+        <div>
+          <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
+            {hasMultiple ? `áudio ${currentIndex + 1} de ${audioFiles.length}` : 'áudio da aula'}
+          </span>
+          <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase">
+            {currentAudio.title}
+          </h4>
         </div>
-        <div className="flex justify-between items-center mt-2 text-xs sm:text-sm text-gray-600">
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
 
-      {/* Controls */}
-      <div className="flex items-center justify-center mb-3 sm:mb-4">
-        {/* Play/Pause Button */}
+        {/* Velocidade de Reprodução (1x, 1.25x, 1.5x) */}
         <button
-          onClick={togglePlay}
-          disabled={isLoading}
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full text-white flex items-center justify-center hover:shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
-          style={{ backgroundColor: '#fc5e32' }}
-          title={isPlaying ? 'Pausar' : 'Reproduzir'}
+          type="button"
+          onClick={() => {
+            const rates = [1, 1.25, 1.5, 2];
+            const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
+            setPlaybackRate(rates[nextIdx]);
+          }}
+          className="px-3 py-1 rounded-full bg-bgPlataforma border border-papelKraft/50 text-xs font-normal font-corpo text-acentoAzul hover:bg-papelKraft/30 transition-colors lowercase"
+          title="velocidade de reprodução"
         >
-          {isLoading ? (
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          ) : isPlaying ? (
-            <Pause className="w-5 h-5 sm:w-6 sm:h-6" />
-          ) : (
-            <Play className="w-5 h-5 sm:w-6 sm:h-6 ml-0.5 sm:ml-1" />
-          )}
+          {playbackRate}x
         </button>
       </div>
 
-      {/* Volume and Speed Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
-        {/* Volume Control */}
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={toggleMute}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition active:scale-95"
-            title={isMuted ? 'Ativar som' : 'Silenciar'}
+      {/* Visual da Barra de Onda Sonora (Inspirado na Referência media_1788227772415.png) */}
+      <div className="flex items-center gap-3 bg-bgPlataforma p-3 sm:p-4 rounded-2xl border border-papelKraft/40">
+        {/* Botão Play/Pause Circular Minimalista */}
+        <button
+          type="button"
+          onClick={togglePlay}
+          disabled={isLoading}
+          className="w-12 h-12 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-md hover:scale-105 transition-transform shrink-0 cursor-pointer disabled:opacity-50"
+          aria-label={isPlaying ? 'pausar áudio' : 'reproduzir áudio'}
+        >
+          {isPlaying ? (
+            <Pause className="w-5 h-5 fill-white" />
+          ) : (
+            <Play className="w-5 h-5 fill-white ml-0.5" />
+          )}
+        </button>
+
+        {/* Linha da Barra de Onda Sonora e Barra de Progresso Arrastável */}
+        <div className="flex-1 space-y-1.5 min-w-0">
+          <div
+            ref={progressRef}
+            onClick={handleProgressClick}
+            className="h-7 rounded-xl bg-white border border-papelKraft/40 flex items-center px-2 cursor-pointer relative overflow-hidden group/bar"
           >
-            {isMuted ? (
-              <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />
+            {/* Preenchimento de Progresso */}
+            <div
+              className="absolute left-0 top-0 bottom-0 bg-acentoTerracota/15 transition-all"
+              style={{ width: `${progressPercent}%` }}
+            />
+
+            {/* Barras de Onda Animadas */}
+            <div className="w-full flex items-center justify-between gap-0.5 z-10">
+              {[...Array(32)].map((_, i) => {
+                const isPast = (i / 32) * 100 <= progressPercent;
+                return (
+                  <div
+                    key={i}
+                    className={`w-1 rounded-full transition-all ${
+                      isPast ? 'bg-acentoTerracota' : 'bg-papelKraft/60'
+                    } ${isPlaying && isPast ? 'animate-pulse' : ''}`}
+                    style={{
+                      height: `${12 + Math.abs(Math.sin(i * 0.8)) * 14}px`,
+                      animationDelay: `${i * 0.04}s`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Timers (Atual / Total) em Helvetica font-corpo min 14px */}
+          <div className="flex justify-between items-center text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Controles Adicionais: Avançar/Voltar 10s e Controle de Volume */}
+      <div className="flex items-center justify-between pt-1 text-xs font-light font-corpo text-tintaCarvao/70">
+        <div className="flex items-center gap-2">
+          {hasMultiple && (
+            <>
+              <button
+                type="button"
+                onClick={handlePrevious}
+                disabled={currentIndex === 0}
+                className="px-3 py-1 rounded-xl bg-bgPlataforma border border-papelKraft/40 text-acentoAzul disabled:opacity-40 hover:bg-papelKraft/30 transition-colors lowercase"
+              >
+                ← áudio anterior
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={currentIndex === audioFiles.length - 1}
+                className="px-3 py-1 rounded-xl bg-bgPlataforma border border-papelKraft/40 text-acentoAzul disabled:opacity-40 hover:bg-papelKraft/30 transition-colors lowercase"
+              >
+                próximo áudio →
+              </button>
+            </>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggleMute}
+            className="p-1.5 rounded-lg hover:bg-bgPlataforma text-tintaCarvao/70 transition-colors"
+            title={isMuted ? 'ativar som' : 'silenciar'}
+          >
+            {isMuted || volume === 0 ? (
+              <VolumeX className="w-4 h-4 text-acentoTerracota" />
             ) : (
-              <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
+              <Volume2 className="w-4 h-4 text-acentoAzul" />
             )}
           </button>
           <input
             type="range"
             min="0"
             max="1"
-            step="0.01"
+            step="0.05"
             value={isMuted ? 0 : volume}
-            onChange={(e) => {
-              handleVolumeChange(e);
-              const target = e.target as HTMLInputElement;
-              target.style.setProperty('--value', `${(parseFloat(target.value) / 1) * 100}%`);
-            }}
-            className="w-16 sm:w-20 h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            style={{ '--value': `${(isMuted ? 0 : volume) * 100}%` } as React.CSSProperties}
           />
         </div>
 
