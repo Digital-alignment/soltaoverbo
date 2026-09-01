@@ -985,6 +985,7 @@ export default function WritingExercises() {
                     <RichTextEditor
                       value={content}
                       onChange={setContent}
+                      onSave={handleSave}
                       placeholder="escreva aqui com calma e sem interrupções..."
                       flat={true}
                       zoomLevel={editorSettings.zoomLevel}

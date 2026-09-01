@@ -21,6 +21,7 @@ import type { EditorFontFamily } from './EditorSettingsModal';
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
+  onSave?: () => void;
   placeholder?: string;
   flat?: boolean;
   zoomLevel?: number;
@@ -36,6 +37,8 @@ const FORMAT_OPTIONS = [
   { value: 'blockquote', label: 'cita poética' },
 ];
 
+const FONT_SIZES = ['12', '14', '16', '18', '20', '24', '28', '32'];
+
 const FONT_FAMILY_MAP: Record<EditorFontFamily, string> = {
   editorial: '"Editorial Serif", Georgia, Garamond, serif',
   sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -47,6 +50,7 @@ const FONT_FAMILY_MAP: Record<EditorFontFamily, string> = {
 export default function RichTextEditor({
   value,
   onChange,
+  onSave,
   placeholder,
   flat = false,
   zoomLevel = 100,
@@ -54,10 +58,12 @@ export default function RichTextEditor({
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const formatMenuRef = useRef<HTMLDivElement>(null);
+  const fontSizeMenuRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('16');
   const [textColor, setTextColor] = useState('#2C2720');
   const [currentFormat, setCurrentFormat] = useState('p');
   const [showFormatMenu, setShowFormatMenu] = useState(false);
+  const [showFontSizeMenu, setShowFontSizeMenu] = useState(false);
 
   useEffect(() => {
     if (editorRef.current && value && !editorRef.current.innerHTML) {
@@ -65,11 +71,14 @@ export default function RichTextEditor({
     }
   }, []);
 
-  // Fechar menu de formatos ao clicar fora
+  // Fechar menus ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (formatMenuRef.current && !formatMenuRef.current.contains(event.target as Node)) {
         setShowFormatMenu(false);
+      }
+      if (fontSizeMenuRef.current && !fontSizeMenuRef.current.contains(event.target as Node)) {
+        setShowFontSizeMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -79,6 +88,39 @@ export default function RichTextEditor({
   const handleInput = () => {
     if (editorRef.current) {
       onChange(editorRef.current.innerHTML);
+    }
+  };
+
+  // HANDLER DE ATALHOS DE TECLADO (CTRL+B, CTRL+I, CTRL+U, CTRL+S, CMD+B, ETC)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const modifier = isMac ? e.metaKey : e.ctrlKey;
+
+    if (modifier) {
+      const key = e.key.toLowerCase();
+
+      // Ctrl+B / Cmd+B -> Negrito
+      if (key === 'b') {
+        e.preventDefault();
+        executeCommand('bold');
+      }
+      // Ctrl+I / Cmd+I -> Itálico
+      else if (key === 'i') {
+        e.preventDefault();
+        executeCommand('italic');
+      }
+      // Ctrl+U / Cmd+U -> Sublinhado
+      else if (key === 'u') {
+        e.preventDefault();
+        executeCommand('underline');
+      }
+      // Ctrl+S / Cmd+S -> Salvar texto
+      else if (key === 's') {
+        e.preventDefault();
+        if (onSave) {
+          onSave();
+        }
+      }
     }
   };
 
@@ -151,9 +193,10 @@ export default function RichTextEditor({
     }
   };
 
-  const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const size = e.target.value;
+  // SELEÇÃO DE TAMANHO DE FONTE COM POPUP PERSONALIZADO ARREDONDADO
+  const selectFontSize = (size: string) => {
     setFontSize(size);
+    setShowFontSizeMenu(false);
     executeCommand('fontSize', '7');
     const fontElements = document.getElementsByTagName('font');
     for (let i = 0; i < fontElements.length; i++) {
@@ -176,12 +219,13 @@ export default function RichTextEditor({
   return (
     <div className="relative min-h-[350px] flex flex-col justify-between">
       
-      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE COM FONTE E ZOOM APLICADOS */}
+      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE COM SUPORTE A ATALHOS DE TECLADO */}
       <div
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="p-4 sm:p-6 min-h-[300px] focus:outline-none text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-28 transition-all"
+        onKeyDown={handleKeyDown}
+        className="p-4 sm:p-6 min-h-[300px] focus:outline-none text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-32 transition-all"
         style={{
           fontFamily: FONT_FAMILY_MAP[fontFamily] || FONT_FAMILY_MAP.editorial,
           fontSize: `${scaledFontSize}px`,
@@ -191,14 +235,14 @@ export default function RichTextEditor({
         data-placeholder={placeholder}
       />
 
-      {/* CONTAINER EXTERNO DA BARRA FLUTUANTE (OVERFLOW-VISIBLE PARA O MENU POPUP SER 100% VISÍVEL) */}
-      <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100000] max-w-[95vw] sm:max-w-fit overflow-visible">
+      {/* CONTAINER EXTERNO DA BARRA FLUTUANTE (90% LARGURA EM ESCRITÓRIO, OVERFLOW-VISIBLE PARA OS POPUPS) */}
+      <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100000] w-[92vw] md:w-[90vw] max-w-5xl overflow-visible">
         
-        {/* MENU POPUP POP-UP DE OPÇÕES DE TEXTO (DESPLEGADO ACIMA DO BOTÃO SEM SER RECORTADO POR OVERFLOW) */}
+        {/* MENU POPUP DE TIPO DE TEXTO (DESPLEGADO ACIMA DO BOTÃO SEM CORTE) */}
         {showFormatMenu && (
           <div
             ref={formatMenuRef}
-            className="absolute bottom-full mb-3 left-2 sm:left-12 z-[100001] w-52 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-2 space-y-1 animate-fadeIn"
+            className="absolute bottom-full mb-3 left-2 sm:left-16 z-[100001] w-52 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-2 space-y-1 animate-fadeIn"
           >
             {FORMAT_OPTIONS.map((opt) => (
               <button
@@ -218,162 +262,193 @@ export default function RichTextEditor({
           </div>
         )}
 
-        {/* ESTRUTURA INTERNA DA BARRA COM COMPORTAMENTO DE SCROLL TÁTIL EM MOBILE */}
-        <div className="bg-papelClaro/95 backdrop-blur-md border border-papelKraft/60 shadow-kraft-lg rounded-3xl p-1.5 sm:p-2.5 flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar">
+        {/* MENU POPUP DE TAMANHO DE FONTE (ARREDONDADO E ELEGANTE) */}
+        {showFontSizeMenu && (
+          <div
+            ref={fontSizeMenuRef}
+            className="absolute bottom-full mb-3 right-4 sm:right-16 z-[100001] w-28 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-1.5 space-y-1 animate-fadeIn"
+          >
+            {FONT_SIZES.map((sz) => (
+              <button
+                key={sz}
+                type="button"
+                onClick={() => selectFontSize(sz)}
+                className={`w-full text-center py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center justify-between px-3 ${
+                  fontSize === sz
+                    ? 'bg-acentoAzul text-white font-bold shadow-sm'
+                    : 'text-tintaCarvao hover:bg-bgPlataforma'
+                }`}
+              >
+                <span className="font-gesto text-sm">{sz}px</span>
+                {fontSize === sz && <Check className="w-3.5 h-3.5 text-white shrink-0" />}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* BARRA FLUTUANTE DE FERRAMENTAS COM 90% DE LARGURA EM DESKTOP E SCROLL COMPACTO EM MOBILE */}
+        <div className="bg-papelClaro/95 backdrop-blur-md border border-papelKraft/60 shadow-kraft-lg rounded-3xl p-2 sm:p-3 flex items-center justify-between sm:justify-center gap-1.5 sm:gap-3 overflow-x-auto custom-compact-scrollbar">
           
-          {/* DESFAZER / REFAZER */}
-          <button
-            type="button"
-            onClick={() => executeCommand('undo')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="desfazer"
-          >
-            <Undo className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('redo')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="refazer"
-          >
-            <Redo className="w-4 h-4" />
-          </button>
-
-          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-          {/* BOTÃO DISPARADOR DO MENU POPUP DE OPÇÕES DE TEXTO */}
-          <button
-            type="button"
-            onClick={() => setShowFormatMenu(!showFormatMenu)}
-            className="px-2.5 sm:px-3 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1 sm:gap-1.5 shadow-sm transition-all lowercase active:scale-95 shrink-0"
-            title="selecionar tipo de texto"
-          >
-            <span>{FORMAT_OPTIONS.find((o) => o.value === currentFormat)?.label || 'parágrafo'}</span>
-            <ChevronUp className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
-          </button>
-
-          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-          {/* FORMATAÇÃO DE TEXTO: NEGRITO, ITÁLICO, TACHADO, SUBLINHADO, CITAÇÃO */}
-          <button
-            type="button"
-            onClick={() => executeCommand('bold')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold shrink-0 active:scale-95"
-            title="negrito"
-          >
-            <Bold className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('italic')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic shrink-0 active:scale-95"
-            title="itálico"
-          >
-            <Italic className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('strikeThrough')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="tachado"
-          >
-            <Strikethrough className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('underline')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="sublinhado"
-          >
-            <Underline className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => selectFormat('blockquote')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="citação poética"
-          >
-            <Quote className="w-4 h-4" />
-          </button>
-
-          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-          {/* LISTAS E ALINHAMENTO */}
-          <button
-            type="button"
-            onClick={() => executeCommand('insertUnorderedList')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="lista com marcadores"
-          >
-            <List className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('insertOrderedList')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="lista numerada"
-          >
-            <ListOrdered className="w-4 h-4" />
-          </button>
-
-          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-          <button
-            type="button"
-            onClick={() => executeCommand('justifyLeft')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="alinhar à esquerda"
-          >
-            <AlignLeft className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('justifyCenter')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="centralizar"
-          >
-            <AlignCenter className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => executeCommand('justifyRight')}
-            className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0 active:scale-95"
-            title="alinhar à direita"
-          >
-            <AlignRight className="w-4 h-4" />
-          </button>
-
-          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
-
-          {/* TAMANHO DE FONTE E COR */}
-          <div className="flex items-center space-x-1 shrink-0">
-            <Type className="w-4 h-4 text-acentoAzul shrink-0" />
-            <select
-              value={fontSize}
-              onChange={handleFontSizeChange}
-              className="px-2 py-1 bg-white/90 border border-papelKraft/40 rounded-xl text-xs font-bold text-acentoAzul focus:outline-none focus:border-acentoAzul transition-colors cursor-pointer"
+          {/* GRUPO 1: DESFAZER / REFAZER */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => executeCommand('undo')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="desfazer (ctrl+z)"
             >
-              <option value="12">12</option>
-              <option value="14">14</option>
-              <option value="16">16</option>
-              <option value="18">18</option>
-              <option value="20">20</option>
-              <option value="24">24</option>
-              <option value="28">28</option>
-              <option value="32">32</option>
-            </select>
+              <Undo className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('redo')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="refazer (ctrl+y)"
+            >
+              <Redo className="w-4 h-4" />
+            </button>
           </div>
 
-          <div className="flex items-center space-x-1.5 pl-1 shrink-0">
-            <label className="flex items-center space-x-1.5 cursor-pointer text-xs font-semibold text-tintaCarvao/80 lowercase">
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* GRUPO 2: BOTÃO DISPARADOR DO MENU POPUP DE TIPO DE TEXTO */}
+          <div className="shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowFormatMenu(!showFormatMenu)}
+              className="px-3 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1.5 shadow-sm transition-all lowercase active:scale-95"
+              title="selecionar tipo de texto"
+            >
+              <span>{FORMAT_OPTIONS.find((o) => o.value === currentFormat)?.label || 'parágrafo'}</span>
+              <ChevronUp className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
+            </button>
+          </div>
+
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* GRUPO 3: FORMATAÇÃO DE TEXTO (NEGRITO, ITÁLICO, TACHADO, SUBLINHADO, CITAÇÃO) */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => executeCommand('bold')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm font-bold active:scale-95"
+              title="negrito (ctrl+b)"
+            >
+              <Bold className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('italic')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm italic active:scale-95"
+              title="itálico (ctrl+i)"
+            >
+              <Italic className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('strikeThrough')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="tachado"
+            >
+              <Strikethrough className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('underline')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="sublinhado (ctrl+u)"
+            >
+              <Underline className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => selectFormat('blockquote')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="citação poética"
+            >
+              <Quote className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* GRUPO 4: LISTAS E ALINHAMENTO */}
+          <div className="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              onClick={() => executeCommand('insertUnorderedList')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="lista com marcadores"
+            >
+              <List className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('insertOrderedList')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="lista numerada"
+            >
+              <ListOrdered className="w-4 h-4" />
+            </button>
+
+            <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyLeft')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="alinhar à esquerda"
+            >
+              <AlignLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyCenter')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="centralizar"
+            >
+              <AlignCenter className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => executeCommand('justifyRight')}
+              className="p-2 sm:p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm active:scale-95"
+              title="alinhar à direita"
+            >
+              <AlignRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="w-px h-5 bg-papelKraft/40 mx-0.5 shrink-0"></div>
+
+          {/* GRUPO 5: TAMANHO DE FONTE (POPUP PERSONALIZADO ARREDONDADO) E SELETOR DE COR */}
+          <div className="flex items-center gap-2 shrink-0">
+            
+            {/* BOTÃO SELETOR DE TAMANHO DE FONTE */}
+            <div className="relative shrink-0" ref={fontSizeMenuRef}>
+              <button
+                type="button"
+                onClick={() => setShowFontSizeMenu(!showFontSizeMenu)}
+                className="px-2.5 py-1.5 bg-white hover:bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-bold text-acentoAzul flex items-center gap-1 shadow-sm transition-all active:scale-95"
+                title="tamanho da fonte"
+              >
+                <Type className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
+                <span className="font-gesto text-sm">{fontSize}px</span>
+                <ChevronUp className="w-3 h-3 text-acentoAzul shrink-0" />
+              </button>
+            </div>
+
+            {/* SELETOR DE COR DE TEXTO ARREDONDADO */}
+            <label className="flex items-center gap-1.5 cursor-pointer text-xs font-semibold text-tintaCarvao/80 lowercase bg-white/90 px-2 py-1 rounded-xl border border-papelKraft/40 shadow-sm shrink-0">
               <span className="hidden sm:inline">cor:</span>
               <input
                 type="color"
                 value={textColor}
                 onChange={handleColorChange}
-                className="w-6 h-6 rounded-lg cursor-pointer border border-papelKraft/40 p-0.5 bg-white shadow-sm"
+                className="w-5 h-5 rounded-md cursor-pointer border-none p-0 bg-transparent"
               />
             </label>
+
           </div>
 
         </div>
@@ -381,13 +456,20 @@ export default function RichTextEditor({
       </div>
 
       <style>{`
-        /* Esconder barra de rolagem mas manter scroll funcional em mobile */
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
+        /* Barra de rolagem compacta e elegante para dispositivos móveis */
+        .custom-compact-scrollbar::-webkit-scrollbar {
+          height: 4px;
         }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        .custom-compact-scrollbar::-webkit-scrollbar-track {
+          background: rgba(190, 197, 64, 0.15);
+          border-radius: 9999px;
+        }
+        .custom-compact-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(20, 13, 130, 0.4);
+          border-radius: 9999px;
+        }
+        .custom-compact-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(20, 13, 130, 0.8);
         }
 
         [contenteditable][data-placeholder]:empty:before {
