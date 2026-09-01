@@ -444,8 +444,8 @@ export default function Dashboard() {
                   </h2>
                 </div>
 
-                {/* Seleção do Mês Ativo (< Mês Ano >) e Aviso de Clique Mais Visível */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-bgPlataforma/60 p-2.5 rounded-2xl border border-papelKraft/40">
+                {/* Seleção do Mês Ativo (< Mês Ano >) e Aviso de Clique Mais Visível (Fundo Sólido) */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-bgPlataforma p-2.5 rounded-2xl border border-papelKraft/50">
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -468,8 +468,8 @@ export default function Dashboard() {
                     </button>
                   </div>
 
-                  {/* Aviso "clique em um dia para releer" em Helvetica (font-corpo min 14px) */}
-                  <div className="inline-flex items-center gap-1.5 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 text-acentoAzul text-xs sm:text-sm font-light font-corpo lowercase">
+                  {/* Aviso "clique em um dia para releer" Tag Box com Fundo Branco Sólido (Sem Transparência) */}
+                  <div className="inline-flex items-center gap-1.5 bg-white px-3.5 py-1.5 rounded-full border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-light font-corpo lowercase shadow-sm">
                     <BookOpen className="w-3.5 h-3.5 text-acentoAzul" />
                     <span>clique em um dia para releer</span>
                   </div>
@@ -502,12 +502,12 @@ export default function Dashboard() {
                         onClick={() => setSelectedDayDetail(day)}
                         className="flex flex-col items-center justify-center group/day relative focus:outline-none"
                       >
-                        {/* Tile do Dia: Fundo Terracota e Número Branco se Houve Atividade */}
+                        {/* Tile do Dia: Fundo Terracota se Ativo, ou Fundo Sólido de Plataforma */}
                         <div
                           className={`w-full h-9 sm:h-10 rounded-xl transition-all duration-300 flex items-center justify-center font-gesto text-base sm:text-lg relative ${
                             day.active
                               ? 'bg-acentoTerracota text-white shadow-sm hover:scale-105'
-                              : 'bg-papelKraft/25 text-tintaCarvao/50 hover:bg-papelKraft/40'
+                              : 'bg-bgPlataforma text-tintaCarvao/60 border border-papelKraft/40 hover:bg-papelKraft/40'
                           }`}
                         >
                           {day.dayNum}
@@ -532,10 +532,10 @@ export default function Dashboard() {
               {/* SEÇÃO INFERIOR: Palavras Totais, Sequência Ativa, Chancela Literária e Botões em Muthazle */}
               <div className="pt-4 border-t border-papelKraft/40 space-y-4">
                 
-                {/* Produção Escrita Acumulada & Dias Consecutivos lado a lado */}
+                {/* Produção Escrita Acumulada & Dias Consecutivos (Fundos Sólidos) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="bg-bgPlataforma/80 p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-acentoAzul/10 text-acentoAzul">
+                  <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-white text-acentoAzul border border-papelKraft/40 shadow-sm">
                       <Feather className="w-5 h-5" />
                     </div>
                     <div>
@@ -549,8 +549,8 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="bg-bgPlataforma/80 p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-acentoTerracota/10 text-acentoTerracota">
+                  <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/50 flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-white text-acentoTerracota border border-papelKraft/40 shadow-sm">
                       <Sparkles className="w-5 h-5" />
                     </div>
                     <div>
@@ -565,9 +565,9 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Chancela Poética / Equivalência Literária de Palavras Escritas */}
-                <div className="bg-bgPlataforma/70 p-3.5 sm:p-4 rounded-2xl border border-papelKraft/60 flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-acentoOliva/20 text-acentoAzul shrink-0">
+                {/* Chancela Poética / Equivalência Literária de Palavras Escritas (Fundo Sólido) */}
+                <div className="bg-bgPlataforma p-3.5 sm:p-4 rounded-2xl border border-papelKraft/60 flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-white text-acentoAzul border border-papelKraft/40 shrink-0 shadow-sm">
                     <BookMarked className="w-5 h-5" />
                   </div>
                   <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/85 lowercase leading-relaxed">
@@ -578,21 +578,21 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                {/* Botões de Ação em Muthazle (font-gesto) */}
-                <div className="flex items-center justify-end gap-2 pt-1">
+                {/* Botões de Ação em Muthazle (Tamanho 23px Desktop, 20px Mobile) */}
+                <div className="flex items-center justify-end gap-3 pt-1">
                   <Link
                     to="/exercises"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-sm font-normal font-gesto lowercase border border-acentoAzul/20 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-white hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-[20px] sm:text-[23px] font-normal font-gesto lowercase border border-papelKraft/60 shadow-sm"
                   >
-                    <Book className="w-3.5 h-3.5" />
+                    <Book className="w-4 h-4" />
                     <span>meus cadernos</span>
                   </Link>
 
                   <Link
                     to="/exercises?new=true"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-sm font-normal font-gesto lowercase shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white transition-all text-[20px] sm:text-[23px] font-normal font-gesto lowercase shadow-sm"
                   >
-                    <Plus className="w-3.5 h-3.5 text-white" />
+                    <Plus className="w-4 h-4 text-white" />
                     <span>+ novo texto</span>
                   </Link>
                 </div>
@@ -609,7 +609,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setIsFullAgendaOpen(true)}
-                  className="p-2 rounded-xl bg-bgPlataforma/80 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all border border-papelKraft/50 shadow-sm flex items-center justify-center"
+                  className="p-2 rounded-xl bg-bgPlataforma hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all border border-papelKraft/50 shadow-sm flex items-center justify-center"
                   aria-label="ver agenda completa"
                 >
                   <Maximize2 className="w-4 h-4" />
@@ -622,18 +622,18 @@ export default function Dashboard() {
 
               <div className="space-y-4">
                 
-                {/* Header Limpo com Título em Muthazle e Abas de Filtro em Muthazle */}
+                {/* Header Limpo com Título em Muthazle e Abas de Filtro em HELVETICA (font-corpo) */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-papelKraft/30 pb-3 pr-12">
                   <h2 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
                     agenda & encontros
                   </h2>
 
-                  {/* Abas de Filtro 100% Visíveis em Muthazle (font-gesto) */}
-                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-sm font-normal font-gesto lowercase shrink-0 self-start sm:self-auto">
+                  {/* Abas de Filtro 100% Visíveis em HELVETICA (font-corpo) */}
+                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs sm:text-sm font-normal font-corpo lowercase shrink-0 self-start sm:self-auto">
                     <button
                       type="button"
                       onClick={() => setAgendaTab('todos')}
-                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                      className={`px-3.5 py-1 rounded-full transition-all whitespace-nowrap font-corpo ${
                         agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
@@ -642,7 +642,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setAgendaTab('cafe')}
-                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                      className={`px-3.5 py-1 rounded-full transition-all whitespace-nowrap font-corpo ${
                         agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
@@ -651,7 +651,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setAgendaTab('admin')}
-                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
+                      className={`px-3.5 py-1 rounded-full transition-all whitespace-nowrap font-corpo ${
                         agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
@@ -666,7 +666,7 @@ export default function Dashboard() {
                     <div
                       key={ev.id}
                       className={`p-4 rounded-3xl border border-papelKraft/60 transition-all duration-200 shadow-sm space-y-3 bg-white ${
-                        ev.isExclusiveAdmin ? 'bg-white/95' : ''
+                        ev.isExclusiveAdmin ? 'bg-white' : ''
                       }`}
                     >
                       {/* Top Row: Countdown (Left) + Type Icon (Right) */}
@@ -709,7 +709,7 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Bottom Row: Left = Modality em Helvetica, Right = Calendar Export + Entrar CTA em Muthazle */}
+                      {/* Bottom Row: Left = Modality em Helvetica, Right = Calendar Export + Entrar CTA em Muthazle (23px / 20px) */}
                       <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
                         <span className="text-tintaCarvao/70 font-light lowercase">
                           {ev.modality}
@@ -720,7 +720,7 @@ export default function Dashboard() {
                             href={generateGoogleCalendarUrl(ev.title, `${ev.time} • ${ev.description}`)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/40 transition-colors shadow-sm"
+                            className="p-2 rounded-xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul border border-papelKraft/40 transition-colors shadow-sm"
                             title="adicionar ao google calendar"
                           >
                             <CalendarPlus className="w-4 h-4" />
@@ -728,7 +728,7 @@ export default function Dashboard() {
 
                           <Link
                             to={ev.linkUrl || '/cafe-com-letras'}
-                            className="px-4 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-sm font-normal font-gesto lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
+                            className="px-5 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-[20px] sm:text-[23px] font-normal font-gesto lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1.5"
                           >
                             <span>entrar →</span>
                           </Link>
@@ -738,13 +738,13 @@ export default function Dashboard() {
                   ))}
                 </div>
 
-                {/* Botão de Expandir Agenda Completa em Muthazle */}
+                {/* Botão de Expandir Agenda Completa em Muthazle (23px / 20px) */}
                 <button
                   type="button"
                   onClick={() => setIsFullAgendaOpen(true)}
-                  className="w-full py-2.5 px-4 rounded-2xl bg-bgPlataforma/80 hover:bg-papelKraft/40 text-acentoAzul text-sm sm:text-base font-normal font-gesto lowercase transition-all flex items-center justify-center gap-2 border border-papelKraft/50 shadow-sm"
+                  className="w-full py-2.5 px-4 rounded-2xl bg-bgPlataforma hover:bg-papelKraft/40 text-acentoAzul text-[20px] sm:text-[23px] font-normal font-gesto lowercase transition-all flex items-center justify-center gap-2 border border-papelKraft/50 shadow-sm"
                 >
-                  <Maximize2 className="w-3.5 h-3.5" />
+                  <Maximize2 className="w-4 h-4" />
                   <span>ver agenda completa ({agendaEvents.length} encontros) →</span>
                 </button>
 
@@ -759,7 +759,7 @@ export default function Dashboard() {
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft relative overflow-hidden space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-normal font-corpo lowercase text-acentoAzul/80 bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20">
+              <span className="text-xs sm:text-sm font-normal font-corpo lowercase text-acentoAzul bg-white px-3.5 py-1 rounded-full border border-papelKraft/60 shadow-sm">
                 em andamento
               </span>
               <span className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase">21 dias de escrita online</span>
@@ -805,11 +805,11 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Botão "retomar" em Muthazle (font-gesto) */}
+            {/* Botão "retomar" em Muthazle (font-gesto 23px / 20px) */}
             <div className="pt-1">
               <Link
                 to="/exercises"
-                className="btn-pill-primary px-6 py-2.5 text-sm sm:text-base font-normal font-gesto shadow-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform"
+                className="btn-pill-primary px-6 py-2.5 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform"
               >
                 <Play className="w-4 h-4 text-white fill-white" />
                 <span>retomar</span>
@@ -834,10 +834,10 @@ export default function Dashboard() {
 
               <Link
                 to="/fogueira"
-                className="text-sm sm:text-base font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
+                className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
               >
                 <span>ver fogueira</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
@@ -882,7 +882,7 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 4 DO BENTO: MEU CADERNO
-              (Muthazle no Título e Botões, Editorial Serif nos Títulos de Cadernos)
+              (Muthazle no Título e Botões 23px/20px, Editorial Serif nos Títulos de Cadernos)
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
             <div className="flex items-center justify-between">
@@ -897,9 +897,9 @@ export default function Dashboard() {
 
               <Link
                 to="/exercises"
-                className="btn-pill-primary px-3.5 py-1.5 text-sm font-normal font-gesto shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
+                className="btn-pill-primary px-5 py-2 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
               >
-                <Pencil className="w-3.5 h-3.5" />
+                <Pencil className="w-4 h-4" />
                 <span>escrever algo novo</span>
               </Link>
             </div>
@@ -925,7 +925,7 @@ export default function Dashboard() {
 
                   <Link
                     to="/exercises"
-                    className="text-xs sm:text-sm font-normal font-gesto text-acentoTerracota hover:underline lowercase"
+                    className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoTerracota hover:underline lowercase"
                   >
                     abrir →
                   </Link>
@@ -936,7 +936,7 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 5 DO BENTO: DESCUBRA (CURADORIA DO ADMIN)
-              (Muthazle no Título, Editorial Serif nos Títulos Recomendados)
+              (Muthazle no Título e Botões 23px/20px, Editorial Serif nos Títulos Recomendados)
              ======================================================== */}
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
             <div className="flex items-center justify-between">
@@ -951,9 +951,9 @@ export default function Dashboard() {
 
               <Link
                 to="/programs"
-                className="text-sm sm:text-base font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
+                className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
               >
-                <Compass className="w-3.5 h-3.5 text-acentoTerracota" />
+                <Compass className="w-4 h-4 text-acentoTerracota" />
                 <span>explorar tudo</span>
               </Link>
             </div>
@@ -991,7 +991,7 @@ export default function Dashboard() {
 
           {/* ========================================================
               ITEM 6 DO BENTO: CURSOS DISPONÍVEIS COMPLETO
-              (Muthazle nos Títulos de Seção e Botões, Editorial Serif nos Títulos de Cursos)
+              (Muthazle nos Títulos de Seção e Botões 23px/20px, Editorial Serif nos Títulos de Cursos)
              ======================================================== */}
           <div className="lg:col-span-12 bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-kraft space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -1006,7 +1006,7 @@ export default function Dashboard() {
             </div>
 
             {courses.length === 0 ? (
-              <div className="rounded-2xl border border-papelKraft/50 p-8 text-center bg-bgPlataforma/50 space-y-2">
+              <div className="rounded-2xl border border-papelKraft/50 p-8 text-center bg-bgPlataforma space-y-2">
                 <BookOpen className="w-12 h-12 text-acentoAzul/40 mx-auto" />
                 <h4 className="text-base font-bold font-editorial text-acentoAzul lowercase">nenhum curso disponível ainda</h4>
               </div>
@@ -1029,12 +1029,12 @@ export default function Dashboard() {
                             loading="lazy"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-acentoAzul/10">
+                          <div className="w-full h-full flex items-center justify-center bg-bgPlataforma border border-papelKraft/40">
                             <BookOpen className="w-10 h-10 text-acentoAzul/40" />
                           </div>
                         )}
                         {!hasAccess && (
-                          <div className="absolute inset-0 bg-tintaCarvao/75 backdrop-blur-[2px] flex items-center justify-center">
+                          <div className="absolute inset-0 bg-tintaCarvao/85 backdrop-blur-[2px] flex items-center justify-center">
                             <div className="text-center text-papelClaro">
                               <Lock className="w-7 h-7 mx-auto mb-1 text-acentoOliva" />
                               <p className="text-xs font-normal font-corpo lowercase">exclusivo premium</p>
@@ -1065,7 +1065,7 @@ export default function Dashboard() {
                           />
                         </div>
 
-                        <div className="pt-2 border-t border-papelKraft/40 flex items-center justify-between text-sm sm:text-base font-normal font-gesto text-acentoAzul lowercase">
+                        <div className="pt-2 border-t border-papelKraft/40 flex items-center justify-between text-[20px] sm:text-[23px] font-normal font-gesto text-acentoAzul lowercase">
                           <span>{hasAccess ? 'acessar aulas →' : 'conhecer programa →'}</span>
                         </div>
                       </div>
@@ -1129,13 +1129,13 @@ export default function Dashboard() {
               {/* VISTA 1: LISTA DE ENCONTROS */}
               {agendaModalView === 'list' && (
                 <div className="space-y-4">
-                  {/* Abas de Filtro da Agenda em Muthazle */}
-                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-sm font-normal font-gesto lowercase">
+                  {/* Abas de Filtro da Agenda em HELVETICA (font-corpo) */}
+                  <div className="inline-flex items-center gap-1 bg-bgPlataforma p-1 rounded-full border border-papelKraft/50 text-xs sm:text-sm font-normal font-corpo lowercase">
                     <button
                       type="button"
                       onClick={() => setAgendaTab('todos')}
-                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70'
+                      className={`px-3.5 py-1 rounded-full transition-all whitespace-nowrap font-corpo ${
+                        agendaTab === 'todos' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       todos
@@ -1143,8 +1143,8 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setAgendaTab('cafe')}
-                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70'
+                      className={`px-3.5 py-1 rounded-full transition-all whitespace-nowrap font-corpo ${
+                        agendaTab === 'cafe' ? 'bg-acentoAzul text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       ao vivo
@@ -1152,8 +1152,8 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setAgendaTab('admin')}
-                      className={`px-3 py-1 rounded-full transition-all whitespace-nowrap ${
-                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-normal' : 'text-tintaCarvao/70'
+                      className={`px-3.5 py-1 rounded-full transition-all whitespace-nowrap font-corpo ${
+                        agendaTab === 'admin' ? 'bg-acentoTerracota text-white shadow-sm font-normal' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
                       }`}
                     >
                       convites
@@ -1165,7 +1165,7 @@ export default function Dashboard() {
                       <div
                         key={ev.id}
                         className={`p-4 rounded-3xl border border-papelKraft/60 transition-all duration-200 shadow-sm space-y-3 bg-white ${
-                          ev.isExclusiveAdmin ? 'bg-white/95' : ''
+                          ev.isExclusiveAdmin ? 'bg-white' : ''
                         }`}
                       >
                         {/* Top Row */}
@@ -1225,7 +1225,7 @@ export default function Dashboard() {
 
                             <Link
                               to={ev.linkUrl || '/cafe-com-letras'}
-                              className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-sm font-normal font-gesto lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1"
+                              className="px-5 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-[20px] sm:text-[23px] font-normal font-gesto lowercase shadow-sm transition-transform hover:scale-105 inline-flex items-center gap-1.5"
                             >
                               <span>entrar →</span>
                             </Link>
@@ -1240,7 +1240,7 @@ export default function Dashboard() {
               {/* VISTA 2: CALENDÁRIO COMPLETO */}
               {agendaModalView === 'calendar' && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between bg-bgPlataforma/60 p-3 rounded-2xl border border-papelKraft/40">
+                  <div className="flex items-center justify-between bg-bgPlataforma p-3 rounded-2xl border border-papelKraft/40">
                     <span className="text-sm font-normal font-corpo text-acentoAzul lowercase">
                       {currentMonthLabel} • encontros agendados
                     </span>
@@ -1260,7 +1260,7 @@ export default function Dashboard() {
 
                     <div className="grid grid-cols-7 gap-2">
                       {monthDaysGrid.emptyLeadingSlots.map((_, idx) => (
-                        <div key={`empty-cal-${idx}`} className="h-24 sm:h-28 rounded-2xl bg-bgPlataforma/20 border border-transparent" />
+                        <div key={`empty-cal-${idx}`} className="h-24 sm:h-28 rounded-2xl bg-bgPlataforma border border-transparent" />
                       ))}
 
                       {monthDaysGrid.days.map((day) => {
@@ -1273,7 +1273,7 @@ export default function Dashboard() {
                             className={`h-24 sm:h-28 p-2 rounded-2xl border transition-all flex flex-col justify-between overflow-hidden ${
                               matchedEvents.length > 0
                                 ? 'bg-white border-acentoAzul/30 shadow-sm'
-                                : 'bg-bgPlataforma/40 border-papelKraft/30'
+                                : 'bg-bgPlataforma border-papelKraft/30'
                             }`}
                           >
                             <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
@@ -1317,7 +1317,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setIsFullAgendaOpen(false)}
-                  className="btn-pill-secondary px-6 py-2 text-base font-normal font-gesto lowercase"
+                  className="btn-pill-secondary px-6 py-2 text-[20px] sm:text-[23px] font-normal font-gesto lowercase"
                 >
                   fechar agenda
                 </button>
@@ -1367,7 +1367,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => setSelectedDayDetail(null)}
-                  className="text-sm font-normal font-gesto text-tintaCarvao/60 hover:text-tintaCarvao lowercase"
+                  className="text-[20px] sm:text-[23px] font-normal font-gesto text-tintaCarvao/70 hover:text-tintaCarvao lowercase"
                 >
                   fechar
                 </button>
@@ -1376,7 +1376,7 @@ export default function Dashboard() {
                   <Link
                     to="/exercises"
                     onClick={() => setSelectedDayDetail(null)}
-                    className="btn-pill-primary px-6 py-2.5 text-sm sm:text-base font-normal font-gesto shadow-sm inline-flex items-center gap-1.5"
+                    className="btn-pill-primary px-6 py-2.5 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-1.5"
                   >
                     <span>reler caderno →</span>
                   </Link>

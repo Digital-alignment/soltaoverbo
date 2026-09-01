@@ -12,10 +12,11 @@ Esta skill atua como **Auditor e Guardião Supremo do Design System de Solta o V
 ## 📜 Regras Estritas de Design (Contrato Inviolável)
 
 ### 1. 🔤 Sistema de Tipografia da Área do Aluno (Contrato Estrito)
-- **Muthazle (`font-gesto`)**: Usada para Saudações principais (`olá, aluna!`), Títulos de Cards Bento (`histórico de escrita & atividade`, `agenda & encontros`, `meus cadernos`, etc.), Botões de Ação (`+ novo texto`, `meus cadernos`, `entrar →`, `ver todos`), Abas de Filtro, e Números (datas e estatísticas).
-- **Helvetica / Sans Contemporânea (`font-corpo`)**: Usada em **tamanho mínimo 14px (`text-sm`)**, em sua maioria **light/normal (`font-light` ou `font-normal`)** e bold apenas quando estritamente necessário. Aplica-se a Tooltips, descrições, corpo de texto, etiquetas (tags), badges e metadados.
+- **Muthazle (`font-gesto`)**: Usada para Saudações principais (`olá, aluna! font-size: 2.3rem`), Títulos de Cards Bento (`font-size: 2.2rem`), e Botões de Ação (`entrar →`, `+ novo texto`, `meus cadernos`, `retomar`, `escrever algo novo`, `abrir →`, `explorar tudo`) em **tamanho 23px no Desktop (`text-[23px]`) e 20px no Mobile (`text-[20px] sm:text-[23px]`)**.
+- **Helvetica / Sans Contemporânea (`font-corpo`)**: Usada em **tamanho mínimo 14px (`text-sm`)**, em sua maioria **light/normal (`font-light` ou `font-normal`)** para descrições, tooltips, corpo de texto, etiquetas (tags), badges, metadados e **Abas de Filtro (`todos`, `ao vivo`, `convites`)**.
 - **PP Editorial Serif (`font-editorial`)**: Usada exclusivamente para Títulos de eventos específicos (`café com letras`), Cursos/Oficinas (`21 dias de escrita`), Títulos de publicações e provocações poéticas da comunidade.
-- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar `font-mono`, fontes monospace genéricas, ou fontes não aprovadas (Playpen Sans, Inter, Arial, etc.).
+- 🚫 **PROIBIÇÃO DE FUNDOS COM TRANSPARÊNCIA**: Eliminar caixas de tags ou blocos com lavagens transparentes (`/10`, `/15`, `/20`, `/60`). Usar sempre fundos sólidos oficiais (`bg-white`, `bg-bgPlataforma`, `bg-papelClaro`, `bg-acentoAzul`, `bg-acentoTerracota`).
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar `font-mono`, fontes monospace genéricas, ou fontes não aprovadas.
 
 ---
 
