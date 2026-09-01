@@ -11,7 +11,6 @@ import {
   Type,
   List,
   ListOrdered,
-  ChevronDown,
   ChevronUp,
   Check,
   Undo,
@@ -23,6 +22,7 @@ interface RichTextEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   flat?: boolean;
+  zoomLevel?: number;
 }
 
 const FORMAT_OPTIONS = [
@@ -34,7 +34,13 @@ const FORMAT_OPTIONS = [
   { value: 'blockquote', label: 'cita poética' },
 ];
 
-export default function RichTextEditor({ value, onChange, placeholder, flat = false }: RichTextEditorProps) {
+export default function RichTextEditor({
+  value,
+  onChange,
+  placeholder,
+  flat = false,
+  zoomLevel = 100,
+}: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const formatMenuRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState('16');
@@ -95,16 +101,19 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
     executeCommand('foreColor', color);
   };
 
+  // Cálculo da escala de fonte baseada no Zoom (90%, 100%, 110%, 125%)
+  const scaledFontSize = Math.round(Number(fontSize) * (zoomLevel / 100));
+
   return (
     <div className="relative min-h-[350px] flex flex-col justify-between">
       
-      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE */}
+      {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE COM ZOOM APLICADO */}
       <div
         ref={editorRef}
         contentEditable
         onInput={handleInput}
-        className="p-4 sm:p-6 min-h-[300px] focus:outline-none font-editorial text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-24"
-        style={{ fontSize: `${fontSize}px`, lineHeight: '1.7', color: textColor }}
+        className="p-4 sm:p-6 min-h-[300px] focus:outline-none font-editorial text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-24 transition-all"
+        style={{ fontSize: `${scaledFontSize}px`, lineHeight: '1.7', color: textColor }}
         data-placeholder={placeholder}
       />
 
@@ -115,7 +124,7 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('undo')}
-          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="desfazer"
         >
           <Undo className="w-4 h-4" />
@@ -123,7 +132,7 @@ export default function RichTextEditor({ value, onChange, placeholder, flat = fa
         <button
           type="button"
           onClick={() => executeCommand('redo')}
-          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm"
+          className="p-1.5 bg-white/90 hover:bg-acentoAzul text-acentoAzul hover:text-white rounded-xl border border-papelKraft/40 transition-colors shadow-sm shrink-0"
           title="refazer"
         >
           <Redo className="w-4 h-4" />

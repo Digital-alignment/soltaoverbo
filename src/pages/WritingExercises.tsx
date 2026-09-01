@@ -3,6 +3,10 @@ import { createPortal } from 'react-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import RichTextEditor from '../components/RichTextEditor';
+import EditorSettingsModal, {
+  DEFAULT_EDITOR_SETTINGS,
+  EditorSettings,
+} from '../components/EditorSettingsModal';
 import {
   Plus,
   Save,
@@ -36,6 +40,7 @@ import {
   BookOpen,
   Send,
   MessageSquare,
+  Settings,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -189,9 +194,32 @@ export default function WritingExercises() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [isAnonymousShare, setIsAnonymousShare] = useState(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  // Modo Foco (Zen Editor) — ATIVO POR PADRÃO AO CRIAR/EDITAR
+  // MODO FOCO (ZEN EDITOR) — ATIVO POR PADRÃO AO CRIAR/EDITAR
   const [isZenMode, setIsZenMode] = useState(false);
+
+  // CONFIGURAÇÕES DO EDITOR COM PERSISTÊNCIA EM LOCALSTORAGE
+  const [editorSettings, setEditorSettings] = useState<EditorSettings>(() => {
+    try {
+      const saved = localStorage.getItem('soltaoverbo_editor_settings');
+      return saved ? JSON.parse(saved) : DEFAULT_EDITOR_SETTINGS;
+    } catch {
+      return DEFAULT_EDITOR_SETTINGS;
+    }
+  });
+
+  const handleUpdateSettings = (newSettings: Partial<EditorSettings>) => {
+    setEditorSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      try {
+        localStorage.setItem('soltaoverbo_editor_settings', JSON.stringify(updated));
+      } catch (err) {
+        console.error('erro ao salvar configurações:', err);
+      }
+      return updated;
+    });
+  };
 
   // Estados de Abas Laterais & Filtros na Vitrina
   const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'tags'>('textos');
@@ -427,6 +455,18 @@ export default function WritingExercises() {
     if (!plainText) return 0;
     return plainText.split(/\s+/).length;
   }, [content]);
+
+  // Marco poético atual com base no número de palavras
+  const currentMilestone = useMemo(() => {
+    if (!editorSettings.showMilestones || currentWordCount === 0) return null;
+    let reached = WORD_MILESTONES[0];
+    for (const m of WORD_MILESTONES) {
+      if (currentWordCount >= m.minWords) {
+        reached = m;
+      }
+    }
+    return reached;
+  }, [currentWordCount, editorSettings.showMilestones]);
 
   const renderTemplateIcon = (type: GuidedTemplate['type']) => {
     switch (type) {
@@ -861,24 +901,51 @@ export default function WritingExercises() {
           </div>
         )}
 
+        {/* MODAL DE CONFIGURAÇÕES DO EDITOR */}
+        <EditorSettingsModal
+          isOpen={showSettingsModal}
+          onClose={() => setShowSettingsModal(false)}
+          settings={editorSettings}
+          onUpdateSettings={handleUpdateSettings}
+        />
+
         {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA VIA REACT PORTAL NO DOM BODY) */}
         {isZenMode &&
           createPortal(
             <div className="fixed inset-0 z-[999999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
               <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
                 
-                {/* Header Superior Limpo do Modo Foco */}
+                {/* Header Superior Limpo do Modo Foco com Botão de Configurações no Canto Superior Esquerdo */}
                 <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
-                  {/* Lado Esquerdo: Estatísticas de Palavras & Sprint */}
+                  
+                  {/* Lado Esquerdo: ÍCONE DE CONFIGURAÇÃO + Estatísticas de Palavras & Sprint */}
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
-                      produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
-                    </span>
+                    <button
+                      onClick={() => setShowSettingsModal(true)}
+                      className="p-2 rounded-xl bg-white hover:bg-bgPlataforma text-acentoAzul border border-papelKraft/50 transition-colors shadow-sm inline-flex items-center gap-1.5"
+                      title="configurações do editor"
+                    >
+                      <Settings className="w-4 h-4 text-acentoAzul" />
+                      <span className="text-xs font-bold lowercase hidden sm:inline">configurações</span>
+                    </button>
 
-                    {timerSeconds !== null && (
+                    {editorSettings.showWordCount && (
+                      <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
+                        produção: <strong className="font-gesto text-xl font-normal text-acentoAzul">{currentWordCount}</strong> palavras
+                      </span>
+                    )}
+
+                    {editorSettings.showTimer && timerSeconds !== null && (
                       <span className="text-xs font-bold text-acentoTerracota flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
                         <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
                         <span className="font-gesto text-lg font-normal">{formatTimerStr(timerSeconds)}</span>
+                      </span>
+                    )}
+
+                    {currentMilestone && (
+                      <span className="text-[11px] font-bold text-acentoAzul bg-acentoAzul/10 px-3 py-1 rounded-full border border-acentoAzul/20 lowercase hidden md:inline-flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-acentoAzul" />
+                        <span>{currentMilestone.title}</span>
                       </span>
                     )}
                   </div>
@@ -920,6 +987,7 @@ export default function WritingExercises() {
                       onChange={setContent}
                       placeholder="escreva aqui com calma e sem interrupções..."
                       flat={true}
+                      zoomLevel={editorSettings.zoomLevel}
                     />
                   </div>
                 </div>
