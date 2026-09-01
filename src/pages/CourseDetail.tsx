@@ -525,24 +525,21 @@ export default function CourseDetail() {
                 )}
 
                 {/* SEÇÃO DE PARTILHAS & COMENTÁRIOS DA AULA */}
-                <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm">
-                  <div className={`flex items-center justify-between transition-all ${showComments ? 'border-b border-papelKraft/25 pb-3 mb-4' : ''}`}>
-                    <button
-                      type="button"
-                      onClick={() => setShowComments(!showComments)}
-                      className="text-[2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase flex items-center gap-2 hover:text-acentoTerracota transition-colors cursor-pointer"
-                    >
-                      <MessageCircle className="w-4 h-4 text-acentoAzul" />
-                      <span>partilhas da aula ({comments.length})</span>
-                    </button>
+                <div className="bg-papelClaro rounded-3xl p-5 sm:p-6 border border-papelKraft/30 shadow-sm transition-all">
+                  <div
+                    className={`flex items-center justify-between gap-4 cursor-pointer transition-all ${showComments ? 'border-b border-papelKraft/25 pb-3 mb-4' : ''}`}
+                    onClick={() => setShowComments(!showComments)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 text-acentoAzul shrink-0" />
+                      <h3 className="text-2xl sm:text-3xl font-normal font-gesto text-acentoAzul lowercase">
+                        partilhas da aula
+                      </h3>
+                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setShowComments(!showComments)}
-                      className="text-xs font-normal font-gesto text-acentoAzul hover:underline lowercase cursor-pointer"
-                    >
-                      {showComments ? 'ocultar ▲' : 'mostrar ▼'}
-                    </button>
+                    <div className="p-2 rounded-full bg-papelKraft/20 hover:bg-papelKraft/30 text-acentoAzul transition-all shrink-0">
+                      <ChevronDown className={`w-5 h-5 text-acentoAzul transition-transform duration-300 ${showComments ? 'rotate-180' : ''}`} />
+                    </div>
                   </div>
 
                   {showComments && (
