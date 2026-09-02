@@ -21,7 +21,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
-import { getWordPreview } from '../utils/textProcessing';
+import { getWordPreview, stripHtmlTags } from '../utils/textProcessing';
 import type { Database } from '../lib/database.types';
 
 type CommunityPost = Database['public']['Tables']['community_posts']['Row'] & {
