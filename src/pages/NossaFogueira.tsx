@@ -1,9 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Heart, MessageCircle, User, Calendar, Edit2, Trash2 } from 'lucide-react';
-import RichTextEditor from '../components/RichTextEditor';
+import {
+  Heart,
+  MessageSquare,
+  Share2,
+  Search,
+  Plus,
+  Calendar,
+  User,
+  Trash2,
+  Edit2,
+  Feather,
+  Flame,
+  Sparkles,
+  BookOpen,
+  Send,
+  X,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import { getWordPreview } from '../utils/textProcessing';
 import type { Database } from '../lib/database.types';
 
@@ -35,6 +52,10 @@ export default function NossaFogueira() {
   const [editContent, setEditContent] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
+
+  // Filtros de Categoria e Busca
+  const [selectedFilter, setSelectedFilter] = useState<'todos' | '21dias' | 'livres' | 'poesia' | 'rituais'>('todos');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     loadPosts();
@@ -107,7 +128,7 @@ export default function NossaFogueira() {
       setDisplayedPosts(postsWithLikes.slice(0, postsPerPage));
       setCurrentPage(1);
     } catch (error) {
-      console.error('Erro ao carregar posts:', error);
+      console.error('erro ao carregar posts:', error);
     } finally {
       setLoading(false);
     }
@@ -198,7 +219,7 @@ export default function NossaFogueira() {
 
       await loadPosts();
     } catch (error) {
-      console.error('Erro ao curtir:', error);
+      console.error('erro ao curtir:', error);
     }
   };
 
@@ -222,12 +243,12 @@ export default function NossaFogueira() {
       await loadComments(postId);
       await loadPosts();
     } catch (error) {
-      console.error('Erro ao comentar:', error);
+      console.error('erro ao comentar:', error);
     }
   };
 
   const handleDeleteComment = async (commentId: string, postId: string) => {
-    if (!confirm('Tem certeza que deseja excluir este comentário?')) {
+    if (!confirm('tem certeza que deseja excluir este comentário?')) {
       return;
     }
 
@@ -235,7 +256,7 @@ export default function NossaFogueira() {
     const previousPosts = [...displayedPosts];
 
     const removeCommentFromState = (comments: Comment[]): Comment[] => {
-      return comments.filter(c => {
+      return comments.filter((c) => {
         if (c.id === commentId) return false;
         if (c.replies) {
           c.replies = removeCommentFromState(c.replies);
@@ -244,14 +265,16 @@ export default function NossaFogueira() {
       });
     };
 
-    setPostComments(prev => ({
+    setPostComments((prev) => ({
       ...prev,
-      [postId]: removeCommentFromState(prev[postId] || [])
+      [postId]: removeCommentFromState(prev[postId] || []),
     }));
 
-    setDisplayedPosts(prev => prev.map(p =>
-      p.id === postId ? { ...p, comment_count: Math.max(0, (p.comment_count || 0) - 1) } : p
-    ));
+    setDisplayedPosts((prev) =>
+      prev.map((p) =>
+        p.id === postId ? { ...p, comments_count: Math.max(0, (p.comments_count || 0) - 1) } : p
+      )
+    );
 
     if (editingComment === commentId) {
       setEditingComment(null);
@@ -262,25 +285,20 @@ export default function NossaFogueira() {
       const { error } = await supabase.from('comments').delete().eq('id', commentId);
 
       if (error) {
-        console.error('Delete error:', error);
+        console.error('erro ao deletar:', error);
         setPostComments(previousComments);
         setDisplayedPosts(previousPosts);
-
-        if (error.message.includes('permission')) {
-          alert('Você não tem permissão para excluir este comentário.');
-        } else {
-          alert('Erro ao excluir comentário: ' + error.message);
-        }
+        alert('erro ao excluir comentário: ' + error.message);
         return;
       }
 
       await loadComments(postId);
       await loadPosts();
     } catch (error: any) {
-      console.error('Erro ao excluir comentário:', error);
+      console.error('erro ao excluir comentário:', error);
       setPostComments(previousComments);
       setDisplayedPosts(previousPosts);
-      alert('Erro ao excluir comentário. Tente novamente.');
+      alert('erro ao excluir comentário. tente novamente.');
     }
   };
 
@@ -289,14 +307,9 @@ export default function NossaFogueira() {
     setEditContent(comment.content);
   };
 
-  const cancelEditComment = () => {
-    setEditingComment(null);
-    setEditContent('');
-  };
-
   const handleUpdateComment = async (commentId: string, postId: string) => {
     if (!editContent.trim()) {
-      alert('O comentário não pode estar vazio.');
+      alert('o comentário não pode estar vazio.');
       return;
     }
 
@@ -304,7 +317,7 @@ export default function NossaFogueira() {
     const newContent = editContent.trim();
 
     const updateCommentInState = (comments: Comment[]): Comment[] => {
-      return comments.map(c => {
+      return comments.map((c) => {
         if (c.id === commentId) {
           return { ...c, content: newContent };
         }
@@ -315,429 +328,457 @@ export default function NossaFogueira() {
       });
     };
 
-    setPostComments(prev => ({
+    setPostComments((prev) => ({
       ...prev,
-      [postId]: updateCommentInState(prev[postId] || [])
+      [postId]: updateCommentInState(prev[postId] || []),
     }));
     setEditingComment(null);
     setEditContent('');
 
     try {
-      const { error } = await supabase
-        .from('comments')
-        .update({ content: newContent })
-        .eq('id', commentId);
+      const { error } = await supabase.from('comments').update({ content: newContent }).eq('id', commentId);
 
       if (error) {
-        console.error('Update error:', error);
+        console.error('erro ao atualizar:', error);
         setPostComments(previousComments);
-
-        if (error.message.includes('permission')) {
-          alert('Você não tem permissão para editar este comentário.');
-        } else {
-          alert('Erro ao atualizar comentário: ' + error.message);
-        }
+        alert('erro ao atualizar comentário: ' + error.message);
         return;
       }
 
       await loadComments(postId);
     } catch (error: any) {
-      console.error('Erro ao atualizar comentário:', error);
+      console.error('erro ao atualizar comentário:', error);
       setPostComments(previousComments);
-      alert('Erro ao atualizar comentário. Tente novamente.');
+      alert('erro ao atualizar comentário. tente novamente.');
     }
   };
 
+  const handleShareLink = (postId: string) => {
+    const shareUrl = `${window.location.origin}/fogueira#post-${postId}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl);
+      alert('link do texto copiado para a área de transferência!');
+    } else {
+      alert(`link para partilhar: ${shareUrl}`);
+    }
+  };
+
+  // Filtragem Dinâmica de Posts por Categoria e Busca
+  const filteredPosts = useMemo(() => {
+    return displayedPosts.filter((post) => {
+      if (!post.writing_exercise || !post.user_profile) return false;
+
+      const title = post.writing_exercise.title.toLowerCase();
+      const content = post.writing_exercise.content.toLowerCase();
+      const author = post.user_profile.display_name.toLowerCase();
+      const matchesSearch = title.includes(searchQuery.toLowerCase()) || content.includes(searchQuery.toLowerCase()) || author.includes(searchQuery.toLowerCase());
+
+      if (!matchesSearch) return false;
+
+      if (selectedFilter === '21dias') {
+        return title.includes('21 dias') || title.includes('dia ');
+      } else if (selectedFilter === 'poesia') {
+        return title.includes('poema') || title.includes('poesia') || content.includes('estrofe');
+      } else if (selectedFilter === 'rituais') {
+        return title.includes('ritual') || title.includes('convite');
+      } else if (selectedFilter === 'livres') {
+        return !title.includes('21 dias') && !title.includes('dia ');
+      }
+
+      return true;
+    });
+  }, [displayedPosts, searchQuery, selectedFilter]);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#f0e6d1' }}>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Nossa Fogueira</h1>
-          <p className="text-gray-600">
-            Compartilhe suas histórias e se conecte com outros escritores
-          </p>
+    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8 pb-28 lg:pb-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        {/* CABEÇALHO DA PÁGINA: nossa fogueira (Muthazle Sem Bold 34px-44px) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-papelKraft/40 pb-4">
+          <div className="space-y-1">
+            <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
+              nossa fogueira
+            </h1>
+            <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase">
+              partilhas e textos da nossa comunidade de escritoras
+            </p>
+          </div>
+
+          <Link
+            to="/exercises?new=true"
+            className="px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-xs hover:bg-acentoTerracota/90 hover:scale-102 transition-all inline-flex items-center gap-2 cursor-pointer shrink-0"
+          >
+            <Plus className="w-4.5 h-4.5 text-white" />
+            <span>partilhar novo texto</span>
+          </Link>
         </div>
 
+        {/* BARRA DE FILTROS & CAMPO DE BUSCA (MOBILE SAFE ROLAGEM) */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-papelClaro p-3 rounded-2xl border border-papelKraft/40 shadow-xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
+            <button
+              onClick={() => setSelectedFilter('todos')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
+                selectedFilter === 'todos'
+                  ? 'bg-acentoAzul text-white shadow-xs'
+                  : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
+              }`}
+            >
+              todos ({allPosts.length})
+            </button>
+
+            <button
+              onClick={() => setSelectedFilter('21dias')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
+                selectedFilter === '21dias'
+                  ? 'bg-acentoAzul text-white shadow-xs'
+                  : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
+              }`}
+            >
+              21 dias de escrita
+            </button>
+
+            <button
+              onClick={() => setSelectedFilter('livres')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
+                selectedFilter === 'livres'
+                  ? 'bg-acentoAzul text-white shadow-xs'
+                  : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
+              }`}
+            >
+              textos livres
+            </button>
+
+            <button
+              onClick={() => setSelectedFilter('poesia')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
+                selectedFilter === 'poesia'
+                  ? 'bg-acentoAzul text-white shadow-xs'
+                  : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
+              }`}
+            >
+              poesia
+            </button>
+          </div>
+
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="buscar histórias..."
+              className="w-full pl-10 pr-4 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40 lowercase shadow-xs"
+            />
+          </div>
+        </div>
+
+        {/* FEED DE HISTÓRIAS E TEXTOS DA COMUNIDADE */}
         {loading ? (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-2xl shadow-lg p-8 animate-pulse">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/6"></div>
+              <div key={i} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-6 animate-pulse space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 bg-papelKraft/40 rounded-full"></div>
+                  <div className="space-y-1.5 flex-1">
+                    <div className="h-4 bg-papelKraft/40 rounded w-1/4"></div>
+                    <div className="h-3 bg-papelKraft/30 rounded w-1/6"></div>
                   </div>
                 </div>
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div className="h-6 bg-papelKraft/40 rounded w-2/3"></div>
                 <div className="space-y-2">
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                  <div className="h-4 bg-papelKraft/30 rounded"></div>
+                  <div className="h-4 bg-papelKraft/30 rounded w-5/6"></div>
                 </div>
               </div>
             ))}
           </div>
-        ) : allPosts.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Nenhuma história ainda</h3>
-            <p className="text-gray-600 mb-6">
-              Seja o primeiro a compartilhar suas criações com a comunidade!
-            </p>
+        ) : filteredPosts.length === 0 ? (
+          <div className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-10 sm:p-12 text-center space-y-4 shadow-kraft">
+            <Flame className="w-12 h-12 text-acentoTerracota/60 mx-auto" />
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
+                nenhuma história encontrada
+              </h3>
+              <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase">
+                {searchQuery
+                  ? 'nenhum texto atende aos critérios da sua busca.'
+                  : 'seja a primeira a partilhar suas criações com a nossa fogueira!'}
+              </p>
+            </div>
             <Link
-              to="/exercises"
-              className="inline-block bg-gradient-to-r from-amber-500 to-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:from-amber-600 hover:to-orange-700 transition shadow-lg"
+              to="/exercises?new=true"
+              className="inline-flex items-center gap-2 bg-acentoTerracota text-white px-6 py-3 rounded-2xl font-gesto text-[22px] lowercase shadow-xs hover:bg-acentoTerracota/90 transition-all cursor-pointer"
             >
-              Começar a Escrever
+              <Feather className="w-5 h-5 text-white" />
+              <span>partilhar o seu texto</span>
             </Link>
           </div>
         ) : (
-          <div className="space-y-6">
-            {displayedPosts.filter(post => post.writing_exercise && post.user_profile).map((post) => {
+          <div className="space-y-5">
+            {filteredPosts.map((post) => {
               const isExpanded = expandedPosts.has(post.id);
               const isCommenting = commentingPost === post.id;
               const textarea = document.createElement('textarea');
               textarea.innerHTML = post.writing_exercise.content;
               const plainText = textarea.value.replace(/<[^>]*>/g, '');
-              const wordCount = plainText.trim().split(/\s+/).filter(word => word.length > 0).length;
-              const needsExpand = wordCount > 35;
+              const wordCount = plainText.trim().split(/\s+/).filter((word) => word.length > 0).length;
+              const needsExpand = wordCount > 40;
 
               return (
-                <div key={post.id} className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                  <div className="p-8">
-                    <div className="flex items-start space-x-4 mb-6">
+                <div
+                  id={`post-${post.id}`}
+                  key={post.id}
+                  className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-7 shadow-kraft space-y-4 hover:border-acentoAzul/40 transition-all"
+                >
+                  {/* CABEÇALHO DO AUTOR */}
+                  <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3.5">
+                    <div className="flex items-center gap-3">
                       <Link to={`/profile/${post.user_profile.id}`}>
                         {post.user_profile.profile_picture_url ? (
                           <img
                             src={post.user_profile.profile_picture_url}
                             alt={post.user_profile.display_name}
-                            className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                            className="w-11 h-11 rounded-full object-cover shrink-0 border border-papelKraft/40"
                           />
                         ) : (
-                          <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
-                            {post.user_profile.display_name.charAt(0).toUpperCase()}
+                          <div className="w-11 h-11 bg-acentoAzul text-white rounded-full flex items-center justify-center font-bold text-sm shrink-0 uppercase">
+                            {post.user_profile.display_name.charAt(0)}
                           </div>
                         )}
                       </Link>
-                      <div className="flex-1 min-w-0">
+
+                      <div className="space-y-0.5">
                         <Link
                           to={`/profile/${post.user_profile.id}`}
-                          className="font-bold text-gray-900 hover:text-amber-600 transition"
+                          className="font-bold font-editorial text-base sm:text-lg text-acentoAzul hover:text-acentoTerracota transition-colors lowercase block leading-tight"
                         >
                           {post.user_profile.display_name}
                         </Link>
-                        <div className="flex items-center text-sm text-gray-500 mt-1">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          {new Date(post.published_at).toLocaleDateString('pt-BR', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric',
-                          })}
+                        <div className="flex items-center gap-1.5 text-[11px] font-corpo text-tintaCarvao/50">
+                          <Calendar className="w-3 h-3" />
+                          <span>
+                            {new Date(post.published_at).toLocaleDateString('pt-BR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric',
+                            })}
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                      {post.writing_exercise.title}
-                    </h2>
+                    <span className="px-3 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold lowercase">
+                      fogueira
+                    </span>
+                  </div>
 
-                    <div className="prose max-w-none text-gray-700 leading-relaxed">
-                      {isExpanded ? (
-                        <div dangerouslySetInnerHTML={{ __html: post.writing_exercise.content }} />
-                      ) : (
-                        <p>{getWordPreview(post.writing_exercise.content)}</p>
-                      )}
-                    </div>
+                  {/* TÍTULO DO TEXTO */}
+                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+                    {post.writing_exercise.title}
+                  </h2>
 
-                    {needsExpand && (
-                      <button
-                        onClick={() => toggleExpand(post.id)}
-                        className="text-amber-600 hover:text-amber-700 font-medium mt-4 transition"
-                      >
-                        {isExpanded ? 'Ver menos' : 'Ler mais'}
-                      </button>
+                  {/* CONTEÚDO POÉTICO */}
+                  <div className="bg-white/90 p-4.5 sm:p-6 rounded-2xl border border-papelKraft/30 text-xs sm:text-sm font-corpo text-tintaCarvao/85 leading-relaxed lowercase space-y-2">
+                    {isExpanded ? (
+                      <div dangerouslySetInnerHTML={{ __html: post.writing_exercise.content }} />
+                    ) : (
+                      <p>{getWordPreview(post.writing_exercise.content)}</p>
                     )}
+                  </div>
 
-                    <div className="flex items-center space-x-6 mt-6 pt-6 border-t border-gray-200">
+                  {/* BOTÃO LER MAIS / LER MENOS */}
+                  {needsExpand && (
+                    <button
+                      onClick={() => toggleExpand(post.id)}
+                      className="text-xs font-bold font-corpo text-acentoTerracota hover:underline lowercase inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>{isExpanded ? 'ler menos' : 'ler texto completo'}</span>
+                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
+                  )}
+
+                  {/* BARRA DE AÇÕES SOCIAIS */}
+                  <div className="flex items-center justify-between pt-3 border-t border-papelKraft/30">
+                    <div className="flex items-center gap-4">
+                      {/* BOTÃO CURTIR / LIKES */}
                       <button
                         onClick={() => handleLike(post.id, post.user_liked)}
-                        className={`flex items-center space-x-2 transition ${
-                          post.user_liked
-                            ? 'text-red-600'
-                            : 'text-gray-600 hover:text-red-600'
+                        className={`flex items-center gap-1.5 text-xs font-bold font-corpo transition-all cursor-pointer ${
+                          post.user_liked ? 'text-red-600' : 'text-tintaCarvao/60 hover:text-red-600'
                         }`}
+                        title={post.user_liked ? 'descurtir' : 'curtir'}
                       >
                         <Heart
-                          className={`w-6 h-6 transition-transform duration-300 ${
-                            post.user_liked ? 'fill-current' : ''
-                          } ${
-                            animatingHeart === post.id ? 'animate-heart-bounce' : ''
-                          }`}
+                          className={`w-4 h-4 transition-transform ${
+                            post.user_liked ? 'fill-current text-red-600' : ''
+                          } ${animatingHeart === post.id ? 'scale-125' : ''}`}
                         />
+                        <span>{post.likes_count || 0}</span>
                       </button>
 
+                      {/* BOTÃO COMENTÁRIOS */}
                       <button
                         onClick={() => toggleComments(post.id)}
-                        className="flex items-center space-x-2 text-gray-600 hover:text-amber-600 transition"
+                        className="flex items-center gap-1.5 text-xs font-bold font-corpo text-tintaCarvao/60 hover:text-acentoAzul transition-colors cursor-pointer"
+                        title="ver partilhas e comentários"
                       >
-                        <MessageCircle className="w-5 h-5" />
-                        <span className="font-medium">{post.comments_count}</span>
+                        <MessageSquare className="w-4 h-4" />
+                        <span>{post.comments_count || 0} comentários</span>
                       </button>
                     </div>
 
-                    {isCommenting && (
-                      <div className="mt-6 pt-6 border-t border-gray-200">
-                        <form
-                          onSubmit={(e) => handleCommentSubmit(post.id, e)}
-                          className="mb-6"
-                        >
-                          {replyTo && (
-                            <div className="mb-3 px-4 py-2 bg-amber-50 border border-amber-200 rounded-lg">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm text-gray-700">
-                                  Respondendo a <span className="font-semibold text-amber-700">{replyToName}</span>
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setReplyTo(null);
-                                    setReplyToName('');
-                                  }}
-                                  className="text-sm text-amber-600 hover:text-amber-700 font-medium"
-                                >
-                                  Cancelar
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                          <RichTextEditor
+                    {/* BOTÃO COMPARTILHAR LINK */}
+                    <button
+                      onClick={() => handleShareLink(post.id)}
+                      className="p-1.5 text-tintaCarvao/50 hover:text-acentoAzul hover:bg-white rounded-xl transition-colors cursor-pointer"
+                      title="copiar link da partilha"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {/* SEÇÃO DE COMENTÁRIOS ANINHALDOS */}
+                  {isCommenting && (
+                    <div className="pt-4 border-t border-papelKraft/30 space-y-4 animate-fadeIn">
+                      {/* FORMULÁRIO DE NOVO COMENTÁRIO */}
+                      <form onSubmit={(e) => handleCommentSubmit(post.id, e)} className="space-y-2">
+                        {replyTo && (
+                          <div className="flex items-center justify-between px-3 py-1.5 bg-acentoAzul/10 rounded-xl text-xs text-acentoAzul font-corpo">
+                            <span>
+                              respondendo a <span className="font-bold">{replyToName}</span>
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setReplyTo(null);
+                                setReplyToName('');
+                              }}
+                              className="text-acentoTerracota font-bold hover:underline"
+                            >
+                              cancelar
+                            </button>
+                          </div>
+                        )}
+
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
                             value={newComment}
-                            onChange={setNewComment}
-                            placeholder="Deixe seu comentário..."
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="escreva seu comentário na fogueira..."
+                            className="flex-1 px-4 py-2.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul placeholder:text-tintaCarvao/40 lowercase shadow-xs"
                           />
                           <button
                             type="submit"
-                            className="mt-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-6 py-2 rounded-lg font-medium hover:from-amber-600 hover:to-orange-700 transition"
+                            className="px-4 py-2.5 bg-acentoAzul hover:bg-acentoAzul/90 text-white rounded-xl font-gesto text-[18px] lowercase transition-colors cursor-pointer shadow-xs shrink-0 flex items-center gap-1"
                           >
-                            Comentar
+                            <Send className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">comentar</span>
                           </button>
-                        </form>
+                        </div>
+                      </form>
 
-                        <div className="space-y-4">
-                          {postComments[post.id]?.map((comment) => (
-                            <div key={comment.id} className="space-y-4">
-                              <div className="flex space-x-3">
-                                {comment.user_profile?.profile_picture_url ? (
-                                  <img
-                                    src={comment.user_profile.profile_picture_url}
-                                    alt={comment.user_profile?.display_name}
-                                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                                  />
-                                ) : (
-                                  <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
-                                    {comment.user_profile?.display_name?.charAt(0).toUpperCase()}
+                      {/* LISTA DE COMENTÁRIOS */}
+                      <div className="space-y-3 bg-white p-4 rounded-2xl border border-papelKraft/30 max-h-80 overflow-y-auto">
+                        {(postComments[post.id] || []).length === 0 ? (
+                          <p className="text-xs text-tintaCarvao/50 font-editorial italic text-center py-2">
+                            nenhum comentário ainda. seja a primeira a partilhar uma reflexão!
+                          </p>
+                        ) : (
+                          postComments[post.id]?.map((comment) => (
+                            <div key={comment.id} className="space-y-2 pb-2.5 border-b border-papelKraft/20 last:border-0 last:pb-0">
+                              <div className="flex items-start justify-between">
+                                <div className="flex items-center gap-2">
+                                  {comment.user_profile?.profile_picture_url ? (
+                                    <img
+                                      src={comment.user_profile.profile_picture_url}
+                                      alt={comment.user_profile?.display_name}
+                                      className="w-7 h-7 rounded-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-7 h-7 bg-acentoAzul text-white rounded-full flex items-center justify-center text-[10px] font-bold uppercase">
+                                      {comment.user_profile?.display_name?.charAt(0)}
+                                    </div>
+                                  )}
+                                  <span className="font-editorial font-bold text-xs text-acentoAzul lowercase">
+                                    {comment.user_profile?.display_name}
+                                  </span>
+                                </div>
+
+                                {profile?.id === comment.user_id && (
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      onClick={() => startEditComment(comment)}
+                                      className="p-1 text-tintaCarvao/40 hover:text-acentoAzul"
+                                      title="editar"
+                                    >
+                                      <Edit2 className="w-3 h-3" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteComment(comment.id, post.id)}
+                                      className="p-1 text-tintaCarvao/40 hover:text-red-600"
+                                      title="excluir"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
                                   </div>
                                 )}
-                                <div className="flex-1">
-                                  {editingComment === comment.id ? (
-                                    <div className="space-y-3">
-                                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-2">
-                                        <p className="text-sm text-gray-700 font-medium">Modo de edição (Admin)</p>
-                                      </div>
-                                      <RichTextEditor
-                                        value={editContent}
-                                        onChange={setEditContent}
-                                        placeholder="Edite o comentário..."
-                                      />
-                                      <div className="flex gap-2">
-                                        <button
-                                          onClick={() => handleUpdateComment(comment.id, post.id)}
-                                          className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition text-sm font-medium"
-                                        >
-                                          Salvar
-                                        </button>
-                                        <button
-                                          onClick={cancelEditComment}
-                                          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm font-medium"
-                                        >
-                                          Cancelar
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <>
-                                      <div className="bg-gray-50 rounded-lg p-4">
-                                        <div className="flex items-center justify-between mb-2">
-                                          <span className="font-semibold text-gray-900">
-                                            {comment.user_profile?.display_name}
-                                          </span>
-                                          <div className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-500">
-                                              {new Date(comment.created_at).toLocaleDateString('pt-BR')}
-                                            </span>
-                                            {profile?.role === 'admin' && (
-                                              <div className="flex items-center gap-1 ml-2">
-                                                <button
-                                                  onClick={() => startEditComment(comment)}
-                                                  className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition"
-                                                  title="Editar (Admin)"
-                                                >
-                                                  <Edit2 className="w-3.5 h-3.5" />
-                                                </button>
-                                                <button
-                                                  onClick={() => handleDeleteComment(comment.id, post.id)}
-                                                  className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition"
-                                                  title="Excluir (Admin)"
-                                                >
-                                                  <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
-                                              </div>
-                                            )}
-                                          </div>
-                                        </div>
-                                        <div
-                                          className="text-gray-700 prose prose-sm max-w-none"
-                                          dangerouslySetInnerHTML={{ __html: comment.content }}
-                                        />
-                                      </div>
-                                      <button
-                                        onClick={() => {
-                                          setReplyTo(comment.id);
-                                          setReplyToName(comment.user_profile?.display_name || 'Usuário');
-                                        }}
-                                        className="text-sm text-amber-600 hover:text-amber-700 mt-2"
-                                      >
-                                        Responder
-                                      </button>
-                                    </>
-                                  )}
-                                </div>
                               </div>
 
-                              {comment.replies && comment.replies.length > 0 && (
-                                <div className="ml-12 space-y-4">
-                                  {comment.replies.map((reply) => (
-                                    <div key={reply.id} className="flex space-x-3">
-                                      {reply.user_profile?.profile_picture_url ? (
-                                        <img
-                                          src={reply.user_profile.profile_picture_url}
-                                          alt={reply.user_profile?.display_name}
-                                          className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                                        />
-                                      ) : (
-                                        <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                                          {reply.user_profile?.display_name?.charAt(0).toUpperCase()}
-                                        </div>
-                                      )}
-                                      <div className="flex-1">
-                                        {editingComment === reply.id ? (
-                                          <div className="space-y-3">
-                                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-2">
-                                              <p className="text-xs text-gray-700 font-medium">Modo de edição (Admin)</p>
-                                            </div>
-                                            <RichTextEditor
-                                              value={editContent}
-                                              onChange={setEditContent}
-                                              placeholder="Edite a resposta..."
-                                            />
-                                            <div className="flex gap-2">
-                                              <button
-                                                onClick={() => handleUpdateComment(reply.id, post.id)}
-                                                className="px-3 py-1.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition text-xs font-medium"
-                                              >
-                                                Salvar
-                                              </button>
-                                              <button
-                                                onClick={cancelEditComment}
-                                                className="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-xs font-medium"
-                                              >
-                                                Cancelar
-                                              </button>
-                                            </div>
-                                          </div>
-                                        ) : (
-                                          <>
-                                            <div className="bg-gray-50 rounded-lg p-4">
-                                              <div className="flex items-center justify-between mb-2">
-                                                <span className="font-semibold text-gray-900 text-sm">
-                                                  {reply.user_profile?.display_name}
-                                                </span>
-                                                <div className="flex items-center gap-2">
-                                                  <span className="text-xs text-gray-500">
-                                                    {new Date(reply.created_at).toLocaleDateString('pt-BR')}
-                                                  </span>
-                                                  {profile?.role === 'admin' && (
-                                                    <div className="flex items-center gap-1 ml-2">
-                                                      <button
-                                                        onClick={() => startEditComment(reply)}
-                                                        className="p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition"
-                                                        title="Editar (Admin)"
-                                                      >
-                                                        <Edit2 className="w-3 h-3" />
-                                                      </button>
-                                                      <button
-                                                        onClick={() => handleDeleteComment(reply.id, post.id)}
-                                                        className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition"
-                                                        title="Excluir (Admin)"
-                                                      >
-                                                        <Trash2 className="w-3 h-3" />
-                                                      </button>
-                                                    </div>
-                                                  )}
-                                                </div>
-                                              </div>
-                                              <div
-                                                className="text-gray-700 text-sm prose prose-sm max-w-none"
-                                                dangerouslySetInnerHTML={{ __html: reply.content }}
-                                              />
-                                            </div>
-                                            <button
-                                              onClick={() => {
-                                                setReplyTo(comment.id);
-                                                setReplyToName(reply.user_profile?.display_name || 'Usuário');
-                                              }}
-                                              className="text-xs text-amber-600 hover:text-amber-700 mt-2"
-                                            >
-                                              Responder
-                                            </button>
-                                          </>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ))}
+                              {editingComment === comment.id ? (
+                                <div className="space-y-2 pt-1">
+                                  <input
+                                    type="text"
+                                    value={editContent}
+                                    onChange={(e) => setEditContent(e.target.value)}
+                                    className="w-full px-3 py-1.5 bg-papelClaro border border-papelKraft/40 rounded-lg text-xs font-corpo text-tintaCarvao focus:outline-none lowercase"
+                                  />
+                                  <div className="flex items-center justify-end gap-2">
+                                    <button
+                                      onClick={() => setEditingComment(null)}
+                                      className="px-2.5 py-1 text-[11px] font-corpo text-tintaCarvao/60 hover:text-tintaCarvao"
+                                    >
+                                      cancelar
+                                    </button>
+                                    <button
+                                      onClick={() => handleUpdateComment(comment.id, post.id)}
+                                      className="px-3 py-1 bg-acentoAzul text-white rounded-lg text-[11px] font-corpo"
+                                    >
+                                      salvar
+                                    </button>
+                                  </div>
                                 </div>
+                              ) : (
+                                <p className="text-xs font-corpo text-tintaCarvao/85 lowercase leading-relaxed pl-9">
+                                  {comment.content}
+                                </p>
                               )}
                             </div>
-                          ))}
-                        </div>
+                          ))
+                        )}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
+
+            {/* BOTÃO LER MAIS POSTS / CARREGAR MAIS */}
             {displayedPosts.length < allPosts.length && (
-              <div className="flex justify-center mt-8">
+              <div className="text-center pt-4">
                 <button
                   onClick={loadMorePosts}
                   disabled={loadingMore}
-                  className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium rounded-lg hover:from-amber-600 hover:to-orange-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-2xl bg-white hover:bg-papelClaro border border-papelKraft/40 text-acentoAzul font-gesto text-[20px] lowercase transition-all cursor-pointer shadow-xs"
                 >
-                  {loadingMore ? (
-                    <>
-                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                      Carregando...
-                    </>
-                  ) : (
-                    'Carregar Mais'
-                  )}
+                  {loadingMore ? 'carregando...' : 'carregar mais histórias'}
                 </button>
               </div>
             )}
           </div>
         )}
+
       </div>
     </div>
   );
