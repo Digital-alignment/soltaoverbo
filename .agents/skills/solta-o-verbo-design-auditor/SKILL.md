@@ -27,9 +27,12 @@ Esta skill atua como **Auditor e Guardião Supremo do Design System de Solta o V
 
 ---
 
-### 3. 📐 Borda sem Grosor (Somente Hairlines Estáticas)
-- Os bordos de cards, botões, modais e entradas devem ser bordas finas e sutilíssimas de papel (`border border-papelKraft/60` ou `border-papelKraft/40`).
-- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar `border-2`, `border-4` ou aumentar a espessura/cor da borda ao fazer hover (ex: `hover:border-2` ou `hover:border-acentoAzul` são **estritamente proibidos**).
+### 3. 📐 Borda sem Grosor (Somente Hairlines Estáticas Finas - Sem Borda em Hover)
+- Os bordos de cards, botões, modais e entradas devem ser bordas finas e sutilíssimas de papel (`border border-papelKraft/40` ou `border border-papelKraft/30`).
+- 🚫 **PROIBIÇÃO ABSOLUTA DE BORDAS COM GROSSURA E BORDA EM HOVER**:
+  - NUNCA utilizar `border-2`, `border-4`, `border-l-4`, ou qualquer borda com espessura visível em cards, botões ou seletores.
+  - NUNCA adicionar ou alterar a espessura da borda no hover (ex: `hover:border-2`, `hover:border-acentoTerracota` em cards).
+  - No hover de cards e botões, alterar apenas o tom sutil do fundo (`hover:bg-white/80`) ou aplicar sombra suave (`hover:shadow-sm` ou `hover:shadow-md`), mantendo SEMPRE a borda estática fina e elegante sem mudar de espessura.
 
 ---
 

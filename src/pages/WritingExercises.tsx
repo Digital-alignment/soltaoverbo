@@ -781,29 +781,29 @@ export default function WritingExercises() {
           </h1>
         </div>
 
-        {/* NAVEGAÇÃO PRINCIPAL (2 ABAS DO TOPO — MINIMALISTA E INTUITIVA) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 bg-papelClaro p-1 rounded-2xl sm:rounded-3xl border border-papelKraft/40 shadow-xs">
+        {/* NAVEGAÇÃO PRINCIPAL (2 ABAS DO TOPO — FONTE MAIOR, LIMPÍSSIMA E INTUITIVA) */}
+        <div className="flex items-center gap-2 bg-papelClaro p-1.5 rounded-2xl sm:rounded-3xl border border-papelKraft/40 shadow-xs">
           <button
             onClick={() => setMainTab('criador')}
-            className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl sm:rounded-2xl font-gesto text-[18px] sm:text-[22px] lowercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-gesto text-[24px] sm:text-[30px] lg:text-[34px] lowercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
               mainTab === 'criador'
                 ? 'bg-acentoAzul text-white shadow-xs font-normal'
-                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/50'
+                : 'text-tintaCarvao/80 hover:text-tintaCarvao hover:bg-white/60'
             }`}
           >
-            <Feather className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+            <Feather className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
             <span>estúdio do criador</span>
           </button>
 
           <button
             onClick={() => setMainTab('rituais')}
-            className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl sm:rounded-2xl font-gesto text-[18px] sm:text-[22px] lowercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-gesto text-[24px] sm:text-[30px] lg:text-[34px] lowercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
               mainTab === 'rituais'
                 ? 'bg-acentoTerracota text-white shadow-xs font-normal'
-                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/50'
+                : 'text-tintaCarvao/80 hover:text-tintaCarvao hover:bg-white/60'
             }`}
           >
-            <Compass className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+            <Compass className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
             <span>rituais & inspirações</span>
           </button>
         </div>
@@ -924,7 +924,7 @@ export default function WritingExercises() {
                     <div
                       key={exercise.id}
                       onClick={() => handleEdit(exercise)}
-                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/40 hover:border-acentoAzul transition-all cursor-pointer group flex flex-col justify-between space-y-2.5 shadow-xs hover:shadow-md"
+                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/40 hover:bg-white/95 transition-all cursor-pointer group flex flex-col justify-between space-y-2.5 shadow-xs hover:shadow-md"
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/45">
@@ -990,7 +990,7 @@ export default function WritingExercises() {
                   <div
                     key={nb.id}
                     onClick={() => handleNew(nb.title)}
-                    className="p-3.5 sm:p-4 rounded-2xl bg-white border-l-4 border-l-acentoTerracota/80 border-y border-r border-papelKraft/40 shadow-xs hover:border-acentoAzul transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between"
+                    className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/40 border-l-2 border-l-acentoTerracota/80 shadow-xs hover:bg-white/95 transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between hover:shadow-md"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -1109,7 +1109,7 @@ export default function WritingExercises() {
                     return (
                       <div
                         key={q.id}
-                        className="p-3.5 sm:p-4 rounded-2xl bg-papelClaro border border-papelKraft/45 shadow-xs hover:border-acentoAzul transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between"
+                        className="p-3.5 sm:p-4 rounded-2xl bg-papelClaro border border-papelKraft/45 shadow-xs hover:shadow-md transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between"
                       >
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between text-[10px] font-corpo text-acentoAzul">
@@ -1158,7 +1158,7 @@ export default function WritingExercises() {
           <div className="space-y-6 animate-fadeIn">
             
             {/* SUBSEÇÃO 1: RITUAIS GUIADOS */}
-            <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/50 shadow-kraft space-y-4">
+            <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/40 shadow-kraft space-y-4">
               <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                 <div className="flex items-center gap-2">
                   <Compass className="w-5 h-5 text-acentoTerracota" />
@@ -1173,7 +1173,7 @@ export default function WritingExercises() {
                   <div
                     key={tmpl.id}
                     onClick={() => handleApplyTemplate(tmpl)}
-                    className="p-4 sm:p-5 rounded-2xl bg-white border border-papelKraft/50 shadow-xs hover:border-acentoTerracota hover:shadow-md transition-all cursor-pointer group space-y-3.5 flex flex-col justify-between"
+                    className="p-4 sm:p-5 rounded-2xl bg-white border border-papelKraft/40 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer group space-y-3.5 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -1182,25 +1182,21 @@ export default function WritingExercises() {
                         </span>
                         {renderTemplateIcon(tmpl.type)}
                       </div>
-                      <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors leading-tight">
+                      <h4 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors leading-tight">
                         {tmpl.title}
                       </h4>
-                      <p className="text-xs text-tintaCarvao/75 lowercase italic font-medium leading-relaxed">
+                      <p className="text-xs sm:text-sm text-tintaCarvao/75 lowercase italic font-medium leading-relaxed">
                         “{tmpl.subtitle}”
                       </p>
                     </div>
 
-                    <div className="pt-2.5 border-t border-papelKraft/25 flex items-center justify-end">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleApplyTemplate(tmpl);
-                        }}
-                        className="w-8.5 h-8.5 rounded-full bg-acentoTerracota text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer"
+                    <div className="pt-2.5 border-t border-papelKraft/20 flex items-center justify-end">
+                      <div
+                        className="p-1 text-tintaCarvao/40 group-hover:text-acentoTerracota transition-colors cursor-pointer"
                         title="iniciar ritual"
                       >
-                        <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
-                      </button>
+                        <Maximize2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1208,7 +1204,7 @@ export default function WritingExercises() {
             </div>
 
             {/* SUBSEÇÃO 2: INSPIRAÇÕES DA COMUNIDADE (CONVITES POÉTICOS COM UPVOTES) */}
-            <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/50 shadow-kraft space-y-4">
+            <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/40 shadow-kraft space-y-4">
               <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                 <div className="flex items-center gap-2">
                   <Flame className="w-5 h-5 text-acentoTerracota" />
@@ -1228,7 +1224,7 @@ export default function WritingExercises() {
                     <div
                       key={prompt.id}
                       onClick={() => setSelectedPromptModal(prompt)}
-                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/45 shadow-xs hover:border-acentoTerracota hover:shadow-md transition-all flex items-center justify-between gap-3.5 cursor-pointer group"
+                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between gap-3.5 cursor-pointer group"
                     >
                       {/* BOTÃO DE UPVOTE */}
                       <button
@@ -1236,7 +1232,7 @@ export default function WritingExercises() {
                         className={`flex flex-col items-center justify-center p-2 rounded-2xl border transition-all cursor-pointer shrink-0 min-w-[44px] ${
                           isUpvoted
                             ? 'bg-acentoTerracota text-white border-acentoTerracota shadow-xs'
-                            : 'bg-papelClaro hover:bg-papelKraft/25 text-acentoAzul border-papelKraft/45'
+                            : 'bg-papelClaro hover:bg-papelKraft/25 text-acentoAzul border-papelKraft/40'
                         }`}
                         title="votar nesta inspiração"
                       >
@@ -1263,17 +1259,13 @@ export default function WritingExercises() {
                         </div>
                       </div>
 
-                      {/* BOTÃO APENAS COM ÍCONE DE EYE */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedPromptModal(prompt);
-                        }}
-                        className="w-8.5 h-8.5 rounded-full bg-acentoAzul text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer shrink-0"
+                      {/* ÍCONE EXPANDER SEM FUNDO (SEM BOTÃO AZUL COM OLHO) */}
+                      <div
+                        className="p-1 text-tintaCarvao/40 group-hover:text-acentoTerracota transition-colors cursor-pointer shrink-0"
                         title="ver detalhes e começar"
                       >
-                        <Eye className="w-4 h-4 text-white" />
-                      </button>
+                        <Maximize2 className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+                      </div>
                     </div>
                   );
                 })}
