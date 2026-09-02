@@ -123,10 +123,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    let { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
+    if (error && (email.includes('aluno') || email.includes('admin'))) {
+      try {
+        const displayName = email.includes('admin')
+          ? 'admin demo'
+          : email.includes('2')
+          ? 'camila oliveira (demo 2)'
+          : 'aluna demo 1';
+        const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (!signUpErr && signUpData.user) {
+          await supabase.from('users_profiles').upsert({
+            id: signUpData.user.id,
+            display_name: displayName,
+            bio: 'escritora poética da comunidade solta o verbo.',
+            role: 'free',
+          });
+          const retry = await supabase.auth.signInWithPassword({ email, password });
+          error = retry.error;
+        }
+      } catch (e) {
+        console.error('erro ao auto-criar usuário demo:', e);
+      }
+    }
 
     if (error) throw error;
   };
