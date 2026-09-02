@@ -316,14 +316,36 @@ export default function WritingExercises() {
   useEffect(() => {
     const isNewRequested = searchParams.get('new') === 'true' || location.state?.new === true;
     const promptState = location.state?.prompt;
+    const sourceType = location.state?.sourceType || 'texto';
+    const courseTitle = location.state?.courseTitle || '';
+    const lessonTitle = location.state?.lessonTitle || '';
 
-    if (isNewRequested || promptState) {
-      if (promptState) {
-        const formattedPrompt = `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">${promptState.replace(/\n/g, '<br/>')}</blockquote><p></p>`;
-        handleNew('reflexão da aula', formattedPrompt);
-      } else {
-        handleNew();
+    if (isNewRequested || promptState || lessonTitle) {
+      let defaultTitle = '';
+      let initialHtml = '';
+
+      if (lessonTitle) {
+        const typeLabel = sourceType === 'citacao' ? 'citação' : sourceType === 'rascunho' ? 'rascunho' : 'exercício';
+        defaultTitle = `${typeLabel} • ${lessonTitle}`;
+
+        const quoteBlock = promptState
+          ? `<blockquote style="border-left: 2px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px; line-height: 1.6;">“${promptState.replace(/\n/g, '<br/>')}”</blockquote>`
+          : '';
+
+        initialHtml = `<div style="margin-bottom: 24px; padding: 14px 18px; background-color: rgba(20, 13, 130, 0.03); border: 1px solid rgba(20, 13, 130, 0.12); border-radius: 16px;">
+          <span style="display: block; font-size: 11px; letter-spacing: 0.05em; color: #FD5E32; font-weight: 600; text-transform: lowercase; margin-bottom: 4px; font-family: sans-serif;">
+            origem • ${courseTitle || 'solta o verbo'}
+          </span>
+          <h4 style="font-size: 15px; color: #140D82; font-weight: 700; text-transform: lowercase; margin: 0 0 4px 0; font-family: sans-serif;">
+            ${lessonTitle}
+          </h4>
+          ${quoteBlock}
+        </div><p></p>`;
+      } else if (promptState) {
+        initialHtml = `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“${promptState.replace(/\n/g, '<br/>')}”</blockquote><p></p>`;
       }
+
+      handleNew(defaultTitle || undefined, initialHtml || undefined);
       window.history.replaceState({}, document.title);
     }
   }, [location.state, searchParams]);

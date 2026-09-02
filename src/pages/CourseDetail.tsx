@@ -192,8 +192,14 @@ export default function CourseDetail() {
   const handleTransferQuoteToAtelier = (textToTransfer: string) => {
     setSelectedText(null);
     setIsZenModeOpen(false);
-    const prompt = `[citação inspiradora da aula "${selectedLesson?.title}"]:\n"${textToTransfer}"\n\nminha reflexão sobre este trecho:`;
-    navigate('/exercises?new=true', { state: { prompt } });
+    navigate('/exercises?new=true', {
+      state: {
+        prompt: textToTransfer,
+        sourceType: 'citacao',
+        courseTitle: course?.title || 'oficina',
+        lessonTitle: selectedLesson?.title || '',
+      },
+    });
   };
 
   const handleDeleteQuote = (idToDelete: string) => {
@@ -213,8 +219,14 @@ export default function CourseDetail() {
 
   const handleTransferDraftToAtelier = () => {
     setIsZenModeOpen(false);
-    const prompt = `[rascunho da aula "${selectedLesson?.title}"]:\n${quickDraft}`;
-    navigate('/exercises?new=true', { state: { prompt } });
+    navigate('/exercises?new=true', {
+      state: {
+        prompt: quickDraft,
+        sourceType: 'rascunho',
+        courseTitle: course?.title || 'oficina',
+        lessonTitle: selectedLesson?.title || '',
+      },
+    });
   };
 
   const loadCourse = async () => {
@@ -345,8 +357,14 @@ export default function CourseDetail() {
 
   const handleOpenAtelierWithPrompt = () => {
     if (!selectedLesson) return;
-    const prompt = `[exercício da aula "${selectedLesson.title}"]:\n\n`;
-    navigate('/exercises?new=true', { state: { prompt } });
+    navigate('/exercises?new=true', {
+      state: {
+        prompt: '',
+        sourceType: 'exercicio',
+        courseTitle: course?.title || 'oficina',
+        lessonTitle: selectedLesson.title,
+      },
+    });
   };
 
   if (loading) {
