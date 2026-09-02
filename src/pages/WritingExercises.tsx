@@ -188,15 +188,14 @@ const GUIDED_TEMPLATES: GuidedTemplate[] = [
 interface WordMilestone {
   minWords: number;
   label: string;
-  icon: string;
 }
 
 const WORD_MILESTONES: WordMilestone[] = [
-  { minWords: 1, label: 'a semente foi plantada', icon: '🌱' },
-  { minWords: 50, label: 'primeiro sopro poético', icon: '🌬️' },
-  { minWords: 150, label: 'corrente fluida de sentimentos', icon: '🌊' },
-  { minWords: 300, label: 'página autoral viva', icon: '✨' },
-  { minWords: 500, label: 'obra em plena floração', icon: '🌸' },
+  { minWords: 1, label: 'a semente foi plantada' },
+  { minWords: 50, label: 'primeiro sopro poético' },
+  { minWords: 150, label: 'corrente fluida de sentimentos' },
+  { minWords: 300, label: 'página autoral viva' },
+  { minWords: 500, label: 'obra em plena floração' },
 ];
 
 export default function WritingExercises() {
@@ -277,6 +276,56 @@ export default function WritingExercises() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  // COMENTÁRIOS E PARTILHAS DOS CONVITES DA COMUNIDADE
+  const [newPromptComment, setNewPromptComment] = useState('');
+  const [promptComments, setPromptComments] = useState<Record<string, Array<{ id: string; author: string; text: string; time: string }>>>(() => {
+    try {
+      const saved = localStorage.getItem('soltaoverbo_prompt_comments');
+      return saved ? JSON.parse(saved) : {
+        p1: [
+          { id: 'c1', author: 'camila m.', text: 'este convite sobre o tempo me fez resgatar uma memória física antiga da minha avó. texto forte!', time: 'há 2 horas' },
+          { id: 'c2', author: 'bruna r.', text: 'escrever com marcação de minutos trouxe uma desaceleração poética incrível.', time: 'há 5 horas' },
+        ],
+        p2: [
+          { id: 'c3', author: 'júlia a.', text: 'usei a frase no auge de um diálogo interno. libertador!', time: 'ontem' },
+        ],
+        p3: [
+          { id: 'c4', author: 'marina s.', text: 'observar o vento na janela durante 3 minutos rendeu 2 páginas.', time: 'há 1 dia' },
+        ],
+        p4: [
+          { id: 'c5', author: 'sofia k.', text: 'encontrei uma fotografia em branco e transformei em poema.', time: 'há 3 dias' },
+        ],
+      };
+    } catch {
+      return {
+        p1: [
+          { id: 'c1', author: 'camila m.', text: 'este convite sobre o tempo me fez resgatar uma memória física antiga da minha avó. texto forte!', time: 'há 2 horas' },
+        ],
+      };
+    }
+  });
+
+  const handleAddPromptComment = (promptId: string) => {
+    if (!newPromptComment.trim()) return;
+    const newComment = {
+      id: `cm_${Date.now()}`,
+      author: profile?.full_name?.toLowerCase() || profile?.username?.toLowerCase() || 'aluna fogueira',
+      text: newPromptComment.trim(),
+      time: 'agora',
+    };
+    const updated = {
+      ...promptComments,
+      [promptId]: [newComment, ...(promptComments[promptId] || [])],
+    };
+    setPromptComments(updated);
+    try {
+      localStorage.setItem('soltaoverbo_prompt_comments', JSON.stringify(updated));
+    } catch (e) {
+      console.error(e);
+    }
+    setNewPromptComment('');
   };
 
   const loadQuotesAndNotes = () => {
@@ -1331,63 +1380,134 @@ export default function WritingExercises() {
           </div>
         )}
 
-        {/* MODAL DE DETALHES DE INSPIRAÇÃO DA COMUNIDADE */}
+        {/* MODAL DE DETALHES DE INSPIRAÇÃO DA COMUNIDADE (DESKTOP LAGO WIDE 2-COLUMNAS + COMENTÁRIOS AO VIVO) */}
         {selectedPromptModal && (
-          <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-lg w-full shadow-kraft-lg space-y-5 relative">
+          <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-6 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-kraft-lg relative flex flex-col gap-6">
+              
+              {/* Botão Fechar */}
               <button
                 onClick={() => setSelectedPromptModal(null)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40 cursor-pointer"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40 cursor-pointer z-10"
+                title="fechar"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="space-y-1">
-                <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold lowercase inline-block mb-1">
-                  {selectedPromptModal.badge} • {selectedPromptModal.category}
-                </span>
-                <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                  “{selectedPromptModal.title}”
-                </h3>
-                <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
-                  curado por {selectedPromptModal.author}
-                </p>
-              </div>
+              {/* Grid Principal: 2 Colunas no Desktop (Esquerda: Detalhes do Convite, Direita: Partilhas & Comentários) */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start pt-2">
+                
+                {/* COLUNA ESQUERDA (7 COLUNAS DESKTOP) */}
+                <div className="lg:col-span-7 space-y-5">
+                  <div className="space-y-2">
+                    <span className="px-3 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold lowercase inline-block">
+                      {selectedPromptModal.badge} • {selectedPromptModal.category}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold font-editorial text-acentoAzul lowercase leading-snug">
+                      “{selectedPromptModal.title}”
+                    </h3>
+                    <p className="text-xs text-tintaCarvao/60 font-corpo lowercase">
+                      curado por {selectedPromptModal.author}
+                    </p>
+                  </div>
 
-              {selectedPromptModal.description && (
-                <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/80 leading-relaxed lowercase bg-white p-4 rounded-2xl border border-papelKraft/40">
-                  {selectedPromptModal.description}
-                </p>
-              )}
+                  {selectedPromptModal.description && (
+                    <div className="bg-white p-4.5 sm:p-5 rounded-2xl border border-papelKraft/40 text-xs sm:text-sm font-corpo text-tintaCarvao/85 leading-relaxed lowercase italic">
+                      “{selectedPromptModal.description}”
+                    </div>
+                  )}
 
-              <div className="flex items-center justify-between text-xs text-tintaCarvao/70 font-medium pt-1">
-                <div className="flex items-center gap-1.5">
-                  <Users className="w-4 h-4 text-acentoOliva" />
-                  <span>{completions[selectedPromptModal.id] || 42} alunas concluíram este desafio</span>
+                  {/* Barra de Ações: Botão de Votos + Métricas + Botão Começar */}
+                  <div className="space-y-3 pt-1">
+                    <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-papelKraft/40">
+                      {/* Botão de Upvote Integrado no Modal */}
+                      <button
+                        onClick={(e) => handleToggleUpvote(selectedPromptModal.id, e)}
+                        className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold font-corpo transition-all cursor-pointer ${
+                          userUpvoted[selectedPromptModal.id]
+                            ? 'bg-acentoTerracota text-white shadow-xs'
+                            : 'bg-papelClaro hover:bg-papelKraft/25 text-acentoAzul border border-papelKraft/40'
+                        }`}
+                        title="votar nesta inspiração"
+                      >
+                        <ChevronUp className={`w-4 h-4 ${userUpvoted[selectedPromptModal.id] ? 'text-white' : 'text-acentoTerracota'}`} />
+                        <span>{upvotes[selectedPromptModal.id] || 0} votos da comunidade</span>
+                      </button>
+
+                      {/* Contador de Conclusões com Ícone SVG Users (Sem Emojis) */}
+                      <div className="flex items-center gap-1.5 text-xs text-tintaCarvao/75 font-medium">
+                        <Users className="w-4 h-4 text-acentoOliva shrink-0" />
+                        <span>{completions[selectedPromptModal.id] || 42} alunas concluíram</span>
+                      </div>
+                    </div>
+
+                    {/* Botão Primário: Começar Desafio (Sem Emojis, Ícone Feather SVG) */}
+                    <button
+                      onClick={() => {
+                        const promptText = selectedPromptModal.title;
+                        setSelectedPromptModal(null);
+                        handleApplyPrompt(promptText);
+                      }}
+                      className="w-full py-3.5 px-6 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[22px] sm:text-[24px] lowercase shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Feather className="w-5 h-5 text-white shrink-0" />
+                      <span>começar desafio no atelier</span>
+                    </button>
+                  </div>
                 </div>
+
+                {/* COLUNA DIREITA (5 COLUNAS DESKTOP) — PARTILHAS & COMENTÁRIOS AO VIVO */}
+                <div className="lg:col-span-5 bg-white rounded-2xl border border-papelKraft/40 p-4.5 sm:p-5 space-y-4 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between border-b border-papelKraft/25 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4 text-acentoTerracota" />
+                        <h4 className="font-editorial text-base font-bold text-acentoAzul lowercase">
+                          partilhas da comunidade
+                        </h4>
+                      </div>
+                      <span className="text-[10px] text-tintaCarvao/50 font-corpo">
+                        {(promptComments[selectedPromptModal.id] || []).length} comentários
+                      </span>
+                    </div>
+
+                    {/* Campo de Entrada de Partilha */}
+                    <div className="space-y-2">
+                      <textarea
+                        value={newPromptComment}
+                        onChange={(e) => setNewPromptComment(e.target.value)}
+                        placeholder="escreva sua partilha ou reflexão sobre este convite..."
+                        rows={3}
+                        className="w-full p-3 bg-papelClaro border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none placeholder:text-tintaCarvao/45 lowercase"
+                      />
+                      <button
+                        onClick={() => handleAddPromptComment(selectedPromptModal.id)}
+                        className="w-full py-2 bg-acentoAzul hover:bg-acentoAzul/90 text-white rounded-xl font-gesto text-[18px] lowercase transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <Send className="w-3.5 h-3.5 text-white" />
+                        <span>publicar partilha</span>
+                      </button>
+                    </div>
+
+                    {/* Stream de Comentários */}
+                    <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                      {(promptComments[selectedPromptModal.id] || []).map((cm) => (
+                        <div key={cm.id} className="p-3 bg-papelClaro/70 rounded-xl border border-papelKraft/30 space-y-1">
+                          <div className="flex items-center justify-between text-[10px] font-corpo">
+                            <span className="font-bold text-acentoAzul lowercase">{cm.author}</span>
+                            <span className="text-tintaCarvao/40">{cm.time}</span>
+                          </div>
+                          <p className="text-xs font-corpo text-tintaCarvao/85 lowercase leading-relaxed">
+                            "{cm.text}"
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-3 border-t border-papelKraft/30">
-                <button
-                  onClick={() => {
-                    alert('comentários do desafio disponíveis na fogueira ao vivo!');
-                  }}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/45 text-xs font-bold lowercase transition-colors cursor-pointer"
-                >
-                  💬 comentar desafio
-                </button>
-
-                <button
-                  onClick={() => {
-                    const promptText = selectedPromptModal.title;
-                    setSelectedPromptModal(null);
-                    handleApplyPrompt(promptText);
-                  }}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs transition-all cursor-pointer"
-                >
-                  🚀 começar desafio
-                </button>
-              </div>
             </div>
           </div>
         )}

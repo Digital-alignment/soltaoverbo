@@ -36,9 +36,10 @@ Esta skill atua como **Auditor e Guardião Supremo do Design System de Solta o V
 
 ---
 
-### 4. 🚫 Proibição Total de Emojis no Código e UI
-- Toda a iconografia DEVE utilizar exclusivamente ícones vetoriais SVG da biblioteca `lucide-react` (ex: `<Sun />`, `<Flame />`, `<Feather />`, `<Crown />`, `<Coffee />`, `<Rocket />`, `<Sparkles />`).
-- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar caracteres emojis genéricos em Unicode (ex: 🌅, 🔥, ✨, 🪶, ☕, 🌿, 👑, 📔, 📖) no JSX, títulos, tags ou botões.
+### 4. 🚫 Proibição Total e Absoluta de Emojis no Código e UI
+- **NUNCA UTILIZE EMOJIS EM NENHUMA PARTE DO DESIGN, CÓDIGO OU INTERFACE.**
+- Toda a iconografia DEVE utilizar exclusivamente ícones vetoriais SVG da biblioteca `lucide-react` (ex: `<Sun />`, `<Flame />`, `<Feather />`, `<Crown />`, `<Coffee />`, `<Rocket />`, `<Sparkles />`, `<Users />`, `<MessageSquare />`, `<Send />`, `<Maximize2 />`, `<ChevronUp />`).
+- 🚫 **PROIBIÇÃO ABSOLUTA**: NUNCA utilizar caracteres emojis genéricos em Unicode (ex: 🚀, 💬, 👥, 🌅, 🔥, ✨, 🪶, ☕, 🌿, 👑, 📔, 📖) no JSX, botões, modais, títulos, tags, descrições ou placeholders. Substitua SEMPRE por ícones SVG do Lucide!
 
 ---
 
