@@ -29,8 +29,10 @@ import {
   Bookmark,
   Quote,
   FileText,
-  Trash2
+  Trash2,
+  Award,
 } from 'lucide-react';
+import PoeticCertificateModal from '../components/PoeticCertificateModal';
 import type { Database } from '../lib/database.types';
 
 type Course = Database['public']['Tables']['courses']['Row'];
@@ -85,6 +87,9 @@ export default function CourseDetail() {
   const [savedQuotes, setSavedQuotes] = useState<SavedQuote[]>([]);
   const [selectedText, setSelectedText] = useState<{ text: string; x: number; y: number } | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // MODAL DO CERTIFICADO POÉTICO
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
 
   const desktopContentRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
@@ -1494,6 +1499,14 @@ export default function CourseDetail() {
         </div>,
         document.body
       )}
+
+      {/* MODAL DE CERTIFICADO POÉTICO DE CONCLUSÃO */}
+      <PoeticCertificateModal
+        isOpen={showCertificateModal}
+        onClose={() => setShowCertificateModal(false)}
+        studentName={profile?.display_name || 'aluna'}
+        courseTitle={course?.title}
+      />
     </div>
   );
 }
