@@ -737,18 +737,17 @@ export default function WritingExercises() {
     }
   };
 
-  // Dynamic Create Button Label based on Active Sub-Tab
   const getDynamicCreateLabel = () => {
     switch (activeTab) {
       case 'cadernos':
-        return '+ criar novo caderno';
+        return '+ criar caderno';
       case 'notas':
-        return '+ criar nova nota';
+        return '+ nova nota';
       case 'citacoes':
-        return '+ adicionar citação';
+        return '+ citação';
       case 'textos':
       default:
-        return '+ criar novo texto';
+        return '+ criar texto';
     }
   };
 
@@ -771,105 +770,101 @@ export default function WritingExercises() {
   };
 
   return (
-    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-5 sm:py-8 pb-28 lg:pb-12">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-5">
         
-        {/* CABEÇALHO DA PÁGINA: escritas criativas (Muthazle 34px-44px Sem Bold) */}
-        <div className="border-b border-papelKraft/40 pb-3">
-          <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
+        {/* CABEÇALHO DA PÁGINA: escritas criativas (Muthazle Sem Bold 32px-42px) */}
+        <div className="border-b border-papelKraft/40 pb-2.5">
+          <h1 className="font-gesto font-normal text-[32px] sm:text-[42px] text-acentoAzul lowercase leading-tight tracking-tight">
             escrita criativa
           </h1>
         </div>
 
-        {/* DUAS ABAS PRINCIPAIS DO TOPO: ESTÚDIO DO CRIADOR | RITUAIS & PROVOCAÇÕES */}
-        <div className="flex items-center gap-2 bg-papelClaro p-1.5 rounded-3xl border border-papelKraft/50 shadow-sm">
+        {/* NAVEGAÇÃO PRINCIPAL (2 ABAS DO TOPO — MINIMALISTA E INTUITIVA) */}
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-papelClaro p-1 rounded-2xl sm:rounded-3xl border border-papelKraft/40 shadow-xs">
           <button
             onClick={() => setMainTab('criador')}
-            className={`flex-1 py-3 px-4 rounded-2xl font-gesto text-[20px] sm:text-[24px] lowercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl sm:rounded-2xl font-gesto text-[18px] sm:text-[22px] lowercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               mainTab === 'criador'
-                ? 'bg-acentoAzul text-white shadow-sm font-normal'
-                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/60'
+                ? 'bg-acentoAzul text-white shadow-xs font-normal'
+                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/50'
             }`}
           >
-            <Feather className="w-5 h-5 shrink-0" />
+            <Feather className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
             <span>estúdio do criador</span>
           </button>
 
           <button
             onClick={() => setMainTab('rituais')}
-            className={`flex-1 py-3 px-4 rounded-2xl font-gesto text-[20px] sm:text-[24px] lowercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            className={`flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl sm:rounded-2xl font-gesto text-[18px] sm:text-[22px] lowercase transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               mainTab === 'rituais'
-                ? 'bg-acentoTerracota text-white shadow-sm font-normal'
-                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/60'
+                ? 'bg-acentoTerracota text-white shadow-xs font-normal'
+                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/50'
             }`}
           >
-            <Wand2 className="w-5 h-5 shrink-0" />
-            <span>rituais & provocações poéticas</span>
+            <Wand2 className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+            <span>rituais & inspirações</span>
           </button>
         </div>
 
         {/* ABA 1: ESTÚDIO DO CRIADOR */}
         {mainTab === 'criador' && (
-          <div className="space-y-5 animate-fadeIn">
+          <div className="space-y-4 animate-fadeIn">
             
-            {/* SUB-MENU DE ÍCONES + RÓTULO (TEXTOS, CADERNOS, NOTAS, CITAÇÕES) */}
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-papelClaro p-3 rounded-2xl border border-papelKraft/40 shadow-sm">
-              <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* SUB-MENU DE ABAS EM ROLAGEM SUAVE (MOBILE SAFE) */}
+            <div className="flex items-center justify-between gap-2 border-b border-papelKraft/35 pb-3 pt-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 max-w-full">
                 <button
                   onClick={() => setActiveTab('textos')}
-                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
                     activeTab === 'textos'
-                      ? 'bg-acentoAzul text-white shadow-sm'
-                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                      ? 'bg-acentoAzul text-white shadow-xs'
+                      : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
                   }`}
                 >
-                  <FileText className="w-4 h-4" />
-                  <span>textos ({exercises.length})</span>
+                  textos ({exercises.length})
                 </button>
 
                 <button
                   onClick={() => setActiveTab('cadernos')}
-                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
                     activeTab === 'cadernos'
-                      ? 'bg-acentoAzul text-white shadow-sm'
-                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                      ? 'bg-acentoAzul text-white shadow-xs'
+                      : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
                   }`}
                 >
-                  <BookOpen className="w-4 h-4" />
-                  <span>cadernos ({DEFAULT_NOTEBOOKS.length})</span>
+                  cadernos ({DEFAULT_NOTEBOOKS.length})
                 </button>
 
                 <button
                   onClick={() => setActiveTab('notas')}
-                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
                     activeTab === 'notas'
-                      ? 'bg-acentoAzul text-white shadow-sm'
-                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                      ? 'bg-acentoAzul text-white shadow-xs'
+                      : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
                   }`}
                 >
-                  <StickyNote className="w-4 h-4 text-amber-500" />
-                  <span>notas ({allNotes.length})</span>
+                  notas ({allNotes.length})
                 </button>
 
                 <button
                   onClick={() => setActiveTab('citacoes')}
-                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold font-corpo lowercase transition-all shrink-0 cursor-pointer ${
                     activeTab === 'citacoes'
-                      ? 'bg-acentoAzul text-white shadow-sm'
-                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                      ? 'bg-acentoAzul text-white shadow-xs'
+                      : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
                   }`}
                 >
-                  <BookMarked className="w-4 h-4 text-acentoTerracota" />
-                  <span>citações ({allQuotes.length})</span>
+                  citações ({allQuotes.length})
                 </button>
               </div>
 
-              {/* SELETOR DE MODO DE VISUALIZAÇÃO: GRID OU LISTA */}
-              <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-xl border border-papelKraft/40">
+              {/* SELETOR GRID / LISTA */}
+              <div className="hidden sm:flex items-center gap-1 bg-white p-1 rounded-xl border border-papelKraft/40 shrink-0">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === 'grid' ? 'bg-white text-acentoAzul shadow-sm' : 'text-tintaCarvao/50 hover:text-tintaCarvao'
+                    viewMode === 'grid' ? 'bg-acentoAzul/10 text-acentoAzul font-bold' : 'text-tintaCarvao/40 hover:text-tintaCarvao'
                   }`}
                   title="visualização em grade"
                 >
@@ -878,7 +873,7 @@ export default function WritingExercises() {
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === 'list' ? 'bg-white text-acentoAzul shadow-sm' : 'text-tintaCarvao/50 hover:text-tintaCarvao'
+                    viewMode === 'list' ? 'bg-acentoAzul/10 text-acentoAzul font-bold' : 'text-tintaCarvao/40 hover:text-tintaCarvao'
                   }`}
                   title="visualização em lista"
                 >
@@ -887,33 +882,33 @@ export default function WritingExercises() {
               </div>
             </div>
 
-            {/* BARRA DE AÇÕES: BOTÃO CRIAR DINÂMICO + CAMPO DE BUSCA */}
+            {/* BARRA DE AÇÕES: BOTÃO CRIAR DINÂMICO + BUSCA */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <button
                 onClick={handleDynamicCreateClick}
-                className="px-6 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[24px] lowercase shadow-sm hover:bg-acentoTerracota/90 hover:scale-105 transition-all inline-flex items-center gap-2 cursor-pointer shrink-0"
+                className="px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-xs hover:bg-acentoTerracota/90 hover:scale-102 transition-all inline-flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
               >
-                <Plus className="w-5 h-5 text-white" />
+                <Plus className="w-4.5 h-4.5 text-white" />
                 <span>{getDynamicCreateLabel()}</span>
               </button>
 
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="buscar no estúdio do criador..."
-                  className="w-full pl-11 pr-4 py-2.5 bg-white border border-papelKraft/45 rounded-2xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/45 lowercase shadow-sm"
+                  placeholder="buscar no estúdio..."
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-papelKraft/40 rounded-2xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40 lowercase shadow-xs"
                 />
               </div>
             </div>
 
-            {/* VITRINA DE CARTÕES RESPONSIVA (4 ITENS DESKTOP / 2 MOBILE NO MODO GRID) */}
+            {/* VITRINA DE CARTÕES (4 COLUNAS DESKTOP / 2 COLUNAS MOBILE) */}
             
             {/* SUB-ABA 1: TEXTOS */}
             {activeTab === 'textos' && (
-              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5" : "space-y-2.5"}>
                 {filteredExercises.map((exercise) => {
                   const titleText = exercise.title || 'texto sem título';
                   const cleanContent = exercise.content.replace(/<[^>]*>/g, '');
@@ -928,34 +923,34 @@ export default function WritingExercises() {
                     <div
                       key={exercise.id}
                       onClick={() => handleEdit(exercise)}
-                      className="p-4 rounded-2xl bg-white border border-papelKraft/45 hover:border-acentoAzul transition-all cursor-pointer group flex flex-col justify-between space-y-3 shadow-sm hover:shadow-md"
+                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/40 hover:border-acentoAzul transition-all cursor-pointer group flex flex-col justify-between space-y-2.5 shadow-xs hover:shadow-md"
                     >
                       <div className="space-y-1.5">
-                        <div className="flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/50">
+                        <div className="flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/45">
                           <span>{new Date(exercise.updated_at).toLocaleDateString('pt-BR')}</span>
                           {exercise.is_published && (
-                            <span className="px-2 py-0.5 rounded-full bg-acentoOliva/20 text-acentoAzul font-bold lowercase text-[9px]">
+                            <span className="px-2 py-0.5 rounded-full bg-acentoOliva/15 text-acentoAzul font-bold lowercase text-[9px]">
                               fogueira
                             </span>
                           )}
                         </div>
-                        <h4 className="font-editorial text-base sm:text-lg font-bold text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase">
+                        <h4 className="font-editorial text-base sm:text-lg font-bold text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase leading-tight">
                           <span className="hidden sm:inline">{titleDesktop}</span>
                           <span className="sm:hidden">{titleMobile}</span>
                         </h4>
-                        <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed">
+                        <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed">
                           <span className="hidden sm:inline">{descDesktop || 'sem conteúdo...'}</span>
                           <span className="sm:hidden">{descMobile || 'sem conteúdo...'}</span>
                         </p>
                       </div>
 
-                      <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-between">
+                      <div className="pt-2 border-t border-papelKraft/20 flex items-center justify-between">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleEdit(exercise);
                           }}
-                          className="p-2 rounded-xl bg-bgPlataforma hover:bg-acentoAzul hover:text-white text-acentoAzul transition-colors cursor-pointer"
+                          className="p-1.5 rounded-xl text-tintaCarvao/50 hover:text-acentoAzul hover:bg-papelClaro transition-colors cursor-pointer"
                           title="abrir no modo foco"
                         >
                           <ExternalLink className="w-4 h-4" />
@@ -966,7 +961,7 @@ export default function WritingExercises() {
                             e.stopPropagation();
                             handleDelete(exercise.id);
                           }}
-                          className="p-2 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                          className="p-1.5 text-tintaCarvao/35 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
                           title="excluir texto"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -977,8 +972,8 @@ export default function WritingExercises() {
                 })}
 
                 {filteredExercises.length === 0 && (
-                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
-                    <FileText className="w-10 h-10 text-acentoAzul/30 mx-auto" />
+                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-xs">
+                    <FileText className="w-9 h-9 text-acentoAzul/30 mx-auto" />
                     <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
                       {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto criado ainda. crie o seu primeiro texto no modo foco!'}
                     </p>
@@ -987,39 +982,39 @@ export default function WritingExercises() {
               </div>
             )}
 
-            {/* SUB-ABA 2: CADERNOS (VISUAL DE CADERNO COM LOMBADA) */}
+            {/* SUB-ABA 2: CADERNOS (VISUAL POÉTICO DE CADERNO COM LOMBADA DE COR) */}
             {activeTab === 'cadernos' && (
-              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5" : "space-y-2.5"}>
                 {DEFAULT_NOTEBOOKS.map((nb) => (
                   <div
                     key={nb.id}
                     onClick={() => handleNew(nb.title)}
-                    className="p-4.5 rounded-2xl bg-white border-l-4 border-l-acentoTerracota border-y border-r border-papelKraft/45 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                    className="p-3.5 sm:p-4 rounded-2xl bg-white border-l-4 border-l-acentoTerracota/80 border-y border-r border-papelKraft/40 shadow-xs hover:border-acentoAzul transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <div className="p-2 rounded-xl bg-papelClaro text-acentoAzul">
+                        <div className="p-1.5 rounded-xl bg-papelClaro text-acentoAzul">
                           {renderNotebookIcon(nb.type)}
                         </div>
-                        <span className="text-[10px] font-bold text-acentoAzul/80 bg-acentoAzul/10 px-2 py-0.5 rounded-full lowercase">
+                        <span className="text-[9px] font-bold text-acentoAzul/80 bg-acentoAzul/10 px-2 py-0.5 rounded-full lowercase">
                           caderno
                         </span>
                       </div>
-                      <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors line-clamp-2">
+                      <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors line-clamp-2 leading-tight">
                         {nb.title}
                       </h4>
-                      <p className="text-[11px] font-light font-corpo text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed">
+                      <p className="text-[11px] font-light font-corpo text-tintaCarvao/70 lowercase line-clamp-2 leading-relaxed">
                         {nb.description}
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-between">
+                    <div className="pt-2 border-t border-papelKraft/20 flex items-center justify-between">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleNew(nb.title);
                         }}
-                        className="p-2 rounded-xl bg-bgPlataforma hover:bg-acentoTerracota hover:text-white text-acentoTerracota transition-colors cursor-pointer"
+                        className="p-1.5 rounded-xl text-acentoTerracota hover:bg-papelClaro transition-colors cursor-pointer"
                         title="escrever neste caderno"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -1030,7 +1025,7 @@ export default function WritingExercises() {
                           e.stopPropagation();
                           alert('funcionalidade de excluir caderno próprio reservada para próximas atualizações.');
                         }}
-                        className="p-2 hover:bg-red-50 text-tintaCarvao/30 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                        className="p-1.5 text-tintaCarvao/30 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
                         title="excluir caderno"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -1041,12 +1036,12 @@ export default function WritingExercises() {
               </div>
             )}
 
-            {/* SUB-ABA 3: NOTAS (VISUAL POST-IT ADESIVO) */}
+            {/* SUB-ABA 3: NOTAS (VISUAL POST-IT ADESIVO LIMPO) */}
             {activeTab === 'notas' && (
-              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5" : "space-y-2.5"}>
                 {allNotes.length === 0 ? (
-                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
-                    <StickyNote className="w-10 h-10 text-amber-500/40 mx-auto" />
+                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-xs">
+                    <StickyNote className="w-9 h-9 text-amber-500/40 mx-auto" />
                     <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
                       nenhuma nota criada ainda. clique no botão + nova nota para criar um post-it!
                     </p>
@@ -1055,13 +1050,13 @@ export default function WritingExercises() {
                   allNotes.map((n) => (
                     <div
                       key={n.id}
-                      className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200/80 shadow-sm hover:shadow-md transition-all cursor-pointer group space-y-3 flex flex-col justify-between relative overflow-hidden"
+                      className="p-3.5 sm:p-4 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A]/80 shadow-xs hover:shadow-md transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between relative overflow-hidden"
                     >
-                      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-12 h-3 bg-amber-200/50 rounded-sm rotate-1"></div>
+                      <div className="w-10 h-1.5 bg-amber-200/70 rounded-full mx-auto"></div>
                       
-                      <div className="space-y-2 pt-1">
+                      <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-[10px] font-corpo text-amber-900/60">
-                          <span className="font-bold lowercase truncate max-w-[120px]">{n.title}</span>
+                          <span className="font-bold lowercase truncate max-w-[110px]">{n.title}</span>
                           <span>{n.updatedAt}</span>
                         </div>
                         <p className="text-xs font-corpo text-amber-950/90 line-clamp-3 lowercase leading-relaxed italic">
@@ -1077,7 +1072,7 @@ export default function WritingExercises() {
                               `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px;">${n.content.replace(/\n/g, '<br/>')}</blockquote><p></p>`
                             );
                           }}
-                          className="p-2 rounded-xl bg-amber-100 hover:bg-acentoTerracota hover:text-white text-acentoTerracota transition-colors cursor-pointer"
+                          className="p-1.5 rounded-xl text-acentoTerracota hover:bg-amber-100 transition-colors cursor-pointer"
                           title="abrir nota no atelier"
                         >
                           <ExternalLink className="w-4 h-4" />
@@ -1085,7 +1080,7 @@ export default function WritingExercises() {
 
                         <button
                           onClick={() => handleDeleteNote(n.id)}
-                          className="p-2 hover:bg-amber-200/50 text-amber-900/40 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                          className="p-1.5 text-amber-900/40 hover:text-red-600 hover:bg-amber-100/60 rounded-xl transition-colors cursor-pointer"
                           title="excluir nota"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -1099,10 +1094,10 @@ export default function WritingExercises() {
 
             {/* SUB-ABA 4: CITAÇÕES (VISUAL BILHETE POÉTICO) */}
             {activeTab === 'citacoes' && (
-              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5" : "space-y-2.5"}>
                 {allQuotes.length === 0 ? (
-                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
-                    <BookMarked className="w-10 h-10 text-acentoAzul/30 mx-auto" />
+                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-xs">
+                    <BookMarked className="w-9 h-9 text-acentoAzul/30 mx-auto" />
                     <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
                       nenhuma citação salva ainda. você pode guardar citações durante a leitura das aulas!
                     </p>
@@ -1113,11 +1108,11 @@ export default function WritingExercises() {
                     return (
                       <div
                         key={q.id}
-                        className="p-4 rounded-2xl bg-papelClaro border border-papelKraft/50 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                        className="p-3.5 sm:p-4 rounded-2xl bg-papelClaro border border-papelKraft/45 shadow-xs hover:border-acentoAzul transition-all cursor-pointer group space-y-2.5 flex flex-col justify-between"
                       >
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <div className="flex items-center justify-between text-[10px] font-corpo text-acentoAzul">
-                            <span className="font-bold lowercase truncate max-w-[130px]">{q.lessonTitle}</span>
+                            <span className="font-bold lowercase truncate max-w-[120px]">{q.lessonTitle}</span>
                             <span className="text-tintaCarvao/40">{q.createdAt}</span>
                           </div>
                           <p className="text-xs font-editorial italic text-tintaCarvao/90 lowercase leading-relaxed border-l-2 border-acentoTerracota pl-2.5 py-0.5">
@@ -1125,7 +1120,7 @@ export default function WritingExercises() {
                           </p>
                         </div>
 
-                        <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between">
+                        <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-between">
                           <button
                             onClick={() => {
                               handleNew(
@@ -1133,7 +1128,7 @@ export default function WritingExercises() {
                                 `<blockquote style="border-left: 2px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px;">“${q.text}”</blockquote><p></p>`
                               );
                             }}
-                            className="p-2 rounded-xl bg-white hover:bg-acentoTerracota hover:text-white text-acentoTerracota border border-papelKraft/40 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-xl text-acentoTerracota hover:bg-white transition-colors cursor-pointer"
                             title="usar no atelier"
                           >
                             <Plus className="w-4 h-4" />
@@ -1141,7 +1136,7 @@ export default function WritingExercises() {
 
                           <button
                             onClick={() => handleDeleteQuote(q.id)}
-                            className="p-2 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                            className="p-1.5 text-tintaCarvao/35 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
                             title="excluir citação"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -1159,54 +1154,54 @@ export default function WritingExercises() {
 
         {/* ABA 2: RITUAIS & PROVOCAÇÕES POÉTICAS */}
         {mainTab === 'rituais' && (
-          <div className="space-y-7 animate-fadeIn">
+          <div className="space-y-6 animate-fadeIn">
             
             {/* SUBSEÇÃO 1: RITUAIS GUIADOS */}
-            <div className="bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
+            <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/50 shadow-kraft space-y-4">
               <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                 <div className="flex items-center gap-2">
                   <Wand2 className="w-5 h-5 text-acentoTerracota" />
-                  <h3 className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
+                  <h3 className="font-editorial text-lg sm:text-xl font-bold text-acentoAzul lowercase">
                     rituais guiados de escrita
                   </h3>
                 </div>
-                <span className="text-xs text-tintaCarvao/60 font-corpo lowercase">
-                  estruturas imersivas passo a passo
+                <span className="text-xs text-tintaCarvao/55 font-corpo lowercase">
+                  estruturas imersivas
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
                 {GUIDED_TEMPLATES.map((tmpl) => (
                   <div
                     key={tmpl.id}
                     onClick={() => handleApplyTemplate(tmpl)}
-                    className="p-4 rounded-2xl bg-white border border-papelKraft/60 shadow-sm hover:border-acentoTerracota transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                    className="p-4 rounded-2xl bg-white border border-papelKraft/50 shadow-xs hover:border-acentoTerracota transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
                   >
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="px-2 py-0.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-[10px] font-bold lowercase">
+                        <span className="px-2 py-0.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-[9px] font-bold lowercase">
                           guiado
                         </span>
                         {renderTemplateIcon(tmpl.type)}
                       </div>
-                      <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                      <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
                         {tmpl.title}
                       </h4>
-                      <p className="text-xs text-tintaCarvao/80 lowercase italic font-medium leading-relaxed">
+                      <p className="text-[11px] text-tintaCarvao/75 lowercase italic font-medium leading-relaxed">
                         “{tmpl.subtitle}”
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-end">
+                    <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-end">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleApplyTemplate(tmpl);
                         }}
-                        className="p-2.5 rounded-xl bg-acentoTerracota text-white hover:bg-acentoTerracota/90 hover:scale-105 transition-all shadow-sm cursor-pointer"
+                        className="w-8 h-8 rounded-full bg-acentoTerracota text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer"
                         title="iniciar ritual"
                       >
-                        <Play className="w-4 h-4 text-white fill-white" />
+                        <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
                       </button>
                     </div>
                   </div>
@@ -1214,21 +1209,21 @@ export default function WritingExercises() {
               </div>
             </div>
 
-            {/* SUBSEÇÃO 2: INSPIRAÇÕES DA COMUNIDADE (CONVITES POÉTICOS COM UPVOTES E RANKING) */}
-            <div className="bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
+            {/* SUBSEÇÃO 2: INSPIRAÇÕES DA COMUNIDADE (CONVITES POÉTICOS COM UPVOTES) */}
+            <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/50 shadow-kraft space-y-4">
               <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-acentoTerracota" />
-                  <h3 className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
+                  <h3 className="font-editorial text-lg sm:text-xl font-bold text-acentoAzul lowercase">
                     convites poéticos da fogueira
                   </h3>
                 </div>
-                <span className="text-xs font-bold text-acentoTerracota bg-acentoTerracota/10 px-3 py-1 rounded-full lowercase">
-                  desafios votados pela comunidade
+                <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
+                  desafios comunitários
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
                 {COMMUNITY_PROMPTS.map((prompt) => {
                   const isUpvoted = !!userUpvoted[prompt.id];
                   const upvoteCount = upvotes[prompt.id] || 0;
@@ -1237,48 +1232,48 @@ export default function WritingExercises() {
                   return (
                     <div
                       key={prompt.id}
-                      className="p-4 rounded-2xl bg-white border border-papelKraft/50 shadow-sm hover:border-acentoTerracota transition-all flex items-center justify-between gap-4"
+                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/45 shadow-xs hover:border-acentoTerracota transition-all flex items-center justify-between gap-3.5"
                     >
-                      {/* BOTAO DE UPVOTE DA COMUNIDADE */}
+                      {/* BOTÃO DE UPVOTE */}
                       <button
                         onClick={(e) => handleToggleUpvote(prompt.id, e)}
-                        className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all cursor-pointer shrink-0 min-w-[48px] ${
+                        className={`flex flex-col items-center justify-center p-2 rounded-2xl border transition-all cursor-pointer shrink-0 min-w-[44px] ${
                           isUpvoted
-                            ? 'bg-acentoTerracota text-white border-acentoTerracota shadow-sm'
-                            : 'bg-papelClaro hover:bg-papelKraft/30 text-acentoAzul border-papelKraft/50'
+                            ? 'bg-acentoTerracota text-white border-acentoTerracota shadow-xs'
+                            : 'bg-papelClaro hover:bg-papelKraft/25 text-acentoAzul border-papelKraft/45'
                         }`}
                         title="votar nesta inspiração"
                       >
-                        <ChevronUp className={`w-4 h-4 ${isUpvoted ? 'text-white' : 'text-acentoTerracota'}`} />
-                        <span className="text-xs font-bold font-corpo">{upvoteCount}</span>
+                        <ChevronUp className={`w-3.5 h-3.5 ${isUpvoted ? 'text-white' : 'text-acentoTerracota'}`} />
+                        <span className="text-[11px] font-bold font-corpo">{upvoteCount}</span>
                       </button>
 
-                      {/* CONTEÚDO PRINCIPAL */}
-                      <div className="flex-1 min-w-0 space-y-1.5">
-                        <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold lowercase">
+                      {/* CONTEÚDO DA INSPIRAÇÃO */}
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[9px] font-bold lowercase">
                             {prompt.badge}
                           </span>
-                          <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase truncate">
+                          <span className="text-[10px] text-tintaCarvao/55 font-medium lowercase truncate">
                             {prompt.category} • por {prompt.author}
                           </span>
                         </div>
-                        <h4 className="text-xs sm:text-sm font-bold font-editorial text-tintaCarvao lowercase leading-relaxed">
+                        <h4 className="text-xs sm:text-sm font-bold font-editorial text-tintaCarvao lowercase leading-snug">
                           “{prompt.title}”
                         </h4>
-                        <div className="flex items-center gap-1.5 text-[10px] text-tintaCarvao/60 font-medium pt-0.5">
+                        <div className="flex items-center gap-1 text-[10px] text-tintaCarvao/55 font-medium pt-0.5">
                           <Users className="w-3 h-3 text-acentoOliva" />
                           <span>{completionCount} alunas concluíram</span>
                         </div>
                       </div>
 
-                      {/* BOTÃO APENAS COM ÍCONE DE VER / COMEÇAR */}
+                      {/* BOTÃO APENAS COM ÍCONE DE EYE */}
                       <button
                         onClick={() => setSelectedPromptModal(prompt)}
-                        className="p-3 rounded-2xl bg-acentoAzul hover:bg-acentoAzul/90 text-white transition-transform hover:scale-105 cursor-pointer shrink-0 shadow-sm"
+                        className="w-8 h-8 rounded-full bg-acentoAzul text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer shrink-0"
                         title="ver detalhes e começar"
                       >
-                        <Eye className="w-4.5 h-4.5 text-white" />
+                        <Eye className="w-4 h-4 text-white" />
                       </button>
                     </div>
                   );
@@ -1292,7 +1287,7 @@ export default function WritingExercises() {
         {/* MODAL DE CRIAÇÃO RÁPIDA DE NOTA ADESIVA (ESTILO POST-IT) */}
         {showNoteModal && (
           <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-            <div className="bg-amber-50 rounded-3xl border border-amber-200 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-4 relative">
+            <div className="bg-[#FFFBEB] rounded-3xl border border-[#FDE68A] p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-4 relative">
               <button
                 onClick={() => setShowNoteModal(false)}
                 className="absolute top-4 right-4 p-2 rounded-full hover:bg-amber-100 text-amber-900/60 hover:text-amber-950 transition-colors border border-amber-200 cursor-pointer"
@@ -1336,7 +1331,7 @@ export default function WritingExercises() {
                 </button>
                 <button
                   onClick={handleSaveNoteModal}
-                  className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[18px] lowercase shadow-sm transition-all cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[18px] lowercase shadow-xs transition-all cursor-pointer"
                 >
                   salvar nota
                 </button>
@@ -1397,7 +1392,7 @@ export default function WritingExercises() {
                     setSelectedPromptModal(null);
                     handleApplyPrompt(promptText);
                   }}
-                  className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-sm transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs transition-all cursor-pointer"
                 >
                   🚀 começar desafio
                 </button>
@@ -1531,7 +1526,7 @@ export default function WritingExercises() {
                             </div>
                             <button
                               onClick={handleStartCustomTimer}
-                              className="w-full mt-2 py-1.5 bg-acentoTerracota hover:bg-acentoTerracota/90 text-white rounded-xl text-xs font-bold lowercase shadow-sm transition-colors"
+                              className="w-full mt-2 py-1.5 bg-acentoTerracota hover:bg-acentoTerracota/90 text-white rounded-xl text-xs font-bold lowercase shadow-xs transition-colors"
                             >
                               iniciar temporizador
                             </button>
@@ -1602,7 +1597,7 @@ export default function WritingExercises() {
                     </button>
                     <button
                       onClick={() => setShowShareModal(true)}
-                      className="p-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-semibold lowercase transition-all shadow-sm"
+                      className="p-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-semibold lowercase transition-all shadow-xs"
                       title="partilhar na fogueira"
                     >
                       <Share2 className="w-4 h-4" />
