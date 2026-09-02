@@ -43,6 +43,15 @@ import {
   MessageSquare,
   Settings,
   Hourglass,
+  LayoutGrid,
+  List,
+  ChevronUp,
+  Users,
+  Pencil,
+  ExternalLink,
+  StickyNote,
+  Wand2,
+  Eye,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -71,9 +80,10 @@ interface CommunityPrompt {
   badge: string;
   category: string;
   author: string;
+  description?: string;
 }
 
-// Convites Poéticos da Comunidade & Admins (Inspirado na Referência)
+// Convites Poéticos da Comunidade & Admins
 const COMMUNITY_PROMPTS: CommunityPrompt[] = [
   {
     id: 'p1',
@@ -81,6 +91,7 @@ const COMMUNITY_PROMPTS: CommunityPrompt[] = [
     badge: 'ao vivo',
     category: 'convite semanal #370',
     author: 'bruna riedel',
+    description: 'o tempo como elemento poético. registre as horas, os minutos ou as estórias do calendário que marcaram um divisor de águas na sua memória.',
   },
   {
     id: 'p2',
@@ -88,6 +99,7 @@ const COMMUNITY_PROMPTS: CommunityPrompt[] = [
     badge: 'ao vivo',
     category: 'convite semanal #371',
     author: 'júlia alvim',
+    description: 'use essa provocação no meio do seu diálogo ou reflexão interna. para o que afinal nunca temos tempo — e o que acontece quando paramos?',
   },
   {
     id: 'p3',
@@ -95,6 +107,7 @@ const COMMUNITY_PROMPTS: CommunityPrompt[] = [
     badge: 'ao vivo',
     category: 'convite semanal #372',
     author: 'comunidade fogueira',
+    description: 'desacelere a escrita. observe uma xícara esfriando, o vento na janela ou um olhar sustenido em tempo real.',
   },
   {
     id: 'p4',
@@ -102,6 +115,7 @@ const COMMUNITY_PROMPTS: CommunityPrompt[] = [
     badge: 'ao vivo',
     category: 'convite semanal #373',
     author: 'comunidade fogueira',
+    description: 'um bilhete antigo, um lenço ou uma fotografia em branco. o que desperta no corpo ao reencontrar o passado?',
   },
 ];
 
@@ -148,40 +162,40 @@ const GUIDED_TEMPLATES: GuidedTemplate[] = [
     type: 'flame',
     title: 'carta de desapego',
     subtitle: 'o que deixo ir no fogo de hoje?',
-    initialTitle: 'carta de desapego: o que deixo ir no fogo de hoje',
-    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“escreva sem medo o peso que você decide soltar no fogo de hoje.”</blockquote><p>hoje eu escolho soltar e deixar ir...</p><p></p><p>não preciso mais carregar o peso de...</p><p></p><p>em substituição, abro espaço para...</p>`,
+    initialTitle: 'carta de desapego: o que deixo ir',
+    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“escreva para aquilo que você não precisa mais carregar no peito.”</blockquote><p>estou deixando ir a necessidade de...</p><p></p><p>liberto a mim mesma de...</p>`,
   },
   {
     id: 'gratidao',
     type: 'sparkles',
-    title: 'diário de gratidão silenciosa',
-    subtitle: '3 milagres imperceptíveis do meu dia.',
-    initialTitle: 'diário de gratidão silenciosa',
-    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“escreva sobre os pequenos milagres invisíveis da sua rotina.”</blockquote><p>3 pequenos milagres imperceptíveis do meu dia de hoje:</p><p>1. </p><p>2. </p><p>3. </p>`,
+    title: 'diário de gratidão',
+    subtitle: 'pequenos milagres da rotina',
+    initialTitle: 'diário de gratidão: pequenos milagres',
+    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“nomeie a beleza oculta nas coisas simples do dia.”</blockquote><p>hoje sou grata por...</p><p></p>`,
   },
   {
-    id: 'poema',
+    id: 'poema4',
     type: 'feather',
     title: 'poema em 4 estrofes',
-    subtitle: 'estrutura guiada com versos soltos.',
-    initialTitle: 'poema em 4 estrofes: versos soltos',
-    initialContent: `<p><strong>estrofe I — a escuta do silêncio</strong></p><p>no primeiro sussurro da casa...</p><p></p><p><strong>estrofe II — a memória do corpo</strong></p><p>um gesto esquecido no tempo...</p><p></p><p><strong>estrofe III — a chama da fogueira</strong></p><p>o fogo que acolhe o peso...</p><p></p><p><strong>estrofe IV — o retorno à presença</strong></p><p>respiro fundo e me reconheço...</p>`,
+    subtitle: 'início, meio, pausa e sopro',
+    initialTitle: 'poema em 4 estrofes',
+    initialContent: `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“4 momentos de sentir: o despertar, a travessia, a pausa e a libertação.”</blockquote><p>I.<br/>[primeira estrofe: a chegada]</p><p></p><p>II.<br/>[segunda estrofe: o sentimento]</p><p></p><p>III.<br/>[terceira estrofe: o silêncio]</p><p></p><p>IV.<br/>[quarta estrofe: o recomeço]</p>`,
   },
 ];
 
-// Tags / Etiquetas Poéticas
-const POETIC_TAGS = ['poesia', 'memória', 'desabafo', 'ritual diário', 'ensaio', 'rascunho'];
+// Marcos Poéticos de Contagem de Palavras (Metas de Escrita Fluida)
+interface WordMilestone {
+  minWords: number;
+  label: string;
+  icon: string;
+}
 
-// Tabela de Chancela Poética em Tempo Real
-const WORD_MILESTONES = [
-  { minWords: 10, title: 'um haicai poético de bashō' },
-  { minWords: 50, title: 'uma estrofe de vinicius de moraes' },
-  { minWords: 100, title: "o poema 'no meio do caminho' de drummond" },
-  { minWords: 300, title: 'o manifesto antropófago de oswald de andrade' },
-  { minWords: 500, title: 'um conto de clarice lispector' },
-  { minWords: 1000, title: 'o livro o pequeno príncipe' },
-  { minWords: 2500, title: 'o romance a metamorfose de franz kafka' },
-  { minWords: 5000, title: 'o banquete de platão' },
+const WORD_MILESTONES: WordMilestone[] = [
+  { minWords: 1, label: 'a semente foi plantada', icon: '🌱' },
+  { minWords: 50, label: 'primeiro sopro poético', icon: '🌬️' },
+  { minWords: 150, label: 'corrente fluida de sentimentos', icon: '🌊' },
+  { minWords: 300, label: 'página autoral viva', icon: '✨' },
+  { minWords: 500, label: 'obra em plena floração', icon: '🌸' },
 ];
 
 export default function WritingExercises() {
@@ -195,8 +209,24 @@ export default function WritingExercises() {
   const [saving, setSaving] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isAnonymousShare, setIsAnonymousShare] = useState(false);
-  const [showRituaisModal, setShowRituaisModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  // ABA PRINCIPAL DO TOPO: 'criador' | 'rituais'
+  const [mainTab, setMainTab] = useState<'criador' | 'rituais'>('criador');
+
+  // SUB-ABA DO ESTÚDIO DO CRIADOR: 'textos' | 'cadernos' | 'notas' | 'citacoes'
+  const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'notas' | 'citacoes'>('textos');
+
+  // MODO DE VISUALIZAÇÃO DA VITRINA: 'grid' | 'list'
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  // MODAL PARA CRIAR/EDITAR NOTAS POÉTICAS
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [noteTitleInput, setNoteTitleInput] = useState('');
+  const [noteContentInput, setNoteContentInput] = useState('');
+
+  // MODAL DE DETALHES DE INSPIRAÇÃO DA COMUNIDADE
+  const [selectedPromptModal, setSelectedPromptModal] = useState<CommunityPrompt | null>(null);
 
   // MODO FOCO (ZEN EDITOR) — ATIVO POR PADRÃO AO CRIAR/EDITAR
   const [isZenMode, setIsZenMode] = useState(false);
@@ -204,6 +234,49 @@ export default function WritingExercises() {
   // CITAÇÕES E NOTAS DO USUÁRIO
   const [allQuotes, setAllQuotes] = useState<Array<{ id: string; text: string; lessonTitle: string; createdAt: string }>>([]);
   const [allNotes, setAllNotes] = useState<Array<{ id: string; title: string; content: string; updatedAt: string }>>([]);
+
+  // ESTADOS DE UPVOTE E CONCLUSÃO DE DESAFIOS (LOCALSTORAGE)
+  const [upvotes, setUpvotes] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('soltaoverbo_prompt_upvotes');
+      return saved ? JSON.parse(saved) : { p1: 42, p2: 28, p3: 65, p4: 19 };
+    } catch {
+      return { p1: 42, p2: 28, p3: 65, p4: 19 };
+    }
+  });
+
+  const [userUpvoted, setUserUpvoted] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem('soltaoverbo_user_upvoted');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const [completions, setCompletions] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('soltaoverbo_prompt_completions');
+      return saved ? JSON.parse(saved) : { p1: 128, p2: 94, p3: 156, p4: 47 };
+    } catch {
+      return { p1: 128, p2: 94, p3: 156, p4: 47 };
+    }
+  });
+
+  const handleToggleUpvote = (id: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const isUpvoted = !!userUpvoted[id];
+    const newUpvoted = { ...userUpvoted, [id]: !isUpvoted };
+    const newUpvotes = { ...upvotes, [id]: (upvotes[id] || 0) + (isUpvoted ? -1 : 1) };
+    setUserUpvoted(newUpvoted);
+    setUpvotes(newUpvotes);
+    try {
+      localStorage.setItem('soltaoverbo_user_upvoted', JSON.stringify(newUpvoted));
+      localStorage.setItem('soltaoverbo_prompt_upvotes', JSON.stringify(newUpvotes));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const loadQuotesAndNotes = () => {
     const quotes: Array<{ id: string; text: string; lessonTitle: string; createdAt: string }> = [];
@@ -242,6 +315,55 @@ export default function WritingExercises() {
     loadQuotesAndNotes();
   }, []);
 
+  const handleSaveNoteModal = () => {
+    if (!noteTitleInput.trim() && !noteContentInput.trim()) return;
+    const noteId = `note_${Date.now()}`;
+    const newNote = {
+      id: noteId,
+      title: noteTitleInput.trim() || 'nota poética',
+      content: noteContentInput.trim(),
+      updatedAt: 'hoje',
+    };
+    try {
+      localStorage.setItem(`soltaoverbo_draft_${noteId}`, newNote.content);
+      const updatedNotes = [newNote, ...allNotes];
+      setAllNotes(updatedNotes);
+    } catch (e) {
+      console.error(e);
+    }
+    setShowNoteModal(false);
+    setNoteTitleInput('');
+    setNoteContentInput('');
+  };
+
+  const handleDeleteNote = (noteId: string) => {
+    if (!confirm('deseja excluir esta nota?')) return;
+    try {
+      localStorage.removeItem(`soltaoverbo_draft_${noteId}`);
+      setAllNotes(allNotes.filter((n) => n.id !== noteId));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDeleteQuote = (quoteId: string) => {
+    if (!confirm('deseja excluir esta citação?')) return;
+    try {
+      const updated = allQuotes.filter((q) => q.id !== quoteId);
+      setAllQuotes(updated);
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('soltaoverbo_quotes_')) {
+          const itemQuotes = JSON.parse(localStorage.getItem(key) || '[]');
+          const filtered = itemQuotes.filter((q: any) => q.id !== quoteId);
+          localStorage.setItem(key, JSON.stringify(filtered));
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // CONFIGURAÇÕES DO EDITOR COM PERSISTÊNCIA EM LOCALSTORAGE
   const [editorSettings, setEditorSettings] = useState<EditorSettings>(() => {
     try {
@@ -263,10 +385,6 @@ export default function WritingExercises() {
       return updated;
     });
   };
-
-  // Estados de Abas da Vitrina: textos | cadernos | citações | notas
-  const [activeTab, setActiveTab] = useState<'textos' | 'cadernos' | 'citacoes' | 'notas'>('textos');
-  const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
 
   // TEMPORIZADOR DO RITUAL (Sprint de Escrita Manual)
   const [timerSeconds, setTimerSeconds] = useState<number | null>(null);
@@ -300,6 +418,7 @@ export default function WritingExercises() {
     };
   }, [isZenMode]);
 
+  // Efeito do Temporizador regressivo
   useEffect(() => {
     let interval: any = null;
     if (isTimerRunning && timerSeconds !== null && timerSeconds > 0) {
@@ -313,36 +432,43 @@ export default function WritingExercises() {
     return () => clearInterval(interval);
   }, [isTimerRunning, timerSeconds]);
 
-  const startTimer = (minutes: number) => {
-    setTimerSeconds(minutes * 60);
+  const handleStartTimer = (mins: number) => {
+    setTimerSeconds(mins * 60);
     setIsTimerRunning(true);
     setTimerFinished(false);
+    setShowTimerPopover(false);
   };
 
-  const pauseTimer = () => {
-    setIsTimerRunning(false);
-  };
-
-  const resumeTimer = () => {
-    if (timerSeconds !== null && timerSeconds > 0) {
+  const handleStartCustomTimer = () => {
+    const h = parseInt(customHours) || 0;
+    const m = parseInt(customMinutes) || 0;
+    const totalSecs = h * 3600 + m * 60;
+    if (totalSecs > 0) {
+      setTimerSeconds(totalSecs);
       setIsTimerRunning(true);
+      setTimerFinished(false);
+      setShowTimerPopover(false);
     }
   };
 
-  const stopTimer = () => {
+  const handleToggleTimer = () => {
+    setIsTimerRunning((prev) => !prev);
+  };
+
+  const handleResetTimer = () => {
     setIsTimerRunning(false);
     setTimerSeconds(null);
     setTimerFinished(false);
   };
 
-  const formatTimerStr = (totalSec: number) => {
-    const h = Math.floor(totalSec / 3600);
-    const m = Math.floor((totalSec % 3600) / 60);
-    const s = totalSec % 60;
+  const formatTimer = (seconds: number) => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
     if (h > 0) {
-      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      return `${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     }
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
   const location = useLocation();
@@ -412,7 +538,6 @@ export default function WritingExercises() {
     setContent(initialContent || '');
     setIsEditing(true);
     setIsZenMode(true);
-    setShowTemplatesModal(false);
   };
 
   const handleApplyTemplate = (tmpl: GuidedTemplate) => {
@@ -424,7 +549,6 @@ export default function WritingExercises() {
     handleNew('convite poético', initialContent);
   };
 
-  // AO EDITAR TEXTO EXISTENTE -> ABRE DIRETO NO MODO FOCO
   const handleEdit = (exercise: WritingExercise) => {
     setCurrentExercise(exercise);
     setTitle(exercise.title);
@@ -436,36 +560,32 @@ export default function WritingExercises() {
   const handleSave = async () => {
     if (!profile) return;
 
-    // Se o título estiver em branco mas houver conteúdo, gerar um título padrão poético com a data
-    const finalTitle = title.trim() || `texto sem título • ${new Date().toLocaleDateString('pt-BR')}`;
-    if (!title.trim()) {
-      setTitle(finalTitle);
-    }
-
     setSaving(true);
     try {
       if (currentExercise) {
         const { error } = await supabase
           .from('writing_exercises')
           .update({
-            title: finalTitle,
-            content: content,
+            title: title || 'texto sem título',
+            content,
+            updated_at: new Date().toISOString(),
           })
           .eq('id', currentExercise.id);
 
         if (error) throw error;
       } else {
-        const { data, error } = await supabase.from('writing_exercises').insert({
-          user_id: profile.id,
-          title: finalTitle,
-          content: content,
-          is_published: false,
-        }).select().single();
+        const { data, error } = await supabase
+          .from('writing_exercises')
+          .insert({
+            user_id: profile.id,
+            title: title || 'texto sem título',
+            content,
+          })
+          .select()
+          .single();
 
         if (error) throw error;
-        if (data) {
-          setCurrentExercise(data);
-        }
+        if (data) setCurrentExercise(data);
       }
 
       await loadExercises();
@@ -578,7 +698,6 @@ export default function WritingExercises() {
     return plainText.split(/\s+/).length;
   }, [content]);
 
-  // Marco poético atual com base no número de palavras
   const currentMilestone = useMemo(() => {
     if (!editorSettings.showMilestones || currentWordCount === 0) return null;
     let reached = WORD_MILESTONES[0];
@@ -618,387 +737,671 @@ export default function WritingExercises() {
     }
   };
 
+  // Dynamic Create Button Label based on Active Sub-Tab
+  const getDynamicCreateLabel = () => {
+    switch (activeTab) {
+      case 'cadernos':
+        return '+ criar novo caderno';
+      case 'notas':
+        return '+ criar nova nota';
+      case 'citacoes':
+        return '+ adicionar citação';
+      case 'textos':
+      default:
+        return '+ criar novo texto';
+    }
+  };
+
+  const handleDynamicCreateClick = () => {
+    switch (activeTab) {
+      case 'cadernos':
+        handleNew('novo caderno');
+        break;
+      case 'notas':
+        setShowNoteModal(true);
+        break;
+      case 'citacoes':
+        handleNew('nova citação');
+        break;
+      case 'textos':
+      default:
+        handleNew();
+        break;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
-        {/* CABEÇALHO DA PÁGINA (ESCRITA CRIATIVA) */}
+        {/* CABEÇALHO DA PÁGINA: escritas criativas (Muthazle 34px-44px Sem Bold) */}
         <div className="border-b border-papelKraft/40 pb-3">
-          <h1 className="font-gesto text-[22px] sm:text-[28px] text-acentoAzul lowercase">
+          <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
             escrita criativa
           </h1>
         </div>
 
-        {/* BARRA DE AÇÕES RÁPIDAS (MINIMALISTA APENAS BOTÕES COM ÍCONES) */}
-        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 bg-papelClaro rounded-3xl border border-papelKraft/45 shadow-sm">
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => handleNew()}
-              className="px-6 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[24px] lowercase shadow-sm hover:bg-acentoTerracota/90 hover:scale-105 transition-all inline-flex items-center gap-2 cursor-pointer"
-            >
-              <Plus className="w-5 h-5 text-white" />
-              <span>criar novo texto</span>
-            </button>
+        {/* DUAS ABAS PRINCIPAIS DO TOPO: ESTÚDIO DO CRIADOR | RITUAIS & PROVOCAÇÕES */}
+        <div className="flex items-center gap-2 bg-papelClaro p-1.5 rounded-3xl border border-papelKraft/50 shadow-sm">
+          <button
+            onClick={() => setMainTab('criador')}
+            className={`flex-1 py-3 px-4 rounded-2xl font-gesto text-[20px] sm:text-[24px] lowercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              mainTab === 'criador'
+                ? 'bg-acentoAzul text-white shadow-sm font-normal'
+                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/60'
+            }`}
+          >
+            <Feather className="w-5 h-5 shrink-0" />
+            <span>estúdio do criador</span>
+          </button>
 
-            <button
-              onClick={() => setShowRituaisModal(true)}
-              className="px-5 py-2.5 rounded-2xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/45 font-gesto text-[20px] sm:text-[24px] lowercase transition-all inline-flex items-center gap-2 shadow-sm cursor-pointer"
-            >
-              <Sparkles className="w-5 h-5 text-acentoTerracota" />
-              <span>rituais & inspirações →</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setMainTab('rituais')}
+            className={`flex-1 py-3 px-4 rounded-2xl font-gesto text-[20px] sm:text-[24px] lowercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
+              mainTab === 'rituais'
+                ? 'bg-acentoTerracota text-white shadow-sm font-normal'
+                : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/60'
+            }`}
+          >
+            <Wand2 className="w-5 h-5 shrink-0" />
+            <span>rituais & provocações poéticas</span>
+          </button>
         </div>
 
-        {/* PROTAGONISTA DA PÁGINA: O ADMINISTRADOR DO CRIADO (VITRINA COMPLETA) */}
-        <div className="bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-5">
-          
-          {/* CABEÇALHO E FILTROS EM PÍLULAS */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-papelKraft/30 pb-4">
-            <div className="flex items-center gap-2">
-              <FileText className="w-5 h-5 text-acentoAzul" />
-              <h3 className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
-                o administrador do criado
-              </h3>
-            </div>
-
-            {/* ABAS DE NAVEGAÇÃO VITRINA: TEXTOS, CADERNOS, CITAÇÕES, NOTAS */}
-            <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-2xl border border-papelKraft/50 text-xs font-semibold lowercase">
-              <button
-                onClick={() => setActiveTab('textos')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  activeTab === 'textos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                textos ({exercises.length})
-              </button>
-
-              <button
-                onClick={() => setActiveTab('cadernos')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  activeTab === 'cadernos' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                cadernos ({DEFAULT_NOTEBOOKS.length})
-              </button>
-
-              <button
-                onClick={() => setActiveTab('citacoes')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  activeTab === 'citacoes' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                citações ({allQuotes.length})
-              </button>
-
-              <button
-                onClick={() => setActiveTab('notas')}
-                className={`px-4 py-2 rounded-xl transition-all ${
-                  activeTab === 'notas' ? 'bg-acentoAzul text-white shadow-sm font-bold' : 'text-tintaCarvao/70 hover:text-tintaCarvao'
-                }`}
-              >
-                notas ({allNotes.length})
-              </button>
-            </div>
-          </div>
-
-          {/* BARRA DE PESQUISA ELEGANTE */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="buscar no administrador de escrita..."
-              className="w-full pl-11 pr-4 py-2.5 bg-white border border-papelKraft/45 rounded-2xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/45 lowercase shadow-sm"
-            />
-          </div>
-
-          {/* ABA 1: LISTA DE TEXTOS (VITRINA CARDS) */}
-          {activeTab === 'textos' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredExercises.map((exercise) => (
-                <div
-                  key={exercise.id}
-                  onClick={() => handleEdit(exercise)}
-                  className="p-5 rounded-2xl bg-white border border-papelKraft/40 hover:border-acentoAzul transition-all cursor-pointer group flex flex-col justify-between space-y-3 shadow-sm"
+        {/* ABA 1: ESTÚDIO DO CRIADOR */}
+        {mainTab === 'criador' && (
+          <div className="space-y-5 animate-fadeIn">
+            
+            {/* SUB-MENU DE ÍCONES + RÓTULO (TEXTOS, CADERNOS, NOTAS, CITAÇÕES) */}
+            <div className="flex flex-wrap items-center justify-between gap-3 bg-papelClaro p-3 rounded-2xl border border-papelKraft/40 shadow-sm">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <button
+                  onClick={() => setActiveTab('textos')}
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'textos'
+                      ? 'bg-acentoAzul text-white shadow-sm'
+                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                  }`}
                 >
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-corpo text-tintaCarvao/50">
-                        {new Date(exercise.updated_at).toLocaleDateString('pt-BR')}
-                      </span>
-                      {exercise.is_published && (
-                        <span className="px-2.5 py-0.5 rounded-full bg-acentoOliva/20 text-acentoAzul text-[10px] font-bold lowercase">
-                          fogueira
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="font-editorial text-lg font-bold text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase truncate">
-                      {exercise.title || 'texto sem título'}
-                    </h4>
-                    <p className="text-xs font-light font-corpo text-tintaCarvao/75 line-clamp-2 lowercase leading-relaxed">
-                      {exercise.content.replace(/<[^>]*>/g, '') || 'nenhum conteúdo salvo ainda...'}
-                    </p>
-                  </div>
+                  <FileText className="w-4 h-4" />
+                  <span>textos ({exercises.length})</span>
+                </button>
 
-                  <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-between">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(exercise);
-                      }}
-                      className="font-gesto text-[20px] text-acentoTerracota hover:underline lowercase flex items-center gap-1"
-                    >
-                      <span>abrir no modo foco →</span>
-                    </button>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(exercise.id);
-                      }}
-                      className="p-1.5 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-lg transition-colors"
-                      title="excluir texto"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {filteredExercises.length === 0 && (
-                <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
-                  <FileText className="w-10 h-10 text-acentoAzul/30 mx-auto" />
-                  <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
-                    {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto criado ainda. crie o seu primeiro texto no modo foco!'}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ABA 2: CADERNOS TEMÁTICOS */}
-          {activeTab === 'cadernos' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-              {DEFAULT_NOTEBOOKS.map((nb) => (
-                <div
-                  key={nb.id}
-                  onClick={() => handleNew(nb.title)}
-                  className="p-5 rounded-2xl bg-white border border-papelKraft/45 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-2 flex flex-col justify-between"
+                <button
+                  onClick={() => setActiveTab('cadernos')}
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'cadernos'
+                      ? 'bg-acentoAzul text-white shadow-sm'
+                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                  }`}
                 >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        {renderNotebookIcon(nb.type)}
-                        <h4 className="text-base font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
-                          {nb.title}
+                  <BookOpen className="w-4 h-4" />
+                  <span>cadernos ({DEFAULT_NOTEBOOKS.length})</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('notas')}
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'notas'
+                      ? 'bg-acentoAzul text-white shadow-sm'
+                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                  }`}
+                >
+                  <StickyNote className="w-4 h-4 text-amber-500" />
+                  <span>notas ({allNotes.length})</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('citacoes')}
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'citacoes'
+                      ? 'bg-acentoAzul text-white shadow-sm'
+                      : 'text-tintaCarvao/75 hover:bg-white/80'
+                  }`}
+                >
+                  <BookMarked className="w-4 h-4 text-acentoTerracota" />
+                  <span>citações ({allQuotes.length})</span>
+                </button>
+              </div>
+
+              {/* SELETOR DE MODO DE VISUALIZAÇÃO: GRID OU LISTA */}
+              <div className="flex items-center gap-1 bg-bgPlataforma p-1 rounded-xl border border-papelKraft/40">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    viewMode === 'grid' ? 'bg-white text-acentoAzul shadow-sm' : 'text-tintaCarvao/50 hover:text-tintaCarvao'
+                  }`}
+                  title="visualização em grade"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                    viewMode === 'list' ? 'bg-white text-acentoAzul shadow-sm' : 'text-tintaCarvao/50 hover:text-tintaCarvao'
+                  }`}
+                  title="visualização em lista"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* BARRA DE AÇÕES: BOTÃO CRIAR DINÂMICO + CAMPO DE BUSCA */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <button
+                onClick={handleDynamicCreateClick}
+                className="px-6 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[24px] lowercase shadow-sm hover:bg-acentoTerracota/90 hover:scale-105 transition-all inline-flex items-center gap-2 cursor-pointer shrink-0"
+              >
+                <Plus className="w-5 h-5 text-white" />
+                <span>{getDynamicCreateLabel()}</span>
+              </button>
+
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="buscar no estúdio do criador..."
+                  className="w-full pl-11 pr-4 py-2.5 bg-white border border-papelKraft/45 rounded-2xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/45 lowercase shadow-sm"
+                />
+              </div>
+            </div>
+
+            {/* VITRINA DE CARTÕES RESPONSIVA (4 ITENS DESKTOP / 2 MOBILE NO MODO GRID) */}
+            
+            {/* SUB-ABA 1: TEXTOS */}
+            {activeTab === 'textos' && (
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+                {filteredExercises.map((exercise) => {
+                  const titleText = exercise.title || 'texto sem título';
+                  const cleanContent = exercise.content.replace(/<[^>]*>/g, '');
+
+                  const titleDesktop = titleText.length > 40 ? titleText.slice(0, 40) + '...' : titleText;
+                  const titleMobile = titleText.length > 25 ? titleText.slice(0, 25) + '...' : titleText;
+
+                  const descDesktop = cleanContent.length > 70 ? cleanContent.slice(0, 70) + '...' : cleanContent;
+                  const descMobile = cleanContent.length > 20 ? cleanContent.slice(0, 20) + '...' : cleanContent;
+
+                  return (
+                    <div
+                      key={exercise.id}
+                      onClick={() => handleEdit(exercise)}
+                      className="p-4 rounded-2xl bg-white border border-papelKraft/45 hover:border-acentoAzul transition-all cursor-pointer group flex flex-col justify-between space-y-3 shadow-sm hover:shadow-md"
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/50">
+                          <span>{new Date(exercise.updated_at).toLocaleDateString('pt-BR')}</span>
+                          {exercise.is_published && (
+                            <span className="px-2 py-0.5 rounded-full bg-acentoOliva/20 text-acentoAzul font-bold lowercase text-[9px]">
+                              fogueira
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="font-editorial text-base sm:text-lg font-bold text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase">
+                          <span className="hidden sm:inline">{titleDesktop}</span>
+                          <span className="sm:hidden">{titleMobile}</span>
                         </h4>
+                        <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed">
+                          <span className="hidden sm:inline">{descDesktop || 'sem conteúdo...'}</span>
+                          <span className="sm:hidden">{descMobile || 'sem conteúdo...'}</span>
+                        </p>
                       </div>
-                      <Plus className="w-4 h-4 text-acentoAzul shrink-0" />
+
+                      <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-between">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(exercise);
+                          }}
+                          className="p-2 rounded-xl bg-bgPlataforma hover:bg-acentoAzul hover:text-white text-acentoAzul transition-colors cursor-pointer"
+                          title="abrir no modo foco"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(exercise.id);
+                          }}
+                          className="p-2 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                          title="excluir texto"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                    <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed">
-                      {nb.description}
+                  );
+                })}
+
+                {filteredExercises.length === 0 && (
+                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
+                    <FileText className="w-10 h-10 text-acentoAzul/30 mx-auto" />
+                    <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
+                      {searchQuery ? 'nenhum texto encontrado.' : 'nenhum texto criado ainda. crie o seu primeiro texto no modo foco!'}
                     </p>
                   </div>
+                )}
+              </div>
+            )}
 
-                  <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-end">
-                    <span className="font-gesto text-[19px] text-acentoTerracota group-hover:underline lowercase">
-                      escrever neste caderno →
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ABA 3: CITAÇÕES SALVAS */}
-          {activeTab === 'citacoes' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {allQuotes.length === 0 ? (
-                <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
-                  <BookMarked className="w-10 h-10 text-acentoAzul/30 mx-auto" />
-                  <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
-                    nenhuma citação salva ainda. você pode guardar citações durante a leitura das aulas!
-                  </p>
-                </div>
-              ) : (
-                allQuotes.map((q) => (
-                  <div key={q.id} className="p-5 rounded-2xl bg-white border border-papelKraft/45 space-y-3 shadow-sm flex flex-col justify-between">
+            {/* SUB-ABA 2: CADERNOS (VISUAL DE CADERNO COM LOMBADA) */}
+            {activeTab === 'cadernos' && (
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+                {DEFAULT_NOTEBOOKS.map((nb) => (
+                  <div
+                    key={nb.id}
+                    onClick={() => handleNew(nb.title)}
+                    className="p-4.5 rounded-2xl bg-white border-l-4 border-l-acentoTerracota border-y border-r border-papelKraft/45 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                  >
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between text-xs font-corpo text-acentoAzul">
-                        <span className="font-bold lowercase truncate max-w-[240px]">
-                          {q.lessonTitle}
-                        </span>
-                        <span className="text-tintaCarvao/40 text-[11px] shrink-0">
-                          {q.createdAt}
+                      <div className="flex items-center justify-between">
+                        <div className="p-2 rounded-xl bg-papelClaro text-acentoAzul">
+                          {renderNotebookIcon(nb.type)}
+                        </div>
+                        <span className="text-[10px] font-bold text-acentoAzul/80 bg-acentoAzul/10 px-2 py-0.5 rounded-full lowercase">
+                          caderno
                         </span>
                       </div>
-                      <p className="text-xs sm:text-sm font-editorial italic text-tintaCarvao/90 lowercase leading-relaxed border-l-2 border-acentoTerracota pl-3 py-1">
-                        "{q.text}"
+                      <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors line-clamp-2">
+                        {nb.title}
+                      </h4>
+                      <p className="text-[11px] font-light font-corpo text-tintaCarvao/75 lowercase line-clamp-2 leading-relaxed">
+                        {nb.description}
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-end">
+                    <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-between">
                       <button
-                        type="button"
-                        onClick={() => {
-                          handleNew(
-                            `citação • ${q.lessonTitle}`,
-                            `<blockquote style="border-left: 2px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px;">“${q.text}”</blockquote><p></p>`
-                          );
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleNew(nb.title);
                         }}
-                        className="font-gesto text-[20px] text-acentoTerracota hover:underline lowercase"
+                        className="p-2 rounded-xl bg-bgPlataforma hover:bg-acentoTerracota hover:text-white text-acentoTerracota transition-colors cursor-pointer"
+                        title="escrever neste caderno"
                       >
-                        usar no atelier →
+                        <ExternalLink className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          alert('funcionalidade de excluir caderno próprio reservada para próximas atualizações.');
+                        }}
+                        className="p-2 hover:bg-red-50 text-tintaCarvao/30 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                        title="excluir caderno"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
 
-          {/* ABA 4: NOTAS & RASCUNHOS DE AULA */}
-          {activeTab === 'notas' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {allNotes.length === 0 ? (
-                <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
-                  <FileText className="w-10 h-10 text-acentoAzul/30 mx-auto" />
-                  <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
-                    nenhuma nota rápida encontrada nos seus rascunhos de aulas.
-                  </p>
-                </div>
-              ) : (
-                allNotes.map((n) => (
-                  <div key={n.id} className="p-5 rounded-2xl bg-white border border-papelKraft/45 space-y-3 shadow-sm flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-xs font-corpo text-acentoAzul">
-                        <span className="font-bold lowercase">
-                          {n.title}
-                        </span>
-                        <span className="text-tintaCarvao/40 text-[11px]">
-                          {n.updatedAt}
-                        </span>
+            {/* SUB-ABA 3: NOTAS (VISUAL POST-IT ADESIVO) */}
+            {activeTab === 'notas' && (
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+                {allNotes.length === 0 ? (
+                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
+                    <StickyNote className="w-10 h-10 text-amber-500/40 mx-auto" />
+                    <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
+                      nenhuma nota criada ainda. clique no botão + nova nota para criar um post-it!
+                    </p>
+                  </div>
+                ) : (
+                  allNotes.map((n) => (
+                    <div
+                      key={n.id}
+                      className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200/80 shadow-sm hover:shadow-md transition-all cursor-pointer group space-y-3 flex flex-col justify-between relative overflow-hidden"
+                    >
+                      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-12 h-3 bg-amber-200/50 rounded-sm rotate-1"></div>
+                      
+                      <div className="space-y-2 pt-1">
+                        <div className="flex items-center justify-between text-[10px] font-corpo text-amber-900/60">
+                          <span className="font-bold lowercase truncate max-w-[120px]">{n.title}</span>
+                          <span>{n.updatedAt}</span>
+                        </div>
+                        <p className="text-xs font-corpo text-amber-950/90 line-clamp-3 lowercase leading-relaxed italic">
+                          "{n.content}"
+                        </p>
                       </div>
-                      <p className="text-xs font-light font-corpo text-tintaCarvao/80 line-clamp-3 lowercase leading-relaxed">
-                        {n.content}
+
+                      <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between">
+                        <button
+                          onClick={() => {
+                            handleNew(
+                              `nota rápida`,
+                              `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px;">${n.content.replace(/\n/g, '<br/>')}</blockquote><p></p>`
+                            );
+                          }}
+                          className="p-2 rounded-xl bg-amber-100 hover:bg-acentoTerracota hover:text-white text-acentoTerracota transition-colors cursor-pointer"
+                          title="abrir nota no atelier"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteNote(n.id)}
+                          className="p-2 hover:bg-amber-200/50 text-amber-900/40 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                          title="excluir nota"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* SUB-ABA 4: CITAÇÕES (VISUAL BILHETE POÉTICO) */}
+            {activeTab === 'citacoes' && (
+              <div className={viewMode === 'grid' ? "grid grid-cols-2 lg:grid-cols-4 gap-3.5" : "space-y-2.5"}>
+                {allQuotes.length === 0 ? (
+                  <div className="col-span-full text-center py-12 space-y-2 bg-white/60 rounded-2xl border border-papelKraft/40 p-6 shadow-sm">
+                    <BookMarked className="w-10 h-10 text-acentoAzul/30 mx-auto" />
+                    <p className="text-xs text-tintaCarvao/70 font-editorial lowercase italic">
+                      nenhuma citação salva ainda. você pode guardar citações durante a leitura das aulas!
+                    </p>
+                  </div>
+                ) : (
+                  allQuotes.map((q) => {
+                    const truncatedText = q.text.length > 80 ? q.text.slice(0, 80) + '...' : q.text;
+                    return (
+                      <div
+                        key={q.id}
+                        className="p-4 rounded-2xl bg-papelClaro border border-papelKraft/50 shadow-sm hover:border-acentoAzul transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-[10px] font-corpo text-acentoAzul">
+                            <span className="font-bold lowercase truncate max-w-[130px]">{q.lessonTitle}</span>
+                            <span className="text-tintaCarvao/40">{q.createdAt}</span>
+                          </div>
+                          <p className="text-xs font-editorial italic text-tintaCarvao/90 lowercase leading-relaxed border-l-2 border-acentoTerracota pl-2.5 py-0.5">
+                            "{truncatedText}"
+                          </p>
+                        </div>
+
+                        <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between">
+                          <button
+                            onClick={() => {
+                              handleNew(
+                                `citação • ${q.lessonTitle}`,
+                                `<blockquote style="border-left: 2px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px;">“${q.text}”</blockquote><p></p>`
+                              );
+                            }}
+                            className="p-2 rounded-xl bg-white hover:bg-acentoTerracota hover:text-white text-acentoTerracota border border-papelKraft/40 transition-colors cursor-pointer"
+                            title="usar no atelier"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteQuote(q.id)}
+                            className="p-2 hover:bg-red-50 text-tintaCarvao/40 hover:text-red-600 rounded-xl transition-colors cursor-pointer"
+                            title="excluir citação"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* ABA 2: RITUAIS & PROVOCAÇÕES POÉTICAS */}
+        {mainTab === 'rituais' && (
+          <div className="space-y-7 animate-fadeIn">
+            
+            {/* SUBSEÇÃO 1: RITUAIS GUIADOS */}
+            <div className="bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
+              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
+                <div className="flex items-center gap-2">
+                  <Wand2 className="w-5 h-5 text-acentoTerracota" />
+                  <h3 className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
+                    rituais guiados de escrita
+                  </h3>
+                </div>
+                <span className="text-xs text-tintaCarvao/60 font-corpo lowercase">
+                  estruturas imersivas passo a passo
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
+                {GUIDED_TEMPLATES.map((tmpl) => (
+                  <div
+                    key={tmpl.id}
+                    onClick={() => handleApplyTemplate(tmpl)}
+                    className="p-4 rounded-2xl bg-white border border-papelKraft/60 shadow-sm hover:border-acentoTerracota transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="px-2 py-0.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-[10px] font-bold lowercase">
+                          guiado
+                        </span>
+                        {renderTemplateIcon(tmpl.type)}
+                      </div>
+                      <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                        {tmpl.title}
+                      </h4>
+                      <p className="text-xs text-tintaCarvao/80 lowercase italic font-medium leading-relaxed">
+                        “{tmpl.subtitle}”
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-end">
+                    <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-end">
                       <button
-                        type="button"
-                        onClick={() => {
-                          handleNew(
-                            `rascunho de aula`,
-                            `<blockquote style="border-left: 2px solid #FD5E32; padding-left: 14px; margin: 10px 0 0 0; color: #140D82; font-style: italic; font-size: 15px;">${n.content.replace(/\n/g, '<br/>')}</blockquote><p></p>`
-                          );
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApplyTemplate(tmpl);
                         }}
-                        className="font-gesto text-[20px] text-acentoTerracota hover:underline lowercase"
+                        className="p-2.5 rounded-xl bg-acentoTerracota text-white hover:bg-acentoTerracota/90 hover:scale-105 transition-all shadow-sm cursor-pointer"
+                        title="iniciar ritual"
                       >
-                        abrir nota no atelier →
+                        <Play className="w-4 h-4 text-white fill-white" />
                       </button>
                     </div>
                   </div>
-                ))
-              )}
+                ))}
+              </div>
             </div>
-          )}
 
-        </div>
+            {/* SUBSEÇÃO 2: INSPIRAÇÕES DA COMUNIDADE (CONVITES POÉTICOS COM UPVOTES E RANKING) */}
+            <div className="bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
+              <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-acentoTerracota" />
+                  <h3 className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
+                    convites poéticos da fogueira
+                  </h3>
+                </div>
+                <span className="text-xs font-bold text-acentoTerracota bg-acentoTerracota/10 px-3 py-1 rounded-full lowercase">
+                  desafios votados pela comunidade
+                </span>
+              </div>
 
-        {/* MODAL UNIFICADO: RITUAIS CRIATIVOS & INSPIRAÇÕES DA COMUNIDADE */}
-        {showRituaisModal && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                {COMMUNITY_PROMPTS.map((prompt) => {
+                  const isUpvoted = !!userUpvoted[prompt.id];
+                  const upvoteCount = upvotes[prompt.id] || 0;
+                  const completionCount = completions[prompt.id] || 42;
+
+                  return (
+                    <div
+                      key={prompt.id}
+                      className="p-4 rounded-2xl bg-white border border-papelKraft/50 shadow-sm hover:border-acentoTerracota transition-all flex items-center justify-between gap-4"
+                    >
+                      {/* BOTAO DE UPVOTE DA COMUNIDADE */}
+                      <button
+                        onClick={(e) => handleToggleUpvote(prompt.id, e)}
+                        className={`flex flex-col items-center justify-center p-2.5 rounded-2xl border transition-all cursor-pointer shrink-0 min-w-[48px] ${
+                          isUpvoted
+                            ? 'bg-acentoTerracota text-white border-acentoTerracota shadow-sm'
+                            : 'bg-papelClaro hover:bg-papelKraft/30 text-acentoAzul border-papelKraft/50'
+                        }`}
+                        title="votar nesta inspiração"
+                      >
+                        <ChevronUp className={`w-4 h-4 ${isUpvoted ? 'text-white' : 'text-acentoTerracota'}`} />
+                        <span className="text-xs font-bold font-corpo">{upvoteCount}</span>
+                      </button>
+
+                      {/* CONTEÚDO PRINCIPAL */}
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold lowercase">
+                            {prompt.badge}
+                          </span>
+                          <span className="text-[10px] text-tintaCarvao/60 font-medium lowercase truncate">
+                            {prompt.category} • por {prompt.author}
+                          </span>
+                        </div>
+                        <h4 className="text-xs sm:text-sm font-bold font-editorial text-tintaCarvao lowercase leading-relaxed">
+                          “{prompt.title}”
+                        </h4>
+                        <div className="flex items-center gap-1.5 text-[10px] text-tintaCarvao/60 font-medium pt-0.5">
+                          <Users className="w-3 h-3 text-acentoOliva" />
+                          <span>{completionCount} alunas concluíram</span>
+                        </div>
+                      </div>
+
+                      {/* BOTÃO APENAS COM ÍCONE DE VER / COMEÇAR */}
+                      <button
+                        onClick={() => setSelectedPromptModal(prompt)}
+                        className="p-3 rounded-2xl bg-acentoAzul hover:bg-acentoAzul/90 text-white transition-transform hover:scale-105 cursor-pointer shrink-0 shadow-sm"
+                        title="ver detalhes e começar"
+                      >
+                        <Eye className="w-4.5 h-4.5 text-white" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* MODAL DE CRIAÇÃO RÁPIDA DE NOTA ADESIVA (ESTILO POST-IT) */}
+        {showNoteModal && (
           <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-3xl w-full shadow-kraft-lg space-y-5 relative max-h-[90vh] overflow-y-auto">
+            <div className="bg-amber-50 rounded-3xl border border-amber-200 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-4 relative">
               <button
-                onClick={() => setShowRituaisModal(false)}
+                onClick={() => setShowNoteModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-amber-100 text-amber-900/60 hover:text-amber-950 transition-colors border border-amber-200 cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-amber-800 lowercase block">
+                  bloco de notas poéticas
+                </span>
+                <h3 className="text-xl font-bold font-editorial text-amber-950 lowercase">
+                  nova nota rápida (post-it)
+                </h3>
+              </div>
+
+              <div className="space-y-3">
+                <input
+                  type="text"
+                  value={noteTitleInput}
+                  onChange={(e) => setNoteTitleInput(e.target.value)}
+                  placeholder="título da nota (ex: ideia de verso)..."
+                  className="w-full px-4 py-2.5 bg-white/80 border border-amber-200 rounded-2xl text-xs sm:text-sm font-corpo text-amber-950 placeholder:text-amber-900/40 focus:outline-none focus:border-acentoTerracota lowercase"
+                />
+
+                <textarea
+                  value={noteContentInput}
+                  onChange={(e) => setNoteContentInput(e.target.value)}
+                  placeholder="escreva seu rascunho rápido aqui..."
+                  rows={4}
+                  className="w-full px-4 py-3 bg-white/80 border border-amber-200 rounded-2xl text-xs sm:text-sm font-corpo text-amber-950 placeholder:text-amber-900/40 focus:outline-none focus:border-acentoTerracota lowercase resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-amber-200/60">
+                <button
+                  onClick={() => setShowNoteModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-amber-900 hover:bg-amber-100 lowercase transition-colors cursor-pointer"
+                >
+                  cancelar
+                </button>
+                <button
+                  onClick={handleSaveNoteModal}
+                  className="px-5 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[18px] lowercase shadow-sm transition-all cursor-pointer"
+                >
+                  salvar nota
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL DE DETALHES DE INSPIRAÇÃO DA COMUNIDADE */}
+        {selectedPromptModal && (
+          <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-lg w-full shadow-kraft-lg space-y-5 relative">
+              <button
+                onClick={() => setSelectedPromptModal(null)}
                 className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
               <div className="space-y-1">
-                <span className="text-xs font-bold text-acentoTerracota lowercase block">
-                  inspirações & rituais de escrita
+                <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold lowercase inline-block mb-1">
+                  {selectedPromptModal.badge} • {selectedPromptModal.category}
                 </span>
                 <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                  rituais guiados & convites da comunidade
+                  “{selectedPromptModal.title}”
                 </h3>
+                <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                  curado por {selectedPromptModal.author}
+                </p>
               </div>
 
-              {/* RITUAIS GUIADOS */}
-              <div className="space-y-3 pt-2 border-t border-papelKraft/30">
-                <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase flex items-center gap-2">
-                  <LayoutTemplate className="w-4 h-4 text-acentoTerracota" />
-                  <span>rituais guiados de escrita</span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {GUIDED_TEMPLATES.map((tmpl) => (
-                    <div
-                      key={tmpl.id}
-                      onClick={() => {
-                        setShowRituaisModal(false);
-                        handleApplyTemplate(tmpl);
-                      }}
-                      className="p-4 rounded-2xl bg-white border border-papelKraft/60 shadow-sm hover:border-acentoTerracota transition-all cursor-pointer group space-y-1.5 flex flex-col justify-between"
-                    >
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          {renderTemplateIcon(tmpl.type)}
-                          <h5 className="text-xs font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
-                            {tmpl.title}
-                          </h5>
-                        </div>
-                        <p className="text-[11px] text-tintaCarvao/75 lowercase italic leading-relaxed">
-                          “{tmpl.subtitle}”
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-end">
-                        <span className="font-gesto text-[18px] text-acentoTerracota lowercase group-hover:underline">
-                          iniciar ritual →
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+              {selectedPromptModal.description && (
+                <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/80 leading-relaxed lowercase bg-white p-4 rounded-2xl border border-papelKraft/40">
+                  {selectedPromptModal.description}
+                </p>
+              )}
+
+              <div className="flex items-center justify-between text-xs text-tintaCarvao/70 font-medium pt-1">
+                <div className="flex items-center gap-1.5">
+                  <Users className="w-4 h-4 text-acentoOliva" />
+                  <span>{completions[selectedPromptModal.id] || 42} alunas concluíram este desafio</span>
                 </div>
               </div>
 
-              {/* CONVITES DA COMUNIDADE */}
-              <div className="space-y-3 pt-4 border-t border-papelKraft/30">
-                <h4 className="text-sm font-bold font-editorial text-acentoAzul lowercase flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-acentoTerracota" />
-                  <span>convites poéticos da comunidade</span>
-                </h4>
-                <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
-                  {COMMUNITY_PROMPTS.map((prompt) => (
-                    <div
-                      key={prompt.id}
-                      className="bg-white p-3.5 rounded-2xl border border-papelKraft/50 shadow-sm space-y-2 hover:border-acentoTerracota transition-all"
-                    >
-                      <h5 className="text-xs font-bold font-editorial text-tintaCarvao lowercase leading-relaxed">
-                        “{prompt.title}”
-                      </h5>
-                      <div className="flex items-center justify-between pt-1 border-t border-papelKraft/30">
-                        <span className="text-[10px] font-corpo text-tintaCarvao/60">
-                          {prompt.category} • por {prompt.author}
-                        </span>
-                        <button
-                          onClick={() => {
-                            setShowRituaisModal(false);
-                            handleApplyPrompt(prompt.title);
-                          }}
-                          className="font-gesto text-[18px] text-acentoTerracota hover:text-acentoAzul transition-colors lowercase"
-                        >
-                          escrever sobre este tema →
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-3 border-t border-papelKraft/30">
+                <button
+                  onClick={() => {
+                    alert('comentários do desafio disponíveis na fogueira ao vivo!');
+                  }}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/45 text-xs font-bold lowercase transition-colors cursor-pointer"
+                >
+                  💬 comentar desafio
+                </button>
 
+                <button
+                  onClick={() => {
+                    const promptText = selectedPromptModal.title;
+                    setSelectedPromptModal(null);
+                    handleApplyPrompt(promptText);
+                  }}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-sm transition-all cursor-pointer"
+                >
+                  🚀 começar desafio
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -1017,301 +1420,200 @@ export default function WritingExercises() {
             <div className="fixed inset-0 z-[999999] w-screen h-screen min-h-screen bg-bgPlataforma text-tintaCarvao p-4 sm:p-8 overflow-y-auto animate-fadeIn flex flex-col justify-between">
               <div className="max-w-5xl mx-auto w-full space-y-4 flex-1 flex flex-col justify-between">
                 
-                {/* Header Superior Limpo do Modo Foco (Métricas à esquerda, Apenas Ícones de Ação à direita) */}
-                <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
-                  
-                  {/* Lado Esquerdo: Contador de Palavras, Timer de Sprint & Selos Poéticos */}
+                {/* Header Superior Limpo do Modo Foco */}
+                <div className="flex items-center justify-between border-b border-papelKraft/40 pb-3">
                   <div className="flex items-center gap-3">
-                    {editorSettings.showWordCount && (
-                      <span className="text-xs font-medium text-tintaCarvao/80 lowercase">
-                        produção: <strong className="font-editorial text-lg font-bold text-acentoAzul">{currentWordCount}</strong> palavras
-                      </span>
-                    )}
+                    <span className="text-xs font-bold text-acentoTerracota lowercase flex items-center gap-1">
+                      <Feather className="w-3.5 h-3.5" />
+                      <span>estúdio autoral</span>
+                    </span>
 
-                    {/* TEMPORIZADOR DE SPRINT COM ÍCONE DE AMPULHETA (REFERÊNCIA media_1788224288012.png) */}
-                    {editorSettings.showTimer && (
-                      <div className="relative" ref={timerPopoverRef}>
-                        {timerSeconds === null ? (
-                          // ESTADO INICIAL: BOTÃO DE AMPULHETA PARA DEFINIR TEMPO MANUALMENTE
-                          <button
-                            onClick={() => setShowTimerPopover(!showTimerPopover)}
-                            className="px-3 py-1.5 rounded-full bg-white hover:bg-bgPlataforma text-acentoTerracota border border-papelKraft/50 transition-all shadow-sm flex items-center gap-1.5 text-xs font-bold font-editorial lowercase active:scale-95"
-                            title="definir tempo do sprint"
-                          >
-                            <Hourglass className="w-4 h-4 text-acentoTerracota" />
-                            <span>definir tempo</span>
-                          </button>
-                        ) : (
-                          // ESTADO ATIVO OU PAUSADO: MOSTRA O CRONÔMETRO COM AMPULHETA E CONTROLES
-                          <div className="flex items-center gap-1.5 bg-white px-3 py-1 rounded-full border border-papelKraft/50 shadow-sm">
-                            <Hourglass className={`w-4 h-4 text-acentoTerracota ${isTimerRunning ? 'animate-spin' : ''}`} />
-                            <span className="font-editorial text-sm font-bold text-acentoTerracota">
-                              {formatTimerStr(timerSeconds)}
-                            </span>
-
-                            {isTimerRunning ? (
-                              <button
-                                onClick={pauseTimer}
-                                className="p-1 hover:bg-papelKraft/20 rounded-full text-acentoTerracota"
-                                title="pausar"
-                              >
-                                <Pause className="w-3.5 h-3.5" />
-                              </button>
-                            ) : (
-                              <button
-                                onClick={resumeTimer}
-                                className="p-1 hover:bg-papelKraft/20 rounded-full text-acentoTerracota"
-                                title="continuar"
-                              >
-                                <Play className="w-3.5 h-3.5 fill-current" />
-                              </button>
-                            )}
-
-                            <button
-                              onClick={stopTimer}
-                              className="p-1 hover:bg-papelKraft/20 rounded-full text-tintaCarvao/50 hover:text-acentoTerracota"
-                              title="parar sprint"
-                            >
-                              <RotateCcw className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        )}
-
-                        {/* CARD POPOVER DE TEMPO MANUAL DA REFERÊNCIA media_1788224288012.png */}
-                        {showTimerPopover && (
-                          <div className="absolute top-full mt-2 left-0 z-50 bg-[#EDE6D4] rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-3.5 space-y-3 w-64 animate-fadeIn">
-                            <div className="text-xs font-bold font-editorial text-acentoAzul lowercase flex items-center gap-1.5 border-b border-papelKraft/30 pb-1.5">
-                              <Hourglass className="w-4 h-4 text-acentoTerracota" />
-                              <span>temporizador de sprint poético</span>
-                            </div>
-
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex-1 space-y-1 text-center">
-                                <span className="text-[10px] font-bold font-editorial text-tintaCarvao/70 lowercase block">horas</span>
-                                <input
-                                  type="number"
-                                  min="0"
-                                  max="23"
-                                  value={customHours}
-                                  onChange={(e) => setCustomHours(e.target.value)}
-                                  className="w-full text-center px-2 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-bold font-editorial text-acentoAzul focus:outline-none"
-                                  placeholder="0"
-                                />
-                              </div>
-
-                              <span className="text-sm font-bold text-tintaCarvao/50 pt-4">:</span>
-
-                              <div className="flex-1 space-y-1 text-center">
-                                <span className="text-[10px] font-bold font-editorial text-tintaCarvao/70 lowercase block">minutos</span>
-                                <input
-                                  type="number"
-                                  min="0"
-                                  max="59"
-                                  value={customMinutes}
-                                  onChange={(e) => setCustomMinutes(e.target.value)}
-                                  className="w-full text-center px-2 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-bold font-editorial text-acentoAzul focus:outline-none"
-                                  placeholder="15"
-                                />
-                              </div>
-                            </div>
-
-                            <button
-                              onClick={() => {
-                                const h = Math.max(0, parseInt(customHours) || 0);
-                                const m = Math.max(0, parseInt(customMinutes) || 0);
-                                const totalMins = h * 60 + m;
-                                if (totalMins > 0) {
-                                  startTimer(totalMins);
-                                  setShowTimerPopover(false);
-                                }
-                              }}
-                              className="w-full btn-pill-primary py-2 text-xs font-bold lowercase shadow-sm flex items-center justify-center gap-1.5"
-                            >
-                              <Play className="w-3.5 h-3.5 fill-current text-white" />
-                              <span>iniciar sprint</span>
-                            </button>
-                          </div>
-                        )}
+                    {/* Temporizador no Topo */}
+                    {timerSeconds !== null && (
+                      <div className="flex items-center gap-2 bg-acentoAzul/10 text-acentoAzul px-3 py-1 rounded-full text-xs font-mono font-bold">
+                        <Timer className="w-3.5 h-3.5" />
+                        <span>{formatTimer(timerSeconds)}</span>
+                        <button
+                          onClick={handleToggleTimer}
+                          className="hover:opacity-80 p-0.5"
+                          title={isTimerRunning ? 'pausar' : 'retomar'}
+                        >
+                          {isTimerRunning ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                        </button>
+                        <button
+                          onClick={handleResetTimer}
+                          className="hover:opacity-80 p-0.5"
+                          title="cancelar temporizador"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
                       </div>
-                    )}
-
-                    {currentMilestone && (
-                      <span className="text-[11px] font-bold text-acentoAzul bg-acentoAzul/10 px-3 py-1.5 rounded-full border border-acentoAzul/20 lowercase hidden md:inline-flex items-center gap-1">
-                        <Sparkles className="w-3.5 h-3.5 text-acentoAzul" />
-                        <span className="font-editorial">{currentMilestone.title}</span>
-                      </span>
                     )}
                   </div>
 
-                  {/* Lado Direito: Apenas Ícones de Ação Arredondados com Tooltips em Hover */}
                   <div className="flex items-center gap-2">
-                    {/* Ícone de Configurações do Editor */}
-                    <div className="relative group">
+                    {/* Botão de Temporizador */}
+                    <div className="relative" ref={timerPopoverRef}>
                       <button
-                        onClick={() => setShowSettingsModal(true)}
-                        className="p-2.5 rounded-full bg-white hover:bg-bgPlataforma text-acentoAzul border border-papelKraft/50 transition-all shadow-sm active:scale-95 flex items-center justify-center"
+                        onClick={() => setShowTimerPopover((prev) => !prev)}
+                        className={`p-2 rounded-xl border text-xs font-semibold lowercase transition-all flex items-center gap-1.5 ${
+                          timerSeconds !== null
+                            ? 'bg-acentoAzul text-white border-acentoAzul'
+                            : 'bg-white hover:bg-papelClaro text-tintaCarvao border-papelKraft/50'
+                        }`}
+                        title="temporizador de ritual"
                       >
-                        <Settings className="w-4 h-4 text-acentoAzul" />
+                        <Timer className="w-4 h-4 text-acentoTerracota" />
+                        <span className="hidden sm:inline">temporizador</span>
                       </button>
-                      <div className="absolute top-full mt-2 right-0 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2.5 py-1 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                        configurações do editor
-                      </div>
+
+                      {showTimerPopover && (
+                        <div className="absolute right-0 mt-2 w-64 bg-papelClaro border border-papelKraft/60 rounded-2xl shadow-kraft-lg p-4 z-50 space-y-3 animate-fadeIn text-tintaCarvao">
+                          <div className="flex items-center justify-between border-b border-papelKraft/40 pb-2">
+                            <span className="text-xs font-bold text-acentoAzul lowercase flex items-center gap-1">
+                              <Timer className="w-3.5 h-3.5 text-acentoTerracota" />
+                              <span>sprint de escrita</span>
+                            </span>
+                            <button
+                              onClick={() => setShowTimerPopover(false)}
+                              className="text-tintaCarvao/50 hover:text-tintaCarvao"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-1.5">
+                            <button
+                              onClick={() => handleStartTimer(5)}
+                              className="px-2.5 py-1.5 bg-white hover:bg-acentoAzul hover:text-white border border-papelKraft/50 rounded-xl text-xs font-semibold lowercase transition-colors"
+                            >
+                              5 min
+                            </button>
+                            <button
+                              onClick={() => handleStartTimer(15)}
+                              className="px-2.5 py-1.5 bg-white hover:bg-acentoAzul hover:text-white border border-papelKraft/50 rounded-xl text-xs font-semibold lowercase transition-colors"
+                            >
+                              15 min
+                            </button>
+                            <button
+                              onClick={() => handleStartTimer(30)}
+                              className="px-2.5 py-1.5 bg-white hover:bg-acentoAzul hover:text-white border border-papelKraft/50 rounded-xl text-xs font-semibold lowercase transition-colors"
+                            >
+                              30 min
+                            </button>
+                          </div>
+
+                          <div className="space-y-1.5 pt-1 border-t border-papelKraft/30">
+                            <span className="text-[11px] text-tintaCarvao/70 lowercase block">
+                              tempo personalizado:
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="number"
+                                min="0"
+                                max="23"
+                                value={customHours}
+                                onChange={(e) => setCustomHours(e.target.value)}
+                                className="w-14 px-2 py-1 bg-white border border-papelKraft/50 rounded-xl text-xs text-center font-mono text-tintaCarvao"
+                                placeholder="00h"
+                              />
+                              <span className="text-xs font-bold text-tintaCarvao/60">h</span>
+                              <input
+                                type="number"
+                                min="1"
+                                max="59"
+                                value={customMinutes}
+                                onChange={(e) => setCustomMinutes(e.target.value)}
+                                className="w-14 px-2 py-1 bg-white border border-papelKraft/50 rounded-xl text-xs text-center font-mono text-tintaCarvao"
+                                placeholder="15m"
+                              />
+                              <span className="text-xs font-bold text-tintaCarvao/60">m</span>
+                            </div>
+                            <button
+                              onClick={handleStartCustomTimer}
+                              className="w-full mt-2 py-1.5 bg-acentoTerracota hover:bg-acentoTerracota/90 text-white rounded-xl text-xs font-bold lowercase shadow-sm transition-colors"
+                            >
+                              iniciar temporizador
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {/* Ícone de Salvar Texto */}
-                    <div className="relative group">
-                      <button
-                        onClick={handleSave}
-                        disabled={saving || !title.trim()}
-                        className="p-2.5 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white border border-acentoTerracota/40 transition-all shadow-sm active:scale-95 disabled:opacity-50 flex items-center justify-center"
-                      >
-                        <Save className="w-4 h-4 text-white" />
-                      </button>
-                      <div className="absolute top-full mt-2 right-0 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2.5 py-1 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                        {saving ? 'salvando...' : 'salvar texto (ctrl+s)'}
-                      </div>
-                    </div>
+                    <button
+                      onClick={() => setShowSettingsModal(true)}
+                      className="p-2 rounded-xl bg-white hover:bg-papelClaro border border-papelKraft/50 text-tintaCarvao/70 hover:text-tintaCarvao transition-colors"
+                      title="configurações do editor"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </button>
 
-                    {/* Ícone de Sair do Modo Foco */}
-                    <div className="relative group">
-                      <button
-                        onClick={handleExitZenMode}
-                        className="p-2.5 rounded-full bg-acentoAzul hover:bg-acentoAzul/90 text-white border border-acentoAzul/40 transition-all shadow-sm active:scale-95 flex items-center justify-center"
-                      >
-                        <Minimize2 className="w-4 h-4 text-white" />
-                      </button>
-                      <div className="absolute top-full mt-2 right-0 hidden group-hover:block bg-tintaCarvao text-white text-[10px] font-editorial px-2.5 py-1 rounded-md whitespace-nowrap z-50 shadow-sm pointer-events-none lowercase">
-                        sair do modo foco
-                      </div>
-                    </div>
+                    <button
+                      onClick={handleExitZenMode}
+                      className="p-2 rounded-xl bg-white hover:bg-papelClaro border border-papelKraft/50 text-tintaCarvao/70 hover:text-tintaCarvao transition-colors flex items-center gap-1.5 text-xs font-semibold lowercase"
+                      title="concluir e fechar modo foco"
+                    >
+                      <Minimize2 className="w-4 h-4" />
+                      <span className="hidden sm:inline">concluir</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* Área Principal de Escrita Integrada ao Background (Sem caixas nidadas nem bordas internas) */}
-                <div className="space-y-4 flex-1 flex flex-col pt-2">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="título do seu texto..."
-                    className="w-full text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul bg-transparent border-none focus:outline-none placeholder:text-tintaCarvao/30 lowercase"
+                {/* Título Editável do Texto */}
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="título do seu texto..."
+                  className="w-full text-2xl sm:text-4xl font-bold font-editorial text-acentoAzul bg-transparent border-b border-papelKraft/30 pb-2 focus:outline-none focus:border-acentoTerracota placeholder:text-tintaCarvao/30 lowercase"
+                />
+
+                {/* Editor RichText */}
+                <div className="flex-1 my-4">
+                  <RichTextEditor
+                    content={content}
+                    onChange={setContent}
+                    placeholder="comece a soltar a sua voz aqui sem interrupções..."
+                    editorSettings={editorSettings}
                   />
-
-                  <div className="flex-1 flex flex-col min-h-[50vh]">
-                    <RichTextEditor
-                      value={content}
-                      onChange={setContent}
-                      onSave={handleSave}
-                      placeholder="escreva aqui com calma e sem interrupções..."
-                      flat={true}
-                      zoomLevel={editorSettings.zoomLevel}
-                      onZoomChange={(newZoom) => handleUpdateSettings({ zoomLevel: newZoom })}
-                      fontFamily={editorSettings.fontFamily}
-                    />
-                  </div>
                 </div>
 
-                {/* Rodapé discreto no Modo Foco */}
-                <div className="pt-2 text-center text-[11px] text-tintaCarvao/50 lowercase">
-                  <span>solta o verbo • espaço protegido de escrita profunda</span>
+                {/* Rodapé do Modo Foco */}
+                <div className="flex items-center justify-between border-t border-papelKraft/40 pt-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                      {currentWordCount} {currentWordCount === 1 ? 'palavra' : 'palavras'}
+                    </span>
+                    {currentMilestone && (
+                      <span className="text-xs font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase flex items-center gap-1 animate-fadeIn">
+                        <span>{currentMilestone.icon}</span>
+                        <span>{currentMilestone.label}</span>
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleDownload}
+                      className="p-2 rounded-xl bg-white hover:bg-papelClaro text-tintaCarvao/70 border border-papelKraft/40 text-xs font-semibold lowercase transition-colors"
+                      title="baixar texto"
+                    >
+                      <Download className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setShowShareModal(true)}
+                      className="p-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-semibold lowercase transition-all shadow-sm"
+                      title="partilhar na fogueira"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
               </div>
             </div>,
             document.body
           )}
-
-        {/* MODAL DE COMPARTILHAMENTO NA FOGUEIRA */}
-        {showShareModal && (
-          <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-            <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-5 relative">
-              <button
-                onClick={() => setShowShareModal(false)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-bgPlataforma text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="space-y-1">
-                <span className="text-xs font-bold text-acentoTerracota lowercase block">
-                  partilha poética
-                </span>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
-                  compartilhar na nossa fogueira
-                </h3>
-              </div>
-
-              <p className="text-xs text-tintaCarvao/80 lowercase leading-relaxed font-medium bg-bgPlataforma/60 p-4 rounded-2xl border border-papelKraft/40">
-                seu texto será publicado no feed da comunidade para que outros membros possam ler, curtir e trocar impressões poéticas com você.
-              </p>
-
-              {/* OPÇÃO DE PUBLICAÇÃO PÚBLICA OU ANÔNIMA */}
-              <div className="space-y-2 pt-1">
-                <span className="text-xs font-bold text-acentoAzul lowercase block">
-                  como prefere assinar esta partilha?
-                </span>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsAnonymousShare(false)}
-                    className={`p-3 rounded-2xl border text-left transition-all ${
-                      !isAnonymousShare
-                        ? 'bg-white border-acentoAzul text-acentoAzul font-bold shadow-sm'
-                        : 'bg-bgPlataforma/60 border-papelKraft/40 text-tintaCarvao/70'
-                    }`}
-                  >
-                    <UserCheck className="w-4 h-4 mb-1 text-acentoAzul" />
-                    <span className="text-xs block lowercase">com meu nome</span>
-                    <span className="text-[10px] opacity-70 block font-normal">{profile?.display_name || 'aluna'}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsAnonymousShare(true)}
-                    className={`p-3 rounded-2xl border text-left transition-all ${
-                      isAnonymousShare
-                        ? 'bg-white border-acentoTerracota text-acentoTerracota font-bold shadow-sm'
-                        : 'bg-bgPlataforma/60 border-papelKraft/40 text-tintaCarvao/70'
-                    }`}
-                  >
-                    <EyeOff className="w-4 h-4 mb-1 text-acentoTerracota" />
-                    <span className="text-xs block lowercase">de forma anônima</span>
-                    <span className="text-[10px] opacity-70 block font-normal">membro anônimo</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-2 border-t border-papelKraft/30">
-                <button
-                  onClick={() => setShowShareModal(false)}
-                  className="btn-pill-secondary px-5 py-2 text-xs font-semibold lowercase"
-                >
-                  cancelar
-                </button>
-                <button
-                  onClick={handleShare}
-                  className="btn-pill-primary px-5 py-2 text-xs font-semibold lowercase inline-flex items-center gap-1.5"
-                >
-                  <Check className="w-3.5 h-3.5" />
-                  <span>confirmar e publicar</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* FOOTER DISCRETO */}
-        <div className="pt-8 border-t border-papelKraft/40 text-center">
-          <img
-            src={BRAND_ASSETS.logos.horizontal}
-            alt="solta o verbo"
-            className="h-9 sm:h-11 w-auto mx-auto opacity-60 hover:opacity-100 transition-opacity"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
-            }}
-          />
-        </div>
 
       </div>
     </div>
