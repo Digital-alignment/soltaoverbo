@@ -52,6 +52,7 @@ import {
   StickyNote,
   Wand2,
   Eye,
+  Compass,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
@@ -802,7 +803,7 @@ export default function WritingExercises() {
                 : 'text-tintaCarvao/70 hover:text-tintaCarvao hover:bg-white/50'
             }`}
           >
-            <Wand2 className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+            <Compass className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
             <span>rituais & inspirações</span>
           </button>
         </div>
@@ -1160,14 +1161,11 @@ export default function WritingExercises() {
             <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/50 shadow-kraft space-y-4">
               <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                 <div className="flex items-center gap-2">
-                  <Wand2 className="w-5 h-5 text-acentoTerracota" />
+                  <Compass className="w-5 h-5 text-acentoTerracota" />
                   <h3 className="font-editorial text-lg sm:text-xl font-bold text-acentoAzul lowercase">
                     rituais guiados de escrita
                   </h3>
                 </div>
-                <span className="text-xs text-tintaCarvao/55 font-corpo lowercase">
-                  estruturas imersivas
-                </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1">
@@ -1175,30 +1173,30 @@ export default function WritingExercises() {
                   <div
                     key={tmpl.id}
                     onClick={() => handleApplyTemplate(tmpl)}
-                    className="p-4 rounded-2xl bg-white border border-papelKraft/50 shadow-xs hover:border-acentoTerracota transition-all cursor-pointer group space-y-3 flex flex-col justify-between"
+                    className="p-4 sm:p-5 rounded-2xl bg-white border border-papelKraft/50 shadow-xs hover:border-acentoTerracota hover:shadow-md transition-all cursor-pointer group space-y-3.5 flex flex-col justify-between"
                   >
-                    <div className="space-y-1.5">
+                    <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="px-2 py-0.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-[9px] font-bold lowercase">
+                        <span className="px-2.5 py-0.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-[10px] font-bold lowercase">
                           guiado
                         </span>
                         {renderTemplateIcon(tmpl.type)}
                       </div>
-                      <h4 className="text-xs sm:text-sm font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                      <h4 className="text-base sm:text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors leading-tight">
                         {tmpl.title}
                       </h4>
-                      <p className="text-[11px] text-tintaCarvao/75 lowercase italic font-medium leading-relaxed">
+                      <p className="text-xs text-tintaCarvao/75 lowercase italic font-medium leading-relaxed">
                         “{tmpl.subtitle}”
                       </p>
                     </div>
 
-                    <div className="pt-2 border-t border-papelKraft/25 flex items-center justify-end">
+                    <div className="pt-2.5 border-t border-papelKraft/25 flex items-center justify-end">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           handleApplyTemplate(tmpl);
                         }}
-                        className="w-8 h-8 rounded-full bg-acentoTerracota text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer"
+                        className="w-8.5 h-8.5 rounded-full bg-acentoTerracota text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer"
                         title="iniciar ritual"
                       >
                         <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
@@ -1213,14 +1211,11 @@ export default function WritingExercises() {
             <div className="bg-papelClaro rounded-3xl p-4.5 sm:p-6 border border-papelKraft/50 shadow-kraft space-y-4">
               <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-acentoTerracota" />
+                  <Flame className="w-5 h-5 text-acentoTerracota" />
                   <h3 className="font-editorial text-lg sm:text-xl font-bold text-acentoAzul lowercase">
                     convites poéticos da fogueira
                   </h3>
                 </div>
-                <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
-                  desafios comunitários
-                </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
@@ -1232,7 +1227,8 @@ export default function WritingExercises() {
                   return (
                     <div
                       key={prompt.id}
-                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/45 shadow-xs hover:border-acentoTerracota transition-all flex items-center justify-between gap-3.5"
+                      onClick={() => setSelectedPromptModal(prompt)}
+                      className="p-3.5 sm:p-4 rounded-2xl bg-white border border-papelKraft/45 shadow-xs hover:border-acentoTerracota hover:shadow-md transition-all flex items-center justify-between gap-3.5 cursor-pointer group"
                     >
                       {/* BOTÃO DE UPVOTE */}
                       <button
@@ -1258,7 +1254,7 @@ export default function WritingExercises() {
                             {prompt.category} • por {prompt.author}
                           </span>
                         </div>
-                        <h4 className="text-xs sm:text-sm font-bold font-editorial text-tintaCarvao lowercase leading-snug">
+                        <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase leading-snug">
                           “{prompt.title}”
                         </h4>
                         <div className="flex items-center gap-1 text-[10px] text-tintaCarvao/55 font-medium pt-0.5">
@@ -1269,8 +1265,11 @@ export default function WritingExercises() {
 
                       {/* BOTÃO APENAS COM ÍCONE DE EYE */}
                       <button
-                        onClick={() => setSelectedPromptModal(prompt)}
-                        className="w-8 h-8 rounded-full bg-acentoAzul text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer shrink-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPromptModal(prompt);
+                        }}
+                        className="w-8.5 h-8.5 rounded-full bg-acentoAzul text-white flex items-center justify-center hover:scale-105 transition-transform shadow-xs cursor-pointer shrink-0"
                         title="ver detalhes e começar"
                       >
                         <Eye className="w-4 h-4 text-white" />
