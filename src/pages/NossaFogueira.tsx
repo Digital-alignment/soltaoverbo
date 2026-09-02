@@ -515,25 +515,24 @@ export default function NossaFogueira() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-6">
             {filteredPosts.map((post) => {
               const isExpanded = expandedPosts.has(post.id);
               const isCommenting = commentingPost === post.id;
-              const textarea = document.createElement('textarea');
-              textarea.innerHTML = post.writing_exercise.content;
-              const plainText = textarea.value.replace(/<[^>]*>/g, '');
+              const rawContent = post.writing_exercise.content || '';
+              const plainText = stripHtmlTags(rawContent);
               const wordCount = plainText.trim().split(/\s+/).filter((word) => word.length > 0).length;
-              const needsExpand = wordCount > 40;
+              const needsExpand = wordCount > 35;
 
               return (
                 <div
                   id={`post-${post.id}`}
                   key={post.id}
-                  className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-7 shadow-kraft space-y-4 hover:border-acentoAzul/40 transition-all"
+                  className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-6 sm:p-8 shadow-kraft space-y-5 select-text focus:outline-none transition-shadow hover:shadow-md"
                 >
                   {/* CABEÇALHO DO AUTOR */}
-                  <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3.5">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between border-b border-papelKraft/30 pb-4">
+                    <div className="flex items-center gap-3.5">
                       <Link to={`/profile/${post.user_profile.id}`}>
                         {post.user_profile.profile_picture_url ? (
                           <img
@@ -551,12 +550,12 @@ export default function NossaFogueira() {
                       <div className="space-y-0.5">
                         <Link
                           to={`/profile/${post.user_profile.id}`}
-                          className="font-bold font-editorial text-base sm:text-lg text-acentoAzul hover:text-acentoTerracota transition-colors lowercase block leading-tight"
+                          className="font-bold font-editorial text-lg sm:text-xl text-acentoAzul hover:text-acentoTerracota transition-colors lowercase block leading-tight"
                         >
                           {post.user_profile.display_name}
                         </Link>
-                        <div className="flex items-center gap-1.5 text-[11px] font-corpo text-tintaCarvao/50">
-                          <Calendar className="w-3 h-3" />
+                        <div className="flex items-center gap-1.5 text-xs font-corpo text-tintaCarvao/55">
+                          <Calendar className="w-3.5 h-3.5" />
                           <span>
                             {new Date(post.published_at).toLocaleDateString('pt-BR', {
                               day: 'numeric',
@@ -568,44 +567,53 @@ export default function NossaFogueira() {
                       </div>
                     </div>
 
-                    <span className="px-3 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold lowercase">
-                      fogueira
+                    <span className="px-3.5 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold font-corpo lowercase">
+                      fogueira • partilha
                     </span>
                   </div>
 
-                  {/* TÍTULO DO TEXTO */}
-                  <h2 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
-                    {post.writing_exercise.title}
+                  {/* TÍTULO EDITORIAL DO TEXTO */}
+                  <h2 className="text-2xl sm:text-3xl font-normal font-editorial text-acentoAzul lowercase leading-snug">
+                    “{post.writing_exercise.title}”
                   </h2>
 
-                  {/* CONTEÚDO POÉTICO */}
-                  <div className="bg-white/90 p-4.5 sm:p-6 rounded-2xl border border-papelKraft/30 text-xs sm:text-sm font-corpo text-tintaCarvao/85 leading-relaxed lowercase space-y-2">
+                  {/* CARTÃO DE LEITURA EDITORIAL DO TEXTO (FOLHA DE MANUSCRITO) */}
+                  <div className="bg-white/95 p-5 sm:p-7 rounded-2xl border border-papelKraft/30 border-l-4 border-l-acentoTerracota/80 font-corpo text-sm sm:text-base text-tintaCarvao/90 leading-relaxed lowercase space-y-3 shadow-xs">
                     {isExpanded ? (
-                      <div dangerouslySetInnerHTML={{ __html: post.writing_exercise.content }} />
+                      <div
+                        className="prose prose-sm max-w-none font-corpo text-tintaCarvao/90 lowercase leading-relaxed space-y-2"
+                        dangerouslySetInnerHTML={{ __html: rawContent }}
+                      />
                     ) : (
-                      <p>{getWordPreview(post.writing_exercise.content)}</p>
+                      <p className="font-corpo text-tintaCarvao/90 lowercase leading-relaxed italic">
+                        "{getWordPreview(rawContent, 38)}"
+                      </p>
                     )}
                   </div>
 
-                  {/* BOTÃO LER MAIS / LER MENOS */}
+                  {/* BOTÃO LER MAIS / RECOLHER TEXTO */}
                   {needsExpand && (
-                    <button
-                      onClick={() => toggleExpand(post.id)}
-                      className="text-xs font-bold font-corpo text-acentoTerracota hover:underline lowercase inline-flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>{isExpanded ? 'ler menos' : 'ler texto completo'}</span>
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    </button>
+                    <div className="pt-1">
+                      <button
+                        onClick={() => toggleExpand(post.id)}
+                        className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-papelClaro border border-papelKraft/40 text-xs font-bold font-corpo text-acentoTerracota lowercase transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <span>{isExpanded ? 'recolher texto' : 'ler texto completo'}</span>
+                        {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   )}
 
                   {/* BARRA DE AÇÕES SOCIAIS */}
-                  <div className="flex items-center justify-between pt-3 border-t border-papelKraft/30">
-                    <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between pt-4 border-t border-papelKraft/30">
+                    <div className="flex items-center gap-3">
                       {/* BOTÃO CURTIR / LIKES */}
                       <button
                         onClick={() => handleLike(post.id, post.user_liked)}
-                        className={`flex items-center gap-1.5 text-xs font-bold font-corpo transition-all cursor-pointer ${
-                          post.user_liked ? 'text-red-600' : 'text-tintaCarvao/60 hover:text-red-600'
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold font-corpo transition-all cursor-pointer border ${
+                          post.user_liked
+                            ? 'bg-red-50 text-red-600 border-red-200 shadow-xs'
+                            : 'bg-white text-tintaCarvao/70 border-papelKraft/40 hover:bg-papelClaro hover:text-red-600'
                         }`}
                         title={post.user_liked ? 'descurtir' : 'curtir'}
                       >
@@ -614,13 +622,17 @@ export default function NossaFogueira() {
                             post.user_liked ? 'fill-current text-red-600' : ''
                           } ${animatingHeart === post.id ? 'scale-125' : ''}`}
                         />
-                        <span>{post.likes_count || 0}</span>
+                        <span>{post.likes_count || 0} curtidas</span>
                       </button>
 
                       {/* BOTÃO COMENTÁRIOS */}
                       <button
                         onClick={() => toggleComments(post.id)}
-                        className="flex items-center gap-1.5 text-xs font-bold font-corpo text-tintaCarvao/60 hover:text-acentoAzul transition-colors cursor-pointer"
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold font-corpo transition-all cursor-pointer border ${
+                          isCommenting
+                            ? 'bg-acentoAzul/10 text-acentoAzul border-acentoAzul/30'
+                            : 'bg-white text-tintaCarvao/70 border-papelKraft/40 hover:bg-papelClaro hover:text-acentoAzul'
+                        }`}
                         title="ver partilhas e comentários"
                       >
                         <MessageSquare className="w-4 h-4" />
@@ -631,7 +643,7 @@ export default function NossaFogueira() {
                     {/* BOTÃO COMPARTILHAR LINK */}
                     <button
                       onClick={() => handleShareLink(post.id)}
-                      className="p-1.5 text-tintaCarvao/50 hover:text-acentoAzul hover:bg-white rounded-xl transition-colors cursor-pointer"
+                      className="p-2 text-tintaCarvao/50 hover:text-acentoAzul hover:bg-white rounded-xl border border-transparent hover:border-papelKraft/40 transition-all cursor-pointer"
                       title="copiar link da partilha"
                     >
                       <Share2 className="w-4 h-4" />

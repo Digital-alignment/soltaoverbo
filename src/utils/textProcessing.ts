@@ -5,7 +5,13 @@ export function decodeHtmlEntities(html: string): string {
 }
 
 export function stripHtmlTags(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
+  if (!html) return '';
+  return html
+    .replace(/<\/p>/gi, ' </p>')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 export function getWordPreview(html: string, wordLimit: number = 35): string {
