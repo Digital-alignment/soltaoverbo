@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { MessageCircle, Trash2, Edit2, Eye, Search, Filter, X, Calendar, User, EyeOff, AlertTriangle } from 'lucide-react';
+import { MessageCircle, Trash2, Edit2, Eye, Search, Filter, X, Calendar, User, EyeOff, AlertTriangle, Heart } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import RichTextEditor from './RichTextEditor';
 
@@ -102,7 +102,7 @@ export default function CommentModeration() {
 
       const commentsWithDetails = await Promise.all(
         (commentsData || []).map(async (comment) => {
-          let postTitle = 'Sem título';
+          let postTitle = 'sem título';
 
           if (comment.post_id) {
             const { data: postData } = await supabase
@@ -127,8 +127,7 @@ export default function CommentModeration() {
       setComments(commentsWithDetails as Comment[]);
       setFilteredComments(commentsWithDetails as Comment[]);
     } catch (error) {
-      console.error('Erro ao carregar comentários:', error);
-      alert('Erro ao carregar comentários. Por favor, recarregue a página.');
+      console.error('erro ao carregar comentários:', error);
     } finally {
       setLoading(false);
     }
@@ -151,7 +150,7 @@ export default function CommentModeration() {
       setPosts((postsData || []) as CommunityPost[]);
       setFilteredPosts((postsData || []) as CommunityPost[]);
     } catch (error) {
-      console.error('Erro ao carregar posts:', error);
+      console.error('erro ao carregar posts:', error);
     }
   };
 
@@ -230,12 +229,11 @@ export default function CommentModeration() {
   };
 
   const handleDeleteComment = async (commentId: string) => {
-    if (!confirm('Tem certeza que deseja excluir este comentário? Esta ação não pode ser desfeita.')) {
+    if (!confirm('tem certeza que deseja excluir este comentário? esta ação não pode ser desfeita.')) {
       return;
     }
 
     setDeletingComments(prev => new Set(prev).add(commentId));
-
     const previousComments = [...comments];
     const previousFiltered = [...filteredComments];
 
@@ -251,24 +249,16 @@ export default function CommentModeration() {
       const { error } = await supabase.from('comments').delete().eq('id', commentId);
 
       if (error) {
-        console.error('Delete error:', error);
         setComments(previousComments);
         setFilteredComments(previousFiltered);
-
-        if (error.message.includes('permission')) {
-          alert('Você não tem permissão para excluir este comentário.');
-        } else {
-          alert('Erro ao excluir comentário: ' + error.message);
-        }
+        alert('erro ao excluir comentário: ' + error.message);
         return;
       }
 
       await loadComments();
     } catch (error: any) {
-      console.error('Erro ao excluir comentário:', error);
       setComments(previousComments);
       setFilteredComments(previousFiltered);
-      alert('Erro ao excluir comentário. Tente novamente.');
     } finally {
       setDeletingComments(prev => {
         const newSet = new Set(prev);
@@ -290,7 +280,7 @@ export default function CommentModeration() {
 
   const handleUpdateComment = async (commentId: string) => {
     if (!editContent.trim()) {
-      alert('O comentário não pode estar vazio.');
+      alert('o comentário não pode estar vazio.');
       return;
     }
 
@@ -310,34 +300,25 @@ export default function CommentModeration() {
         .eq('id', commentId);
 
       if (error) {
-        console.error('Update error:', error);
         setComments(previousComments);
         setFilteredComments(previousFiltered);
-
-        if (error.message.includes('permission')) {
-          alert('Você não tem permissão para editar este comentário.');
-        } else {
-          alert('Erro ao atualizar comentário: ' + error.message);
-        }
+        alert('erro ao atualizar comentário: ' + error.message);
         return;
       }
 
       await loadComments();
     } catch (error: any) {
-      console.error('Erro ao atualizar comentário:', error);
       setComments(previousComments);
       setFilteredComments(previousFiltered);
-      alert('Erro ao atualizar comentário. Tente novamente.');
     }
   };
 
   const handleHidePost = async (postId: string) => {
-    if (!confirm('Tem certeza que deseja ocultar este post da Fogueira? O post permanecerá visível para o autor, mas todos os comentários serão excluídos.')) {
+    if (!confirm('tem certeza que deseja ocultar este post da fogueira?')) {
       return;
     }
 
     setHidingPosts(prev => new Set(prev).add(postId));
-
     const previousPosts = [...posts];
     const previousFiltered = [...filteredPosts];
 
@@ -351,25 +332,16 @@ export default function CommentModeration() {
         .eq('id', postId);
 
       if (error) {
-        console.error('Hide error:', error);
         setPosts(previousPosts);
         setFilteredPosts(previousFiltered);
-
-        if (error.message.includes('permission')) {
-          alert('Você não tem permissão para ocultar este post.');
-        } else {
-          alert('Erro ao ocultar post: ' + error.message);
-        }
+        alert('erro ao ocultar post: ' + error.message);
         return;
       }
 
       await loadPosts();
-      alert('Post ocultado da Fogueira com sucesso!');
     } catch (error: any) {
-      console.error('Erro ao ocultar post:', error);
       setPosts(previousPosts);
       setFilteredPosts(previousFiltered);
-      alert('Erro ao ocultar post. Tente novamente.');
     } finally {
       setHidingPosts(prev => {
         const newSet = new Set(prev);
@@ -380,12 +352,11 @@ export default function CommentModeration() {
   };
 
   const handleDeletePost = async (postId: string) => {
-    if (!confirm('Tem certeza que deseja EXCLUIR PERMANENTEMENTE este post? Esta ação não pode ser desfeita e o post será removido inclusive do perfil do autor.')) {
+    if (!confirm('tem certeza que deseja EXCLUIR PERMANENTEMENTE este post?')) {
       return;
     }
 
     setDeletingPosts(prev => new Set(prev).add(postId));
-
     const previousPosts = [...posts];
     const previousFiltered = [...filteredPosts];
 
@@ -399,25 +370,16 @@ export default function CommentModeration() {
         .eq('id', postId);
 
       if (error) {
-        console.error('Delete error:', error);
         setPosts(previousPosts);
         setFilteredPosts(previousFiltered);
-
-        if (error.message.includes('permission')) {
-          alert('Você não tem permissão para excluir este post.');
-        } else {
-          alert('Erro ao excluir post: ' + error.message);
-        }
+        alert('erro ao excluir post: ' + error.message);
         return;
       }
 
       await loadPosts();
-      alert('Post excluído permanentemente com sucesso!');
     } catch (error: any) {
-      console.error('Erro ao excluir post:', error);
       setPosts(previousPosts);
       setFilteredPosts(previousFiltered);
-      alert('Erro ao excluir post. Tente novamente.');
     } finally {
       setDeletingPosts(prev => {
         const newSet = new Set(prev);
@@ -433,79 +395,67 @@ export default function CommentModeration() {
   };
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-        <MessageCircle className="w-6 h-6 mr-2 text-amber-600" />
-        Moderação de Comentários
-      </h2>
+    <div className="space-y-6">
+      <div className="border-b border-papelKraft/30 pb-4">
+        <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+          moderação de fogueira & comentários
+        </h2>
+        <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+          supervisão de histórias partilhadas na comunidade e moderação de comentários
+        </p>
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-medium text-gray-600">Total Posts</h3>
-            <MessageCircle className="w-4 h-4 text-amber-600" />
-          </div>
-          <p className="text-xl font-bold text-gray-900">{stats.totalPosts}</p>
+      {/* MÉTRICAS DE MODERAÇÃO */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">total posts</span>
+          <span className="font-gesto font-normal text-2xl text-acentoAzul block">{stats.totalPosts}</span>
         </div>
 
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-200">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-medium text-gray-600">Posts Visíveis</h3>
-            <Eye className="w-4 h-4 text-emerald-600" />
-          </div>
-          <p className="text-xl font-bold text-gray-900">{stats.visiblePosts}</p>
+        <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">posts visíveis</span>
+          <span className="font-gesto font-normal text-2xl text-acentoOliva block">{stats.visiblePosts}</span>
         </div>
 
-        <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-4 border border-red-200">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-medium text-gray-600">Posts Ocultos</h3>
-            <EyeOff className="w-4 h-4 text-red-600" />
-          </div>
-          <p className="text-xl font-bold text-gray-900">{stats.hiddenPosts}</p>
+        <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">posts ocultos</span>
+          <span className="font-gesto font-normal text-2xl text-acentoTerracota block">{stats.hiddenPosts}</span>
         </div>
 
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-medium text-gray-600">Comentários</h3>
-            <MessageCircle className="w-4 h-4 text-blue-600" />
-          </div>
-          <p className="text-xl font-bold text-gray-900">{stats.totalComments}</p>
+        <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">comentários</span>
+          <span className="font-gesto font-normal text-2xl text-acentoAzul block">{stats.totalComments}</span>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl p-4 border border-purple-200">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-medium text-gray-600">Hoje</h3>
-            <Calendar className="w-4 h-4 text-purple-600" />
-          </div>
-          <p className="text-xl font-bold text-gray-900">{stats.todayComments}</p>
+        <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">hoje</span>
+          <span className="font-gesto font-normal text-2xl text-acentoTerracota block">{stats.todayComments}</span>
         </div>
 
-        <div className="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-xl p-4 border border-cyan-200">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-medium text-gray-600">Esta Semana</h3>
-            <Calendar className="w-4 h-4 text-cyan-600" />
-          </div>
-          <p className="text-xl font-bold text-gray-900">{stats.thisWeekComments}</p>
+        <div className="bg-bgPlataforma p-3.5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">esta semana</span>
+          <span className="font-gesto font-normal text-2xl text-acentoAzul block">{stats.thisWeekComments}</span>
         </div>
       </div>
 
-      <div className="mb-6 space-y-3">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+      {/* BARRA DE FILTROS */}
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
             <input
               type="text"
-              placeholder="Buscar por conteúdo, autor ou post..."
+              placeholder="buscar por conteúdo, autor ou post..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              className="w-full pl-9 pr-8 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-tintaCarvao/40 hover:text-tintaCarvao"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
@@ -513,169 +463,139 @@ export default function CommentModeration() {
           <select
             value={contentFilter}
             onChange={(e) => setContentFilter(e.target.value as any)}
-            className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white font-medium"
+            className="w-full sm:w-auto px-3 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
           >
-            <option value="all">Posts e Comentários</option>
-            <option value="posts">Apenas Posts</option>
-            <option value="comments">Apenas Comentários</option>
+            <option value="all">posts e comentários</option>
+            <option value="posts">apenas posts</option>
+            <option value="comments">apenas comentários</option>
           </select>
 
-          <div className="relative">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as any)}
-              className="w-full sm:w-auto pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent appearance-none bg-white"
-              disabled={contentFilter === 'posts'}
-            >
-              <option value="all">Todos os tipos</option>
-              <option value="comments">Comentários</option>
-              <option value="replies">Respostas</option>
-            </select>
-          </div>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value as any)}
+            className="w-full sm:w-auto px-3 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
+            disabled={contentFilter === 'posts'}
+          >
+            <option value="all">todos os tipos</option>
+            <option value="comments">comentários</option>
+            <option value="replies">respostas</option>
+          </select>
 
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as any)}
-            className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
+            className="w-full sm:w-auto px-3 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
           >
-            <option value="all">Todo o período</option>
-            <option value="today">Hoje</option>
-            <option value="7days">Últimos 7 dias</option>
-            <option value="30days">Últimos 30 dias</option>
+            <option value="all">todo o período</option>
+            <option value="today">hoje</option>
+            <option value="7days">últimos 7 dias</option>
+            <option value="30days">últimos 30 dias</option>
           </select>
         </div>
 
         {(searchQuery || dateFilter !== 'all' || typeFilter !== 'all' || contentFilter !== 'all') && (
-          <div className="flex items-center justify-between text-sm">
-            <p className="text-gray-600">
-              {contentFilter === 'posts' && (
-                <>Mostrando <span className="font-semibold">{filteredPosts.length}</span> de{' '}
-                <span className="font-semibold">{posts.length}</span> posts</>
-              )}
-              {contentFilter === 'comments' && (
-                <>Mostrando <span className="font-semibold">{filteredComments.length}</span> de{' '}
-                <span className="font-semibold">{comments.length}</span> comentários</>
-              )}
-              {contentFilter === 'all' && (
-                <>Mostrando <span className="font-semibold">{filteredPosts.length}</span> posts e{' '}
-                <span className="font-semibold">{filteredComments.length}</span> comentários</>
-              )}
-            </p>
+          <div className="flex items-center justify-between text-xs font-corpo text-tintaCarvao/70 pt-1">
+            <span>
+              exibindo resultados filtrados
+            </span>
             <button
               onClick={clearFilters}
-              className="text-amber-600 hover:text-amber-700 font-medium flex items-center"
+              className="text-acentoTerracota hover:underline flex items-center gap-1 font-bold lowercase"
             >
-              <X className="w-4 h-4 mr-1" />
-              Limpar filtros
+              <X className="w-3.5 h-3.5" />
+              <span>limpar filtros</span>
             </button>
           </div>
         )}
       </div>
 
+      {/* CONTEÚDO: POSTS DA FOGUEIRA E COMENTÁRIOS */}
       {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse bg-gray-100 rounded-lg p-4 h-32"></div>
-          ))}
-        </div>
-      ) : (contentFilter === 'all' || contentFilter === 'posts') && filteredPosts.length === 0 && (contentFilter === 'posts' || filteredComments.length === 0) ? (
-        <div className="text-center py-12">
-          <MessageCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum conteúdo encontrado</h3>
-          <p className="text-gray-600 mb-4">Tente ajustar os filtros ou a busca.</p>
-          {(searchQuery || dateFilter !== 'all' || typeFilter !== 'all' || contentFilter !== 'all') && (
-            <button onClick={clearFilters} className="text-amber-600 hover:text-amber-700 font-medium">
-              Limpar filtros
-            </button>
-          )}
-        </div>
+        <p className="text-xs font-corpo text-tintaCarvao/60 italic text-center py-6">carregando moderação...</p>
       ) : (
         <div className="space-y-6">
           {(contentFilter === 'all' || contentFilter === 'posts') && filteredPosts.length > 0 && (
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                <MessageCircle className="w-5 h-5 mr-2 text-amber-600" />
-                Posts da Fogueira ({filteredPosts.length})
+            <div className="space-y-3">
+              <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase border-b border-papelKraft/30 pb-2">
+                posts da fogueira ({filteredPosts.length})
               </h3>
-              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+              
+              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
                 {filteredPosts.map((post) => (
-                  <div key={post.id} className={`border rounded-lg p-4 transition-colors bg-white ${
-                    post.hidden_from_fogueira ? 'border-red-300 bg-red-50' : 'border-gray-200 hover:border-amber-300'
-                  }`}>
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-3 flex-1">
-                        {post.user_profile?.profile_picture_url ? (
-                          <img
-                            src={post.user_profile.profile_picture_url}
-                            alt={post.user_profile.display_name}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold">
-                            {post.user_profile?.display_name?.charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-900">{post.user_profile?.display_name}</p>
-                          <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div
+                    key={post.id}
+                    className={`bg-white p-4.5 rounded-2xl border ${
+                      post.hidden_from_fogueira ? 'border-red-300 bg-red-50/50' : 'border-papelKraft/40'
+                    } shadow-xs space-y-2`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-acentoAzul text-white font-bold flex items-center justify-center text-xs overflow-hidden">
+                          {post.user_profile?.profile_picture_url ? (
+                            <img src={post.user_profile.profile_picture_url} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            post.user_profile?.display_name?.charAt(0).toUpperCase()
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-editorial font-bold text-sm text-acentoAzul lowercase">
+                            {post.user_profile?.display_name}
+                          </p>
+                          <div className="flex items-center gap-2 text-[10px] font-corpo text-tintaCarvao/50">
                             <span>{new Date(post.published_at).toLocaleString('pt-BR')}</span>
                             {post.hidden_from_fogueira && (
-                              <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full font-medium flex items-center">
-                                <EyeOff className="w-3 h-3 mr-1" />
-                                Oculto da Fogueira
+                              <span className="px-2 py-0.5 bg-red-100 text-red-700 rounded-full font-bold">
+                                oculto da fogueira
                               </span>
                             )}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+
+                      <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => window.open('/fogueira', '_blank')}
-                          className="p-2 text-gray-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition"
-                          title="Ver no contexto"
-                          disabled={hidingPosts.has(post.id) || deletingPosts.has(post.id)}
+                          className="p-1.5 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors cursor-pointer"
+                          title="ver na fogueira"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3.5 h-3.5" />
                         </button>
                         {!post.hidden_from_fogueira && (
                           <button
                             onClick={() => handleHidePost(post.id)}
-                            className="p-2 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                            title={hidingPosts.has(post.id) ? "Ocultando..." : "Ocultar da Fogueira"}
-                            disabled={hidingPosts.has(post.id) || deletingPosts.has(post.id)}
+                            className="p-1.5 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoTerracota border border-papelKraft/40 transition-colors cursor-pointer"
+                            title="ocultar post"
                           >
-                            <EyeOff className={`w-4 h-4 ${hidingPosts.has(post.id) ? 'animate-pulse' : ''}`} />
+                            <EyeOff className="w-3.5 h-3.5" />
                           </button>
                         )}
                         <button
                           onClick={() => handleDeletePost(post.id)}
-                          className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                          title={deletingPosts.has(post.id) ? "Excluindo..." : "Excluir Permanentemente"}
-                          disabled={hidingPosts.has(post.id) || deletingPosts.has(post.id)}
+                          className="p-1.5 rounded-xl bg-papelClaro hover:bg-red-50 text-red-600 border border-papelKraft/40 transition-colors cursor-pointer"
+                          title="excluir permanentemente"
                         >
-                          <Trash2 className={`w-4 h-4 ${deletingPosts.has(post.id) ? 'animate-pulse' : ''}`} />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
 
-                    <div className="mb-2">
-                      <h4 className="font-bold text-gray-900 mb-1">{post.writing_exercise?.title}</h4>
-                    </div>
+                    <h4 className="font-editorial font-bold text-base text-acentoAzul lowercase">
+                      “{post.writing_exercise?.title}”
+                    </h4>
 
-                    <div className="bg-gray-50 rounded-lg p-3 mb-2">
-                      <div
-                        className="text-gray-700 prose prose-sm max-w-none line-clamp-3"
-                        dangerouslySetInnerHTML={{ __html: getContentPreview(post.writing_exercise?.content || '') }}
-                      />
-                    </div>
+                    <p className="text-xs font-corpo text-tintaCarvao/80 italic bg-bgPlataforma p-3 rounded-xl border border-papelKraft/30 lowercase">
+                      "{getContentPreview(post.writing_exercise?.content || '')}"
+                    </p>
 
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span className="flex items-center">
-                        <MessageCircle className="w-4 h-4 mr-1" />
-                        {post.comments_count} comentários
+                    <div className="flex items-center gap-4 text-xs font-corpo text-tintaCarvao/60 pt-1">
+                      <span className="flex items-center gap-1">
+                        <Heart className="w-3.5 h-3.5 text-red-500 fill-current" />
+                        <span>{post.likes_count} curtidas</span>
                       </span>
-                      <span>❤️ {post.likes_count} curtidas</span>
+                      <span className="flex items-center gap-1">
+                        <MessageCircle className="w-3.5 h-3.5 text-acentoAzul" />
+                        <span>{post.comments_count} comentários</span>
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -684,109 +604,88 @@ export default function CommentModeration() {
           )}
 
           {(contentFilter === 'all' || contentFilter === 'comments') && filteredComments.length > 0 && (
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                <MessageCircle className="w-5 h-5 mr-2 text-blue-600" />
-                Comentários ({filteredComments.length})
+            <div className="space-y-3">
+              <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase border-b border-papelKraft/30 pb-2">
+                comentários ({filteredComments.length})
               </h3>
-              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-          {filteredComments.map((comment) => (
-            <div key={comment.id} className="border border-gray-200 rounded-lg p-4 hover:border-amber-300 transition-colors bg-white">
-              {editingComment === comment.id ? (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="font-semibold text-gray-900">Editando Comentário</h4>
-                    <button onClick={cancelEdit} className="text-gray-500 hover:text-gray-700">
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                  <RichTextEditor value={editContent} onChange={setEditContent} placeholder="Edite o comentário..." />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleUpdateComment(comment.id)}
-                      className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition font-medium"
-                    >
-                      Salvar
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-3">
-                      {comment.user_profile?.profile_picture_url ? (
-                        <img
-                          src={comment.user_profile.profile_picture_url}
-                          alt={comment.user_profile.display_name}
-                          className="w-10 h-10 rounded-full object-cover"
+              
+              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                {filteredComments.map((comment) => (
+                  <div key={comment.id} className="bg-white p-4 rounded-2xl border border-papelKraft/40 shadow-xs space-y-2">
+                    {editingComment === comment.id ? (
+                      <div className="space-y-3">
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          rows={3}
+                          className="w-full p-3 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
                         />
-                      ) : (
-                        <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold">
-                          {comment.user_profile?.display_name?.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-semibold text-gray-900">{comment.user_profile?.display_name}</p>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
-                          <span>{new Date(comment.created_at).toLocaleString('pt-BR')}</span>
-                          {comment.is_reply && (
-                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full font-medium">
-                              Resposta
-                            </span>
-                          )}
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={cancelEdit}
+                            className="px-3 py-1.5 rounded-xl bg-papelClaro text-tintaCarvao/70 text-xs font-corpo lowercase cursor-pointer"
+                          >
+                            cancelar
+                          </button>
+                          <button
+                            onClick={() => handleUpdateComment(comment.id)}
+                            className="px-4 py-1.5 rounded-xl bg-acentoAzul text-white font-gesto text-[18px] lowercase shadow-xs cursor-pointer"
+                          >
+                            salvar
+                          </button>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => window.open('/fogueira', '_blank')}
-                        className="p-2 text-gray-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition"
-                        title="Ver no contexto"
-                        disabled={deletingComments.has(comment.id)}
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => startEditComment(comment)}
-                        className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Editar"
-                        disabled={deletingComments.has(comment.id)}
-                      >
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteComment(comment.id)}
-                        className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        title={deletingComments.has(comment.id) ? "Excluindo..." : "Excluir"}
-                        disabled={deletingComments.has(comment.id)}
-                      >
-                        <Trash2 className={`w-4 h-4 ${deletingComments.has(comment.id) ? 'animate-pulse' : ''}`} />
-                      </button>
-                    </div>
-                  </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-acentoAzul text-white font-bold flex items-center justify-center text-xs overflow-hidden">
+                              {comment.user_profile?.profile_picture_url ? (
+                                <img src={comment.user_profile.profile_picture_url} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                comment.user_profile?.display_name?.charAt(0).toUpperCase()
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-editorial font-bold text-sm text-acentoAzul lowercase">
+                                {comment.user_profile?.display_name}
+                              </p>
+                              <div className="flex items-center gap-2 text-[10px] font-corpo text-tintaCarvao/50">
+                                <span>{new Date(comment.created_at).toLocaleString('pt-BR')}</span>
+                                {comment.is_reply && (
+                                  <span className="px-2 py-0.5 bg-acentoAzul/10 text-acentoAzul rounded-full font-bold">
+                                    resposta
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
 
-                  <div className="mb-2">
-                    <p className="text-sm text-gray-600 mb-1">
-                      <span className="font-medium">Post:</span> {comment.post_title}
-                    </p>
-                  </div>
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => startEditComment(comment)}
+                              className="p-1.5 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors cursor-pointer"
+                              title="editar comentário"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteComment(comment.id)}
+                              className="p-1.5 rounded-xl bg-papelClaro hover:bg-red-50 text-red-600 border border-papelKraft/40 transition-colors cursor-pointer"
+                              title="excluir comentário"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
 
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    <div
-                      className="text-gray-700 prose prose-sm max-w-none"
-                      dangerouslySetInnerHTML={{ __html: comment.content }}
-                    />
+                        <p className="text-xs font-corpo text-tintaCarvao/80 bg-bgPlataforma p-3 rounded-xl border border-papelKraft/30 lowercase">
+                          "{comment.content}"
+                        </p>
+                      </>
+                    )}
                   </div>
-                </>
-              )}
-            </div>
-          ))}
+                ))}
               </div>
             </div>
           )}

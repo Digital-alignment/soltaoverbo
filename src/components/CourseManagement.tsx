@@ -35,7 +35,7 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
   };
 
   const handleDeleteCourse = async (courseId: string) => {
-    if (!confirm('Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita.')) {
+    if (!confirm('tem certeza que deseja excluir esta oficina? esta ação não pode ser desfeita.')) {
       return;
     }
 
@@ -46,8 +46,8 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
 
       onRefresh();
     } catch (error) {
-      console.error('Erro ao excluir curso:', error);
-      alert('Erro ao excluir curso. Tente novamente.');
+      console.error('erro ao excluir oficina:', error);
+      alert('erro ao excluir oficina. tente novamente.');
     }
   };
 
@@ -89,7 +89,7 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
         setMaterialCounts((prev) => ({ ...prev, ...counts }));
       }
     } catch (error) {
-      console.error('Erro ao carregar aulas:', error);
+      console.error('erro ao carregar aulas:', error);
     }
   };
 
@@ -105,7 +105,7 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
       setMaterials((prev) => ({ ...prev, [lessonId]: data || [] }));
       setMaterialCounts((prev) => ({ ...prev, [lessonId]: data?.length || 0 }));
     } catch (error) {
-      console.error('Erro ao carregar materiais:', error);
+      console.error('erro ao carregar materiais:', error);
     }
   };
 
@@ -122,7 +122,7 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
   };
 
   const handleDeleteLesson = async (lessonId: string, courseId: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta aula?')) {
+    if (!confirm('tem certeza que deseja excluir esta aula?')) {
       return;
     }
 
@@ -133,13 +133,13 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
 
       await loadLessons(courseId);
     } catch (error) {
-      console.error('Erro ao excluir aula:', error);
-      alert('Erro ao excluir aula. Tente novamente.');
+      console.error('erro ao excluir aula:', error);
+      alert('erro ao excluir aula. tente novamente.');
     }
   };
 
   const handleDeleteMaterial = async (materialId: string, lessonId: string) => {
-    if (!confirm('Tem certeza que deseja excluir este material?')) {
+    if (!confirm('tem certeza que deseja excluir este material?')) {
       return;
     }
 
@@ -159,8 +159,8 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
 
       await loadMaterials(lessonId);
     } catch (error) {
-      console.error('Erro ao excluir material:', error);
-      alert('Erro ao excluir material. Tente novamente.');
+      console.error('erro ao excluir material:', error);
+      alert('erro ao excluir material. tente novamente.');
     }
   };
 
@@ -191,8 +191,7 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
 
       await loadLessons(courseId);
     } catch (error) {
-      console.error('Erro ao reordenar aula:', error);
-      alert('Erro ao reordenar aula. Tente novamente.');
+      console.error('erro ao reordenar aula:', error);
     }
   };
 
@@ -217,118 +216,119 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
 
       await loadLessons(courseId);
     } catch (error) {
-      console.error('Erro ao reordenar aula:', error);
-      alert('Erro ao reordenar aula. Tente novamente.');
+      console.error('erro ao reordenar aula:', error);
     }
   };
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-            <BookOpen className="w-6 h-6 mr-2 text-amber-600" />
-            Gerenciar Cursos
-          </h2>
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-papelKraft/30 pb-4">
+          <div>
+            <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+              gerenciar oficinas & cursos
+            </h2>
+            <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+              criação de oficinas autorais, organização de leções e materiais de apoio
+            </p>
+          </div>
+
           <button
             onClick={handleCreateCourse}
-            className="flex items-center px-4 py-2 text-white rounded-lg font-medium transition shadow-lg"
-            style={{ backgroundColor: '#1f008f' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#160069'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1f008f'}
+            className="px-4 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[19px] lowercase shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
           >
-            <Plus className="w-5 h-5 mr-2" />
-            Criar Curso
+            <Plus className="w-4 h-4" />
+            <span>+ criar oficina</span>
           </button>
         </div>
 
         {courses.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
-            <p>Nenhum curso criado ainda</p>
-            <p className="text-sm mt-2">Clique em "Criar Curso" para começar</p>
+          <div className="text-center py-12 bg-white p-8 rounded-2xl border border-papelKraft/30 space-y-3">
+            <BookOpen className="w-10 h-10 text-tintaCarvao/30 mx-auto" />
+            <p className="text-xs font-corpo text-tintaCarvao/60 lowercase">
+              nenhuma oficina criada ainda. clique em criar oficina para começar.
+            </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {courses.map((course) => {
               const isExpanded = expandedCourse === course.id;
               const courseLessons = lessons[course.id] || [];
 
               return (
-                <div key={course.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="p-4 bg-gray-50">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h3 className="font-semibold text-gray-900 text-lg">{course.title}</h3>
-                          <span
-                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                              course.course_type === 'free'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {course.course_type === 'free' ? 'Gratuito' : 'Premium'}
+                <div key={course.id} className="bg-white rounded-2xl border border-papelKraft/40 shadow-xs overflow-hidden">
+                  <div className="p-4 sm:p-5">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-center gap-3">
+                          <h3 className="font-editorial font-bold text-lg text-acentoAzul lowercase leading-tight">
+                            {course.title}
+                          </h3>
+                          <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
+                            {course.course_type === 'free' ? 'gratuito' : 'premium'}
                           </span>
                         </div>
+
                         <div
-                          className="text-sm text-gray-600 mb-3 prose prose-sm max-w-none line-clamp-2"
+                          className="text-xs font-corpo text-tintaCarvao/75 lowercase line-clamp-2"
                           dangerouslySetInnerHTML={{ __html: course.description || '' }}
                         />
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
-                          <List className="w-4 h-4" />
-                          <span>{courseLessons.length} aulas</span>
+
+                        <div className="flex items-center gap-2 text-[11px] font-corpo text-tintaCarvao/50">
+                          <List className="w-3.5 h-3.5 text-tintaCarvao/40" />
+                          <span>{courseLessons.length} leções cadastradas</span>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2 ml-4">
+
+                      <div className="flex items-center gap-1.5 self-end sm:self-center">
                         <button
                           onClick={() => handleToggleCourse(course.id)}
-                          className="p-2 text-gray-600 hover:bg-gray-200 rounded-lg transition"
-                          title={isExpanded ? 'Recolher' : 'Expandir'}
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors cursor-pointer"
+                          title={isExpanded ? 'recolher leções' : 'expandir leções'}
                         >
-                          {isExpanded ? (
-                            <ChevronUp className="w-5 h-5" />
-                          ) : (
-                            <ChevronDown className="w-5 h-5" />
-                          )}
+                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={() => handleEditCourse(course)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                          title="Editar curso"
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors cursor-pointer"
+                          title="editar oficina"
                         >
-                          <Edit2 className="w-5 h-5" />
+                          <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteCourse(course.id)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                          title="Excluir curso"
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-red-50 text-red-600 border border-papelKraft/40 transition-colors cursor-pointer"
+                          title="excluir oficina"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
+
                     </div>
                   </div>
 
                   {isExpanded && (
-                    <div className="p-4 bg-white border-t border-gray-200">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-semibold text-gray-900">Aulas do Curso</h4>
+                    <div className="p-4 sm:p-5 bg-bgPlataforma border-t border-papelKraft/40 space-y-4">
+                      <div className="flex items-center justify-between border-b border-papelKraft/30 pb-3">
+                        <h4 className="font-editorial font-bold text-base text-acentoAzul lowercase">
+                          leções da oficina
+                        </h4>
                         <button
                           onClick={() => handleCreateLesson(course.id)}
-                          className="flex items-center px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-sm font-medium hover:bg-amber-200 transition"
+                          className="px-3 py-1.5 rounded-xl bg-acentoTerracota text-white font-gesto text-[17px] lowercase shadow-xs hover:bg-acentoTerracota/90 transition-colors flex items-center gap-1 cursor-pointer"
                         >
-                          <Plus className="w-4 h-4 mr-1" />
-                          Adicionar Aula
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>adicionar leção</span>
                         </button>
                       </div>
 
                       {courseLessons.length === 0 ? (
-                        <p className="text-sm text-gray-500 text-center py-4">
-                          Nenhuma aula criada ainda
+                        <p className="text-xs font-corpo text-tintaCarvao/60 italic text-center py-4">
+                          nenhuma leção criada nesta oficina ainda.
                         </p>
                       ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-2.5">
                           {courseLessons.map((lesson, index) => {
                             const lessonMaterials = materials[lesson.id] || [];
                             const hasMaterials = lessonMaterials.length > 0;
@@ -338,52 +338,34 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
                             return (
                               <div
                                 key={lesson.id}
-                                className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                                className="bg-white p-3.5 rounded-xl border border-papelKraft/40 space-y-2 shadow-xs"
                               >
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1">
-                                    <div className="flex items-center space-x-2 mb-1 flex-wrap">
-                                      <span className="text-xs font-medium text-gray-500">
-                                        #{lesson.order_index}
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                  
+                                  <div className="flex-1 space-y-1">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="text-[10px] font-bold font-corpo text-acentoTerracota bg-acentoTerracota/10 px-2 py-0.5 rounded-full">
+                                        leção #{lesson.order_index}
                                       </span>
-                                      {lesson.tags && lesson.tags.length > 0 && (
-                                        <>
-                                          {lesson.tags.map((tag, tagIndex) => (
-                                            <span
-                                              key={tagIndex}
-                                              className="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium"
-                                            >
-                                              {tag}
-                                            </span>
-                                          ))}
-                                        </>
-                                      )}
+                                      {lesson.tags && lesson.tags.map((tag, tagIndex) => (
+                                        <span
+                                          key={tagIndex}
+                                          className="px-2 py-0.5 rounded-full bg-papelKraft/25 text-tintaCarvao/80 text-[10px] font-corpo lowercase"
+                                        >
+                                          {tag}
+                                        </span>
+                                      ))}
                                     </div>
-                                    <h5 className="font-medium text-gray-900">{lesson.title}</h5>
-                                    {lesson.description && (
-                                      <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                                        {lesson.description}
-                                      </p>
-                                    )}
-                                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                                      {lesson.audio_url && (
-                                        <span className="flex items-center">
-                                          <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
-                                          Áudio
-                                        </span>
-                                      )}
-                                      {lesson.zoom_link && (
-                                        <span className="flex items-center">
-                                          <span className="w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
-                                          Zoom
-                                        </span>
-                                      )}
-                                      {lesson.recording_url && (
-                                        <span className="flex items-center">
-                                          <span className="w-2 h-2 bg-purple-500 rounded-full mr-1"></span>
-                                          Gravação
-                                        </span>
-                                      )}
+
+                                    <h5 className="font-editorial font-bold text-sm text-acentoAzul lowercase">
+                                      {lesson.title}
+                                    </h5>
+
+                                    <div className="flex items-center gap-3 text-[10px] font-corpo text-tintaCarvao/60 pt-1">
+                                      {lesson.audio_url && <span className="text-acentoOliva font-bold">✓ áudio gravado</span>}
+                                      {lesson.zoom_link && <span className="text-acentoAzul font-bold">✓ encontro zoom</span>}
+                                      {lesson.recording_url && <span className="text-acentoTerracota font-bold">✓ vídeo gravado</span>}
+
                                       {(materialCounts[lesson.id] ?? 0) > 0 && (
                                         <button
                                           onClick={() => {
@@ -391,76 +373,68 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
                                               loadMaterials(lesson.id);
                                             }
                                           }}
-                                          className="flex items-center hover:text-amber-600"
+                                          className="flex items-center gap-1 text-acentoAzul hover:underline cursor-pointer"
                                         >
-                                          <FolderOpen className="w-3 h-3 mr-1" />
-                                          {hasMaterials
-                                            ? `${lessonMaterials.length} materiais`
-                                            : `${materialCounts[lesson.id]} materiais`}
+                                          <FolderOpen className="w-3 h-3" />
+                                          <span>
+                                            {hasMaterials ? `${lessonMaterials.length} materiais` : `${materialCounts[lesson.id]} materiais`}
+                                          </span>
                                         </button>
                                       )}
                                     </div>
                                   </div>
-                                  <div className="flex items-center space-x-2 ml-4">
+
+                                  <div className="flex items-center gap-1 self-end sm:self-center">
                                     <button
                                       onClick={() => handleMoveLessonUp(lesson, course.id)}
                                       disabled={isFirst}
-                                      className={`p-1 rounded transition ${
-                                        isFirst
-                                          ? 'text-gray-300 cursor-not-allowed'
-                                          : 'text-gray-600 hover:bg-gray-200'
-                                      }`}
-                                      title="Mover para cima"
+                                      className="p-1.5 rounded-lg bg-papelClaro hover:bg-papelKraft/20 text-tintaCarvao/70 disabled:opacity-30 border border-papelKraft/30 transition-colors cursor-pointer"
+                                      title="mover para cima"
                                     >
-                                      <ArrowUp className="w-4 h-4" />
+                                      <ArrowUp className="w-3.5 h-3.5" />
                                     </button>
                                     <button
                                       onClick={() => handleMoveLessonDown(lesson, course.id)}
                                       disabled={isLast}
-                                      className={`p-1 rounded transition ${
-                                        isLast
-                                          ? 'text-gray-300 cursor-not-allowed'
-                                          : 'text-gray-600 hover:bg-gray-200'
-                                      }`}
-                                      title="Mover para baixo"
+                                      className="p-1.5 rounded-lg bg-papelClaro hover:bg-papelKraft/20 text-tintaCarvao/70 disabled:opacity-30 border border-papelKraft/30 transition-colors cursor-pointer"
+                                      title="mover para baixo"
                                     >
-                                      <ArrowDown className="w-4 h-4" />
+                                      <ArrowDown className="w-3.5 h-3.5" />
                                     </button>
                                     <button
                                       onClick={() => handleEditLesson(lesson)}
-                                      className="p-1 text-blue-600 hover:bg-blue-50 rounded transition"
-                                      title="Editar aula"
+                                      className="p-1.5 rounded-lg bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/30 transition-colors cursor-pointer"
+                                      title="editar leção"
                                     >
-                                      <Edit2 className="w-4 h-4" />
+                                      <Edit2 className="w-3.5 h-3.5" />
                                     </button>
                                     <button
                                       onClick={() => handleDeleteLesson(lesson.id, course.id)}
-                                      className="p-1 text-red-600 hover:bg-red-50 rounded transition"
-                                      title="Excluir aula"
+                                      className="p-1.5 rounded-lg bg-papelClaro hover:bg-red-50 text-red-600 border border-papelKraft/30 transition-colors cursor-pointer"
+                                      title="excluir leção"
                                     >
-                                      <Trash2 className="w-4 h-4" />
+                                      <Trash2 className="w-3.5 h-3.5" />
                                     </button>
                                   </div>
+
                                 </div>
 
                                 {hasMaterials && lessonMaterials.length > 0 && (
-                                  <div className="mt-3 pt-3 border-t border-gray-200">
-                                    <p className="text-xs font-medium text-gray-700 mb-2">
-                                      Materiais:
-                                    </p>
+                                  <div className="mt-2 pt-2 border-t border-papelKraft/30 space-y-1">
+                                    <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+                                      materiais de apoio:
+                                    </span>
                                     <div className="space-y-1">
                                       {lessonMaterials.map((material) => (
                                         <div
                                           key={material.id}
-                                          className="flex items-center justify-between text-xs bg-white rounded px-2 py-1"
+                                          className="flex items-center justify-between text-xs bg-bgPlataforma rounded-lg px-2.5 py-1 border border-papelKraft/30 font-corpo lowercase"
                                         >
-                                          <span className="text-gray-700">{material.title}</span>
+                                          <span className="text-tintaCarvao/80">{material.title}</span>
                                           <button
-                                            onClick={() =>
-                                              handleDeleteMaterial(material.id, lesson.id)
-                                            }
-                                            className="text-red-600 hover:text-red-700"
-                                            title="Excluir material"
+                                            onClick={() => handleDeleteMaterial(material.id, lesson.id)}
+                                            className="text-red-600 hover:text-red-700 cursor-pointer"
+                                            title="excluir material"
                                           >
                                             <Trash2 className="w-3 h-3" />
                                           </button>

@@ -32,7 +32,7 @@ export default function ContactMessagesManagement() {
       if (error) throw error;
       setMessages(data || []);
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.error('erro ao buscar mensagens:', error);
     } finally {
       setLoading(false);
     }
@@ -51,12 +51,12 @@ export default function ContactMessagesManagement() {
         setSelectedMessage({ ...selectedMessage, status });
       }
     } catch (error) {
-      console.error('Error updating message status:', error);
+      console.error('erro ao atualizar status:', error);
     }
   };
 
   const deleteMessage = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta mensagem?')) return;
+    if (!confirm('tem certeza que deseja excluir esta mensagem?')) return;
 
     try {
       const { error } = await supabase
@@ -70,7 +70,7 @@ export default function ContactMessagesManagement() {
         setSelectedMessage(null);
       }
     } catch (error) {
-      console.error('Error deleting message:', error);
+      console.error('erro ao excluir mensagem:', error);
     }
   };
 
@@ -81,21 +81,21 @@ export default function ContactMessagesManagement() {
 
   const getStatusBadge = (status: ContactMessage['status']) => {
     const styles = {
-      new: 'bg-blue-100 text-blue-800',
-      read: 'bg-yellow-100 text-yellow-800',
-      replied: 'bg-green-100 text-green-800',
-      archived: 'bg-gray-100 text-gray-800',
+      new: 'bg-acentoTerracota text-white',
+      read: 'bg-acentoAzul/10 text-acentoAzul',
+      replied: 'bg-acentoOliva/20 text-acentoOliva',
+      archived: 'bg-papelKraft/30 text-tintaCarvao/70',
     };
 
     const labels = {
-      new: 'Nova',
-      read: 'Lida',
-      replied: 'Respondida',
-      archived: 'Arquivada',
+      new: 'nova',
+      read: 'lida',
+      replied: 'respondida',
+      archived: 'arquivada',
     };
 
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
+      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold font-corpo lowercase ${styles[status]}`}>
         {labels[status]}
       </span>
     );
@@ -112,40 +112,36 @@ export default function ContactMessagesManagement() {
     });
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-          <Mail className="w-6 h-6 mr-2 text-amber-600" />
-          Mensagens de Contato
-        </h2>
-        <div className="text-sm text-gray-600">
-          {filteredMessages.length} {filteredMessages.length === 1 ? 'mensagem' : 'mensagens'}
+      <div className="flex items-center justify-between border-b border-papelKraft/30 pb-4">
+        <div>
+          <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+            mensagens de contato
+          </h2>
+          <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+            mensagens recebidas pelo formulário do site institucional
+          </p>
         </div>
+        <span className="text-xs font-bold font-corpo text-acentoAzul bg-acentoAzul/10 px-3 py-1 rounded-full lowercase">
+          {filteredMessages.length} mensagens
+        </span>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
         {['all', 'new', 'read', 'replied', 'archived'].map((status) => (
           <button
             key={status}
             onClick={() => setFilter(status)}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold font-corpo lowercase transition cursor-pointer whitespace-nowrap ${
               filter === status
-                ? 'bg-amber-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            {status === 'all' ? 'Todas' : status === 'new' ? 'Novas' : status === 'read' ? 'Lidas' : status === 'replied' ? 'Respondidas' : 'Arquivadas'}
+            {status === 'all' ? 'todas' : status === 'new' ? 'novas' : status === 'read' ? 'lidas' : status === 'replied' ? 'respondidas' : 'arquivadas'}
             {status !== 'all' && (
-              <span className="ml-2 text-xs">
+              <span className="ml-1 text-[10px] opacity-80">
                 ({messages.filter(m => m.status === status).length})
               </span>
             )}
@@ -154,11 +150,13 @@ export default function ContactMessagesManagement() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          {filteredMessages.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-lg">
-              <Mail className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-600">Nenhuma mensagem encontrada</p>
+        <div className="space-y-3">
+          {loading ? (
+            <p className="text-xs font-corpo text-tintaCarvao/60 italic text-center py-6">carregando mensagens...</p>
+          ) : filteredMessages.length === 0 ? (
+            <div className="text-center py-8 bg-white rounded-2xl border border-papelKraft/30 space-y-2">
+              <Mail className="w-8 h-8 text-tintaCarvao/30 mx-auto" />
+              <p className="text-xs font-corpo text-tintaCarvao/60 lowercase">nenhuma mensagem encontrada.</p>
             </div>
           ) : (
             filteredMessages.map((message) => (
@@ -170,20 +168,22 @@ export default function ContactMessagesManagement() {
                     updateMessageStatus(message.id, 'read');
                   }
                 }}
-                className={`bg-white rounded-lg shadow-sm border-2 p-4 cursor-pointer transition hover:shadow-md ${
-                  selectedMessage?.id === message.id ? 'border-amber-500' : 'border-transparent'
-                } ${message.status === 'new' ? 'bg-blue-50' : ''}`}
+                className={`bg-white rounded-2xl border ${
+                  selectedMessage?.id === message.id ? 'border-acentoAzul ring-1 ring-acentoAzul' : 'border-papelKraft/40'
+                } p-4 cursor-pointer transition shadow-xs space-y-2`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">{message.name}</h3>
-                    <p className="text-sm text-gray-600">{message.email}</p>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase">{message.name}</h3>
+                    <p className="text-xs font-corpo text-tintaCarvao/70">{message.email}</p>
                   </div>
                   {getStatusBadge(message.status)}
                 </div>
-                <p className="text-sm text-gray-700 line-clamp-2 mb-2">{message.message}</p>
-                <div className="flex items-center text-xs text-gray-500">
-                  <Clock className="w-3 h-3 mr-1" />
+                <p className="text-xs font-corpo text-tintaCarvao/80 line-clamp-2 italic bg-bgPlataforma p-2.5 rounded-xl border border-papelKraft/30 lowercase">
+                  "{message.message}"
+                </p>
+                <div className="flex items-center text-[10px] font-corpo text-tintaCarvao/50">
+                  <Clock className="w-3 h-3 mr-1 text-tintaCarvao/40" />
                   {formatDate(message.created_at)}
                 </div>
               </div>
@@ -193,13 +193,13 @@ export default function ContactMessagesManagement() {
 
         <div>
           {selectedMessage ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-6">
-              <div className="flex items-start justify-between mb-4">
+            <div className="bg-white rounded-2xl border border-papelKraft/40 p-5 shadow-xs space-y-4 sticky top-6">
+              <div className="flex items-start justify-between border-b border-papelKraft/30 pb-3">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">{selectedMessage.name}</h3>
+                  <h3 className="font-editorial font-bold text-lg text-acentoAzul lowercase">{selectedMessage.name}</h3>
                   <a
                     href={`mailto:${selectedMessage.email}`}
-                    className="text-sm text-amber-600 hover:text-amber-700 transition"
+                    className="text-xs font-corpo text-acentoTerracota hover:underline"
                   >
                     {selectedMessage.email}
                   </a>
@@ -207,59 +207,57 @@ export default function ContactMessagesManagement() {
                 {getStatusBadge(selectedMessage.status)}
               </div>
 
-              <div className="mb-6">
-                <p className="text-sm text-gray-500 mb-2">
-                  Recebida em {formatDate(selectedMessage.created_at)}
-                </p>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-gray-800 whitespace-pre-wrap">{selectedMessage.message}</p>
+              <div className="space-y-2">
+                <span className="text-[10px] font-corpo text-tintaCarvao/50 lowercase block">
+                  recebida em {formatDate(selectedMessage.created_at)}
+                </span>
+                <div className="bg-bgPlataforma rounded-xl p-4 border border-papelKraft/30">
+                  <p className="text-xs font-corpo text-tintaCarvao leading-relaxed whitespace-pre-wrap lowercase">
+                    {selectedMessage.message}
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="text-sm font-medium text-gray-700 mb-2">Ações:</div>
-                <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-2 pt-2 border-t border-papelKraft/30">
+                <span className="text-xs font-bold text-acentoAzul lowercase font-corpo block">ações de gestão:</span>
+                <div className="grid grid-cols-2 gap-2 text-xs font-corpo lowercase">
                   {selectedMessage.status === 'new' && (
                     <button
                       onClick={() => updateMessageStatus(selectedMessage.id, 'read')}
-                      className="flex items-center justify-center px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition"
+                      className="py-2 px-3 bg-papelClaro border border-papelKraft/40 rounded-xl hover:bg-papelKraft/20 text-tintaCarvao/80 cursor-pointer"
                     >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Marcar como Lida
+                      marcar como lida
                     </button>
                   )}
                   {(selectedMessage.status === 'new' || selectedMessage.status === 'read') && (
                     <button
                       onClick={() => updateMessageStatus(selectedMessage.id, 'replied')}
-                      className="flex items-center justify-center px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition"
+                      className="py-2 px-3 bg-acentoOliva/20 text-acentoOliva border border-acentoOliva/40 rounded-xl hover:bg-acentoOliva/30 cursor-pointer"
                     >
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Marcar como Respondida
+                      marcar como respondida
                     </button>
                   )}
                   {selectedMessage.status !== 'archived' && (
                     <button
                       onClick={() => updateMessageStatus(selectedMessage.id, 'archived')}
-                      className="flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition"
+                      className="py-2 px-3 bg-papelClaro border border-papelKraft/40 rounded-xl hover:bg-papelKraft/20 text-tintaCarvao/80 cursor-pointer"
                     >
-                      <Archive className="w-4 h-4 mr-2" />
-                      Arquivar
+                      arquivar
                     </button>
                   )}
                   <button
                     onClick={() => deleteMessage(selectedMessage.id)}
-                    className="flex items-center justify-center px-4 py-2 bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition col-span-2"
+                    className="py-2 px-3 bg-red-50 text-red-600 border border-red-200 rounded-xl hover:bg-red-100 col-span-2 cursor-pointer"
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Excluir Mensagem
+                    excluir mensagem
                   </button>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="bg-gray-50 rounded-lg p-12 text-center">
-              <Mail className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Selecione uma mensagem para ver os detalhes</p>
+            <div className="bg-white rounded-2xl border border-papelKraft/30 p-8 text-center space-y-2">
+              <Mail className="w-10 h-10 text-tintaCarvao/30 mx-auto" />
+              <p className="text-xs font-corpo text-tintaCarvao/60 lowercase">selecione uma mensagem para visualizar os detalhes.</p>
             </div>
           )}
         </div>

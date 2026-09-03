@@ -85,7 +85,7 @@ export default function CheckoutAnalytics() {
         last30Days: last30,
       });
     } catch (error) {
-      console.error('Error loading checkout data:', error);
+      console.error('erro ao carregar dados de checkout:', error);
     } finally {
       setLoading(false);
     }
@@ -103,131 +103,107 @@ export default function CheckoutAnalytics() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
-      </div>
-    );
+    return <p className="text-xs font-corpo text-tintaCarvao/60 italic text-center py-6">carregando análise...</p>;
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Análise de Checkout</h2>
+      <div className="flex items-center justify-between border-b border-papelKraft/30 pb-4">
+        <div>
+          <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+            análise de checkout & conversão
+          </h2>
+          <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+            métricas de funil, compras concluídas e abandonos de checkout
+          </p>
+        </div>
+
         <select
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value as any)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          className="px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
         >
-          <option value="7days">Últimos 7 dias</option>
-          <option value="30days">Últimos 30 dias</option>
-          <option value="all">Todos os tempos</option>
+          <option value="7days">últimos 7 dias</option>
+          <option value="30days">últimos 30 dias</option>
+          <option value="all">todo o período</option>
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Total de Tentativas</h3>
-            <Users className="w-5 h-5 text-blue-600" />
-          </div>
-          <p className="text-3xl font-bold text-gray-900">{stats.totalAttempts}</p>
-          <p className="text-xs text-gray-500 mt-1">Últimos 7 dias: {stats.last7Days}</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-bgPlataforma p-4 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">total de tentativas</span>
+          <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoAzul block">{stats.totalAttempts}</span>
+          <span className="text-[10px] text-tintaCarvao/50 font-corpo block">últimos 7 dias: {stats.last7Days}</span>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Compras Concluídas</h3>
-            <CheckCircle className="w-5 h-5 text-green-600" />
-          </div>
-          <p className="text-3xl font-bold text-green-600">{stats.completedCheckouts}</p>
-          <p className="text-xs text-gray-500 mt-1">Conversão realizada</p>
+        <div className="bg-bgPlataforma p-4 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">compras concluídas</span>
+          <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoOliva block">{stats.completedCheckouts}</span>
+          <span className="text-[10px] text-tintaCarvao/50 font-corpo block">conversão realizada</span>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Checkouts Abandonados</h3>
-            <XCircle className="w-5 h-5 text-red-600" />
-          </div>
-          <p className="text-3xl font-bold text-red-600">{stats.abandonedCheckouts}</p>
-          <p className="text-xs text-gray-500 mt-1">Necessitam atenção</p>
+        <div className="bg-bgPlataforma p-4 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">abandonos</span>
+          <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoTerracota block">{stats.abandonedCheckouts}</span>
+          <span className="text-[10px] text-tintaCarvao/50 font-corpo block">necessitam atenção</span>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Taxa de Conversão</h3>
-            <TrendingUp className="w-5 h-5 text-amber-600" />
-          </div>
-          <p className="text-3xl font-bold text-amber-600">{stats.conversionRate.toFixed(1)}%</p>
-          <p className="text-xs text-gray-500 mt-1">Conversão do funil</p>
+        <div className="bg-bgPlataforma p-4 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+          <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">taxa de conversão</span>
+          <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoAzul block">{stats.conversionRate.toFixed(1)}%</span>
+          <span className="text-[10px] text-tintaCarvao/50 font-corpo block">conversão do funil</span>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Tentativas Recentes</h3>
+      <div className="bg-white rounded-2xl border border-papelKraft/40 overflow-hidden shadow-xs">
+        <div className="px-5 py-3 border-b border-papelKraft/30 bg-papelClaro">
+          <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase">
+            tentativas recentes de checkout
+          </h3>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 lowercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 lowercase tracking-wider">
-                  Data da Tentativa
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 lowercase tracking-wider">
-                  Plano
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 lowercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 lowercase tracking-wider">
-                  Data de Conclusão
-                </th>
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-papelKraft/30 bg-bgPlataforma text-[10px] font-bold font-corpo text-tintaCarvao/60 lowercase">
+                <th className="px-4 py-2.5">e-mail</th>
+                <th className="px-4 py-2.5">data da tentativa</th>
+                <th className="px-4 py-2.5">plano</th>
+                <th className="px-4 py-2.5">status</th>
+                <th className="px-4 py-2.5">conclusão</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-papelKraft/20 text-xs font-corpo text-tintaCarvao lowercase">
               {attempts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
-                    Nenhuma tentativa de checkout encontrada
+                  <td colSpan={5} className="px-4 py-8 text-center text-tintaCarvao/50 italic">
+                    nenhuma tentativa de checkout registrada no período.
                   </td>
                 </tr>
               ) : (
                 attempts.map((attempt) => (
-                  <tr key={attempt.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <Mail className="w-4 h-4 text-gray-400 mr-2" />
-                        <span className="text-sm text-gray-900">{attempt.email || 'N/A'}</span>
-                      </div>
+                  <tr key={attempt.id} className="hover:bg-papelClaro/50 transition-colors">
+                    <td className="px-4 py-3 font-medium text-acentoAzul">
+                      {attempt.email || 'não informado'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 text-gray-400 mr-2" />
-                        <span className="text-sm text-gray-600">{formatDate(attempt.attempted_at)}</span>
-                      </div>
+                    <td className="px-4 py-3 text-tintaCarvao/70">
+                      {formatDate(attempt.attempted_at)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{attempt.plan_type || 'N/A'}</span>
+                    <td className="px-4 py-3 font-bold text-acentoTerracota">
+                      {attempt.plan_type || 'premium'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3">
                       {attempt.completed ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Concluído
+                        <span className="px-2.5 py-0.5 rounded-full bg-acentoOliva/20 text-acentoOliva font-bold text-[10px]">
+                          ✓ concluído
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          <XCircle className="w-3 h-3 mr-1" />
-                          Abandonado
+                        <span className="px-2.5 py-0.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota font-bold text-[10px]">
+                          abandonado
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-4 py-3 text-tintaCarvao/60">
                       {attempt.completed_at ? formatDate(attempt.completed_at) : '-'}
                     </td>
                   </tr>

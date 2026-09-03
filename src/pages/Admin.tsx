@@ -8,7 +8,25 @@ import BannerManagement from '../components/BannerManagement';
 import BroadcastManagement from '../components/BroadcastManagement';
 import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
-import { Users, BookOpen, Mail, Image, Instagram, Linkedin, FileText, Search, Filter, X, Megaphone, MessageCircle, ShoppingCart, Download } from 'lucide-react';
+import {
+  Users,
+  BookOpen,
+  Mail,
+  Image as ImageIcon,
+  Instagram,
+  Linkedin,
+  FileText,
+  Search,
+  Filter,
+  X,
+  Megaphone,
+  MessageCircle,
+  ShoppingCart,
+  Download,
+  Shield,
+  Calendar,
+  ExternalLink,
+} from 'lucide-react';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
 
@@ -91,7 +109,6 @@ export default function Admin() {
   const filterUsers = () => {
     let filtered = [...users];
 
-    // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -101,12 +118,10 @@ export default function Admin() {
       );
     }
 
-    // Role filter
     if (roleFilter !== 'all') {
       filtered = filtered.filter((user) => user.role === roleFilter);
     }
 
-    // Date filter
     if (dateFilter !== 'all') {
       const now = new Date();
       const filterDate = new Date();
@@ -142,12 +157,12 @@ export default function Admin() {
     };
 
     const roleNames: { [key: string]: string } = {
-      free: 'Gratuito',
-      paid: 'Premium',
-      admin: 'Administrador'
+      free: 'gratuito',
+      paid: 'premium',
+      admin: 'administrador'
     };
 
-    const headers = ['Nome', 'Email', 'Instagram', 'LinkedIn', 'Substack', 'Email Público', 'Plano', 'Data de Registro'];
+    const headers = ['nome', 'email', 'instagram', 'linkedin', 'substack', 'email publico', 'plano', 'data de registro'];
 
     const rows = filteredUsers.map(user => [
       escapeCSV(user.display_name),
@@ -169,7 +184,7 @@ export default function Admin() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `usuarios-soltao-overboo-${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `alunas-soltaoverbo-${new Date().toISOString().split('T')[0]}.csv`);
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
@@ -179,7 +194,6 @@ export default function Admin() {
 
   const loadData = async () => {
     try {
-      // Fetch users with emails from auth.users
       const { data: usersData, error: usersError } = await supabase
         .from('users_profiles')
         .select('*')
@@ -187,7 +201,6 @@ export default function Admin() {
 
       if (usersError) throw usersError;
 
-      // Fetch emails from auth.users for each user
       const usersWithEmails = await Promise.all(
         (usersData || []).map(async (user) => {
           const { data: authData } = await supabase.auth.admin.getUserById(user.id);
@@ -217,7 +230,7 @@ export default function Admin() {
         totalCourses: coursesData?.length || 0,
       });
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('erro ao carregar dados:', error);
     } finally {
       setLoading(false);
     }
@@ -231,364 +244,373 @@ export default function Admin() {
         .eq('id', userId);
 
       if (error) {
-        console.error('Erro ao atualizar papel do usuário:', error);
-        alert(`Erro ao atualizar papel do usuário: ${error.message}`);
+        console.error('erro ao atualizar papel:', error);
+        alert(`erro ao atualizar papel: ${error.message}`);
         return;
       }
 
-      // Show success feedback
-      const roleNames = {
-        free: 'Gratuito',
-        paid: 'Premium',
-        admin: 'Administrador'
-      };
-
-      alert(`Papel do usuário atualizado para ${roleNames[newRole]} com sucesso!`);
-
-      // Reload data to reflect changes
       await loadData();
     } catch (err) {
-      console.error('Erro inesperado:', err);
-      alert('Erro inesperado ao atualizar papel do usuário. Tente novamente.');
+      console.error('erro inesperado:', err);
+      alert('erro inesperado ao atualizar papel da aluna.');
     }
   };
 
   if (profile?.role !== 'admin') {
     return (
-      <div className="min-h-screen bg-paper">
-        <div className="max-w-7xl mx-auto px-4 py-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Acesso negado</h2>
-          <p className="text-gray-600 mt-2">Você não tem permissão para acessar esta página.</p>
+      <div className="min-h-screen bg-bgPlataforma text-tintaCarvao flex items-center justify-center p-4">
+        <div className="bg-papelClaro p-8 rounded-3xl border border-papelKraft/40 text-center max-w-md space-y-3">
+          <Shield className="w-10 h-10 text-acentoTerracota mx-auto" />
+          <h2 className="text-xl font-editorial font-bold text-acentoAzul lowercase">acesso restrito</h2>
+          <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+            você não possui permissão de administração para acessar este painel.
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#f0e6d1' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Painel Administrativo</h1>
-          <p className="text-gray-600">Gerencie usuários, cursos, banners e mensagens da plataforma</p>
+    <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8 pb-28 lg:pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 lg:pl-28">
+        
+        {/* CABEÇALHO PRINCIPAL DO PAINEL */}
+        <div className="border-b border-papelKraft/40 pb-4 space-y-0.5">
+          <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
+            painel administrativo
+          </h1>
+          <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase">
+            gestão de alunas, oficinas, banners, transmissões e moderação da plataforma
+          </p>
         </div>
 
-        <div className="flex gap-2 mb-8 flex-wrap">
+        {/* NAVEGAÇÃO DE ABAS EM PÍLDORAS */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-papelKraft/40 pb-2">
           <button
             onClick={() => setActiveTab('users')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'users'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            <Users className="w-5 h-5 mr-2" />
-            Usuários
+            <Users className="w-4 h-4" />
+            <span>alunas ({users.length})</span>
           </button>
+
           <button
             onClick={() => setActiveTab('courses')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'courses'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            <BookOpen className="w-5 h-5 mr-2" />
-            Cursos
+            <BookOpen className="w-4 h-4" />
+            <span>oficinas ({courses.length})</span>
           </button>
+
           <button
             onClick={() => setActiveTab('banners')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'banners'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            <Image className="w-5 h-5 mr-2" />
-            Banners
+            <ImageIcon className="w-4 h-4" />
+            <span>banners</span>
           </button>
+
           <button
             onClick={() => setActiveTab('broadcasts')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'broadcasts'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            <Megaphone className="w-5 h-5 mr-2" />
-            Broadcasts
+            <Megaphone className="w-4 h-4" />
+            <span>broadcasts</span>
           </button>
+
           <button
             onClick={() => setActiveTab('moderation')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'moderation'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            <MessageCircle className="w-5 h-5 mr-2" />
-            Moderação
+            <MessageCircle className="w-4 h-4" />
+            <span>moderação</span>
           </button>
+
           <button
             onClick={() => setActiveTab('messages')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'messages'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
-            <Mail className="w-5 h-5 mr-2" />
-            Mensagens
+            <Mail className="w-4 h-4" />
+            <span>mensagens</span>
           </button>
+
           <button
             onClick={() => setActiveTab('checkout')}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'checkout'
-                ? 'bg-white text-amber-600 shadow-lg'
-                : 'bg-white/60 text-gray-700 hover:bg-white/80'
+                ? 'bg-acentoTerracota text-white shadow-xs'
+                : 'bg-white/80 text-acentoTerracota hover:text-acentoTerracota/90 border border-papelKraft/40'
             }`}
           >
-            <ShoppingCart className="w-5 h-5 mr-2" />
-            Checkout
+            <ShoppingCart className="w-4 h-4" />
+            <span>checkout</span>
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-600">Total de Usuários</h3>
-              <Users className="w-5 h-5 text-amber-600" />
+        {/* CARTÕES DE MÉTRICAS GERAIS (RITUAL STATS) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+              total de alunas
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoAzul">
+                {stats.totalUsers}
+              </span>
+              <span className="text-[10px] text-tintaCarvao/50 font-corpo">cadastros</span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-600">Usuários Gratuitos</h3>
-              <Users className="w-5 h-5 text-gray-600" />
+          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+              membros gratuitos
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-gesto font-normal text-2xl sm:text-3xl text-tintaCarvao/80">
+                {stats.freeUsers}
+              </span>
+              <span className="text-[10px] text-tintaCarvao/50 font-corpo">alunas</span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.freeUsers}</p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-600">Usuários Premium</h3>
-              <Users className="w-5 h-5 text-emerald-600" />
+          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+              membros premium
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoTerracota">
+                {stats.paidUsers}
+              </span>
+              <span className="text-[10px] text-tintaCarvao/50 font-corpo">assinantes</span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.paidUsers}</p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-600">Total de Cursos</h3>
-              <BookOpen className="w-5 h-5 text-amber-600" />
+          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+              total de oficinas
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoOliva">
+                {stats.totalCourses}
+              </span>
+              <span className="text-[10px] text-tintaCarvao/50 font-corpo">cursos</span>
             </div>
-            <p className="text-3xl font-bold text-gray-900">{stats.totalCourses}</p>
           </div>
         </div>
 
+        {/* ABA 1: GERENCIAR ALUNAS */}
         {activeTab === 'users' && (
-          <div ref={usersRef} className="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                <Users className="w-6 h-6 mr-2 text-amber-600" />
-                Gerenciar Usuários
-              </h2>
+          <div ref={usersRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-papelKraft/30 pb-4">
+              <div>
+                <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+                  gerenciar alunas & membros
+                </h2>
+                <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+                  listagem completa, papéis de acesso e exportação de relatórios
+                </p>
+              </div>
+
               <button
                 onClick={downloadUsersCSV}
                 disabled={filteredUsers.length === 0}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm"
-                title="Exportar lista de usuários para CSV"
+                className="px-4 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[19px] lowercase shadow-xs flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
+                title="exportar lista de alunas para CSV"
               >
                 <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">Exportar CSV</span>
-                <span className="sm:hidden">CSV</span>
-                {filteredUsers.length > 0 && (
-                  <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
-                    {filteredUsers.length}
-                  </span>
-                )}
+                <span>exportar csv ({filteredUsers.length})</span>
               </button>
             </div>
 
-            {/* Search and Filter Bar */}
-            <div className="mb-6 space-y-3">
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Search Input */}
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            {/* BARRA DE BUSCA E FILTROS */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                
+                {/* Campo de Busca */}
+                <div className="relative flex-1 w-full">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-tintaCarvao/40" />
                   <input
                     type="text"
-                    placeholder="Buscar por nome ou email..."
+                    placeholder="buscar por nome ou e-mail..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full pl-9 pr-8 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-tintaCarvao/40 hover:text-tintaCarvao"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
-                {/* Role Filter */}
-                <div className="relative">
-                  <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                {/* Filtro de Plano */}
+                <div className="w-full sm:w-auto">
                   <select
                     value={roleFilter}
                     onChange={(e) => setRoleFilter(e.target.value as 'all' | 'free' | 'paid' | 'admin')}
-                    className="w-full sm:w-auto pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent appearance-none bg-white"
+                    className="w-full px-3 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
                   >
-                    <option value="all">Todos os planos</option>
-                    <option value="free">Plano Gratuito</option>
-                    <option value="paid">Plano Premium</option>
-                    <option value="admin">Administradores</option>
+                    <option value="all">todos os planos</option>
+                    <option value="free">plano gratuito</option>
+                    <option value="paid">plano premium</option>
+                    <option value="admin">administradores</option>
                   </select>
                 </div>
 
-                {/* Date Filter */}
-                <select
-                  value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value as 'all' | '7days' | '30days' | '90days')}
-                  className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
-                >
-                  <option value="all">Todo o período</option>
-                  <option value="7days">Últimos 7 dias</option>
-                  <option value="30days">Últimos 30 dias</option>
-                  <option value="90days">Últimos 90 dias</option>
-                </select>
+                {/* Filtro de Data */}
+                <div className="w-full sm:w-auto">
+                  <select
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value as 'all' | '7days' | '30days' | '90days')}
+                    className="w-full px-3 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
+                  >
+                    <option value="all">todo o período</option>
+                    <option value="7days">últimos 7 dias</option>
+                    <option value="30days">últimos 30 dias</option>
+                    <option value="90days">últimos 90 dias</option>
+                  </select>
+                </div>
               </div>
 
-              {/* Active Filters & Clear Button */}
               {(searchQuery || roleFilter !== 'all' || dateFilter !== 'all') && (
-                <div className="flex items-center justify-between text-sm">
-                  <p className="text-gray-600">
-                    Mostrando <span className="font-semibold">{filteredUsers.length}</span> de{' '}
-                    <span className="font-semibold">{users.length}</span> usuários
-                  </p>
+                <div className="flex items-center justify-between text-xs font-corpo text-tintaCarvao/70 pt-1">
+                  <span>
+                    exibindo <strong className="text-acentoAzul">{filteredUsers.length}</strong> de {users.length} alunas
+                  </span>
                   <button
                     onClick={clearFilters}
-                    className="text-amber-600 hover:text-amber-700 font-medium flex items-center"
+                    className="text-acentoTerracota hover:underline flex items-center gap-1 font-bold lowercase"
                   >
-                    <X className="w-4 h-4 mr-1" />
-                    Limpar filtros
+                    <X className="w-3.5 h-3.5" />
+                    <span>limpar filtros</span>
                   </button>
                 </div>
               )}
             </div>
 
+            {/* LISTAGEM DE CARTÕES DE ALUNAS */}
             {loading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="animate-pulse bg-gray-100 rounded-lg p-4 h-32"></div>
-                ))}
-              </div>
+              <LoadingPage />
             ) : filteredUsers.length === 0 ? (
-              <div className="text-center py-12">
-                <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum usuário encontrado</h3>
-                <p className="text-gray-600 mb-4">
-                  Tente ajustar os filtros ou a busca para encontrar usuários.
+              <div className="text-center py-12 bg-white p-8 rounded-2xl border border-papelKraft/30 space-y-3">
+                <Users className="w-10 h-10 text-tintaCarvao/30 mx-auto" />
+                <p className="text-xs font-corpo text-tintaCarvao/60 lowercase">
+                  nenhuma aluna encontrada com os filtros selecionados.
                 </p>
-                {(searchQuery || roleFilter !== 'all' || dateFilter !== 'all') && (
-                  <button
-                    onClick={clearFilters}
-                    className="text-amber-600 hover:text-amber-700 font-medium"
-                  >
-                    Limpar filtros
-                  </button>
-                )}
               </div>
             ) : (
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+              <div className="space-y-3 max-h-[550px] overflow-y-auto pr-1">
                 {filteredUsers.map((user) => (
-                  <div key={user.id} className="border border-gray-200 rounded-lg p-4 hover:border-amber-300 transition-colors">
-                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                      {/* User Info */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 text-lg truncate">
+                  <div
+                    key={user.id}
+                    className="bg-white p-4 rounded-2xl border border-papelKraft/40 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  >
+                    {/* Info da Aluna */}
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase truncate">
                           {user.display_name}
                         </h3>
-                        <div className="flex items-center gap-2 mt-1">
-                          <p className="text-sm text-gray-600 truncate">{user.email}</p>
-                          <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded-full whitespace-nowrap">
-                            Admin only
-                          </span>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1 flex items-center">
-                          <Users className="w-3 h-3 mr-1" />
-                          Membro desde {new Date(user.created_at).toLocaleDateString('pt-BR')}
-                        </p>
+                        <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
+                          {user.role === 'admin' ? 'administradora' : user.role === 'paid' ? 'premium' : 'gratuito'}
+                        </span>
                       </div>
 
-                      {/* Social Media Icons */}
-                      <div className="flex items-center gap-2">
-                        {user.instagram_url && (
-                          <a
-                            href={user.instagram_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-full bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500 text-white hover:opacity-80 transition-opacity"
-                            title="Instagram"
-                          >
-                            <Instagram className="w-4 h-4" />
-                          </a>
-                        )}
-                        {user.linkedin_url && (
-                          <a
-                            href={user.linkedin_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                            title="LinkedIn"
-                          >
-                            <Linkedin className="w-4 h-4" />
-                          </a>
-                        )}
-                        {user.substack_url && (
-                          <a
-                            href={user.substack_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors"
-                            title="Substack"
-                          >
-                            <FileText className="w-4 h-4" />
-                          </a>
-                        )}
-                        {user.email_public && (
-                          <a
-                            href={`mailto:${user.email_public}`}
-                            className="p-2 rounded-full bg-gray-600 text-white hover:bg-gray-700 transition-colors"
-                            title="Email Público"
-                          >
-                            <Mail className="w-4 h-4" />
-                          </a>
-                        )}
-                        {!user.instagram_url && !user.linkedin_url && !user.substack_url && !user.email_public && (
-                          <span className="text-xs text-gray-400 italic px-2">Sem links sociais</span>
-                        )}
-                      </div>
+                      <p className="text-xs font-corpo text-tintaCarvao/70 truncate">
+                        {user.email || 'e-mail não disponível'}
+                      </p>
 
-                      {/* Role Selector */}
+                      <div className="flex items-center gap-3 text-[10px] font-corpo text-tintaCarvao/50">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3 text-tintaCarvao/40" />
+                          <span>membro desde {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Redes Sociais */}
+                    <div className="flex items-center gap-1.5">
+                      {user.substack_url && (
+                        <a
+                          href={user.substack_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                          title="Substack"
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                      {user.instagram_url && (
+                        <a
+                          href={user.instagram_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                          title="Instagram"
+                        >
+                          <Instagram className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                      {user.linkedin_url && (
+                        <a
+                          href={user.linkedin_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                          title="LinkedIn"
+                        >
+                          <Linkedin className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                      {user.email_public && (
+                        <a
+                          href={`mailto:${user.email_public}`}
+                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                          title="E-mail Público"
+                        >
+                          <Mail className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Seletor de Papel */}
+                    <div>
                       <select
                         value={user.role}
-                        onChange={(e) =>
-                          updateUserRole(user.id, e.target.value as 'free' | 'paid' | 'admin')
-                        }
-                        className={`px-4 py-2 rounded-lg text-sm font-medium border-2 transition-colors min-w-[140px] ${
-                          user.role === 'admin'
-                            ? 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200'
-                            : user.role === 'paid'
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-200'
-                            : 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200'
-                        }`}
+                        onChange={(e) => updateUserRole(user.id, e.target.value as 'free' | 'paid' | 'admin')}
+                        className="px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
                       >
-                        <option value="free">Gratuito</option>
-                        <option value="paid">Premium</option>
-                        <option value="admin">Admin</option>
+                        <option value="free">gratuito</option>
+                        <option value="paid">premium</option>
+                        <option value="admin">admin</option>
                       </select>
                     </div>
                   </div>
@@ -598,46 +620,54 @@ export default function Admin() {
           </div>
         )}
 
+        {/* ABA 2: OFICINAS & CURSOS */}
         {activeTab === 'courses' && (
           <div ref={coursesRef}>
             <CourseManagement courses={courses} onRefresh={loadData} />
           </div>
         )}
 
+        {/* ABA 3: BANNERS */}
         {activeTab === 'banners' && (
-          <div ref={bannersRef} className="bg-white rounded-2xl shadow-lg p-6">
+          <div ref={bannersRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <BannerManagement />
           </div>
         )}
 
+        {/* ABA 4: BROADCASTS */}
         {activeTab === 'broadcasts' && (
-          <div ref={broadcastsRef} className="bg-white rounded-2xl shadow-lg p-6">
+          <div ref={broadcastsRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <BroadcastManagement />
           </div>
         )}
 
+        {/* ABA 5: MODERAÇÃO DA FOGUEIRA E COMENTÁRIOS */}
         {activeTab === 'moderation' && (
-          <div ref={moderationRef} className="bg-white rounded-2xl shadow-lg p-6">
+          <div ref={moderationRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <CommentModeration />
           </div>
         )}
 
+        {/* ABA 6: MENSAGENS DE CONTATO */}
         {activeTab === 'messages' && (
-          <div ref={messagesRef} className="bg-white rounded-2xl shadow-lg p-6">
+          <div ref={messagesRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <ContactMessagesManagement />
           </div>
         )}
 
+        {/* ABA 7: CHECKOUT & CONVERSÃO */}
         {activeTab === 'checkout' && (
-          <div ref={checkoutRef} className="bg-white rounded-2xl shadow-lg p-6">
+          <div ref={checkoutRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <CheckoutAnalytics />
           </div>
         )}
 
-        <div className="mt-12 pt-8 border-t border-white/30 flex justify-between items-center">
-          <p className="text-gray-600 text-sm">Plataforma Soltão Overboo - Painel Administrativo</p>
-          <p className="text-gray-500 text-xs">v{APP_VERSION}</p>
+        {/* RODAPÉ DO PAINEL */}
+        <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs font-corpo text-tintaCarvao/60 lowercase">
+          <span>solta o verbo coletivo • painel administrativo</span>
+          <span>versão v{APP_VERSION}</span>
         </div>
+
       </div>
     </div>
   );

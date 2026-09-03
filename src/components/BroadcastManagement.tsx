@@ -17,11 +17,6 @@ export default function BroadcastManagement() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    console.log('Current user profile:', profile);
-    console.log('User role:', profile?.role);
-  }, [profile]);
-
   // Form state
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -42,12 +37,8 @@ export default function BroadcastManagement() {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error loading broadcasts:', error);
-        throw error;
-      }
+      if (error) throw error;
 
-      // Get recipient and read counts for each broadcast
       const broadcastsWithStats = await Promise.all(
         (data || []).map(async (broadcast) => {
           const { count: recipientCount } = await supabase
@@ -71,8 +62,8 @@ export default function BroadcastManagement() {
 
       setBroadcasts(broadcastsWithStats);
     } catch (err) {
-      console.error('Error loading broadcasts:', err);
-      setError('Erro ao carregar broadcasts');
+      console.error('erro ao carregar broadcasts:', err);
+      setError('erro ao carregar broadcasts');
     } finally {
       setLoading(false);
     }
@@ -82,15 +73,13 @@ export default function BroadcastManagement() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError('Imagem muito grande. Tamanho máximo: 5MB');
+      setError('imagem muito grande. tamanho máximo: 5MB');
       return;
     }
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
-      setError('Apenas arquivos de imagem são permitidos');
+      setError('apenas arquivos de imagem são permitidos');
       return;
     }
 
@@ -116,22 +105,21 @@ export default function BroadcastManagement() {
     e.preventDefault();
     setError('');
 
-    // Validation
     if (!title.trim()) {
-      setError('Título é obrigatório');
+      setError('título é obrigatório');
       return;
     }
     if (!message.trim()) {
-      setError('Mensagem é obrigatória');
+      setError('mensagem é obrigatória');
       return;
     }
     if (targetAudience.length === 0) {
-      setError('Selecione pelo menos um público-alvo');
+      setError('selecione pelo menos um público-alvo');
       return;
     }
 
     const confirmed = window.confirm(
-      `Enviar broadcast para ${getRoleLabels(targetAudience).join(', ')}?\n\nEsta ação não pode ser desfeita.`
+      `enviar broadcast para ${getRoleLabels(targetAudience).join(', ')}?\n\nesta ação não pode ser desfeita.`
     );
 
     if (!confirmed) return;
@@ -140,7 +128,6 @@ export default function BroadcastManagement() {
     try {
       let imageUrl = null;
 
-      // Upload image if present
       if (imageFile) {
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -159,8 +146,7 @@ export default function BroadcastManagement() {
         imageUrl = publicUrl;
       }
 
-      // Create broadcast
-      const { error: insertError, data: insertedData } = await supabase
+      const { error: insertError } = await supabase
         .from('admin_broadcasts')
         .insert({
           title,
@@ -168,38 +154,28 @@ export default function BroadcastManagement() {
           image_url: imageUrl,
           target_audience: targetAudience,
           created_by: profile?.id,
-        })
-        .select();
+        });
 
-      if (insertError) {
-        console.error('Insert error details:', insertError);
-        throw new Error(insertError.message || 'Erro ao criar broadcast');
-      }
+      if (insertError) throw insertError;
 
-      // Reset form
       setTitle('');
       setMessage('');
       setImageFile(null);
       setImagePreview('');
       setTargetAudience(['free', 'paid']);
 
-      // Reload broadcasts
       await loadBroadcasts();
-
-      alert('Broadcast enviado com sucesso!');
+      alert('broadcast enviado com sucesso!');
     } catch (err: any) {
-      console.error('Error creating broadcast:', err);
-      setError(err?.message || 'Erro ao enviar broadcast. Tente novamente.');
+      console.error('erro ao criar broadcast:', err);
+      setError(err?.message || 'erro ao enviar broadcast. tente novamente.');
     } finally {
       setSubmitting(false);
     }
   };
 
   const deleteBroadcast = async (broadcastId: string) => {
-    const confirmed = window.confirm(
-      'Excluir este broadcast?\n\nIsso também removerá as notificações de todos os usuários.'
-    );
-
+    const confirmed = window.confirm('excluir este broadcast?');
     if (!confirmed) return;
 
     try {
@@ -211,241 +187,169 @@ export default function BroadcastManagement() {
       if (error) throw error;
 
       await loadBroadcasts();
-      alert('Broadcast excluído com sucesso!');
     } catch (err) {
-      console.error('Error deleting broadcast:', err);
-      alert('Erro ao excluir broadcast. Tente novamente.');
+      console.error('erro ao excluir broadcast:', err);
     }
   };
 
   const getRoleLabels = (roles: string[]) => {
     const labels: Record<string, string> = {
-      free: 'Usuários Gratuitos',
-      paid: 'Usuários Premium',
-      admin: 'Administradores',
+      free: 'gratuitos',
+      paid: 'premium',
+      admin: 'administradores',
     };
     return roles.map((role) => labels[role] || role);
   };
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case 'free':
-        return 'bg-gray-100 text-gray-800';
-      case 'paid':
-        return 'bg-emerald-100 text-emerald-800';
-      case 'admin':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
-          <Megaphone className="w-6 h-6 mr-2 text-amber-600" />
-          Enviar Broadcast
+    <div className="space-y-6">
+      <div className="border-b border-papelKraft/30 pb-4">
+        <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+          transmissões & broadcasts
         </h2>
-        <p className="text-gray-600">Envie mensagens para grupos de usuários</p>
+        <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+          envio de avisos e notificações em tempo real para grupos de alunas
+        </p>
       </div>
 
-      {/* Create Broadcast Form */}
-      <form onSubmit={handleSubmit} className="rounded-xl p-6 space-y-6" style={{ backgroundColor: '#f0e6d1' }}>
+      {/* FORMULÁRIO DE ENVIO */}
+      <form onSubmit={handleSubmit} className="bg-white p-5 sm:p-6 rounded-2xl border border-papelKraft/40 shadow-xs space-y-4">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start">
-            <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2.5 rounded-xl text-xs font-corpo flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Título *
+          <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+            título da transmissão *
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ex: Nova aula disponível!"
+            placeholder="ex: nova aula gravada disponível na plataforma!"
             maxLength={200}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+            className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
           />
-          <p className="text-xs text-gray-500 mt-1">{title.length}/200 caracteres</p>
         </div>
 
-        {/* Message */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Mensagem *
+          <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+            mensagem da transmissão *
           </label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Digite sua mensagem aqui..."
+            placeholder="digite o texto da notificação..."
             maxLength={2000}
-            rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+            rows={3}
+            className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
           />
-          <p className="text-xs text-gray-500 mt-1">{message.length}/2000 caracteres</p>
         </div>
 
-        {/* Image Upload */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Imagem (opcional)
+          <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+            imagem da notificação (opcional)
           </label>
           {imagePreview ? (
-            <div className="relative">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-full max-h-64 object-cover rounded-lg"
-              />
+            <div className="relative rounded-xl overflow-hidden border border-papelKraft/40 max-h-48">
+              <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
               <button
                 type="button"
                 onClick={removeImage}
-                className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
+                className="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-full hover:bg-red-700 transition cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           ) : (
-            <label className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-amber-500 transition block">
-              <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-600 mb-1">Clique para adicionar uma imagem</p>
-              <p className="text-xs text-gray-500">PNG, JPG, WebP até 5MB</p>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
+            <label className="border border-dashed border-papelKraft/60 rounded-xl p-4 text-center cursor-pointer hover:border-acentoAzul block bg-bgPlataforma">
+              <ImageIcon className="w-8 h-8 text-acentoAzul/50 mx-auto mb-1" />
+              <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">clique para selecionar uma imagem (até 5MB)</p>
+              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
             </label>
           )}
         </div>
 
-        {/* Target Audience */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Público-alvo *
+          <label className="block text-xs font-bold text-acentoAzul mb-2 lowercase font-corpo">
+            público-alvo *
           </label>
-          <div className="space-y-2">
+          <div className="flex flex-wrap gap-2">
             {[
-              { value: 'free', label: 'Usuários Gratuitos' },
-              { value: 'paid', label: 'Usuários Premium' },
-              { value: 'admin', label: 'Administradores' },
-            ].map((option) => (
-              <label
-                key={option.value}
-                className="flex items-center space-x-3 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-white transition"
-              >
-                <input
-                  type="checkbox"
-                  checked={targetAudience.includes(option.value)}
-                  onChange={() => toggleAudience(option.value)}
-                  className="w-5 h-5 text-amber-600 rounded focus:ring-amber-500"
-                />
-                <span className="text-gray-700 font-medium">{option.label}</span>
-              </label>
-            ))}
+              { value: 'free', label: 'alunas gratuitas' },
+              { value: 'paid', label: 'alunas premium' },
+              { value: 'admin', label: 'administradoras' },
+            ].map((option) => {
+              const checked = targetAudience.includes(option.value);
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => toggleAudience(option.value)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-corpo lowercase border cursor-pointer transition-all ${
+                    checked
+                      ? 'bg-acentoAzul text-white border-acentoAzul shadow-xs'
+                      : 'bg-white text-tintaCarvao/70 border-papelKraft/40 hover:bg-papelKraft/20'
+                  }`}
+                >
+                  {checked ? '✓ ' : ''}{option.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full bg-amber-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-amber-600 transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-colors disabled:opacity-50"
         >
-          {submitting ? (
-            <>Enviando...</>
-          ) : (
-            <>
-              <Send className="w-5 h-5 mr-2" />
-              Enviar Broadcast
-            </>
-          )}
+          <Send className="w-4 h-4 text-white" />
+          <span>{submitting ? 'enviando...' : 'enviar broadcast'}</span>
         </button>
       </form>
 
-      {/* Broadcasts List */}
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Broadcasts Enviados</h3>
+      {/* HISTÓRICO DE BROADCASTS */}
+      <div className="space-y-3">
+        <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase border-b border-papelKraft/30 pb-2">
+          broadcasts enviados
+        </h3>
 
         {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse bg-gray-100 rounded-lg p-6 h-48" />
-            ))}
-          </div>
+          <p className="text-xs font-corpo text-tintaCarvao/60 italic text-center py-6">carregando histórico...</p>
         ) : broadcasts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg">
-            <Megaphone className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h4 className="text-lg font-semibold text-gray-900 mb-2">Nenhum broadcast enviado</h4>
-            <p className="text-gray-600">Crie seu primeiro broadcast usando o formulário acima.</p>
+          <div className="text-center py-8 bg-white rounded-2xl border border-papelKraft/30 space-y-2">
+            <Megaphone className="w-8 h-8 text-tintaCarvao/30 mx-auto" />
+            <p className="text-xs font-corpo text-tintaCarvao/60 lowercase">nenhum broadcast enviado ainda.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {broadcasts.filter((b) => b.is_active).map((broadcast) => (
-              <div
-                key={broadcast.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-              >
+              <div key={broadcast.id} className="bg-white rounded-2xl border border-papelKraft/40 p-4 shadow-xs space-y-2 flex flex-col justify-between">
                 {broadcast.image_url && (
-                  <img
-                    src={broadcast.image_url}
-                    alt={broadcast.title}
-                    className="w-full h-40 object-cover"
-                  />
+                  <img src={broadcast.image_url} alt={broadcast.title} className="w-full h-32 object-cover rounded-xl border border-papelKraft/30" />
                 )}
-                <div className="p-4">
-                  <h4 className="font-bold text-gray-900 mb-2">{broadcast.title}</h4>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{broadcast.message}</p>
+                <div className="space-y-1">
+                  <h4 className="font-editorial font-bold text-base text-acentoAzul lowercase">{broadcast.title}</h4>
+                  <p className="text-xs font-corpo text-tintaCarvao/75 lowercase line-clamp-2">{broadcast.message}</p>
+                </div>
 
-                  {/* Target Audience Badges */}
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {broadcast.target_audience.map((role) => (
-                      <span
-                        key={role}
-                        className={`text-xs px-2 py-1 rounded-full font-medium ${getRoleBadgeColor(role)}`}
-                      >
-                        {getRoleLabels([role])[0]}
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex items-center justify-between pt-2 border-t border-papelKraft/30 text-[10px] font-corpo text-tintaCarvao/60">
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3 h-3 text-acentoAzul" />
+                    <span>{broadcast.recipient_count} enviadas ({broadcast.read_count} lidas)</span>
+                  </span>
 
-                  {/* Stats */}
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-                    <div className="flex items-center">
-                      <Users className="w-3 h-3 mr-1" />
-                      {broadcast.recipient_count} receberam
-                    </div>
-                    <div>
-                      {broadcast.read_count}/{broadcast.recipient_count} leram
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs text-gray-500 border-t pt-3">
-                    <div className="flex items-center">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      {new Date(broadcast.created_at).toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </div>
-                    <button
-                      onClick={() => deleteBroadcast(broadcast.id)}
-                      className="text-red-600 hover:text-red-700 transition p-1"
-                      title="Excluir broadcast"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => deleteBroadcast(broadcast.id)}
+                    className="p-1 rounded-lg hover:bg-red-50 text-red-600 cursor-pointer"
+                    title="excluir broadcast"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             ))}
