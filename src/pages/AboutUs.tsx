@@ -58,6 +58,13 @@ export default function AboutUs() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<EventPhoto | null>(null);
 
+  const { getSection } = usePageContent('about');
+  const heroSec = getSection('hero', {
+    title: 'uma comunidade viva',
+    subtitle: 'a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a nossa jornada. um convite para desacelerar, cultivar presença e dar forma ao que vive dentro.',
+    image_url: '/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg',
+  });
+
   const { scrollYProgress } = useScroll({
     target: pageRef,
     offset: ['start start', 'end end'],

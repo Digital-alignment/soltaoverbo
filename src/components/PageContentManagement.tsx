@@ -5,6 +5,7 @@ import {
   saveCMSDataToSupabase,
   SiteCMSData,
   SectionContent,
+  DEFAULT_CMS_DATA,
 } from '../hooks/usePageContent';
 import {
   FileText,
@@ -239,7 +240,9 @@ export default function PageContentManagement() {
       {/* PAINEL DE SEÇÕES DA PÁGINA SELECIONADA */}
       <div className="space-y-6">
         {currentPage.sections.map((sec) => {
-          const sectionData = (cmsData[selectedPageSlug] || {})[sec.key] || {};
+          const defaultSec = (DEFAULT_CMS_DATA[selectedPageSlug] || {})[sec.key] || {};
+          const customSec = (cmsData[selectedPageSlug] || {})[sec.key] || {};
+          const sectionData = { ...defaultSec, ...customSec };
 
           return (
             <div
