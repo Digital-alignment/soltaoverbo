@@ -241,7 +241,7 @@ export default function ProgramaCiclo() {
 
                 <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
                   <img
-                    src="/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
+                    src={heroSec.image_url || "/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"}
                     alt="ciclo de aprofundamento solta o verbo"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />

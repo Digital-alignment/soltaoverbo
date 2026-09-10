@@ -265,7 +265,7 @@ export default function Programa21Dias() {
 
                 <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
                   <img
-                    src="/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png"
+                    src={heroSec.image_url || "/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png"}
                     alt="21 dias de escrita solta o verbo"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     onError={(e) => {

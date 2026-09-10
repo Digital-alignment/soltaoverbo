@@ -133,32 +133,44 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Coluna Direita: Card Bento Visual */}
+            {/* Coluna Direita: Card Bento Visual ou Foto Customizada */}
             <div className="lg:col-span-5 relative">
-              <div className="relative rounded-3xl bg-papelClaro p-8 sm:p-12 border border-papelKraft/60 shadow-kraft-lg overflow-hidden group">
-                <div className="absolute -top-10 -right-10 opacity-10 transition-transform duration-700 group-hover:rotate-12">
-                  <img
-                    src={BRAND_ASSETS.logos.icon}
-                    alt="monograma sv"
-                    className="w-72 h-72 object-contain"
-                  />
-                </div>
-
-                <div className="relative z-10 space-y-6 py-4">
-                  <blockquote className="font-editorial text-2xl sm:text-3xl lg:text-4xl text-acentoAzul leading-snug font-bold lowercase">
-                    “a palavra dita alivia. a palavra escrita liberta e constrói o amanhã.”
-                  </blockquote>
-
-                  <div className="pt-6 border-t border-papelKraft/40">
-                    <p className="font-bold text-acentoAzul text-lg lowercase">
-                      comunidade solta o verbo
-                    </p>
-                    <p className="text-sm text-tintaCarvao/60 lowercase font-medium">
-                      movimento de escrita e presença
-                    </p>
+              {heroSec.image_url ? (
+                <div className="relative rounded-3xl bg-papelClaro p-3 border border-papelKraft/60 shadow-kraft-lg overflow-hidden group">
+                  <div className="w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative">
+                    <img
+                      src={heroSec.image_url}
+                      alt="solta o verbo hero"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="relative rounded-3xl bg-papelClaro p-8 sm:p-12 border border-papelKraft/60 shadow-kraft-lg overflow-hidden group">
+                  <div className="absolute -top-10 -right-10 opacity-10 transition-transform duration-700 group-hover:rotate-12">
+                    <img
+                      src={BRAND_ASSETS.logos.icon}
+                      alt="monograma sv"
+                      className="w-72 h-72 object-contain"
+                    />
+                  </div>
+
+                  <div className="relative z-10 space-y-6 py-4">
+                    <blockquote className="font-editorial text-2xl sm:text-3xl lg:text-4xl text-acentoAzul leading-snug font-bold lowercase">
+                      “a palavra dita alivia. a palavra escrita liberta e constrói o amanhã.”
+                    </blockquote>
+
+                    <div className="pt-6 border-t border-papelKraft/40">
+                      <p className="font-bold text-acentoAzul text-lg lowercase">
+                        comunidade solta o verbo
+                      </p>
+                      <p className="text-sm text-tintaCarvao/60 lowercase font-medium">
+                        movimento de escrita e presença
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

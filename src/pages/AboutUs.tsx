@@ -159,7 +159,7 @@ export default function AboutUs() {
 
                 <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
                   <img
-                    src="/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg"
+                    src={heroSec.image_url || "/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg"}
                     alt="solta o verbo vivencia"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
