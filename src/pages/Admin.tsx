@@ -8,6 +8,7 @@ import BannerManagement from '../components/BannerManagement';
 import BroadcastManagement from '../components/BroadcastManagement';
 import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
+import PageContentManagement from '../components/PageContentManagement';
 import {
   Users,
   BookOpen,
@@ -26,6 +27,7 @@ import {
   Shield,
   Calendar,
   ExternalLink,
+  Layers,
 } from 'lucide-react';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
@@ -40,7 +42,7 @@ export default function Admin() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation' | 'checkout'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation' | 'checkout' | 'pages'>('users');
   const [stats, setStats] = useState({
     totalUsers: 0,
     freeUsers: 0,
@@ -59,6 +61,7 @@ export default function Admin() {
   const moderationRef = useRef<HTMLDivElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
   const checkoutRef = useRef<HTMLDivElement>(null);
+  const pagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadData();
@@ -93,6 +96,9 @@ export default function Admin() {
           break;
         case 'checkout':
           ref = checkoutRef;
+          break;
+        case 'pages':
+          ref = pagesRef;
           break;
       }
 
@@ -362,12 +368,24 @@ export default function Admin() {
             onClick={() => setActiveTab('checkout')}
             className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === 'checkout'
-                ? 'bg-acentoTerracota text-white shadow-xs'
-                : 'bg-white/80 text-acentoTerracota hover:text-acentoTerracota/90 border border-papelKraft/40'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
             }`}
           >
             <ShoppingCart className="w-4 h-4" />
             <span>checkout</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('pages')}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+              activeTab === 'pages'
+                ? 'bg-acentoTerracota text-white shadow-xs'
+                : 'bg-white/80 text-acentoTerracota hover:text-acentoTerracota/90 border border-papelKraft/40'
+            }`}
+          >
+            <Layers className="w-4 h-4" />
+            <span>gestão de páginas (cms)</span>
           </button>
         </div>
 
@@ -659,6 +677,13 @@ export default function Admin() {
         {activeTab === 'checkout' && (
           <div ref={checkoutRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <CheckoutAnalytics />
+          </div>
+        )}
+
+        {/* ABA 8: GESTÃO DE PÁGINAS DO SITE (CMS) */}
+        {activeTab === 'pages' && (
+          <div ref={pagesRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
+            <PageContentManagement />
           </div>
         )}
 

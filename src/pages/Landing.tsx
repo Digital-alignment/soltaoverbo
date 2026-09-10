@@ -15,8 +15,16 @@ import FaqAccordion from '../components/FaqAccordion';
 import ContrateExperienciaSection from '../components/ContrateExperienciaSection';
 import FoundersSection from '../components/FoundersSection';
 import { BRAND_ASSETS } from '../config/brandAssets';
+import { usePageContent } from '../hooks/usePageContent';
 
 export default function Landing() {
+  const { getSection } = usePageContent('landing');
+  const heroSec = getSection('hero', {
+    title: 'a narrativa muda a partir do ponto que você solta o verbo.',
+    subtitle: 'reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.',
+    button_text: 'conhecer os programas',
+    button_link: '#produtos',
+  });
   const pillars = [
     {
       title: 'essência humana',
@@ -97,22 +105,21 @@ export default function Landing() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 roteiro original: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  a narrativa muda
-                </span>{' '}
-                a partir do ponto que você solta o verbo.
+                  {heroSec.title || 'a narrativa muda a partir do ponto que você solta o verbo.'}
+                </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.
+                {heroSec.subtitle || 'reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.'}
               </p>
 
               {/* Botões CTA Principais */}
               <div className="pt-4 flex flex-wrap items-center gap-4">
                 <a
-                  href="#produtos"
+                  href={heroSec.button_link || '#produtos'}
                   className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5"
                 >
-                  <span>conhecer os programas</span>
+                  <span>{heroSec.button_text || 'conhecer os programas'}</span>
                   <Pencil className="w-5 h-5 text-white" />
                 </a>
 

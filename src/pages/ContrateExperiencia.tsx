@@ -21,6 +21,7 @@ import {
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface EventPhoto {
   image: string;
@@ -128,6 +129,11 @@ const b2bFaqItems = [
 ];
 
 export default function ContrateExperiencia() {
+  const { getSection } = usePageContent('contrate_experiencia');
+  const heroSec = getSection('hero', {
+    title: 'experiências de escrita autoral sob medida',
+    subtitle: 'levamos rituais de escrita consciente, integração humana e expressão autêntica para empresas, festivais e coletivos.',
+  });
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -181,12 +187,12 @@ export default function ContrateExperiencia() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 contrate uma experiência: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  a arte do encontro no seu evento.
+                  {heroSec.title || 'a arte do encontro no seu evento.'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                levamos a escrita consciente, rodas de partilha e curadoria poética para empresas, retiros, festivais e marcas. vivências sob medida que criam pontes de escuta autêntica e marcam momentos inesquecíveis.
+                {heroSec.subtitle || 'levamos a escrita consciente, rodas de partilha e curadoria poética para empresas, retiros, festivais e marcas. vivências sob medida que criam pontes de escuta autêntica e marcam momentos inesquecíveis.'}
               </p>
 
               {/* Destaque B2B de Alinhamento Direto */}

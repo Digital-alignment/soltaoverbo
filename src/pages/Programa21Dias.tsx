@@ -23,6 +23,7 @@ import {
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface WeekPhase {
   number: string;
@@ -125,6 +126,11 @@ const faqItems = [
 ];
 
 export default function Programa21Dias() {
+  const { getSection } = usePageContent('programa_21_dias');
+  const heroSec = getSection('hero', {
+    title: '21 dias de escrita autoral & respiro interno',
+    subtitle: 'uma jornada guiada para desbloquear sua expressão, criar hábitos de escrita leve e reencontrar a sua voz autêntica sem autocrítica.',
+  });
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [activePhaseIndex, setActivePhaseIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -182,12 +188,12 @@ export default function Programa21Dias() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 21 dias de escrita: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  sua história tem valor.
+                  {heroSec.title || 'sua história tem valor.'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                sair de &quot;quero escrever um dia&quot; para &quot;eu escrevo, e isso já é meu&quot;. um método simples de 21 dias para destravar sua voz, criar um hábito sustentado e pertencer ao grupo &quot;junto e misturado&quot; — sem pressão por talento ou perfeição.
+                {heroSec.subtitle || 'sair de "quero escrever um dia" para "eu escrevo, e isso já é meu". um método simples de 21 dias para destravar sua voz, criar um hábito sustentado e pertencer ao grupo "junto e misturado" — sem pressão por talento ou perfeição.'}
               </p>
 
               {/* Destaque de Preço & Garantia */}

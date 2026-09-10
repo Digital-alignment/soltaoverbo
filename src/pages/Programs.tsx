@@ -4,8 +4,15 @@ import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import WavyLine from '../components/WavyLine';
 import { useState, useEffect } from 'react';
+import { usePageContent } from '../hooks/usePageContent';
 
 export default function Programs() {
+  const { getSection } = usePageContent('programs');
+  const heroSec = getSection('hero', {
+    title: 'a arte de viver melhor',
+    subtitle: 'uma comunidade viva de autodesenvolvimento, onde a expressão é caminho para transformar realidades.',
+    body_text: 'a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a jornada.',
+  });
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -24,20 +31,20 @@ export default function Programs() {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-28">
         <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <h1 className="font-editorial text-5xl md:text-6xl lg:text-7xl font-bold text-deepBlue mb-6">
-            a arte de viver melhor
+          <h1 className="font-editorial text-5xl md:text-6xl lg:text-7xl font-bold text-deepBlue mb-6 lowercase">
+            {heroSec.title || 'a arte de viver melhor'}
           </h1>
           <div className="flex justify-center mb-8">
             <WavyLine color="#BEC540" width={250} animate />
           </div>
 
           <div className="max-w-4xl mx-auto space-y-6 mb-12">
-            <p className="text-xl md:text-2xl text-deepBlue font-medium leading-relaxed">
-              uma comunidade viva de autodesenvolvimento, onde a expressão é caminho para transformar realidades.
+            <p className="text-xl md:text-2xl text-deepBlue font-medium leading-relaxed lowercase">
+              {heroSec.subtitle || 'uma comunidade viva de autodesenvolvimento, onde a expressão é caminho para transformar realidades.'}
             </p>
 
-            <p className="text-lg md:text-xl text-deepBlue/80 leading-relaxed">
-              a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a jornada.
+            <p className="text-lg md:text-xl text-deepBlue/80 leading-relaxed lowercase">
+              {heroSec.body_text || 'a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a jornada.'}
             </p>
 
             <p className="text-lg md:text-xl text-deepBlue italic font-medium mt-8">

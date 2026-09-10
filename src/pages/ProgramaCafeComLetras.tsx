@@ -27,6 +27,7 @@ import {
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface DynamicStep {
   step: string;
@@ -100,6 +101,11 @@ const faqItems = [
 ];
 
 export default function ProgramaCafeComLetras() {
+  const { getSection } = usePageContent('programa_cafe_com_letras');
+  const heroSec = getSection('hero', {
+    title: 'encontro mensal de escrita & aconchego',
+    subtitle: 'um ritual de domingo com café quentinho, cadernos abertos e partilhas afetivas.',
+  });
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
@@ -152,12 +158,12 @@ export default function ProgramaCafeComLetras() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 café com letras: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  bora ajustar esse encontro juntos?
+                  {heroSec.title || 'bora ajustar esse encontro juntos?'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                olá! que bom que você chegou aqui. a solta o verbo acredita no poder da escrita coletiva como ferramenta de autoconhecimento. criamos o café com letras para transformar o início da sua semana através da palavra.
+                {heroSec.subtitle || 'olá! que bom que você chegou aqui. a solta o verbo acredita no poder da escrita coletiva como ferramenta de autoconhecimento. criamos o café com letras para transformar o início da sua semana através da palavra.'}
               </p>
 
               {/* Destaque Logístico & Preço */}

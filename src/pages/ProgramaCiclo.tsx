@@ -27,6 +27,7 @@ import {
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface DynamicStep {
   step: string;
@@ -106,6 +107,11 @@ const faqItems = [
 ];
 
 export default function ProgramaCiclo() {
+  const { getSection } = usePageContent('programa_ciclo');
+  const heroSec = getSection('hero', {
+    title: 'o ciclo de aprofundamento',
+    subtitle: 'uma jornada contínua para quem deseja transformar a escrita em prática diária de presença e autocompaixão.',
+  });
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
@@ -158,12 +164,12 @@ export default function ProgramaCiclo() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 ciclo de aprofundamento: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  onde a escrita ganha laços e maturidade.
+                  {heroSec.title || 'onde a escrita ganha laços e maturidade.'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                3 meses de imersão contínua com encontros ao vivo, mentoria com bruna riedel e júlia alvim, 2 grupos de comunidade (&quot;junto e misturado&quot; + &quot;cá entre nós&quot;) e acesso total ao programa 21 dias de escrita.
+                {heroSec.subtitle || '3 meses de imersão contínua com encontros ao vivo, mentoria com bruna riedel e júlia alvim, 2 grupos de comunidade ("junto e misturado" + "cá entre nós") e acesso total ao programa 21 dias de escrita.'}
               </p>
 
               {/* Destaque de Preço & Garantia (Alineado con Product Canvas 2026) */}

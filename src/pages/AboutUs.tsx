@@ -6,6 +6,7 @@ import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
 import { FullPageScrollStroke } from '../components/ui/svg-follow-scroll';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface EventPhoto {
   image: string;
@@ -117,13 +118,12 @@ export default function AboutUs() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 solta o verbo: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  uma comunidade viva
-                </span>{' '}
-                onde a expressão transforma realidades.
+                  {heroSec.title || 'uma comunidade viva'}
+                </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a nossa jornada. um convite para desacelerar, cultivar presença e dar forma ao que vive dentro.
+                {heroSec.subtitle || heroSec.body_text || 'a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a nossa jornada. um convite para desacelerar, cultivar presença e dar forma ao que vive dentro.'}
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-4">
