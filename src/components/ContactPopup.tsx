@@ -1,5 +1,6 @@
 import { X, Instagram, MessageCircle, Mail } from 'lucide-react';
 import { useEffect } from 'react';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface ContactPopupProps {
   isOpen: boolean;
@@ -7,6 +8,15 @@ interface ContactPopupProps {
 }
 
 export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
+  const { getSection } = usePageContent('contacts');
+  const contactsSec = getSection('info', {
+    instagram: 'https://www.instagram.com/soltaoverbo.coletivo/',
+    instagram_handle: '@soltaoverbo.coletivo',
+    whatsapp: 'https://wa.link/w67ibp',
+    whatsapp_number: 'envie uma mensagem',
+    email: 'info@soltaoverbocoletivo.com',
+  });
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -56,7 +66,7 @@ export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
 
         <div className="space-y-4">
           <a
-            href="https://www.instagram.com/soltaoverbo.coletivo/"
+            href={contactsSec.instagram || 'https://www.instagram.com/soltaoverbo.coletivo/'}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-4 p-4 rounded-2xl bg-white hover:bg-white/80 transition-all duration-300 hover:scale-105 group"
@@ -66,12 +76,12 @@ export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
             </div>
             <div className="text-left flex-1">
               <p className="font-bold text-popupText text-lg">instagram</p>
-              <p className="text-popupText/70 text-sm">@soltaoverbo.coletivo</p>
+              <p className="text-popupText/70 text-sm">{contactsSec.instagram_handle || '@soltaoverbo.coletivo'}</p>
             </div>
           </a>
 
           <a
-            href="https://wa.link/w67ibp"
+            href={contactsSec.whatsapp || 'https://wa.link/w67ibp'}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-4 p-4 rounded-2xl bg-white hover:bg-white/80 transition-all duration-300 hover:scale-105 group"
@@ -81,12 +91,12 @@ export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
             </div>
             <div className="text-left flex-1">
               <p className="font-bold text-popupText text-lg">whatsapp</p>
-              <p className="text-popupText/70 text-sm">envie uma mensagem</p>
+              <p className="text-popupText/70 text-sm">{contactsSec.whatsapp_number || 'envie uma mensagem'}</p>
             </div>
           </a>
 
           <a
-            href="mailto:info@soltaoverbocoletivo.com"
+            href={contactsSec.email ? (contactsSec.email.startsWith('mailto:') ? contactsSec.email : `mailto:${contactsSec.email}`) : 'mailto:info@soltaoverbocoletivo.com'}
             className="flex items-center gap-4 p-4 rounded-2xl bg-white hover:bg-white/80 transition-all duration-300 hover:scale-105 group"
           >
             <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ backgroundColor: '#bac706' }}>
@@ -94,7 +104,7 @@ export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
             </div>
             <div className="text-left flex-1">
               <p className="font-bold text-popupText text-lg">e-mail</p>
-              <p className="text-popupText/70 text-sm">info@soltaoverbocoletivo.com</p>
+              <p className="text-popupText/70 text-sm">{contactsSec.email || 'info@soltaoverbocoletivo.com'}</p>
             </div>
           </a>
         </div>

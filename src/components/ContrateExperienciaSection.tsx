@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, Building2, Users2, Compass, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { BRAND_ASSETS } from '../config/brandAssets';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface GallerySlide {
   image: string;
@@ -38,6 +39,10 @@ const eventSlides: GallerySlide[] = [
 
 export default function ContrateExperienciaSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { getSection } = usePageContent('contacts');
+  const contactsSec = getSection('info', {
+    whatsapp: 'https://wa.link/w67ibp',
+  });
 
   // Auto-play do carrossel a cada 4.5 segundos
   useEffect(() => {
@@ -55,7 +60,7 @@ export default function ContrateExperienciaSection() {
     setCurrentSlide((prev) => (prev - 1 + eventSlides.length) % eventSlides.length);
   };
 
-  const whatsappUrl = `https://wa.me/5511999999999?text=${encodeURIComponent(
+  const whatsappUrl = contactsSec.whatsapp || `https://wa.me/5511999999999?text=${encodeURIComponent(
     'olá! gostaria de saber mais sobre como contratar uma experiência ou oficina do solta o verbo para nossa empresa/evento.'
   )}`;
 

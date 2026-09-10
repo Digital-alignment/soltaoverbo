@@ -130,10 +130,17 @@ const b2bFaqItems = [
 
 export default function ContrateExperiencia() {
   const { getSection } = usePageContent('contrate_experiencia');
+  const { getSection: getContactSection } = usePageContent('contacts');
+
   const heroSec = getSection('hero', {
     title: 'experiências de escrita autoral sob medida',
     subtitle: 'levamos rituais de escrita consciente, integração humana e expressão autêntica para empresas, festivais e coletivos.',
   });
+
+  const contactsSec = getContactSection('info', {
+    whatsapp: 'https://wa.me/5548991316277?text=ol%C3%A1!%20gostaria%20de%20solicitar%20uma%20proposta%20personalizada%20para%20uma%20experi%C3%AAncia%20do%20solta%20o%20verbo.',
+  });
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -144,6 +151,7 @@ export default function ContrateExperiencia() {
   const [isScreenshotPaused, setIsScreenshotPaused] = useState(false);
 
   const whatsappUrl =
+    contactsSec.whatsapp ||
     'https://wa.me/5548991316277?text=ol%C3%A1!%20gostaria%20de%20solicitar%20uma%20proposta%20personalizada%20para%20uma%20experi%C3%AAncia%20do%20solta%20o%20verbo.';
 
   // Auto-play do carrossel de fotos de eventos (4.5s)

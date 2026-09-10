@@ -4,9 +4,18 @@ import { useState } from 'react';
 import ContactPopup from './ContactPopup';
 import HalftoneDotsCanvas from './HalftoneDotsCanvas';
 import { BRAND_ASSETS } from '../config/brandAssets';
+import { usePageContent } from '../hooks/usePageContent';
 
 export default function PreLoginFooter() {
   const [isContactPopupOpen, setIsContactPopupOpen] = useState(false);
+  const { getSection } = usePageContent('contacts');
+  const contactsSec = getSection('info', {
+    instagram: 'https://www.instagram.com/soltaoverbo.coletivo/',
+    instagram_handle: '@soltaoverbo.coletivo',
+    whatsapp: 'https://wa.link/w67ibp',
+    email: 'info@soltaoverbocoletivo.com',
+    footer_phrase: 'autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.',
+  });
 
   return (
     <>
@@ -49,7 +58,7 @@ export default function PreLoginFooter() {
                   }}
                 />
                 <p className="text-white/80 text-sm sm:text-base font-medium leading-relaxed max-w-xs lowercase">
-                  autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.
+                  {contactsSec.footer_phrase || 'autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.'}
                 </p>
               </div>
 
@@ -100,17 +109,17 @@ export default function PreLoginFooter() {
                 <div className="flex items-center gap-3 mb-4">
                   {[
                     {
-                      href: 'https://www.instagram.com/soltaoverbo.coletivo/',
+                      href: contactsSec.instagram || 'https://www.instagram.com/soltaoverbo.coletivo/',
                       icon: Instagram,
                       label: 'instagram',
                     },
                     {
-                      href: 'https://wa.link/w67ibp',
+                      href: contactsSec.whatsapp || 'https://wa.link/w67ibp',
                       icon: MessageCircle,
                       label: 'whatsapp',
                     },
                     {
-                      href: 'mailto:info@soltaoverbocoletivo.com',
+                      href: contactsSec.email ? (contactsSec.email.startsWith('mailto:') ? contactsSec.email : `mailto:${contactsSec.email}`) : 'mailto:info@soltaoverbocoletivo.com',
                       icon: Mail,
                       label: 'e-mail',
                     },
@@ -191,12 +200,12 @@ export default function PreLoginFooter() {
                       comunidade • reflexão • afeto
                     </p>
                     <a
-                      href="https://www.instagram.com/soltaoverbo.coletivo/"
+                      href={contactsSec.instagram || 'https://www.instagram.com/soltaoverbo.coletivo/'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-acentoAzul font-bold font-mono hover:text-acentoTerracota transition-colors lowercase"
                     >
-                      @soltaoverbo.coletivo
+                      {contactsSec.instagram_handle || '@soltaoverbo.coletivo'}
                     </a>
                   </div>
                 </div>

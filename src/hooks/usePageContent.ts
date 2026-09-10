@@ -162,6 +162,18 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       button_link: "https://wa.me/5531999999999",
       image_url: "/brand-assets/gallery/events/_MG_0015.jpg"
     }
+  },
+  contacts: {
+    info: {
+      title: "canais de contato & redes sociais",
+      subtitle: "informações globais de contato e links do coletivo",
+      whatsapp: "https://wa.link/w67ibp",
+      whatsapp_number: "+55 (31) 99999-9999",
+      instagram: "https://www.instagram.com/soltaoverbo.coletivo/",
+      instagram_handle: "@soltaoverbo.coletivo",
+      email: "info@soltaoverbocoletivo.com",
+      footer_phrase: "autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais."
+    }
   }
 };
 

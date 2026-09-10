@@ -87,6 +87,13 @@ const PAGE_OPTIONS: PageOption[] = [
       { key: 'proposta', name: 'Proposta de Rituais Corporativos', hasImage: true, hasButton: true },
     ],
   },
+  {
+    slug: 'contacts',
+    name: 'Canais de Contato & Redes',
+    sections: [
+      { key: 'info', name: 'Informações Globais de Contato & Redes Sociais', hasImage: false, hasButton: false },
+    ],
+  },
 ];
 
 export default function PageContentManagement() {
@@ -306,6 +313,89 @@ export default function PageContentManagement() {
                   className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
                 />
               </div>
+
+              {/* CAMPOS ESPECÍFICOS PARA CANAIS DE CONTATO & REDES */}
+              {selectedPageSlug === 'contacts' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      link do whatsapp (URL)
+                    </label>
+                    <input
+                      type="url"
+                      value={sectionData.whatsapp || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'whatsapp', e.target.value)}
+                      placeholder="https://wa.link/w67ibp ou https://wa.me/55..."
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      número ou texto de exibição whatsapp
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.whatsapp_number || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'whatsapp_number', e.target.value)}
+                      placeholder="ex: +55 (31) 99999-9999"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      link do instagram (URL)
+                    </label>
+                    <input
+                      type="url"
+                      value={sectionData.instagram || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'instagram', e.target.value)}
+                      placeholder="https://www.instagram.com/soltaoverbo.coletivo/"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      usuário / handle instagram (@)
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.instagram_handle || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'instagram_handle', e.target.value)}
+                      placeholder="ex: @soltaoverbo.coletivo"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      e-mail de contato principal
+                    </label>
+                    <input
+                      type="email"
+                      value={sectionData.email || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'email', e.target.value)}
+                      placeholder="info@soltaoverbocoletivo.com"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      slogan / frase do rodapé (footer)
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.footer_phrase || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'footer_phrase', e.target.value)}
+                      placeholder="autodesenvolvimento em coletivo através da escrita..."
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* FOTO E BOTÕES (SE APLICÁVEL) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-papelKraft/30">
