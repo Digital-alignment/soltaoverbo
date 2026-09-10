@@ -488,382 +488,139 @@ export default function LessonModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {lesson ? 'Editar Aula' : 'Criar Nova Aula'}
+    <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-[99999] p-4 animate-fadeIn">
+      <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-kraft-lg">
+        <div className="sticky top-0 bg-papelClaro border-b border-papelKraft/30 px-6 py-4 flex items-center justify-between z-10">
+          <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+            {lesson ? 'editar leção' : 'criar nova leção'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition"
+            className="text-tintaCarvao/50 hover:text-tintaCarvao transition cursor-pointer"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2.5 rounded-xl text-xs font-corpo lowercase">
               {error}
             </div>
           )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tags
+              <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                tags
               </label>
               <input
                 type="text"
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="Ex: Dia 1, Intro, Avançado"
+                className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                placeholder="ex: dia 1, intro, ritmos"
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Separe múltiplas tags com vírgulas
+              <p className="text-[10px] text-tintaCarvao/50 mt-1 font-corpo lowercase">
+                separe múltiplas tags com vírgulas
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ordem *
+              <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                ordem *
               </label>
               <input
                 type="number"
                 value={orderIndex}
                 onChange={(e) => setOrderIndex(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
                 placeholder="0"
                 min="0"
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Use as setas para reordenar
-              </p>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Título da Aula *
+            <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+              título da leção *
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="Ex: Introdução à Narrativa"
+              className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+              placeholder="ex: aula 1 — o soltar da palavra"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Descrição
+            <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+              descrição da leção *
             </label>
             <RichTextEditor
               value={description}
               onChange={setDescription}
-              placeholder="Descreva o conteúdo desta aula"
+              placeholder="descreva o conteúdo e o exercício da leção..."
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              URL do Áudio
-            </label>
-            <input
-              type="url"
-              value={audioUrl}
-              onChange={(e) => setAudioUrl(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="https://exemplo.com/audio.mp3"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Link para o áudio da aula (opcional)
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Link do Zoom
-            </label>
-            <input
-              type="url"
-              value={zoomLink}
-              onChange={(e) => setZoomLink(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="https://zoom.us/j/..."
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Link para aula ao vivo (opcional)
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              URL da Gravação
-            </label>
-            <div className="relative">
-              <input
-                type="url"
-                value={recordingUrl}
-                onChange={(e) => setRecordingUrl(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="https://www.youtube.com/watch?v=..."
-              />
-              {recordingUrl && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  {isYouTubeUrl(recordingUrl) ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-amber-500" />
-                  )}
-                </div>
-              )}
-            </div>
-            <p className="text-sm text-gray-500 mt-1">
-              {isYouTubeUrl(recordingUrl)
-                ? 'Link do YouTube válido detectado'
-                : 'Cole o link do YouTube (ex: https://www.youtube.com/watch?v=... ou https://youtu.be/...)'}
-            </p>
-
-            {recordingUrl && isYouTubeUrl(recordingUrl) && (
-              <div className="mt-4 bg-gray-50 border border-gray-200 rounded-xl p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <label className="text-sm font-medium text-gray-700">
-                    Preview da Gravação
-                  </label>
-                </div>
-                <div className="max-w-md mx-auto">
-                  <YouTubeEmbed videoUrl={recordingUrl} title="Preview" />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="pt-4 border-t border-gray-200">
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Arquivos de Áudio (Máx. 10 minutos)
+          {/* ARQUIVOS DE ÁUDIO */}
+          <div className="border-t border-papelKraft/30 pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo flex items-center gap-1.5">
+                <Music className="w-4 h-4 text-acentoTerracota" />
+                <span>áudios da leção</span>
               </label>
-              <p className="text-sm text-gray-500 mb-3">
-                Faça upload de arquivos de áudio para esta aula. Duração máxima: 10 minutos por arquivo.
-              </p>
 
-              {audioError && (
-                <div className="mb-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                  {audioError}
-                </div>
-              )}
-
-              <div
-                onClick={() => audioInputRef.current?.click()}
-                className="border-2 border-dashed border-purple-300 rounded-lg p-6 text-center cursor-pointer transition hover:border-purple-400 hover:bg-purple-50"
-              >
-                <Music className="w-10 h-10 mx-auto mb-3 text-purple-400" />
-                <p className="text-sm text-gray-600 mb-1">
-                  Clique para selecionar arquivos de áudio
-                </p>
-                <p className="text-xs text-gray-500">
-                  MP3, WAV, M4A, OGG (máx. 50MB, até 10 minutos)
-                </p>
+              <label className="px-3 py-1 rounded-xl bg-acentoAzul text-white text-xs font-corpo lowercase cursor-pointer hover:bg-acentoAzul/90 transition">
+                + adicionar áudio
                 <input
-                  ref={audioInputRef}
                   type="file"
-                  multiple
+                  accept="audio/*"
                   onChange={(e) => handleAudioFileSelect(e.target.files)}
                   className="hidden"
-                  accept="audio/*"
                   disabled={audioUploading}
                 />
-              </div>
-
-              {audioUploading && (
-                <div className="mt-3 text-center text-sm text-gray-600">
-                  <div className="inline-block w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin mr-2" />
-                  Processando arquivos de áudio...
-                </div>
-              )}
-
-              {audioFiles.filter((a) => !a.toDelete).length > 0 && (
-                <div className="mt-4 space-y-2">
-                  <p className="text-sm font-medium text-gray-700">
-                    Áudios Adicionados ({audioFiles.filter((a) => !a.toDelete).length})
-                  </p>
-                  {audioFiles.map((audio, index) => {
-                    if (audio.toDelete) return null;
-
-                    return (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200"
-                      >
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0">
-                            <Play className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
-                              {audio.title}
-                            </p>
-                            <p className="text-xs text-gray-600">
-                              {formatDuration(audio.durationSeconds)} • {formatFileSize(audio.fileSizeBytes)}
-                            </p>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveAudio(index)}
-                          className="text-red-500 hover:text-red-700 transition p-2 rounded-lg hover:bg-red-50"
-                          title="Remover áudio"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Materiais para Download
               </label>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setUploadMode('file')}
-                  className={`px-3 py-1 text-sm rounded-lg transition ${
-                    uploadMode === 'file'
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Arquivo
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setUploadMode('url')}
-                  className={`px-3 py-1 text-sm rounded-lg transition ${
-                    uploadMode === 'url'
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  URL Externa
-                </button>
-              </div>
             </div>
 
-            {uploadMode === 'file' ? (
-              <div
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition ${
-                  isDragging
-                    ? 'border-amber-500 bg-amber-50'
-                    : 'border-gray-300 hover:border-amber-400 hover:bg-gray-50'
-                }`}
-              >
-                <Upload className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                <p className="text-sm text-gray-600 mb-1">
-                  Arraste arquivos ou clique para selecionar
-                </p>
-                <p className="text-xs text-gray-500">
-                  PDF, áudio, imagem, vídeo, documentos (máx. 50MB)
-                </p>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  onChange={(e) => handleFileSelect(e.target.files)}
-                  className="hidden"
-                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.mp3,.mp4,.wav,.jpg,.jpeg,.png,.gif"
-                />
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <input
-                  type="text"
-                  value={urlTitle}
-                  onChange={(e) => setUrlTitle(e.target.value)}
-                  placeholder="Título do material (opcional)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                />
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
-                    placeholder="https://exemplo.com/arquivo.pdf"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleUrlAdd}
-                    className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
-                  >
-                    Adicionar
-                  </button>
-                </div>
-              </div>
+            {audioError && (
+              <p className="text-xs text-red-600 font-corpo lowercase">{audioError}</p>
             )}
 
-            {materials.filter((m) => !m.toDelete).length > 0 && (
-              <div className="mt-4 space-y-2">
-                <p className="text-sm font-medium text-gray-700">
-                  Materiais Adicionados ({materials.filter((m) => !m.toDelete).length})
-                </p>
-                {materials.map((material, index) => {
-                  if (material.toDelete) return null;
-
-                  const getIcon = () => {
-                    switch (material.fileType) {
-                      case 'pdf':
-                        return <FileText className="w-5 h-5 text-red-500" />;
-                      case 'audio':
-                        return <FileText className="w-5 h-5 text-blue-500" />;
-                      case 'image':
-                        return <FileText className="w-5 h-5 text-green-500" />;
-                      case 'link':
-                        return <ExternalLink className="w-5 h-5 text-gray-500" />;
-                      default:
-                        return <File className="w-5 h-5 text-gray-500" />;
-                    }
-                  };
-
+            {audioFiles.filter((a) => !a.toDelete).length > 0 && (
+              <div className="space-y-2">
+                {audioFiles.map((audio, index) => {
+                  if (audio.toDelete) return null;
                   return (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-white border border-papelKraft/40 rounded-2xl shadow-xs"
                     >
                       <div className="flex items-center gap-3 flex-1 min-w-0">
-                        {getIcon()}
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {material.title}
-                          </p>
-                          {material.fileSize && (
-                            <p className="text-xs text-gray-500">
-                              {formatFileSize(material.fileSize)}
-                            </p>
-                          )}
-                        </div>
+                        <Music className="w-4 h-4 text-acentoAzul flex-shrink-0" />
+                        <input
+                          type="text"
+                          value={audio.title}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setAudioFiles(
+                              audioFiles.map((a, i) => (i === index ? { ...a, title: val } : a))
+                            );
+                          }}
+                          className="flex-1 px-2.5 py-1 bg-bgPlataforma border border-papelKraft/30 rounded-lg text-xs font-corpo text-tintaCarvao lowercase"
+                          placeholder="título do áudio..."
+                        />
                       </div>
                       <button
                         type="button"
-                        onClick={() => handleRemoveMaterial(index)}
-                        className="text-red-500 hover:text-red-700 transition"
+                        onClick={() => handleRemoveAudio(index)}
+                        className="text-red-500 hover:text-red-700 ml-2 cursor-pointer"
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   );
@@ -872,21 +629,124 @@ export default function LessonModal({
             )}
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+          {/* MATERIAIS COMPLEMENTARES */}
+          <div className="border-t border-papelKraft/30 pt-4 space-y-3">
+            <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo flex items-center gap-1.5">
+              <FileText className="w-4 h-4 text-acentoTerracota" />
+              <span>materiais de apoio (PDFs, imagens e links)</span>
+            </label>
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setUploadMode('file')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-corpo lowercase transition cursor-pointer ${
+                  uploadMode === 'file'
+                    ? 'bg-acentoAzul text-white font-bold'
+                    : 'bg-white text-tintaCarvao/70 border border-papelKraft/40'
+                }`}
+              >
+                upload de arquivo
+              </button>
+              <button
+                type="button"
+                onClick={() => setUploadMode('url')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-corpo lowercase transition cursor-pointer ${
+                  uploadMode === 'url'
+                    ? 'bg-acentoAzul text-white font-bold'
+                    : 'bg-white text-tintaCarvao/70 border border-papelKraft/40'
+                }`}
+              >
+                link externo
+              </button>
+            </div>
+
+            {uploadMode === 'file' ? (
+              <label className="border border-dashed border-papelKraft/60 rounded-2xl p-5 text-center cursor-pointer hover:border-acentoAzul block bg-white">
+                <Upload className="w-6 h-6 text-acentoAzul/50 mx-auto mb-1" />
+                <span className="text-xs font-bold font-corpo text-acentoAzul lowercase block">
+                  clique para anexar arquivos (PDF, Imagens, etc.)
+                </span>
+                <input
+                  type="file"
+                  multiple
+                  onChange={(e) => handleFileSelect(e.target.files)}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={urlTitle}
+                  onChange={(e) => setUrlTitle(e.target.value)}
+                  placeholder="título do link..."
+                  className="w-full px-3.5 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    value={urlInput}
+                    onChange={(e) => setUrlInput(e.target.value)}
+                    placeholder="https://..."
+                    className="flex-1 px-3.5 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleUrlAdd}
+                    className="px-4 py-1.5 bg-acentoAzul text-white rounded-xl text-xs font-corpo lowercase cursor-pointer"
+                  >
+                    adicionar
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {materials.filter((m) => !m.toDelete).length > 0 && (
+              <div className="space-y-2">
+                {materials.map((material, index) => {
+                  if (material.toDelete) return null;
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-white border border-papelKraft/40 rounded-2xl shadow-xs"
+                    >
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <FileText className="w-4 h-4 text-acentoAzul flex-shrink-0" />
+                        <span className="text-xs font-corpo text-tintaCarvao lowercase truncate">
+                          {material.title}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMaterial(index)}
+                        className="text-red-500 hover:text-red-700 ml-2 cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4 border-t border-papelKraft/30">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+              className="px-4 py-2 rounded-xl bg-white border border-papelKraft/40 text-tintaCarvao/70 text-xs font-corpo lowercase cursor-pointer"
               disabled={loading}
             >
-              Cancelar
+              cancelar
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg font-medium hover:from-amber-600 hover:to-orange-700 transition disabled:opacity-50"
+              className="px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] lowercase shadow-xs transition cursor-pointer disabled:opacity-50"
               disabled={loading}
             >
-              {loading ? 'Salvando...' : lesson ? 'Atualizar Aula' : 'Criar Aula'}
+              {loading ? 'salvando...' : lesson ? 'salvar alterações' : 'criar leção'}
             </button>
           </div>
         </form>

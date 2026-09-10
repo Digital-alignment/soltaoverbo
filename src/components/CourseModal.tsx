@@ -54,24 +54,21 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
     if (!validTypes.includes(file.type)) {
-      setError('Por favor, selecione uma imagem válida (JPG, PNG, WebP ou GIF)');
+      setError('por favor, selecione uma imagem válida (JPG, PNG, WebP ou GIF)');
       return;
     }
 
-    // Validate file size (10MB max)
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      setError('A imagem deve ter no máximo 10MB');
+      setError('a imagem deve ter no máximo 10MB');
       return;
     }
 
     setSelectedFile(file);
     setError('');
 
-    // Create preview URL
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewUrl(reader.result as string);
@@ -89,106 +86,86 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
     e.stopPropagation();
 
     const file = e.dataTransfer.files?.[0];
-    if (!file) return;
-
-    // Create a synthetic event to reuse validation logic
-    const syntheticEvent = {
-      target: { files: [file] }
-    } as React.ChangeEvent<HTMLInputElement>;
-    handleFileSelect(syntheticEvent);
-  };
-
-  const uploadImage = async (): Promise<string | null> => {
-    if (!selectedFile) return thumbnailUrl || null;
-
-    setUploading(true);
-    setUploadProgress(0);
-
-    try {
-      // Generate unique filename
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `course-${crypto.randomUUID()}-${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      // Upload to Supabase storage
-      const { error: uploadError } = await supabase.storage
-        .from('course-thumbnails')
-        .upload(filePath, selectedFile, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) throw uploadError;
-
-      setUploadProgress(100);
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('course-thumbnails')
-        .getPublicUrl(filePath);
-
-      return publicUrl;
-    } catch (err: any) {
-      console.error('Upload error:', err);
-      throw new Error('Erro ao fazer upload da imagem: ' + err.message);
-    } finally {
-      setUploading(false);
+    if (file) {
+      const fakeEvent = {
+        target: { files: [file] },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+      handleFileSelect(fakeEvent);
     }
   };
 
-  const handleRemoveImage = () => {
-    setSelectedFile(null);
-    setPreviewUrl('');
-    setThumbnailUrl('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const uploadFileToSupabase = async (file: File): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `course-thumbnails/${fileName}`;
+
+    setUploadProgress(30);
+
+    const { error: uploadError } = await supabase.storage
+      .from('banners')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (uploadError) {
+      throw new Error(`erro no upload: ${uploadError.message}`);
     }
+
+    setUploadProgress(70);
+
+    const { data } = supabase.storage.from('banners').getPublicUrl(filePath);
+
+    setUploadProgress(100);
+    return data.publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!title.trim()) {
+      setError('título do curso é obrigatório');
+      return;
+    }
+
+    if (!description.trim()) {
+      setError('descrição do curso é obrigatória');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      if (!title.trim()) {
-        throw new Error('O título é obrigatório');
-      }
-
-      if (!description.trim()) {
-        throw new Error('A descrição é obrigatória');
-      }
-
-      // Upload image if a file was selected
       let finalThumbnailUrl = thumbnailUrl;
-      if (selectedFile) {
-        const uploadedUrl = await uploadImage();
-        if (uploadedUrl) {
-          finalThumbnailUrl = uploadedUrl;
-        }
-      } else if (uploadMode === 'url') {
-        finalThumbnailUrl = thumbnailUrl;
-      }
 
-      const courseData = {
-        title: title.trim(),
-        description: description.trim(),
-        thumbnail_url: finalThumbnailUrl.trim() || null,
-        course_type: courseType,
-        stripe_payment_link: stripePaymentLink.trim() || null,
-      };
+      if (uploadMode === 'file' && selectedFile) {
+        setUploading(true);
+        finalThumbnailUrl = await uploadFileToSupabase(selectedFile);
+      }
 
       if (course) {
         const { error: updateError } = await supabase
           .from('courses')
-          .update(courseData as any)
+          .update({
+            title: title.trim(),
+            description: description.trim(),
+            thumbnail_url: finalThumbnailUrl || null,
+            course_type: courseType,
+            stripe_payment_link: stripePaymentLink.trim() || null,
+            updated_at: new Date().toISOString(),
+          })
           .eq('id', course.id);
 
         if (updateError) throw updateError;
       } else {
-        const { error: insertError } = await supabase
-          .from('courses')
-          .insert(courseData as any);
+        const { error: insertError } = await supabase.from('courses').insert({
+          title: title.trim(),
+          description: description.trim(),
+          thumbnail_url: finalThumbnailUrl || null,
+          course_type: courseType,
+          stripe_payment_link: stripePaymentLink.trim() || null,
+        });
 
         if (insertError) throw insertError;
       }
@@ -196,100 +173,101 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Erro ao salvar curso');
+      setError(err.message || 'erro ao salvar oficina');
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
-          <h2 className="text-2xl font-bold text-gray-900">
-            {course ? 'Editar Curso' : 'Criar Novo Curso'}
+    <div className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center z-[99999] p-4 animate-fadeIn">
+      <div className="bg-papelClaro rounded-3xl border border-papelKraft/60 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-kraft-lg">
+        
+        {/* CABEÇALHO DO MODAL */}
+        <div className="sticky top-0 bg-papelClaro border-b border-papelKraft/30 px-6 py-4 flex items-center justify-between z-10">
+          <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+            {course ? 'editar oficina' : 'criar nova oficina'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition"
+            className="text-tintaCarvao/50 hover:text-tintaCarvao transition cursor-pointer"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2.5 rounded-xl text-xs font-corpo lowercase">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Título do Curso *
+            <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+              título da oficina *
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="Ex: Curso de Escrita Criativa"
+              className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+              placeholder="ex: 21 dias de escrita autoral"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Descrição *
+            <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+              descrição *
             </label>
             <RichTextEditor
               value={description}
               onChange={setDescription}
-              placeholder="Descreva o curso e o que os alunos aprenderão"
+              placeholder="descreva a oficina e o que as alunas aprenderão..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Imagem de Capa do Curso
+            <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+              imagem de capa da oficina
             </label>
 
-            {/* Toggle between upload and URL */}
             <div className="flex gap-2 mb-3">
               <button
                 type="button"
                 onClick={() => setUploadMode('file')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-corpo lowercase transition cursor-pointer ${
                   uploadMode === 'file'
-                    ? 'bg-amber-100 text-amber-700 border-2 border-amber-300'
-                    : 'bg-gray-100 text-gray-600 border-2 border-gray-200 hover:bg-gray-200'
+                    ? 'bg-acentoAzul text-white font-bold'
+                    : 'bg-white text-tintaCarvao/70 border border-papelKraft/40'
                 }`}
               >
-                <Upload className="w-4 h-4 inline mr-1" />
-                Fazer Upload
+                <Upload className="w-3.5 h-3.5 inline mr-1" />
+                fazer upload
               </button>
               <button
                 type="button"
                 onClick={() => setUploadMode('url')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-corpo lowercase transition cursor-pointer ${
                   uploadMode === 'url'
-                    ? 'bg-amber-100 text-amber-700 border-2 border-amber-300'
-                    : 'bg-gray-100 text-gray-600 border-2 border-gray-200 hover:bg-gray-200'
+                    ? 'bg-acentoAzul text-white font-bold'
+                    : 'bg-white text-tintaCarvao/70 border border-papelKraft/40'
                 }`}
               >
-                URL Externa
+                url externa
               </button>
             </div>
 
             {uploadMode === 'file' ? (
               <div>
-                {/* File Upload Area */}
                 <div
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-amber-400 transition cursor-pointer"
+                  className="border border-dashed border-papelKraft/60 rounded-2xl p-6 text-center hover:border-acentoAzul transition cursor-pointer bg-white"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <input
@@ -299,160 +277,111 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
                     onChange={handleFileSelect}
                     className="hidden"
                   />
-
-                  {previewUrl ? (
-                    <div className="space-y-3">
-                      <div className="relative inline-block">
-                        <img
-                          src={previewUrl}
-                          alt="Preview"
-                          className="max-h-48 rounded-lg mx-auto object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveImage();
-                          }}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                      {selectedFile && (
-                        <div className="text-sm text-gray-600">
-                          <p className="font-medium">{selectedFile.name}</p>
-                          <p className="text-xs text-gray-500">
-                            {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
-                        </div>
-                      )}
-                      {uploading && (
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-center text-amber-600">
-                            <Loader className="w-5 h-5 animate-spin mr-2" />
-                            <span className="text-sm font-medium">Enviando imagem...</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-amber-500 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${uploadProgress}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <ImageIcon className="w-12 h-12 text-gray-400 mx-auto" />
-                      <div>
-                        <p className="text-gray-700 font-medium">
-                          Clique para selecionar ou arraste uma imagem
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          JPG, PNG, WebP ou GIF (máx. 10MB)
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                  <ImageIcon className="w-8 h-8 text-acentoAzul/50 mx-auto mb-2" />
+                  <p className="text-xs font-bold text-acentoAzul lowercase font-corpo">
+                    clique ou arraste uma imagem aqui
+                  </p>
+                  <p className="text-[10px] text-tintaCarvao/50 lowercase mt-1 font-corpo">
+                    PNG, JPG, WebP ou GIF (máx 10MB)
+                  </p>
                 </div>
               </div>
             ) : (
-              <div>
-                <input
-                  type="url"
-                  value={thumbnailUrl}
-                  onChange={(e) => {
-                    setThumbnailUrl(e.target.value);
-                    setPreviewUrl(e.target.value);
+              <input
+                type="url"
+                value={thumbnailUrl}
+                onChange={(e) => {
+                  setThumbnailUrl(e.target.value);
+                  setPreviewUrl(e.target.value);
+                }}
+                className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                placeholder="https://exemplo.com/imagem.jpg"
+              />
+            )}
+
+            {previewUrl && (
+              <div className="mt-3 relative rounded-2xl overflow-hidden border border-papelKraft/40 max-h-40">
+                <img src={previewUrl} alt="pré-visualização" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreviewUrl('');
+                    setThumbnailUrl('');
+                    setSelectedFile(null);
                   }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  placeholder="https://exemplo.com/imagem.jpg"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  Cole o URL de uma imagem hospedada externamente
-                </p>
-                {thumbnailUrl && (
-                  <div className="mt-3">
-                    <img
-                      src={thumbnailUrl}
-                      alt="Preview"
-                      className="max-h-48 rounded-lg object-cover"
-                      onError={() => setError('URL da imagem inválida')}
-                    />
-                  </div>
-                )}
+                  className="absolute top-2 right-2 p-1 bg-tintaCarvao/70 text-white rounded-full hover:bg-tintaCarvao transition"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tipo de Curso *
+            <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+              tipo de acesso
             </label>
-            <div className="flex space-x-4">
-              <label className="flex items-center">
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-corpo lowercase text-tintaCarvao">
                 <input
                   type="radio"
+                  name="courseType"
                   value="free"
                   checked={courseType === 'free'}
-                  onChange={(e) => setCourseType(e.target.value as 'free' | 'paid')}
-                  className="mr-2"
+                  onChange={() => setCourseType('free')}
+                  className="text-acentoAzul focus:ring-acentoAzul"
                 />
-                <span className="text-gray-700">Gratuito</span>
+                <span>gratuito (todas as alunas)</span>
               </label>
-              <label className="flex items-center">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-corpo lowercase text-tintaCarvao">
                 <input
                   type="radio"
+                  name="courseType"
                   value="paid"
                   checked={courseType === 'paid'}
-                  onChange={(e) => setCourseType(e.target.value as 'free' | 'paid')}
-                  className="mr-2"
+                  onChange={() => setCourseType('paid')}
+                  className="text-acentoAzul focus:ring-acentoAzul"
                 />
-                <span className="text-gray-700">Premium</span>
+                <span>exclusivo premium</span>
               </label>
             </div>
           </div>
 
           {courseType === 'paid' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Link de Pagamento Stripe
+              <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                link de checkout / pagamento (opcional)
               </label>
               <input
                 type="url"
                 value={stripePaymentLink}
                 onChange={(e) => setStripePaymentLink(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="https://buy.stripe.com/..."
+                className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                placeholder="https://checkout.stripe.com/..."
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Link de pagamento do Stripe para este curso premium
-              </p>
             </div>
           )}
 
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+          <div className="flex gap-3 pt-4 border-t border-papelKraft/30">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
-              disabled={loading || uploading}
+              className="flex-1 py-2.5 rounded-xl bg-white border border-papelKraft/40 text-tintaCarvao/70 text-xs font-corpo lowercase transition cursor-pointer"
             >
-              Cancelar
+              cancelar
             </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg font-medium hover:from-amber-600 hover:to-orange-700 transition disabled:opacity-50 flex items-center"
               disabled={loading || uploading}
+              className="flex-1 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] lowercase shadow-xs flex items-center justify-center gap-2 transition cursor-pointer disabled:opacity-50"
             >
-              {loading || uploading ? (
+              {loading ? (
                 <>
-                  <Loader className="w-4 h-4 mr-2 animate-spin" />
-                  {uploading ? 'Enviando...' : 'Salvando...'}
+                  <Loader className="w-4 h-4 animate-spin" />
+                  <span>salvando...</span>
                 </>
               ) : (
-                course ? 'Atualizar Curso' : 'Criar Curso'
+                <span>salvar oficina</span>
               )}
             </button>
           </div>
