@@ -9,6 +9,7 @@ import BroadcastManagement from '../components/BroadcastManagement';
 import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
 import PageContentManagement from '../components/PageContentManagement';
+import MediaGalleryManagement from '../components/MediaGalleryManagement';
 import {
   Users,
   BookOpen,
@@ -42,7 +43,7 @@ export default function Admin() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation' | 'checkout' | 'pages'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation' | 'checkout' | 'pages' | 'gallery'>('users');
   const [stats, setStats] = useState({
     totalUsers: 0,
     freeUsers: 0,
@@ -62,6 +63,7 @@ export default function Admin() {
   const messagesRef = useRef<HTMLDivElement>(null);
   const checkoutRef = useRef<HTMLDivElement>(null);
   const pagesRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadData();
@@ -99,6 +101,9 @@ export default function Admin() {
           break;
         case 'pages':
           ref = pagesRef;
+          break;
+        case 'gallery':
+          ref = galleryRef;
           break;
       }
 
@@ -386,6 +391,18 @@ export default function Admin() {
           >
             <Layers className="w-4 h-4" />
             <span>gestão de páginas (cms)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('gallery')}
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+              activeTab === 'gallery'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
+            }`}
+          >
+            <ImageIcon className="w-4 h-4" />
+            <span>banco de mídias & galeria</span>
           </button>
         </div>
 
@@ -684,6 +701,13 @@ export default function Admin() {
         {activeTab === 'pages' && (
           <div ref={pagesRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <PageContentManagement />
+          </div>
+        )}
+
+        {/* ABA 9: BANCO DE MÍDIAS & GALERIA */}
+        {activeTab === 'gallery' && (
+          <div ref={galleryRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
+            <MediaGalleryManagement />
           </div>
         )}
 

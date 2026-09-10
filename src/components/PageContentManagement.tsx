@@ -19,7 +19,9 @@ import {
   HelpCircle,
   X,
   Eye,
+  Grid,
 } from 'lucide-react';
+import MediaPickerModal from './MediaPickerModal';
 
 interface PageOption {
   slug: string;
@@ -103,6 +105,8 @@ export default function PageContentManagement() {
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [activePickerSecKey, setActivePickerSecKey] = useState<string | null>(null);
 
   useEffect(() => {
     loadCMS();
@@ -402,9 +406,22 @@ export default function PageContentManagement() {
                 
                 {/* GERENCIAMENTO DA IMAGEM DA SEÇÃO */}
                 <div className="space-y-2">
-                  <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
-                    foto da seção
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
+                      foto da seção
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActivePickerSecKey(sec.key);
+                        setIsPickerOpen(true);
+                      }}
+                      className="px-3 py-1 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul hover:text-white text-acentoAzul text-xs font-bold font-corpo lowercase transition cursor-pointer flex items-center gap-1"
+                    >
+                      <Grid className="w-3.5 h-3.5" />
+                      <span>escolher da galeria</span>
+                    </button>
+                  </div>
 
                   {sectionData.image_url ? (
                     <div className="relative rounded-2xl overflow-hidden border border-papelKraft/40 max-h-48 group">
@@ -414,6 +431,16 @@ export default function PageContentManagement() {
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-tintaCarvao/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActivePickerSecKey(sec.key);
+                            setIsPickerOpen(true);
+                          }}
+                          className="px-3 py-1.5 rounded-xl bg-acentoTerracota text-white font-bold text-xs cursor-pointer lowercase"
+                        >
+                          galeria
+                        </button>
                         <label className="px-3 py-1.5 rounded-xl bg-white text-acentoAzul font-bold text-xs cursor-pointer lowercase">
                           alterar foto
                           <input
@@ -435,25 +462,24 @@ export default function PageContentManagement() {
                       </div>
                     </div>
                   ) : (
-                    <label className="border border-dashed border-papelKraft/60 rounded-2xl p-5 text-center cursor-pointer hover:border-acentoAzul block bg-bgPlataforma">
-                      <Upload className="w-6 h-6 text-acentoAzul/50 mx-auto mb-1" />
-                      <span className="text-xs font-bold font-corpo text-acentoAzul lowercase block">
-                        {uploadingImage === sec.key ? 'enviando foto...' : '+ fazer upload de foto'}
-                      </span>
-                      <span className="text-[10px] font-corpo text-tintaCarvao/50 lowercase block">
-                        formatos recomendados: JPG, PNG, WebP (até 10MB)
-                      </span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleImageUpload(sec.key, file);
-                        }}
-                        className="hidden"
-                        disabled={uploadingImage === sec.key}
-                      />
-                    </label>
+                    <div className="space-y-2">
+                      <label className="border border-dashed border-papelKraft/60 rounded-2xl p-4 text-center cursor-pointer hover:border-acentoAzul block bg-bgPlataforma">
+                        <Upload className="w-5 h-5 text-acentoAzul/50 mx-auto mb-1" />
+                        <span className="text-xs font-bold font-corpo text-acentoAzul lowercase block">
+                          {uploadingImage === sec.key ? 'enviando foto...' : '+ fazer upload de foto'}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleImageUpload(sec.key, file);
+                          }}
+                          className="hidden"
+                          disabled={uploadingImage === sec.key}
+                        />
+                      </label>
+                    </div>
                   )}
                 </div>
 
@@ -506,6 +532,17 @@ export default function PageContentManagement() {
           <span>{saving ? 'salvando alterações...' : 'salvar todas as alterações da página'}</span>
         </button>
       </div>
+
+      {/* MODAL DE SELEÇÃO DE MÍDIA DA GALERIA */}
+      <MediaPickerModal
+        isOpen={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        onSelectUrl={(url) => {
+          if (activePickerSecKey) {
+            handleSectionChange(activePickerSecKey, 'image_url', url);
+          }
+        }}
+      />
 
     </div>
   );

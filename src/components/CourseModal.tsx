@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Upload, Image as ImageIcon, Loader } from 'lucide-react';
+import { X, Upload, Image as ImageIcon, Loader, Grid } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import RichTextEditor from './RichTextEditor';
+import MediaPickerModal from './MediaPickerModal';
 import type { Database } from '../lib/database.types';
 
 type Course = Database['public']['Tables']['courses']['Row'];
@@ -26,6 +27,7 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -260,6 +262,14 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
               >
                 url externa
               </button>
+              <button
+                type="button"
+                onClick={() => setIsPickerOpen(true)}
+                className="px-3 py-1.5 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul hover:text-white text-acentoAzul text-xs font-bold font-corpo lowercase transition cursor-pointer flex items-center gap-1"
+              >
+                <Grid className="w-3.5 h-3.5" />
+                <span>escolher da galeria</span>
+              </button>
             </div>
 
             {uploadMode === 'file' ? (
@@ -387,6 +397,17 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
           </div>
         </form>
       </div>
+
+      <MediaPickerModal
+        isOpen={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        onSelectUrl={(url) => {
+          setThumbnailUrl(url);
+          setPreviewUrl(url);
+          setSelectedFile(null);
+          setUploadMode('url');
+        }}
+      />
     </div>
   );
 }
