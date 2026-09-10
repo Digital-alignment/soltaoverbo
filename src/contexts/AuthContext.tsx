@@ -111,22 +111,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data.user) {
       const { error: profileError } = await supabase
         .from('users_profiles')
-        .insert({
+        .upsert({
           id: data.user.id,
           display_name: displayName,
           bio: '',
           role: 'free',
         });
 
-      if (profileError) throw profileError;
+      if (profileError) console.error('Erro ao criar perfil:', profileError);
+
+      if (data.session) {
+        setSession(data.session);
+        setUser(data.user);
+        await loadProfile(data.user.id);
+      }
     }
   };
 
   const signIn = async (email: string, password: string) => {
-    let { error } = await supabase.auth.signInWithPassword({
+    let authRes = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+
+    let error = authRes.error;
+    let session = authRes.data.session;
+    let user = authRes.data.user;
 
     if (error && (email.includes('aluno') || email.includes('admin'))) {
       try {
@@ -148,6 +158,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           });
           const retry = await supabase.auth.signInWithPassword({ email, password });
           error = retry.error;
+          session = retry.data.session;
+          user = retry.data.user;
         }
       } catch (e) {
         console.error('erro ao auto-criar usuário demo:', e);
@@ -155,6 +167,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     if (error) throw error;
+
+    if (session && user) {
+      setSession(session);
+      setUser(user);
+      await loadProfile(user.id);
+    }
   };
 
   const signInWithGoogle = async () => {
