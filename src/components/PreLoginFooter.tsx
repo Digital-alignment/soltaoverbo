@@ -14,7 +14,7 @@ export default function PreLoginFooter() {
     instagram_handle: '@soltaoverbo.coletivo',
     whatsapp: 'https://wa.link/w67ibp',
     email: 'info@soltaoverbocoletivo.com',
-    footer_phrase: 'autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.',
+    footer_phrase: 'autodesenvolvimento em coletivo através da escrita guiada.',
   });
 
   return (
@@ -58,7 +58,7 @@ export default function PreLoginFooter() {
                   }}
                 />
                 <p className="text-white/80 text-sm sm:text-base font-medium leading-relaxed max-w-xs lowercase">
-                  {contactsSec.footer_phrase || 'autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais.'}
+                  {contactsSec.footer_phrase || 'autodesenvolvimento em coletivo através da escrita guiada.'}
                 </p>
               </div>
 
@@ -92,12 +92,6 @@ export default function PreLoginFooter() {
                   >
                     contato
                   </button>
-                  <Link
-                    to="/roteirooriginal"
-                    className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
-                  >
-                    roteiro original
-                  </Link>
                 </div>
               </div>
 

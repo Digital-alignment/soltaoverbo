@@ -111,16 +111,16 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   programa_cafe_com_letras: {
     hero: {
-      title: "encontro mensal de escrita & aconchego",
-      subtitle: "um ritual de domingo com café quentinho, cadernos abertos e partilhas afetivas.",
+      title: "encontro semanal de escrita & aconchego",
+      subtitle: "um ritual de terça-feira das 8h às 8h30 com café quentinho, cadernos abertos e partilhas afetivas.",
       body_text: "encontros ao vivo para escrever em grupo, exercitar a escuta poética e criar conexões verdadeiras.",
-      button_text: "garantir ingresso para o próximo café →",
+      button_text: "garantir ingresso no café (r$ 97/mês) →",
       button_link: "#inscricao",
       image_url: "/brand-assets/gallery/events/_MG_9849.jpg"
     },
     detalhes: {
       title: "como funciona o café com letras",
-      subtitle: "duas horas de escrita guiada e roda de leitura opcional",
+      subtitle: "meia hora de escrita guiada e roda de leitura poética todas as terças às 8h",
       body_text: "preparamos o ambiente para você se sentir em casa. a cada edição, um tema inédito inspira nossos rituais de escrita e trocas humanas.",
       button_text: "participar da próxima edição →",
       button_link: "#inscricao",
@@ -131,8 +131,8 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
     hero: {
       title: "o ciclo de aprofundamento",
       subtitle: "uma jornada contínua para quem deseja transformar a escrita em prática diária de presença e autocompaixão.",
-      body_text: "encontros quinzenais ao vivo, mentoria coletiva com bruna e júlia, acervo completo de oficinas e comunidade exclusiva.",
-      button_text: "fazer parte do ciclo (r$ 597/ano) →",
+      body_text: "encontros ao vivo, mentoria coletiva com bruna e júlia, acervo completo de oficinas e comunidade exclusiva.",
+      button_text: "fazer parte do ciclo (r$ 597/trimestre) →",
       button_link: "#planos",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
     },
@@ -147,16 +147,16 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   contrate_experiencia: {
     hero: {
-      title: "experiências de escrita autoral sob medida",
-      subtitle: "levamos rituais de escrita consciente, integração humana e expressão autêntica para empresas, festivais e coletivos.",
+      title: "crie com a gente",
+      subtitle: "criamos laboratórios e rituais de escrita autoral sob medida para marcas, festivais, eventos e encontros coletivos.",
       body_text: "desenvolvemos vivências presenciais e virtuais customizadas para a cultura da sua equipe ou evento.",
       button_text: "falar com a equipe no whatsapp →",
       button_link: "https://wa.me/5531999999999",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
     },
     proposta: {
-      title: "proposta de rituais corporativos",
-      subtitle: "saúde mental, escuta ativa e coesão de time através da palavra",
+      title: "experiência de escrita em eventos",
+      subtitle: "saúde mental, escuta ativa e coesão através da palavra",
       body_text: "nossos rituais de escrita promovem conexão genuína, redução de estresse e fortalecimento da autoria individual em ambientes corporativos e eventos especiais.",
       button_text: "solicitar proposta personalizada →",
       button_link: "https://wa.me/5531999999999",
@@ -171,8 +171,8 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       whatsapp_number: "+55 (31) 99999-9999",
       instagram: "https://www.instagram.com/soltaoverbo.coletivo/",
       instagram_handle: "@soltaoverbo.coletivo",
-      email: "info@soltaoverbocoletivo.com",
-      footer_phrase: "autodesenvolvimento em coletivo através da escrita guiada e rituais presenciais."
+      email: "soltaoverbocoletivo@gmail.com",
+      footer_phrase: "autodesenvolvimento em coletivo através da escrita autoral e encontros virtuais."
     }
   }
 };

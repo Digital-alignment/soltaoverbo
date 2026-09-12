@@ -12,13 +12,16 @@ import {
   Building2,
   Compass,
   LogIn,
+  Sparkles,
 } from 'lucide-react';
 import { BRAND_ASSETS } from '../config/brandAssets';
+import ObserverTourModal from './ObserverTourModal';
 
 export default function PreLoginNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isTourOpen, setIsTourOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const location = useLocation();
@@ -273,6 +276,15 @@ export default function PreLoginNavbar() {
                   <span className="absolute -bottom-1.5 left-0 right-0 h-0.5 bg-acentoOliva rounded-full" />
                 )}
               </Link>
+
+              {/* Conhecer por dentro (Modo Observador / Tour Virtual) */}
+              <button
+                onClick={() => setIsTourOpen(true)}
+                className="font-medium transition-colors duration-200 lowercase relative flex items-center gap-2 text-base xl:text-lg text-tintaCarvao/80 hover:text-acentoAzul bg-transparent border-none cursor-pointer p-0"
+              >
+                <Sparkles className="w-4 h-4 text-acentoTerracota" />
+                <span>conhecer por dentro</span>
+              </button>
             </nav>
 
             {/* Ações Direitas Desktop (Entrar & Fazer Parte com UI melhorada e íconos) */}
@@ -406,6 +418,19 @@ export default function PreLoginNavbar() {
                   </div>
                   {isActive('/about') && <ArrowRight className="w-4 h-4 text-white" />}
                 </Link>
+
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsTourOpen(true);
+                  }}
+                  className="p-3.5 rounded-2xl font-bold text-sm lowercase flex items-center justify-between transition-all text-tintaCarvao hover:bg-bgPlataforma w-full bg-transparent border-none cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-acentoTerracota" />
+                    <span>conhecer por dentro</span>
+                  </div>
+                </button>
               </nav>
             </div>
 
@@ -432,6 +457,9 @@ export default function PreLoginNavbar() {
           </div>
         </div>
       )}
+
+      {/* Modal de Modo Observador / Tour pela Plataforma */}
+      <ObserverTourModal isOpen={isTourOpen} onClose={() => setIsTourOpen(false)} />
     </>
   );
 }

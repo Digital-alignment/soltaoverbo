@@ -27,6 +27,7 @@ import {
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import PaymentModal, { ProductKey } from '../components/PaymentModal';
 import { usePageContent } from '../hooks/usePageContent';
 
 interface DynamicStep {
@@ -90,7 +91,7 @@ const faqItems = [
   },
   {
     q: 'quando acontecem os encontros ao vivo?',
-    a: 'os encontros do ciclo acontecem quinzenalmente via zoom (1h30 de duração) mais o café com letras semanal (segundas às 8h). a agenda completa é enviada com antecedência.',
+    a: 'os encontros do ciclo acontecem quinzenalmente via zoom (1h30 de duração) mais o café com letras semanal (terças às 8h). a agenda completa é enviada com antecedência.',
   },
   {
     q: 'e se eu não puder participar ao vivo de algum encontro?',
@@ -112,7 +113,7 @@ export default function ProgramaCiclo() {
     title: 'o ciclo de aprofundamento',
     subtitle: 'uma jornada contínua para quem deseja transformar a escrita em prática diária de presença e autocompaixão.',
   });
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
   // Estado do Carrossel de Screenshots de Depoimentos
@@ -121,7 +122,6 @@ export default function ProgramaCiclo() {
   const [isPaused, setIsPaused] = useState(false);
 
   const navigate = useNavigate();
-  const youtubeVideoId = 'dQw4w9WgXcQ';
 
   // Auto-play do carrossel a cada 4 segundos
   useEffect(() => {
@@ -133,8 +133,7 @@ export default function ProgramaCiclo() {
   }, [isPaused, selectedScreenshot]);
 
   const handleEnroll = () => {
-    localStorage.setItem('checkout_intent', 'ciclo');
-    navigate('/register?product=ciclo');
+    setIsPaymentModalOpen(true);
   };
 
   const nextSlide = () => {
@@ -207,7 +206,7 @@ export default function ProgramaCiclo() {
                 </div>
               </div>
 
-              {/* Botões CTA Principais */}
+              {/* Botão CTA Principal */}
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <button
                   onClick={handleEnroll}
@@ -216,14 +215,6 @@ export default function ProgramaCiclo() {
                   <span>garantir minha vaga no ciclo — R$ 597 no PIX</span>
                   <Pencil className="w-5 h-5 text-white" />
                 </button>
-
-                <a
-                  href="#video-apresentacao"
-                  className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base px-7 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2 cursor-pointer lowercase"
-                >
-                  <span>ver vídeo das facilitadoras</span>
-                  <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
-                </a>
               </div>
             </div>
 
@@ -777,6 +768,13 @@ export default function ProgramaCiclo() {
           </div>
         </div>
       </section>
+
+      {/* Modal de Pagamento Interativo */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        product="ciclo"
+      />
 
       {/* 11. PreLoginFooter Poético com Shader WebGL */}
       <PreLoginFooter />

@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { X, Loader } from 'lucide-react';
 import { createCheckoutSession } from '../lib/stripe';
 
+export type ProductKey = '21dias' | 'ciclo' | 'cafe' | 'geral';
+
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userEmail: string;
+  userEmail?: string;
+  product?: ProductKey;
 }
 
 interface InstallmentOption {
@@ -16,25 +19,58 @@ interface InstallmentOption {
 }
 
 const INSTALLMENT_OPTIONS: InstallmentOption[] = [
-  { months: 2, priceId: import.meta.env.VITE_STRIPE_PRICE_2X || '', monthlyAmount: 748.50 },
-  { months: 3, priceId: import.meta.env.VITE_STRIPE_PRICE_3X || '', monthlyAmount: 499.00 },
-  { months: 4, priceId: import.meta.env.VITE_STRIPE_PRICE_4X || '', monthlyAmount: 374.25 },
-  { months: 5, priceId: import.meta.env.VITE_STRIPE_PRICE_5X || '', monthlyAmount: 299.40, isHighlighted: true },
+  { months: 2, priceId: import.meta.env.VITE_STRIPE_PRICE_2X || '', monthlyAmount: 38.50 },
+  { months: 3, priceId: import.meta.env.VITE_STRIPE_PRICE_3X || '', monthlyAmount: 225.67, isHighlighted: true },
 ];
 
 const PRICE_IDS = {
   ONE_TIME: import.meta.env.VITE_STRIPE_PRICE_ONE_TIME || '',
   TWO_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_2X || '',
   THREE_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_3X || '',
-  FOUR_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_4X || '',
-  FIVE_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_5X || '',
 };
 
-export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModalProps) {
+export default function PaymentModal({ isOpen, onClose, userEmail = '', product = '21dias' }: PaymentModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selectedInstallment, setSelectedInstallment] = useState<InstallmentOption>(INSTALLMENT_OPTIONS[0]);
+  const [selectedInstallment, setSelectedInstallment] = useState<InstallmentOption>(INSTALLMENT_OPTIONS[1]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const productDetails = {
+    '21dias': {
+      title: '21 dias de escrita',
+      subtitle: 'jornada prática para criar um hábito sustentado de escrita autoral',
+      priceText: 'R$ 77,00',
+      installmentText: 'ou 2x R$ 38,50',
+      whatsappMessage: 'Olá! Quero garantir minha vaga nos 21 dias de escrita por R$ 77,00 via PIX.',
+    },
+    ciclo: {
+      title: 'ciclo de aprofundamento',
+      subtitle: 'mentoria ao vivo, rodas quinzenais e acesso contínuo à comunidade',
+      priceText: 'R$ 597,00',
+      installmentText: '/ trimestre (ou 3x R$ 225,67 sem juros)',
+      whatsappMessage: 'Olá! Quero fazer parte do ciclo de aprofundamento (R$ 597,00/trimestre) via PIX.',
+    },
+    cafe: {
+      title: 'café com letras',
+      subtitle: 'rodas temáticas semanais de escrita ao vivo toda terça-feira 8h–8h30',
+      priceText: 'R$ 97,00',
+      installmentText: '/ mês (incluso no ciclo de aprofundamento)',
+      whatsappMessage: 'Olá! Quero me inscrever no café com letras (R$ 97,00/mês) via PIX.',
+    },
+    geral: {
+      title: 'plano de assinatura solta o verbo',
+      subtitle: 'acesso completo a todas as experiências e comunidade',
+      priceText: 'R$ 597,00',
+      installmentText: '/ trimestre',
+      whatsappMessage: 'Olá! Gostaria de informações sobre formas de pagamento.',
+    },
+  }[product] || {
+    title: '21 dias de escrita',
+    subtitle: 'jornada prática para criar um hábito sustentado de escrita autoral',
+    priceText: 'R$ 77,00',
+    installmentText: 'ou 2x R$ 38,50',
+    whatsappMessage: 'Olá! Quero garantir minha vaga no Solta o Verbo.',
+  };
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -87,147 +123,106 @@ export default function PaymentModal({ isOpen, onClose, userEmail }: PaymentModa
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
+      className="fixed inset-0 bg-tintaCarvao/50 backdrop-blur-xs flex items-center justify-center z-[99999] p-4 overflow-y-auto"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white rounded-3xl max-w-2xl w-full my-8 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
-        <div className="flex justify-between items-center p-4 sm:p-6 md:p-8 border-b border-deepBlue/10">
-          <h2 className="font-editorial text-xl sm:text-2xl md:text-3xl text-deepBlue">Escolha Seu Plano</h2>
+      <div className="bg-papelClaro rounded-3xl max-w-xl w-full my-8 shadow-kraft-lg border border-papelKraft/60 animate-in fade-in zoom-in-95 duration-300 overflow-hidden">
+        {/* Cabeçalho */}
+        <div className="flex justify-between items-start p-6 sm:p-8 border-b border-papelKraft/40 bg-bgPlataforma">
+          <div>
+            <span className="text-xs font-bold text-acentoTerracota uppercase tracking-wider block mb-1">
+              opções de inscrição
+            </span>
+            <h2 className="font-editorial text-2xl sm:text-3xl text-acentoAzul font-bold lowercase">
+              {productDetails.title}
+            </h2>
+            <p className="text-sm text-tintaCarvao/80 font-medium lowercase mt-1">
+              {productDetails.subtitle}
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-deepBlue/10 rounded-lg transition-colors flex-shrink-0"
+            className="p-2 hover:bg-papelKraft/20 rounded-full transition-colors flex-shrink-0 text-tintaCarvao/60 hover:text-tintaCarvao"
             aria-label="Fechar modal"
           >
-            <X className="w-5 h-5 sm:w-6 sm:h-6 text-deepBlue" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
-        <div className="p-4 sm:p-6 md:p-8">
+        <div className="p-6 sm:p-8 space-y-6">
           {error && (
-            <div className="mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+            <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
               {error}
             </div>
           )}
 
-          <div className="space-y-4 sm:space-y-6">
-            <div className="bg-gradient-to-br from-deepBlue/5 to-deepBlue/10 rounded-2xl p-4 sm:p-5 md:p-6 border border-deepBlue/10 hover:border-deepBlue/20 transition-all duration-300">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm text-deepBlue/70 font-medium">Pagamento Único</p>
-                  <p className="text-2xl sm:text-3xl font-bold text-deepBlue mt-1">R$ 1.497,00</p>
-                  <p className="text-xs text-deepBlue/50 mt-2">Acesso integral por 1 ano</p>
+          {/* Opção 1: Valor Principal & Checkout Direct */}
+          <div className="bg-bgPlataforma rounded-2xl p-5 border border-papelKraft/60 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <span className="text-xs font-bold text-tintaCarvao/60 uppercase block">
+                  investimento
+                </span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className="text-3xl font-bold font-editorial text-acentoAzul">
+                    {productDetails.priceText}
+                  </span>
+                  <span className="text-xs text-tintaCarvao/70 lowercase font-medium">
+                    {productDetails.installmentText}
+                  </span>
                 </div>
+              </div>
+
+              {PRICE_IDS.ONE_TIME ? (
                 <button
                   onClick={() => !loading && handleCheckout(PRICE_IDS.ONE_TIME, 'payment')}
                   disabled={loading}
-                  className="btn-primary py-3 px-6 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap w-full md:w-auto"
+                  className="btn-pill-primary text-sm px-6 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {loading ? (
                     <>
-                      <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                      Processando...
+                      <Loader className="w-4 h-4 animate-spin text-white" />
+                      <span>processando...</span>
                     </>
                   ) : (
-                    'Pagar Agora'
+                    <span>pagar agora</span>
                   )}
                 </button>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-blue-50/60 to-blue-100/40 rounded-2xl p-4 sm:p-5 md:p-6 border border-blue-200 hover:border-blue-300 transition-all duration-300">
-              <div className="space-y-4">
-                <div className="flex flex-col gap-4">
-                  <div className="flex-1">
-                    <p className="text-xs sm:text-sm text-deepBlue/70 font-medium mb-3 sm:mb-4">Parcelas</p>
-
-                    <div className="relative w-full">
-                      <button
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                        disabled={loading}
-                        className="w-full bg-white border-2 border-blue-300 hover:border-blue-400 disabled:opacity-50 disabled:cursor-not-allowed text-deepBlue font-semibold py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-between text-sm sm:text-base"
-                      >
-                        <span>{selectedInstallment.months}x de R$ {selectedInstallment.monthlyAmount.toFixed(2)}</span>
-                        <svg
-                          className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                        </svg>
-                      </button>
-
-                      {dropdownOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-blue-300 rounded-xl shadow-lg z-10 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                          {INSTALLMENT_OPTIONS.map((option) => (
-                            <button
-                              key={option.months}
-                              onClick={() => {
-                                setSelectedInstallment(option);
-                                setDropdownOpen(false);
-                              }}
-                              className={`w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 transition-all duration-200 text-sm sm:text-base ${
-                                selectedInstallment.months === option.months
-                                  ? 'bg-blue-100 border-l-4 border-blue-500 text-deepBlue font-semibold'
-                                  : 'hover:bg-blue-50 text-deepBlue/80'
-                              }`}
-                            >
-                              <div className="flex justify-between items-center gap-2">
-                                <span className="truncate">{option.months}x de R$ {option.monthlyAmount.toFixed(2)}</span>
-                                {option.isHighlighted && (
-                                  <span className="text-xs bg-limeGreen text-white px-2 py-1 rounded-full font-bold whitespace-nowrap">
-                                    Melhor opção
-                                  </span>
-                                )}
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => !loading && handleCheckout(selectedInstallment.priceId, 'subscription')}
-                    disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed text-white font-bold py-3 px-6 sm:px-8 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap w-full"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                        Processando...
-                      </>
-                    ) : (
-                      'Parcelar Agora'
-                    )}
-                  </button>
-                </div>
-
-                <p className="text-xs text-deepBlue/50">Acesso integral por 1 ano</p>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-green-50 to-green-25 rounded-2xl p-4 sm:p-5 md:p-6 border border-green-200 hover:border-green-300 transition-all duration-300">
-              <div className="flex flex-col gap-4">
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm text-deepBlue/70 font-medium">Pagar com PIX</p>
-                  <p className="text-xs text-limeGreen font-bold mt-2 lowercase tracking-wide">Desconto especial nesta forma de pagamento</p>
-                  <p className="text-xs text-deepBlue/50 mt-2">Acesso integral por 1 ano</p>
-                </div>
-                <a
-                  href="https://wa.link/nyiqy2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-limeGreen hover:bg-limeGreen/90 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap w-full"
-                >
-                  Pagar via WhatsApp
-                </a>
-              </div>
+              ) : null}
             </div>
           </div>
 
-          <div className="text-center text-deepBlue/60 text-xs sm:text-sm border-t border-deepBlue/10 pt-4 sm:pt-6 mt-4">
-            <p>Todas as opções incluem acesso total por 1 ano</p>
+          {/* Opção 2: Pagamento Chave PIX & WhatsApp */}
+          <div className="bg-white rounded-2xl p-5 border border-papelKraft/60 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-bold text-acentoAzul text-base lowercase font-editorial">
+                  pagamento via pix ou atendimento humano
+                </h4>
+                <p className="text-xs text-tintaCarvao/70 font-medium lowercase">
+                  receba a chave pix direta e auxílio imediato pelo whatsapp da equipe
+                </p>
+              </div>
+            </div>
+
+            <a
+              href={`https://wa.me/5548991823637?text=${encodeURIComponent(productDetails.whatsappMessage)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 px-6 rounded-full transition-all flex items-center justify-center gap-2.5 text-sm shadow-sm cursor-pointer"
+            >
+              <span>garantir vaga pelo whatsapp</span>
+            </a>
+          </div>
+
+          {/* Opção 3: Criar Conta / Fazer Login primeiro */}
+          <div className="text-center pt-2 border-t border-papelKraft/30">
+            <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+              já tem uma conta?{' '}
+              <a href="/login" className="text-acentoAzul font-bold hover:underline">
+                fazer login na área de membros
+              </a>
+            </p>
           </div>
         </div>
       </div>

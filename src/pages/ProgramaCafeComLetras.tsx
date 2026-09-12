@@ -84,11 +84,11 @@ const deploymentScreenshots = [
 const faqItems = [
   {
     q: 'quando acontecem os encontros do café com letras?',
-    a: 'todas as segundas-feiras, das 8:00 às 8:30 da manhã (horário de brasília), ao vivo via zoom. exatamente 30 minutos para alinhar a semana.',
+    a: 'todas as terças-feiras, das 8:00 às 8:30 da manhã (horário de brasília), ao vivo via zoom. exatamente 30 minutos para alinhar a semana.',
   },
   {
-    q: 'e se eu não puder participar ao vivo na segunda às 8h?',
-    a: 'não tem problema! a proposta do disparador poético e a gravação do encontro ficam salvas na área de membros para você assistir e escrever no momento que preferir.',
+    q: 'e se eu não puder participar ao vivo na terça às 8h?',
+    a: 'se você não puder participar ao vivo, o exercício será enviado no grupo do WhatsApp "café com letras" da comunidade.',
   },
   {
     q: 'sou obrigada a ler meu texto em voz alta?',
@@ -156,14 +156,14 @@ export default function ProgramaCafeComLetras() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                café com letras: <br className="hidden sm:inline" />
+                café com letras <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  {heroSec.title || 'bora ajustar esse encontro juntos?'}
+                  {heroSec.title || 'escrita em coletivo'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                {heroSec.subtitle || 'olá! que bom que você chegou aqui. a solta o verbo acredita no poder da escrita coletiva como ferramenta de autoconhecimento. criamos o café com letras para transformar o início da sua semana através da palavra.'}
+                {heroSec.subtitle || 'quer saber como é estar com a gente? participe de um café com letras, e conheça a nossa comunidade.'}
               </p>
 
               {/* Destaque Logístico & Preço */}
@@ -175,7 +175,7 @@ export default function ProgramaCafeComLetras() {
                     </span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
-                        R$ 37,00
+                        R$ 97,00
                       </span>
                       <span className="text-xs sm:text-sm text-tintaCarvao/70 lowercase font-medium">
                         /mês (ou grátis no ciclo)
@@ -192,7 +192,7 @@ export default function ProgramaCafeComLetras() {
                 <div className="grid grid-cols-2 gap-3 text-xs text-tintaCarvao/80 font-medium lowercase">
                   <div className="flex items-center gap-2 bg-bgPlataforma p-2.5 rounded-xl border border-papelKraft/30">
                     <Calendar className="w-4 h-4 text-acentoTerracota flex-shrink-0" />
-                    <span>toda segunda-feira</span>
+                    <span>toda terça-feira</span>
                   </div>
                   <div className="flex items-center gap-2 bg-bgPlataforma p-2.5 rounded-xl border border-papelKraft/30">
                     <Clock className="w-4 h-4 text-acentoTerracota flex-shrink-0" />
@@ -207,17 +207,9 @@ export default function ProgramaCafeComLetras() {
                   onClick={handleEnroll}
                   className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
                 >
-                  <span>garantir minha xícara por R$ 37/mês</span>
+                  <span>garantir minha xícara por R$ 97/mês</span>
                   <Pencil className="w-5 h-5 text-white" />
                 </button>
-
-                <a
-                  href="#video-apresentacao"
-                  className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base px-7 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2 cursor-pointer lowercase"
-                >
-                  <span>ver vídeo das facilitadoras</span>
-                  <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
-                </a>
               </div>
             </div>
 
@@ -249,71 +241,10 @@ export default function ProgramaCafeComLetras() {
                     “o café esquenta a xícara, a escrita acolhe a semana e a palavra cria laços reais.”
                   </blockquote>
                   <p className="text-xs text-tintaCarvao/60 font-mono lowercase pt-2 border-t border-papelKraft/30">
-                    rodas de segunda // solta o verbo colectivo
+                    rodas de terça // solta o verbo colectivo
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. SEÇÃO VÍDEO DE APRESENTAÇÃO DE YOUTUBE */}
-      <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
-              <span>mensagem das facilitadoras</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              assista à apresentação do café com letras
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              bruna riedel e júlia alvim contam como 30 minutos na segunda-feira podem transformar a sua semana.
-            </p>
-          </div>
-
-          <div className="relative rounded-3xl bg-bgPlataforma p-3 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
-            <div className="absolute -top-2 left-8 sm:left-12 w-28 sm:w-36 h-7 sm:h-9 pointer-events-none z-30 opacity-90">
-              <img
-                src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
-                alt="fita washi"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-papelKraft/40 shadow-inner bg-acentoAzul">
-              {!isPlayingVideo ? (
-                <div
-                  onClick={() => setIsPlayingVideo(true)}
-                  className="absolute inset-0 cursor-pointer group/thumb w-full h-full"
-                >
-                  <img
-                    src="/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
-                    alt="capa do video café com letras"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover/thumb:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/85 via-acentoAzul/40 to-acentoAzul/30 transition-opacity duration-300 group-hover/thumb:opacity-90" />
-
-                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover/thumb:scale-110 group-hover/thumb:bg-acentoTerracota/90 animate-pulse mb-3">
-                      <Play className="w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 fill-white translate-x-0.5" />
-                    </div>
-                    <span className="bg-papelClaro/95 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-base shadow-lg lowercase border border-papelKraft/50">
-                      clique para assistir (3 min)
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <iframe
-                  className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0`}
-                  title="Café com Letras - Apresentação"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              )}
             </div>
           </div>
         </div>
@@ -347,7 +278,7 @@ export default function ProgramaCafeComLetras() {
                   <Coffee className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  ritual de segunda-feira
+                  ritual de terça-feira
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
                   30 minutos das 8h às 8h30 para começar a semana com presença, calma e foco antes do barulho do cotidiano.
@@ -424,7 +355,7 @@ export default function ProgramaCafeComLetras() {
               <span>dinâmica do encontro (30 min)</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              como funcionam as segundas de manhã
+              como funcionam as terças de manhã
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
               uma estrutura leve de 30 minutos via zoom para ajustar o tom da sua semana.
@@ -489,7 +420,7 @@ export default function ProgramaCafeComLetras() {
               <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>quer começar a segunda-feira com foco, calma e presença interior</span>
+                  <span>quer começar a terça-feira com foco, calma e presença interior</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
@@ -688,11 +619,11 @@ export default function ProgramaCafeComLetras() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase">
-              pronta para transformar suas segundas-feiras?
+              pronta para transformar a sua semana?
             </h2>
 
             <p className="text-papelClaro/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
-              garanta seu passe mensal do café com letras e tenha acesso a todas as rodas ao vivo das segundas às 8h e ao grupo exclusivo.
+              garanta seu passe mensal do café com letras e tenha acesso a todas as rodas ao vivo das terças às 8h e ao grupo exclusivo.
             </p>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
@@ -702,7 +633,7 @@ export default function ProgramaCafeComLetras() {
 
               <div className="flex justify-center items-baseline gap-2">
                 <span className="text-4xl sm:text-5xl font-bold font-editorial text-white">
-                  R$ 37,00
+                  R$ 97,00
                 </span>
                 <span className="text-sm text-papelClaro/80 lowercase">
                   /mês (100% grátis para assinantes do ciclo)
@@ -720,7 +651,7 @@ export default function ProgramaCafeComLetras() {
                 onClick={handleEnroll}
                 className="btn-pill-accent text-lg px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3 w-full sm:w-auto lowercase cursor-pointer"
               >
-                <span>sim! quero garantir minha vaga por R$ 37/mês</span>
+                <span>sim! quero garantir minha vaga por R$ 97/mês</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

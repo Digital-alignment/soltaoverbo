@@ -14,11 +14,17 @@ import PreLoginFooter from '../components/PreLoginFooter';
 import FaqAccordion from '../components/FaqAccordion';
 import ContrateExperienciaSection from '../components/ContrateExperienciaSection';
 import FoundersSection from '../components/FoundersSection';
-import { BRAND_ASSETS } from '../config/brandAssets';
-import { usePageContent } from '../hooks/usePageContent';
+import PaymentModal, { ProductKey } from '../components/PaymentModal';
 
 export default function Landing() {
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductKey>('21dias');
   const { getSection } = usePageContent('landing');
+
+  const openPayment = (prod: ProductKey) => {
+    setSelectedProduct(prod);
+    setPaymentModalOpen(true);
+  };
   const heroSec = getSection('hero', {
     title: 'a narrativa muda a partir do ponto que você solta o verbo.',
     subtitle: 'reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.',
@@ -99,11 +105,11 @@ export default function Landing() {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
                 />
-                <span>mentoria coletiva & escrita consciente</span>
+                <span>comunidade de autodesenvolvimento através da escrita</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                roteiro original: <br className="hidden sm:inline" />
+                solta o verbo <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
                   {heroSec.title || 'a narrativa muda a partir do ponto que você solta o verbo.'}
                 </span>
@@ -196,7 +202,7 @@ export default function Landing() {
                   escolha a experiência ideal para o seu momento
                 </h2>
                 <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase max-w-2xl mx-auto lg:mx-0">
-                  três formatos desenhados para acolher a sua jornada de escrita, do primeiro passo ao aprofundamento contínuo.
+                  saiba como você pode fazer parte da nossa comunidade.
                 </p>
               </div>
 
@@ -228,11 +234,11 @@ export default function Landing() {
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
-                      21 dias de escrita (sua história tem valor)
+                      21 dias de escrita
                     </h3>
 
                     <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      uma jornada prática de 21 dias para desbloquear sua voz e criar um hábito vivo de escrita guiada. receba exercícios diários, áudios inspiradores e acesso à fogueira de apoio durante todo o desafio.
+                      uma jornada prática de 21 dias para desbloquear sua voz e criar um hábito vivo de escrita guiada. receba exercícios diários, áudios inspiradores e acesso à área de membros.
                     </p>
 
                     <ul className="space-y-3 pt-2 text-tintaCarvao/90 font-medium text-base lowercase">
@@ -242,11 +248,11 @@ export default function Landing() {
                       </li>
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>áudios de reflexão e acervo em formato de podcast interno</span>
+                        <span>acesso a área de membros, espaço de compartilhamento de textos e conexão</span>
                       </li>
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>acesso à fogueira comunitária durante os 21 dias de jornada</span>
+                        <span>1 café com letras por mês com a comunidade</span>
                       </li>
                     </ul>
                   </div>
@@ -266,13 +272,13 @@ export default function Landing() {
                       </div>
                     </div>
 
-                    <Link
-                      to="/register?product=21dias"
-                      className="btn-pill-primary text-base px-7 py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2"
+                    <button
+                      onClick={() => openPayment('21dias')}
+                      className="btn-pill-primary text-base px-7 py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>garantir minha vaga</span>
                       <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
 
@@ -314,11 +320,11 @@ export default function Landing() {
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-papelClaro lowercase">
-                      ciclo de aprofundamento (comunidade paga)
+                      ciclo de aprofundamento
                     </h3>
 
                     <p className="text-papelClaro/90 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      o espaço contínuo de mentoria e escrita em grupo. encontros quinzenais ao vivo com bruna e júlia, mentoria em tempo real, acervo completo de gravações e acesso ilimitado à fogueira durante todo o ano.
+                      o espaço contínuo de mentoria e escrita em grupo. encontros quinzenais ao vivo com bruna e júlia, mentoria em tempo real, acervo completo de gravações e acesso à comunidade.
                     </p>
 
                     <ul className="space-y-3 pt-2 text-papelClaro/90 font-medium text-base lowercase">
@@ -328,7 +334,7 @@ export default function Landing() {
                       </li>
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>acesso contínuo e ilimitado à fogueira de partilha 365 dias por ano</span>
+                        <span>acesso contínuo à fogueira de partilha e canais exclusivos</span>
                       </li>
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
@@ -340,25 +346,25 @@ export default function Landing() {
                   <div className="pt-6 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div className="space-y-0.5">
                       <span className="text-[11px] font-bold text-papelClaro/70 lowercase block">
-                        plano anual especial
+                        assinatura trimestral
                       </span>
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl sm:text-3xl font-bold font-editorial text-white">
                           R$ 597,00
                         </span>
                         <span className="text-xs sm:text-sm font-medium text-papelClaro/80 lowercase">
-                          / ano (ou 3x R$ 239,00)
+                          / trimestre (ou 3x R$ 225,67 sem juros)
                         </span>
                       </div>
                     </div>
 
-                    <Link
-                      to="/register?product=ciclo"
-                      className="btn-pill-accent text-base px-7 py-3 rounded-full shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2"
+                    <button
+                      onClick={() => openPayment('ciclo')}
+                      className="btn-pill-accent text-base px-7 py-3 rounded-full shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>fazer parte do ciclo</span>
                       <Users className="w-4 h-4" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
 
@@ -400,29 +406,29 @@ export default function Landing() {
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
-                      café com letras (rodas de escrita)
+                      café com letras (escrita em coletivo)
                     </h3>
 
                     <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      nossas rodas temáticas presenciais e virtuais com café quente, cadernos abertos e leitura em grupo. um espaço intimista para experimentar propostas poéticas pontuais.
+                      toda terça-feira, das 8h às 8h30, via zoom. um tema diferente toda semana para começar a semana soltando o verbo em coletivo. incluso no ciclo de aprofundamento, e quem comprar os 21 dias de escrita tem direito a participar de 1 café com letras por mês.
                     </p>
                   </div>
 
                   <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div className="space-y-0.5">
                       <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase block">
-                        modalidade por edição
+                        encontro semanal ao vivo
                       </span>
                       <span className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase block">
-                        inscrições por evento
+                        R$ 97,00 / mês
                       </span>
                     </div>
 
                     <Link
-                      to="/programs#cafe-com-letras"
+                      to="/programas/ciclo-de-aprofundamento"
                       className="btn-pill-secondary text-base px-7 py-3 rounded-full border border-papelKraft/70 hover:bg-papelClaro transition-all flex items-center justify-center gap-2"
                     >
-                      <span>ver próximas edições</span>
+                      <span>faça parte</span>
                       <ArrowRight className="w-4 h-4 text-acentoAzul" />
                     </Link>
                   </div>

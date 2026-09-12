@@ -73,8 +73,8 @@ export default function ContrateExperienciaSection() {
     },
     {
       icon: Users2,
-      badge: 'coletivos & retiros',
-      title: 'rodas de escrita para coletivos',
+      badge: 'eventos e experiências',
+      title: 'experiência de escrita em eventos',
       description: 'encontros presenciais ou virtuais sob medida para festivais, comunidades, retiros e grupos de reflexão.',
     },
     {
@@ -112,11 +112,11 @@ export default function ContrateExperienciaSection() {
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
-                contrate uma experiência solta o verbo
+                crie com a gente
               </h2>
 
               <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
-                levamos nossas vivências, rodas de escrita consciente e oficinas narrativas sob medida para a sua equipe, retiro ou evento presencial.
+                leve uma experiência de escrita da solta o verbo para a sua organização, e desenvolva o senso de pertencimento a partir da escrita expressiva.
               </p>
             </div>
 
@@ -195,7 +195,7 @@ export default function ContrateExperienciaSection() {
             </div>
           </div>
 
-          {/* Highlights Bento Grid Compacto e Dinâmico */}
+          {/* Highlights Bento Grid Compacto e Dinâmico (Sem o botão interno 'saiba mais') */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {highlights.map(({ icon: Icon, badge, title, description }, idx) => (
               <div
@@ -219,13 +219,27 @@ export default function ContrateExperienciaSection() {
                     {description}
                   </p>
                 </div>
-
-                <div className="pt-4 mt-4 border-t border-papelKraft/30 flex items-center justify-between text-xs font-bold text-acentoAzul opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>saiba mais</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </div>
               </div>
             ))}
+          </div>
+
+          {/* NOVA BOX DE TEORIA E REFERÊNCIAS (Item 1.3 - Pennebaker & Ebbinghaus) */}
+          <div className="bg-bgPlataforma rounded-2xl p-6 sm:p-8 border border-papelKraft/60 shadow-sm space-y-4 relative overflow-hidden">
+            <span className="text-xs font-bold text-acentoTerracota uppercase tracking-widest block">
+              base científica & metodológica
+            </span>
+            <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+              nosso trabalho é construído a partir de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem estar emocional, e a curva do esquecimento de ebbinghaus, que reforça a importância da prática recorrente da escrita e não apenas de um encontro isolado.
+            </p>
+            <div className="pt-2">
+              <a
+                href="mailto:soltaoverbocoletivo@gmail.com"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-acentoAzul text-white text-xs sm:text-sm font-bold lowercase hover:bg-acentoAzul/90 transition-all cursor-pointer shadow-xs"
+              >
+                <span>enviar e-mail</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
           {/* Banner CTA WhatsApp Elegante com Marca D'Água e Alto Contraste */}

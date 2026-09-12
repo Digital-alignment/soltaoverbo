@@ -23,6 +23,7 @@ import {
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
+import PaymentModal, { ProductKey } from '../components/PaymentModal';
 import { usePageContent } from '../hooks/usePageContent';
 
 interface WeekPhase {
@@ -128,10 +129,10 @@ const faqItems = [
 export default function Programa21Dias() {
   const { getSection } = usePageContent('programa_21_dias');
   const heroSec = getSection('hero', {
-    title: '21 dias de escrita autoral & respiro interno',
+    title: 'escrever até virar hábito',
     subtitle: 'uma jornada guiada para desbloquear sua expressão, criar hábitos de escrita leve e reencontrar a sua voz autêntica sem autocrítica.',
   });
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [activePhaseIndex, setActivePhaseIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
@@ -141,7 +142,6 @@ export default function Programa21Dias() {
   const [isPaused, setIsPaused] = useState(false);
 
   const navigate = useNavigate();
-  const youtubeVideoId = 'dQw4w9WgXcQ';
 
   // Auto-play do carrossel a cada 4 segundos
   useEffect(() => {
@@ -153,8 +153,7 @@ export default function Programa21Dias() {
   }, [isPaused, selectedScreenshot]);
 
   const handleEnroll = () => {
-    localStorage.setItem('checkout_intent', '21dias');
-    navigate('/register?product=21dias');
+    setIsPaymentModalOpen(true);
   };
 
   const nextSlide = () => {
@@ -182,14 +181,11 @@ export default function Programa21Dias() {
                   alt="chama viva"
                   className="w-5 h-5 object-contain"
                 />
-                <span>jornada self-paced de escrita guiada</span>
+                <span>escrever até virar hábito</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                21 dias de escrita: <br className="hidden sm:inline" />
-                <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  {heroSec.title || 'sua história tem valor.'}
-                </span>
+                escrever até virar hábito
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
@@ -240,14 +236,6 @@ export default function Programa21Dias() {
                   <span>garantir minha vaga por R$ 77</span>
                   <Pencil className="w-5 h-5 text-white" />
                 </button>
-
-                <a
-                  href="#video-apresentacao"
-                  className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base px-7 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2 cursor-pointer lowercase"
-                >
-                  <span>assista ao vídeo de apresentação</span>
-                  <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
-                </a>
               </div>
             </div>
 
@@ -288,72 +276,7 @@ export default function Programa21Dias() {
         </div>
       </section>
 
-      {/* 3. SEÇÃO VÍDEO DE APRESENTAÇÃO DE YOUTUBE (Com Capa da Galeria) */}
-      <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
-              <span>mensagem das facilitadoras</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              assista à apresentação do programa
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              bruna riedel e júlia alvim contam como os 21 dias vão transformar a sua relação com as palavras.
-            </p>
-          </div>
-
-          {/* Reproductor de Video Estilo Scrapbook con Capa da Galeria */}
-          <div className="relative rounded-3xl bg-bgPlataforma p-3 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
-            {/* Sticker Fita Washi Superior */}
-            <div className="absolute -top-2 left-8 sm:left-12 w-28 sm:w-36 h-7 sm:h-9 pointer-events-none z-30 opacity-90">
-              <img
-                src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
-                alt="fita washi"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-papelKraft/40 shadow-inner bg-acentoAzul">
-              {!isPlayingVideo ? (
-                /* Capa da Galería con Foto 100% Cobertura e Botão Play Centralizado */
-                <div
-                  onClick={() => setIsPlayingVideo(true)}
-                  className="absolute inset-0 cursor-pointer group/thumb w-full h-full"
-                >
-                  <img
-                    src="/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
-                    alt="capa do video 21 dias de escrita"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover/thumb:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/85 via-acentoAzul/40 to-acentoAzul/30 transition-opacity duration-300 group-hover/thumb:opacity-90" />
-
-                  {/* Botón Play y Pill Centralizados Absolutos */}
-                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover/thumb:scale-110 group-hover/thumb:bg-acentoTerracota/90 animate-pulse mb-3">
-                      <Play className="w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 fill-white translate-x-0.5" />
-                    </div>
-                    <span className="bg-papelClaro/95 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-base shadow-lg lowercase border border-papelKraft/50">
-                      clique para assistir ao vídeo (3 min)
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <iframe
-                  className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0`}
-                  title="21 Dias de Escrita - Apresentação"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. ENTREGÁVEIS & O QUE ESTÁ INCLUÍDO (Bento Grid) */}
+      {/* 4. ENTREGÁVEIS & O QUE ESTÁ INCLUÍDO (Bento Grid 3 Colunas) */}
       <section className="py-20 sm:py-28 bg-bgPlataforma">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -369,11 +292,11 @@ export default function Programa21Dias() {
               uma experiência completa para sua jornada de escrita
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              quatro pilares desenhados para acolher o seu ritmo e garantir o seu hábito.
+              três pilares desenhados para acolher o seu ritmo e garantir o seu hábito.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
@@ -422,23 +345,6 @@ export default function Programa21Dias() {
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
                 <span>03 // comunidade viva</span>
-              </div>
-            </div>
-
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  diário de bordo em pdf
-                </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  material gráfico artesanal para baixar, imprimir ou usar digitalmente como guia durante e após os 21 dias.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>04 // caderno artesanal</span>
               </div>
             </div>
           </div>
@@ -859,6 +765,13 @@ export default function Programa21Dias() {
 
       {/* 11. PreLoginFooter Poético com Shader WebGL */}
       <PreLoginFooter />
+
+      {/* Modal de Pagamento Direto */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        product="21dias"
+      />
     </div>
   );
 }
