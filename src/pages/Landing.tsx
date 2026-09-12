@@ -15,6 +15,7 @@ import FaqAccordion from '../components/FaqAccordion';
 import ContrateExperienciaSection from '../components/ContrateExperienciaSection';
 import FoundersSection from '../components/FoundersSection';
 import PaymentModal, { ProductKey } from '../components/PaymentModal';
+import { usePageContent } from '../hooks/usePageContent';
 
 export default function Landing() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
