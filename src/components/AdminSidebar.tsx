@@ -256,7 +256,16 @@ export default function AdminSidebar() {
             >
               {/* MAIN ITEM BUTTON */}
               <div
-                onClick={() => handleSelectTab(item.id, hasSub ? item.subItems![0].id : undefined)}
+                onClick={() =>
+                  handleSelectTab(
+                    item.id,
+                    hasSub
+                      ? activeSub && item.subItems?.some((s) => s.id === activeSub)
+                        ? activeSub
+                        : item.subItems![0].id
+                      : undefined
+                  )
+                }
                 className={`flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all cursor-pointer group ${
                   isActive
                     ? 'bg-acentoAzul text-white shadow-xs font-bold'
@@ -298,7 +307,9 @@ export default function AdminSidebar() {
               {showExpanded && hasSub && isSubOpen && (
                 <div className="relative ml-6 pl-3 border-l border-papelKraft/60 space-y-1 my-1 animate-fadeIn">
                   {item.subItems!.map((sub) => {
-                    const isSubActive = isActive && activeSub === sub.id;
+                    const effectiveSub =
+                      activeSub || (isActive && item.subItems?.[0]?.id ? item.subItems[0].id : '');
+                    const isSubActive = isActive && effectiveSub === sub.id;
 
                     return (
                       <button
@@ -329,7 +340,9 @@ export default function AdminSidebar() {
                   {hasSub ? (
                     <div className="space-y-1">
                       {item.subItems!.map((sub) => {
-                        const isSubActive = isActive && activeSub === sub.id;
+                        const effectiveSub =
+                          activeSub || (isActive && item.subItems?.[0]?.id ? item.subItems[0].id : '');
+                        const isSubActive = isActive && effectiveSub === sub.id;
                         return (
                           <button
                             key={sub.id}
