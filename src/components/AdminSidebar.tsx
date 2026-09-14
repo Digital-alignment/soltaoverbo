@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Users,
@@ -9,93 +10,379 @@ import {
   ShoppingCart,
   Layers,
   Images,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Menu,
+  X,
+  FileText,
+  ShieldCheck,
 } from 'lucide-react';
+import { BRAND_ASSETS } from '../config/brandAssets';
+
+export interface AdminNavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  group: 'geral' | 'cms' | 'comunidade';
+  subItems?: { id: string; label: string }[];
+}
+
+export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
+  {
+    id: 'users',
+    label: 'alunas & membros',
+    icon: Users,
+    group: 'geral',
+    subItems: [
+      { id: 'all', label: 'todas as alunas' },
+      { id: 'paid', label: 'membros premium' },
+      { id: 'free', label: 'membros gratuitos' },
+      { id: 'admin', label: 'administradoras' },
+    ],
+  },
+  {
+    id: 'courses',
+    label: 'oficinas & cursos',
+    icon: BookOpen,
+    group: 'geral',
+    subItems: [
+      { id: 'all', label: 'todas as oficinas' },
+      { id: 'new', label: '+ criar nova oficina' },
+    ],
+  },
+  {
+    id: 'pages',
+    label: 'gestão de páginas (cms)',
+    icon: Layers,
+    group: 'cms',
+    subItems: [
+      { id: 'landing', label: 'home / landing page' },
+      { id: 'about', label: 'sobre nós (nossa história)' },
+      { id: 'programs', label: 'catálogo de programas' },
+      { id: 'programa_21_dias', label: '21 dias de escrita' },
+      { id: 'programa_cafe_com_letras', label: 'café com letras' },
+      { id: 'programa_ciclo', label: 'ciclo de aprofundamento' },
+      { id: 'contrate_experiencia', label: 'contrate uma experiência' },
+      { id: 'contacts', label: 'canais de contato & redes' },
+      { id: 'tour_modal', label: 'modo observador (tour virtual)' },
+    ],
+  },
+  {
+    id: 'banners',
+    label: 'gestão de banners',
+    icon: ImageIcon,
+    group: 'cms',
+  },
+  {
+    id: 'gallery',
+    label: 'banco de mídias & galeria',
+    icon: Images,
+    group: 'cms',
+  },
+  {
+    id: 'broadcasts',
+    label: 'transmissões & broadcasts',
+    icon: Megaphone,
+    group: 'comunidade',
+  },
+  {
+    id: 'moderation',
+    label: 'moderação da fogueira',
+    icon: MessageCircle,
+    group: 'comunidade',
+  },
+  {
+    id: 'messages',
+    label: 'mensagens de contato',
+    icon: Mail,
+    group: 'comunidade',
+  },
+  {
+    id: 'checkout',
+    label: 'métricas de checkout',
+    icon: ShoppingCart,
+    group: 'comunidade',
+  },
+];
 
 export default function AdminSidebar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'users';
+  const activeSub = searchParams.get('sub') || '';
 
-  const navItems = [
-    { id: 'users', label: 'alunas & membros', icon: Users },
-    { id: 'courses', label: 'oficinas & cursos', icon: BookOpen },
-    { id: 'banners', label: 'gestão de banners', icon: ImageIcon },
-    { id: 'broadcasts', label: 'transmissões & broadcasts', icon: Megaphone },
-    { id: 'moderation', label: 'moderação da comunidade', icon: MessageCircle },
-    { id: 'messages', label: 'mensagens de contato', icon: Mail },
-    { id: 'checkout', label: 'métricas de checkout', icon: ShoppingCart },
-    { id: 'pages', label: 'gestão de páginas (cms)', icon: Layers },
-    { id: 'gallery', label: 'banco de mídias & galeria', icon: Images },
-  ];
+  const [isExpanded, setIsExpanded] = useState<boolean>(() => {
+    const saved = localStorage.getItem('admin_sidebar_expanded');
+    return saved !== null ? saved === 'true' : true;
+  });
 
-  const handleSelectTab = (tabId: string) => {
-    setSearchParams({ tab: tabId });
+  const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({
+    [activeTab]: true,
+  });
+
+  const [hoveredFlyout, setHoveredFlyout] = useState<string | null>(null);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Keep active tab submenu open automatically
+    if (activeTab) {
+      setOpenSubMenus((prev) => ({ ...prev, [activeTab]: true }));
+    }
+  }, [activeTab]);
+
+  const toggleExpanded = () => {
+    const next = !isExpanded;
+    setIsExpanded(next);
+    localStorage.setItem('admin_sidebar_expanded', String(next));
+    window.dispatchEvent(new CustomEvent('admin-sidebar-toggle', { detail: { expanded: next } }));
+  };
+
+  const toggleSubMenu = (itemId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenSubMenus((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
+  };
+
+  const handleSelectTab = (tabId: string, subId?: string) => {
+    const params: Record<string, string> = { tab: tabId };
+    if (subId) {
+      params.sub = subId;
+    }
+    setSearchParams(params);
+    setMobileDrawerOpen(false);
+    setHoveredFlyout(null);
+  };
+
+  const renderNavGroup = (groupKey: 'geral' | 'cms' | 'comunidade', groupLabel: string) => {
+    const groupItems = ADMIN_NAV_ITEMS.filter((item) => item.group === groupKey);
+
+    return (
+      <div key={groupKey} className="space-y-1">
+        {isExpanded && (
+          <div className="px-3 pt-3 pb-1 text-[10px] font-bold font-corpo text-tintaCarvao/40 lowercase tracking-wider">
+            {groupLabel}
+          </div>
+        )}
+
+        {groupItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          const hasSub = item.subItems && item.subItems.length > 0;
+          const isSubOpen = !!openSubMenus[item.id];
+
+          return (
+            <div
+              key={item.id}
+              className="relative"
+              onMouseEnter={() => !isExpanded && setHoveredFlyout(item.id)}
+              onMouseLeave={() => !isExpanded && setHoveredFlyout(null)}
+            >
+              {/* MAIN ITEM BUTTON */}
+              <div
+                onClick={() => handleSelectTab(item.id, hasSub ? item.subItems![0].id : undefined)}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all cursor-pointer group ${
+                  isActive
+                    ? 'bg-acentoAzul text-white shadow-xs font-semibold'
+                    : 'text-tintaCarvao/80 hover:text-acentoAzul hover:bg-papelKraft/25'
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div
+                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-transform ${
+                      isActive ? 'bg-white/15 text-white' : 'text-tintaCarvao/70 group-hover:text-acentoAzul'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </div>
+
+                  {isExpanded && (
+                    <span className="text-xs font-corpo lowercase truncate leading-tight">
+                      {item.label}
+                    </span>
+                  )}
+                </div>
+
+                {isExpanded && hasSub && (
+                  <button
+                    onClick={(e) => toggleSubMenu(item.id, e)}
+                    className="p-1 rounded-lg hover:bg-black/10 text-current/70 transition-colors"
+                    aria-label="expandir submenu"
+                  >
+                    {isSubOpen ? (
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                )}
+              </div>
+
+              {/* TREE SUB-ITEMS (EXPANDED MODE) */}
+              {isExpanded && hasSub && isSubOpen && (
+                <div className="relative ml-6 pl-3 border-l border-papelKraft/60 space-y-1 my-1 animate-fadeIn">
+                  {item.subItems!.map((sub) => {
+                    const isSubActive = isActive && activeSub === sub.id;
+
+                    return (
+                      <button
+                        key={sub.id}
+                        onClick={() => handleSelectTab(item.id, sub.id)}
+                        className={`w-full text-left flex items-center gap-2 py-1.5 px-3 rounded-xl text-xs font-corpo lowercase transition-all cursor-pointer ${
+                          isSubActive
+                            ? 'bg-acentoTerracota text-white font-bold shadow-xs'
+                            : 'text-tintaCarvao/75 hover:text-acentoAzul hover:bg-white/80'
+                        }`}
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60 shrink-0" />
+                        <span className="truncate">{sub.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* FLYOUT POPOVER CARD (COLLAPSED ICON-ONLY MODE) */}
+              {!isExpanded && hoveredFlyout === item.id && (
+                <div className="absolute left-14 top-0 z-50 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-3 min-w-[210px] animate-fadeIn space-y-2">
+                  <div className="flex items-center gap-2 pb-2 border-b border-papelKraft/30 text-acentoAzul">
+                    <Icon className="w-4 h-4" />
+                    <span className="text-xs font-bold font-editorial lowercase">{item.label}</span>
+                  </div>
+
+                  {hasSub ? (
+                    <div className="space-y-1">
+                      {item.subItems!.map((sub) => {
+                        const isSubActive = isActive && activeSub === sub.id;
+                        return (
+                          <button
+                            key={sub.id}
+                            onClick={() => handleSelectTab(item.id, sub.id)}
+                            className={`w-full text-left flex items-center gap-2 py-1.5 px-2.5 rounded-xl text-xs font-corpo lowercase transition-all cursor-pointer ${
+                              isSubActive
+                                ? 'bg-acentoTerracota text-white font-bold'
+                                : 'text-tintaCarvao/80 hover:bg-bgPlataforma hover:text-acentoAzul'
+                            }`}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-current opacity-60 shrink-0" />
+                            <span className="truncate">{sub.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleSelectTab(item.id)}
+                      className="w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-corpo text-acentoAzul bg-acentoAzul/10 font-bold lowercase cursor-pointer"
+                    >
+                      abrir seção →
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   return (
     <>
-      {/* DESKTOP FLOATING SIDEBAR ADMIN (Lado Esquerdo da Tela) */}
-      <nav className="hidden lg:flex fixed left-5 top-1/2 -translate-y-1/2 z-50 pointer-events-none">
-        <div className="bg-papelClaro/95 backdrop-blur-md rounded-3xl py-4 px-3 border border-papelKraft/70 shadow-kraft-lg flex flex-col items-center gap-3 pointer-events-auto transition-all duration-300">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
+      {/* DESKTOP SIDEBAR ADMIN (FLUTUANTE NO LADO ESQUERDO) */}
+      <aside
+        className={`hidden lg:flex fixed left-4 top-24 bottom-6 z-40 flex-col bg-papelClaro/95 backdrop-blur-md rounded-3xl border border-papelKraft/60 shadow-kraft-lg transition-all duration-300 overflow-hidden ${
+          isExpanded ? 'w-64' : 'w-18'
+        }`}
+      >
+        {/* CABEÇALHO DO SIDEBAR COM BOTÃO DE RECOLHER/EXPANDIR */}
+        <div className="p-3.5 border-b border-papelKraft/40 flex items-center justify-between gap-2">
+          {isExpanded ? (
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-acentoAzul text-white flex items-center justify-center shrink-0 border border-acentoOliva shadow-xs">
+                <ShieldCheck className="w-4 h-4 text-acentoOliva" />
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-editorial font-bold text-sm text-acentoAzul lowercase truncate">
+                  painel admin
+                </h2>
+                <p className="text-[10px] font-corpo text-tintaCarvao/60 lowercase truncate">
+                  solta o verbo
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-xl bg-acentoAzul text-white flex items-center justify-center shrink-0 border border-acentoOliva mx-auto">
+              <ShieldCheck className="w-4 h-4 text-acentoOliva" />
+            </div>
+          )}
 
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleSelectTab(item.id)}
-                className="relative group flex flex-col items-center justify-center cursor-pointer"
-                aria-label={item.label}
-              >
-                {/* Active Circle Indicator */}
-                <div
-                  className={`w-11 h-11 rounded-2xl transition-all duration-300 flex items-center justify-center relative ${
-                    active
-                      ? 'bg-acentoAzul text-white shadow-md scale-105'
-                      : 'bg-transparent text-tintaCarvao/70 hover:bg-papelKraft/40 hover:text-acentoAzul hover:scale-105'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                </div>
-
-                {/* Tooltip Lateral ao Passar o Mouse */}
-                <div className="absolute left-16 px-3 py-1.5 bg-acentoAzul text-white text-xs font-semibold font-corpo lowercase rounded-xl shadow-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 whitespace-nowrap z-50">
-                  {item.label}
-                </div>
-              </button>
-            );
-          })}
+          <button
+            onClick={toggleExpanded}
+            className="p-1.5 rounded-xl hover:bg-papelKraft/30 text-tintaCarvao/70 hover:text-acentoAzul transition-colors cursor-pointer shrink-0"
+            title={isExpanded ? 'recolher menu lateral' : 'expandir menu lateral'}
+          >
+            {isExpanded ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </button>
         </div>
-      </nav>
 
-      {/* MOBILE FLOATING BAR ADMIN (Ao Rodapé da Tela) */}
-      <nav className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 px-3 w-full max-w-md pointer-events-none">
-        <div className="bg-papelClaro/95 backdrop-blur-md rounded-full py-2 px-3 border border-papelKraft/70 shadow-kraft-lg flex items-center gap-2 overflow-x-auto no-scrollbar pointer-events-auto relative">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleSelectTab(item.id)}
-                className="flex flex-col items-center justify-center shrink-0 cursor-pointer py-1 px-1"
-                aria-label={item.label}
-              >
-                <div
-                  className={`rounded-full transition-all duration-300 flex items-center justify-center ${
-                    active
-                      ? 'w-10 h-10 bg-acentoAzul text-white shadow-md scale-105'
-                      : 'w-9 h-9 bg-transparent text-tintaCarvao/70 hover:text-acentoAzul'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                </div>
-              </button>
-            );
-          })}
+        {/* CORPO DO SIDEBAR COM GRUPOS E NAVEGAÇÃO EM ÁRVORE */}
+        <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-4">
+          {renderNavGroup('geral', 'gestão geral')}
+          {renderNavGroup('cms', 'conteúdo do site (cms)')}
+          {renderNavGroup('comunidade', 'comunidade & vendas')}
         </div>
-      </nav>
+
+        {/* RODAPÉ DO SIDEBAR (INDICADOR DE VERSÃO E STATUS) */}
+        {isExpanded && (
+          <div className="p-3 border-t border-papelKraft/40 bg-bgPlataforma/50 text-[10px] font-corpo text-tintaCarvao/60 lowercase text-center">
+            <span>solta o verbo • modo admin</span>
+          </div>
+        )}
+      </aside>
+
+      {/* MOBILE TRIGGER BUTTON (FLUTUANTE NO CANTO SUPERIOR OU BOTTOM) */}
+      <div className="lg:hidden fixed bottom-4 right-4 z-50">
+        <button
+          onClick={() => setMobileDrawerOpen(true)}
+          className="p-3.5 rounded-full bg-acentoAzul text-white shadow-kraft-lg flex items-center gap-2 border border-acentoOliva cursor-pointer"
+          aria-label="abrir menu admin"
+        >
+          <Menu className="w-5 h-5" />
+          <span className="text-xs font-bold font-corpo lowercase">menu admin</span>
+        </button>
+      </div>
+
+      {/* MOBILE DRAWER OVERLAY */}
+      {mobileDrawerOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div
+            className="fixed inset-0 bg-tintaCarvao/40 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileDrawerOpen(false)}
+          />
+
+          <div className="relative w-4/5 max-w-xs bg-papelClaro h-full shadow-2xl flex flex-col z-10 border-r border-papelKraft/60">
+            <div className="p-4 border-b border-papelKraft/40 flex items-center justify-between bg-bgPlataforma">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-acentoAzul" />
+                <span className="font-editorial font-bold text-base text-acentoAzul lowercase">
+                  menu administrativo
+                </span>
+              </div>
+              <button
+                onClick={() => setMobileDrawerOpen(false)}
+                className="p-1.5 rounded-xl text-tintaCarvao/70 hover:text-acentoAzul"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {renderNavGroup('geral', 'gestão geral')}
+              {renderNavGroup('cms', 'conteúdo do site (cms)')}
+              {renderNavGroup('comunidade', 'comunidade & vendas')}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

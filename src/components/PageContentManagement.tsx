@@ -109,8 +109,12 @@ const PAGE_OPTIONS: PageOption[] = [
   },
 ];
 
-export default function PageContentManagement() {
-  const [selectedPageSlug, setSelectedPageSlug] = useState<string>('landing');
+interface PageContentManagementProps {
+  selectedSubPage?: string;
+}
+
+export default function PageContentManagement({ selectedSubPage }: PageContentManagementProps) {
+  const [selectedPageSlug, setSelectedPageSlug] = useState<string>(selectedSubPage || 'landing');
   const [cmsData, setCmsData] = useState<SiteCMSData>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -118,6 +122,15 @@ export default function PageContentManagement() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [activePickerSecKey, setActivePickerSecKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (selectedSubPage) {
+      const match = PAGE_OPTIONS.find(p => p.slug === selectedSubPage);
+      if (match) {
+        setSelectedPageSlug(match.slug);
+      }
+    }
+  }, [selectedSubPage]);
 
   useEffect(() => {
     loadCMS();
@@ -221,6 +234,15 @@ export default function PageContentManagement() {
       {/* CABEÇALHO DA GESTÃO DE PÁGINAS */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-papelKraft/30 pb-4">
         <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[11px] font-bold font-corpo lowercase">
+              cms de páginas
+            </span>
+            <span className="text-tintaCarvao/40 text-xs">•</span>
+            <span className="font-editorial font-bold text-sm text-acentoTerracota lowercase">
+              {currentPage.name}
+            </span>
+          </div>
           <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
             gestão de páginas & conteúdo (cms)
           </h2>
@@ -239,24 +261,26 @@ export default function PageContentManagement() {
         </button>
       </div>
 
-      {/* SELETOR DE PÁGINAS (PÍLDORAS) */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-papelKraft/40 pb-2">
-        {PAGE_OPTIONS.map((page) => {
-          const isActive = page.slug === selectedPageSlug;
-          return (
-            <button
-              key={page.slug}
-              onClick={() => setSelectedPageSlug(page.slug)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap ${
-                isActive
-                  ? 'bg-acentoAzul text-white shadow-xs'
-                  : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-              }`}
-            >
+      {/* BARRA DE SELEÇÃO RÁPIDA DE PÁGINA (SEM SCROLLBAR HORIZONTAL NATIVO) */}
+      <div className="bg-white p-3 rounded-2xl border border-papelKraft/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-2">
+          <Layers className="w-4 h-4 text-acentoAzul" />
+          <span className="text-xs font-bold font-corpo text-tintaCarvao lowercase">
+            página em edição:
+          </span>
+        </div>
+
+        <select
+          value={selectedPageSlug}
+          onChange={(e) => setSelectedPageSlug(e.target.value)}
+          className="w-full sm:w-auto px-4 py-2 bg-papelClaro border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo text-acentoAzul focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
+        >
+          {PAGE_OPTIONS.map((page) => (
+            <option key={page.slug} value={page.slug}>
               {page.name}
-            </button>
-          );
-        })}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* PAINEL DE SEÇÕES DA PÁGINA SELECIONADA */}

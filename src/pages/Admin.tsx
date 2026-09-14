@@ -49,7 +49,21 @@ export default function Admin() {
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
 
+  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(() => {
+    const saved = localStorage.getItem('admin_sidebar_expanded');
+    return saved !== null ? saved === 'true' : true;
+  });
+
+  useEffect(() => {
+    const handleToggle = (e: CustomEvent) => {
+      setSidebarExpanded(e.detail.expanded);
+    };
+    window.addEventListener('admin-sidebar-toggle' as any, handleToggle);
+    return () => window.removeEventListener('admin-sidebar-toggle' as any, handleToggle);
+  }, []);
+
   const rawTab = searchParams.get('tab');
+  const activeSub = searchParams.get('sub') || '';
   const activeTab: TabType = VALID_TABS.includes(rawTab as TabType) ? (rawTab as TabType) : 'users';
 
   const setActiveTab = (tab: TabType) => {
@@ -278,6 +292,14 @@ export default function Admin() {
     }
   };
 
+  useEffect(() => {
+    if (activeTab === 'users' && activeSub) {
+      if (['all', 'free', 'paid', 'admin'].includes(activeSub)) {
+        setRoleFilter(activeSub as 'all' | 'free' | 'paid' | 'admin');
+      }
+    }
+  }, [activeTab, activeSub]);
+
   if (profile?.role !== 'admin') {
     return (
       <div className="min-h-screen bg-bgPlataforma text-tintaCarvao flex items-center justify-center p-4">
@@ -294,127 +316,36 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-6 sm:py-8 pb-28 lg:pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 lg:pl-28">
+      <div
+        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 transition-all duration-300 ${
+          sidebarExpanded ? 'lg:pl-72' : 'lg:pl-24'
+        }`}
+      >
         
         {/* CABEÇALHO PRINCIPAL DO PAINEL */}
         <div className="border-b border-papelKraft/40 pb-4 space-y-0.5">
+          <div className="flex items-center gap-2 mb-1 text-xs font-corpo text-tintaCarvao/60 lowercase">
+            <span className="font-bold text-acentoAzul">painel administrativo</span>
+            <span>/</span>
+            <span className="font-bold text-acentoTerracota font-editorial">
+              {activeTab}
+            </span>
+            {activeSub && (
+              <>
+                <span>/</span>
+                <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul font-bold">
+                  {activeSub}
+                </span>
+              </>
+            )}
+          </div>
+
           <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
             painel administrativo
           </h1>
           <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase">
             gestão de alunas, oficinas, banners, transmissões e moderação da plataforma
           </p>
-        </div>
-
-        {/* NAVEGAÇÃO DE ABAS EM PÍLDORAS */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-papelKraft/40 pb-2">
-          <button
-            onClick={() => setActiveTab('users')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'users'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            <span>alunas ({users.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('courses')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'courses'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>oficinas ({courses.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('banners')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'banners'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <ImageIcon className="w-4 h-4" />
-            <span>banners</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('broadcasts')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'broadcasts'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <Megaphone className="w-4 h-4" />
-            <span>broadcasts</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('moderation')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'moderation'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>moderação</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('messages')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'messages'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <Mail className="w-4 h-4" />
-            <span>mensagens</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('checkout')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'checkout'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <ShoppingCart className="w-4 h-4" />
-            <span>checkout</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('pages')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'pages'
-                ? 'bg-acentoTerracota text-white shadow-xs'
-                : 'bg-white/80 text-acentoTerracota hover:text-acentoTerracota/90 border border-papelKraft/40'
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>gestão de páginas (cms)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('gallery')}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'gallery'
-                ? 'bg-acentoAzul text-white shadow-xs'
-                : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
-            }`}
-          >
-            <ImageIcon className="w-4 h-4" />
-            <span>banco de mídias & galeria</span>
-          </button>
         </div>
 
         {/* CARTÕES DE MÉTRICAS GERAIS (RITUAL STATS) */}
@@ -711,7 +642,7 @@ export default function Admin() {
         {/* ABA 8: GESTÃO DE PÁGINAS DO SITE (CMS) */}
         {activeTab === 'pages' && (
           <div ref={pagesRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
-            <PageContentManagement />
+            <PageContentManagement selectedSubPage={activeSub} />
           </div>
         )}
 
