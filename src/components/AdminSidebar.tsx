@@ -164,12 +164,17 @@ export default function AdminSidebar() {
     setHoveredFlyout(null);
   };
 
-  const renderNavGroup = (groupKey: 'geral' | 'cms' | 'comunidade', groupLabel: string) => {
+  const renderNavGroup = (
+    groupKey: 'geral' | 'cms' | 'comunidade',
+    groupLabel: string,
+    forceExpanded: boolean = false
+  ) => {
     const groupItems = ADMIN_NAV_ITEMS.filter((item) => item.group === groupKey);
+    const showExpanded = forceExpanded || isExpanded;
 
     return (
       <div key={groupKey} className="space-y-1">
-        {isExpanded && (
+        {showExpanded && (
           <div className="px-3 pt-3 pb-1 text-xs font-bold font-editorial text-acentoAzul/80 lowercase tracking-wider border-b border-papelKraft/30 mb-1">
             {groupLabel}
           </div>
@@ -185,8 +190,8 @@ export default function AdminSidebar() {
             <div
               key={item.id}
               className="relative"
-              onMouseEnter={() => !isExpanded && setHoveredFlyout(item.id)}
-              onMouseLeave={() => !isExpanded && setHoveredFlyout(null)}
+              onMouseEnter={() => !showExpanded && setHoveredFlyout(item.id)}
+              onMouseLeave={() => !showExpanded && setHoveredFlyout(null)}
             >
               {/* MAIN ITEM BUTTON */}
               <div
@@ -206,14 +211,14 @@ export default function AdminSidebar() {
                     <Icon className="w-4.5 h-4.5" />
                   </div>
 
-                  {isExpanded && (
+                  {showExpanded && (
                     <span className="text-sm font-corpo font-medium lowercase truncate leading-tight">
                       {item.label}
                     </span>
                   )}
                 </div>
 
-                {isExpanded && hasSub && (
+                {showExpanded && hasSub && (
                   <button
                     onClick={(e) => toggleSubMenu(item.id, e)}
                     className="p-1 rounded-lg hover:bg-black/10 text-current/70 transition-colors"
@@ -229,7 +234,7 @@ export default function AdminSidebar() {
               </div>
 
               {/* TREE SUB-ITEMS (EXPANDED MODE) */}
-              {isExpanded && hasSub && isSubOpen && (
+              {showExpanded && hasSub && isSubOpen && (
                 <div className="relative ml-6 pl-3 border-l border-papelKraft/60 space-y-1 my-1 animate-fadeIn">
                   {item.subItems!.map((sub) => {
                     const isSubActive = isActive && activeSub === sub.id;
@@ -253,7 +258,7 @@ export default function AdminSidebar() {
               )}
 
               {/* FLYOUT POPOVER CARD (COLLAPSED ICON-ONLY MODE) */}
-              {!isExpanded && hoveredFlyout === item.id && (
+              {!showExpanded && hoveredFlyout === item.id && (
                 <div className="absolute left-16 top-0 z-[9999] bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-3.5 min-w-[220px] animate-fadeIn space-y-2">
                   <div className="flex items-center gap-2 pb-2 border-b border-papelKraft/30 text-acentoAzul">
                     <Icon className="w-4.5 h-4.5" />
@@ -536,25 +541,64 @@ export default function AdminSidebar() {
           />
 
           <div className="relative w-4/5 max-w-xs bg-papelClaro h-full shadow-2xl flex flex-col z-10 border-r border-papelKraft/60">
+            {/* CABEÇALHO DO DRAWER MOBILE */}
             <div className="p-4 border-b border-papelKraft/40 flex items-center justify-between bg-bgPlataforma">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-acentoAzul" />
-                <span className="font-editorial font-bold text-base text-acentoAzul lowercase">
-                  menu administrativo
-                </span>
-              </div>
+              <Link to="/admin" onClick={() => setMobileDrawerOpen(false)} className="flex items-center gap-2">
+                <img
+                  src={BRAND_ASSETS.logos.horizontalPng}
+                  alt="solta o verbo admin"
+                  className="h-6 object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/logo_horizontal_4.png';
+                  }}
+                />
+              </Link>
               <button
                 onClick={() => setMobileDrawerOpen(false)}
-                className="p-1.5 rounded-xl text-tintaCarvao/70 hover:text-acentoAzul"
+                className="p-1.5 rounded-xl text-tintaCarvao/70 hover:text-acentoAzul transition-colors cursor-pointer"
+                aria-label="fechar menu"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto sidebar-scrollbar p-4 space-y-4">
-              {renderNavGroup('geral', 'gestão geral')}
-              {renderNavGroup('cms', 'conteúdo do site (cms)')}
-              {renderNavGroup('comunidade', 'comunidade & vendas')}
+            {/* BARRA DE AÇÕES RÁPIDAS MOBILE (ALUNA + MEU PERFIL / SAIR) */}
+            <div className="p-3 border-b border-papelKraft/30 bg-papelClaro/80 flex items-center justify-between gap-2">
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileDrawerOpen(false)}
+                className="flex-1 flex items-center justify-between py-1.5 px-3 rounded-full bg-acentoTerracota/15 hover:bg-acentoTerracota/25 border border-acentoTerracota/40 text-acentoTerracota text-xs font-bold font-corpo lowercase transition-all shadow-xs cursor-pointer"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5 text-acentoTerracota" />
+                  <span>aluna</span>
+                </div>
+                <span className="text-[10px] opacity-75">→</span>
+              </Link>
+
+              <button
+                onClick={() => {
+                  setMobileDrawerOpen(false);
+                  signOut();
+                }}
+                className="flex items-center gap-1.5 py-1.5 px-3 rounded-full bg-acentoTerracota/10 hover:bg-acentoTerracota/20 border border-acentoTerracota/30 text-acentoTerracota text-xs font-corpo lowercase transition-all cursor-pointer"
+                title="sair"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>sair</span>
+              </button>
+            </div>
+
+            {/* ITENS DO MENU NAVEGÁVEL MOBILE (SEMPRE EXPANDIDOS) */}
+            <div className="flex-1 overflow-y-auto sidebar-scrollbar p-3 space-y-4">
+              {renderNavGroup('geral', 'gestão geral', true)}
+              {renderNavGroup('cms', 'conteúdo do site (cms)', true)}
+              {renderNavGroup('comunidade', 'comunidade & vendas', true)}
+            </div>
+
+            {/* RODAPÉ DO DRAWER MOBILE */}
+            <div className="p-3 border-t border-papelKraft/40 bg-bgPlataforma/50 text-[10px] font-corpo text-tintaCarvao/60 lowercase text-center">
+              <span>solta o verbo • modo admin</span>
             </div>
           </div>
         </div>

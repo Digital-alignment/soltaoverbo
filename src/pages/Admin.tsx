@@ -327,16 +327,16 @@ export default function Admin() {
         {/* BREADCRUMB BAR PARA ABAS DIFERENTES DE DASHBOARD */}
         {activeTab !== 'dashboard' && (
           <div className="flex items-center justify-between gap-2 border-b border-papelKraft/40 pb-3">
-            <div className="flex items-center gap-2 text-xs font-corpo text-tintaCarvao/60 lowercase">
-              <span className="font-bold text-acentoAzul">painel administrativo</span>
-              <span>/</span>
-              <span className="font-bold text-acentoTerracota font-editorial text-sm">
+            <div className="flex items-center gap-2 text-xs font-corpo font-light text-tintaCarvao/70 lowercase tracking-wide">
+              <span className="font-light text-acentoAzul">painel administrativo</span>
+              <span className="text-tintaCarvao/40 font-light">/</span>
+              <span className="font-light text-acentoTerracota">
                 {activeTab}
               </span>
               {activeSub && (
                 <>
-                  <span>/</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul font-bold text-[11px]">
+                  <span className="text-tintaCarvao/40 font-light">/</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul font-light text-[11px]">
                     {activeSub}
                   </span>
                 </>
@@ -351,10 +351,10 @@ export default function Admin() {
             
             {/* CABEÇALHO DA DASHBOARD */}
             <div className="border-b border-papelKraft/40 pb-4 space-y-0.5">
-              <div className="flex items-center gap-2 mb-1 text-xs font-corpo text-tintaCarvao/60 lowercase">
-                <span className="font-bold text-acentoAzul">painel administrativo</span>
-                <span>/</span>
-                <span className="font-bold text-acentoTerracota font-editorial">
+              <div className="flex items-center gap-2 mb-1 text-xs font-corpo font-light text-tintaCarvao/70 lowercase tracking-wide">
+                <span className="font-light text-acentoAzul">painel administrativo</span>
+                <span className="text-tintaCarvao/40 font-light">/</span>
+                <span className="font-light text-acentoTerracota">
                   dashboard
                 </span>
               </div>
