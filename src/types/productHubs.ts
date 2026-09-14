@@ -62,3 +62,21 @@ export interface StudentCourseProgress {
   completed_lessons: number;
   last_activity: string;
 }
+
+export type MaterialCategory =
+  | 'pdf_guia'
+  | 'exercicio'
+  | 'link_recomendado'
+  | 'audio';
+
+export interface ProductMaterial {
+  id: string;
+  product_slug: ProductSlug;
+  title: string;
+  category: MaterialCategory;
+  file_url: string;
+  description?: string;
+  is_published: boolean;
+  created_at?: string;
+  updated_at?: string;
+}

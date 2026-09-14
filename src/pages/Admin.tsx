@@ -45,7 +45,22 @@ type UserProfile = Database['public']['Tables']['users_profiles']['Row'] & {
 };
 type Course = Database['public']['Tables']['courses']['Row'];
 
-const VALID_TABS = ['dashboard', 'users', 'courses', 'messages', 'banners', 'broadcasts', 'moderation', 'checkout', 'pages', 'gallery'] as const;
+const VALID_TABS = [
+  'dashboard',
+  'programa_21_dias',
+  'programa_ciclo',
+  'programa_cafe_com_letras',
+  'contrate_experiencia',
+  'users',
+  'courses',
+  'messages',
+  'banners',
+  'broadcasts',
+  'moderation',
+  'checkout',
+  'pages',
+  'gallery',
+] as const;
 type TabType = typeof VALID_TABS[number];
 
 export default function Admin() {

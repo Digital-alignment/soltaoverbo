@@ -5,7 +5,8 @@ import ProductAlunasTable from '../ProductAlunasTable';
 import ProductMeetingScheduler from '../ProductMeetingScheduler';
 import ProductTaskManager from '../ProductTaskManager';
 import ProductBroadcastSender from '../ProductBroadcastSender';
-import { RefreshCw, Calendar, Users, Layers, CheckSquare, Megaphone } from 'lucide-react';
+import ProductMaterialsManager from '../ProductMaterialsManager';
+import { RefreshCw, Calendar, Users, Layers, CheckSquare, Megaphone, FileText } from 'lucide-react';
 
 export default function AdminCicloHub() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -83,6 +84,17 @@ export default function AdminCicloHub() {
           }`}
         >
           encontros ao vivo & gravações
+        </button>
+
+        <button
+          onClick={() => setSub('materials')}
+          className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+            activeSub === 'materials'
+              ? 'bg-acentoAzul text-white font-bold shadow-xs'
+              : 'text-tintaCarvao/70 hover:bg-papelKraft/20'
+          }`}
+        >
+          materiais de apoio
         </button>
 
         <button
@@ -180,15 +192,15 @@ export default function AdminCicloHub() {
               </button>
 
               <button
-                onClick={() => setSub('members')}
+                onClick={() => setSub('materials')}
                 className="bg-white p-5 rounded-2xl border border-papelKraft/40 text-left space-y-2 hover:border-acentoAzul transition-all shadow-xs cursor-pointer"
               >
-                <Users className="w-5 h-5 text-acentoAzul" />
+                <FileText className="w-5 h-5 text-acentoAzul" />
                 <h4 className="font-editorial font-bold text-sm text-acentoAzul lowercase">
-                  gerenciar assinantes →
+                  materiais de apoio →
                 </h4>
                 <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
-                  consultar lista de membros com assinatura premium ativa.
+                  guias em pdf, exercícios práticos e leituras complementares.
                 </p>
               </button>
 
@@ -221,6 +233,13 @@ export default function AdminCicloHub() {
 
       {activeSub === 'meetings' && (
         <ProductMeetingScheduler
+          productSlug="programa_ciclo"
+          productName="Ciclo de Aprofundamento"
+        />
+      )}
+
+      {activeSub === 'materials' && (
+        <ProductMaterialsManager
           productSlug="programa_ciclo"
           productName="Ciclo de Aprofundamento"
         />
