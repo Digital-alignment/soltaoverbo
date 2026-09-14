@@ -30,6 +30,8 @@ import {
   Calendar,
   ExternalLink,
   Layers,
+  LayoutDashboard,
+  Plus,
 } from 'lucide-react';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
@@ -39,7 +41,7 @@ type UserProfile = Database['public']['Tables']['users_profiles']['Row'] & {
 };
 type Course = Database['public']['Tables']['courses']['Row'];
 
-const VALID_TABS = ['users', 'courses', 'messages', 'banners', 'broadcasts', 'moderation', 'checkout', 'pages', 'gallery'] as const;
+const VALID_TABS = ['dashboard', 'users', 'courses', 'messages', 'banners', 'broadcasts', 'moderation', 'checkout', 'pages', 'gallery'] as const;
 type TabType = typeof VALID_TABS[number];
 
 export default function Admin() {
@@ -64,7 +66,7 @@ export default function Admin() {
 
   const rawTab = searchParams.get('tab');
   const activeSub = searchParams.get('sub') || '';
-  const activeTab: TabType = VALID_TABS.includes(rawTab as TabType) ? (rawTab as TabType) : 'users';
+  const activeTab: TabType = VALID_TABS.includes(rawTab as TabType) ? (rawTab as TabType) : 'dashboard';
 
   const setActiveTab = (tab: TabType) => {
     setSearchParams({ tab }, { replace: true });
@@ -398,6 +400,96 @@ export default function Admin() {
             </div>
           </div>
         </div>
+
+        {/* ABA DASHBOARD PRINCIPAL (SHORTCUTS & VISÃO GERAL) */}
+        {activeTab === 'dashboard' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-6 sm:p-8 shadow-kraft space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-papelKraft/30 pb-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[11px] font-bold font-corpo lowercase">
+                      visão geral & atalhos
+                    </span>
+                  </div>
+                  <h2 className="font-editorial font-bold text-xl sm:text-2xl text-acentoAzul lowercase">
+                    dashboard administrativo
+                  </h2>
+                  <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+                    central de atalhos rápidos, tarefas, consultas e agenda
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setActiveTab('users')}
+                    className="px-4 py-2 rounded-2xl bg-acentoAzul hover:bg-acentoAzul/90 text-white font-gesto text-[18px] lowercase shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <Users className="w-4 h-4" />
+                    <span>consultar aluna</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* GRID DE CARTÕES DE ATALHOS RÁPIDOS */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-white p-5 rounded-2xl border border-papelKraft/40 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold font-editorial text-acentoAzul lowercase">
+                      consultar aluna
+                    </span>
+                    <Search className="w-4 h-4 text-acentoTerracota" />
+                  </div>
+                  <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+                    busca rápida por e-mail ou nome para consultar papéis de assinatura e detalhes de conta.
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('users')}
+                    className="text-xs font-bold font-corpo text-acentoAzul hover:underline flex items-center gap-1 lowercase cursor-pointer"
+                  >
+                    <span>acessar gestão de alunas →</span>
+                  </button>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-papelKraft/40 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold font-editorial text-acentoAzul lowercase">
+                      gestão de páginas cms
+                    </span>
+                    <Layers className="w-4 h-4 text-acentoTerracota" />
+                  </div>
+                  <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+                    editar frases, textos e fazer upload de fotos da landing page e programas públicos.
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('pages')}
+                    className="text-xs font-bold font-corpo text-acentoAzul hover:underline flex items-center gap-1 lowercase cursor-pointer"
+                  >
+                    <span>acessar cms →</span>
+                  </button>
+                </div>
+
+                <div className="bg-white p-5 rounded-2xl border border-papelKraft/40 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold font-editorial text-acentoAzul lowercase">
+                      nova oficina & cursos
+                    </span>
+                    <BookOpen className="w-4 h-4 text-acentoOliva" />
+                  </div>
+                  <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+                    adicionar novas lições, cadastrar áudios binaurais ou criar módulos para a comunidade.
+                  </p>
+                  <button
+                    onClick={() => setActiveTab('courses')}
+                    className="text-xs font-bold font-corpo text-acentoAzul hover:underline flex items-center gap-1 lowercase cursor-pointer"
+                  >
+                    <span>gerenciar oficinas →</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ABA 1: GERENCIAR ALUNAS */}
         {activeTab === 'users' && (

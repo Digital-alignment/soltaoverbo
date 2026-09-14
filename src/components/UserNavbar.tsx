@@ -86,7 +86,7 @@ export default function UserNavbar() {
                 title="entrar no painel administrativo"
               >
                 <ShieldCheck className="w-4 h-4 text-acentoAzul" />
-                <span className="hidden sm:inline">painel admin</span>
+                <span className="hidden sm:inline">admin</span>
               </Link>
             )}
 

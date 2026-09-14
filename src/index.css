@@ -45,6 +45,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Brand Scrollbar for Admin Sidebar */
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(217, 205, 184, 0.7);
+  border-radius: 9999px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 13, 130, 0.5);
+}
+
 :root {
   --bg-plataforma: #EDE6D4;
   --papel-claro: #F7F3E8;
