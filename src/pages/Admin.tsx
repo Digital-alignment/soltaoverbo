@@ -243,15 +243,10 @@ export default function Admin() {
 
       if (usersError) throw usersError;
 
-      const usersWithEmails = await Promise.all(
-        (usersData || []).map(async (user) => {
-          const { data: authData } = await supabase.auth.admin.getUserById(user.id);
-          return {
-            ...user,
-            email: authData?.user?.email || '',
-          };
-        })
-      );
+      const usersWithEmails = (usersData || []).map((user) => ({
+        ...user,
+        email: user.email || '',
+      }));
 
       const { data: coursesData } = await supabase
         .from('courses')
