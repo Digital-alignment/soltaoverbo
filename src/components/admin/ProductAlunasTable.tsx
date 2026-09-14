@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { ProductSlug, StudentCourseProgress } from '../../types/productHubs';
+import StudentInspectionDrawer from './StudentInspectionDrawer';
 import {
   Users,
   Search,
@@ -10,6 +11,8 @@ import {
   BookOpen,
   Mail,
   Shield,
+  FileText,
+  UserCheck,
 } from 'lucide-react';
 
 interface ProductAlunasTableProps {
@@ -26,6 +29,8 @@ export default function ProductAlunasTable({
   const [students, setStudents] = useState<StudentCourseProgress[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState<StudentCourseProgress | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     fetchEnrolledStudents();
@@ -51,6 +56,7 @@ export default function ProductAlunasTable({
             total_days: 21,
             completed_lessons: 14,
             last_activity: 'hoje às 14:30',
+            role: 'paid',
           },
           {
             user_id: 'u2',
@@ -60,6 +66,7 @@ export default function ProductAlunasTable({
             total_days: 21,
             completed_lessons: 21,
             last_activity: 'ontem às 19:15',
+            role: 'paid',
           },
           {
             user_id: 'u3',
@@ -69,6 +76,7 @@ export default function ProductAlunasTable({
             total_days: 21,
             completed_lessons: 6,
             last_activity: 'há 2 dias',
+            role: 'free',
           },
           {
             user_id: 'u4',
@@ -78,6 +86,7 @@ export default function ProductAlunasTable({
             total_days: 21,
             completed_lessons: 1,
             last_activity: 'há 3 dias',
+            role: 'free',
           },
         ]);
       } else {
@@ -91,6 +100,7 @@ export default function ProductAlunasTable({
           total_days: 21,
           completed_lessons: showProgressDay ? (idx % 21) + 1 : 0,
           last_activity: 'ativo recentemente',
+          role: p.role || 'paid',
         }));
         setStudents(mapped);
       }
@@ -99,6 +109,11 @@ export default function ProductAlunasTable({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOpenDrawer = (student: StudentCourseProgress) => {
+    setSelectedStudent(student);
+    setIsDrawerOpen(true);
   };
 
   const filteredStudents = students.filter(
@@ -122,8 +137,8 @@ export default function ProductAlunasTable({
           </h3>
           <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
             {showProgressDay
-              ? 'acompanhamento individual do progresso diário (dia X de 21)'
-              : 'listagem oficial de participantes e status de acesso'}
+              ? 'clique em qualquer aluna para abrir a ficha poética individual e acompanhar o progresso'
+              : 'listagem oficial de participantes, status de acesso e ficha da aluna'}
           </p>
         </div>
 
@@ -164,6 +179,7 @@ export default function ProductAlunasTable({
                 <th className="py-3 px-4">contato / e-mail</th>
                 {showProgressDay && <th className="py-3 px-4">progresso no curso</th>}
                 <th className="py-3 px-4 text-right">última atividade</th>
+                <th className="py-3 px-4 text-right">ação</th>
               </tr>
             </thead>
 
@@ -175,7 +191,11 @@ export default function ProductAlunasTable({
                 const isCompleted = student.current_day >= student.total_days;
 
                 return (
-                  <tr key={student.user_id} className="hover:bg-papelClaro/50 transition-colors">
+                  <tr
+                    key={student.user_id}
+                    onClick={() => handleOpenDrawer(student)}
+                    className="hover:bg-papelClaro/60 transition-colors cursor-pointer group"
+                  >
                     <td className="py-3.5 px-4 font-medium">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-acentoAzul text-white font-bold flex items-center justify-center shrink-0 border border-acentoOliva overflow-hidden text-xs">
@@ -190,7 +210,7 @@ export default function ProductAlunasTable({
                           )}
                         </div>
                         <div>
-                          <p className="font-bold text-acentoAzul font-editorial text-sm">
+                          <p className="font-bold text-acentoAzul font-editorial text-sm group-hover:text-acentoTerracota transition-colors">
                             {student.display_name}
                           </p>
                           <span className="text-[10px] text-tintaCarvao/50 block">
@@ -234,6 +254,19 @@ export default function ProductAlunasTable({
                         <span>{student.last_activity}</span>
                       </div>
                     </td>
+
+                    <td className="py-3.5 px-4 text-right">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenDrawer(student);
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white font-corpo text-xs font-bold lowercase transition-all cursor-pointer inline-flex items-center gap-1 shadow-xs"
+                      >
+                        <UserCheck className="w-3.5 h-3.5" />
+                        <span>ver ficha poética →</span>
+                      </button>
+                    </td>
                   </tr>
                 );
               })}
@@ -241,6 +274,15 @@ export default function ProductAlunasTable({
           </table>
         </div>
       )}
+
+      {/* DRAWER DE INSPEÇÃO DA ALUNA */}
+      <StudentInspectionDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        student={selectedStudent}
+        productSlug={productSlug}
+        productName={productName}
+      />
     </div>
   );
 }

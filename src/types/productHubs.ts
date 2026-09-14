@@ -52,6 +52,15 @@ export interface B2BLead {
   updated_at?: string;
 }
 
+export interface StudentProduction {
+  id: string;
+  title: string;
+  excerpt: string;
+  word_count: number;
+  created_at: string;
+  folder_name?: string;
+}
+
 export interface StudentCourseProgress {
   user_id: string;
   display_name: string;
@@ -61,6 +70,10 @@ export interface StudentCourseProgress {
   total_days: number;
   completed_lessons: number;
   last_activity: string;
+  role?: string;
+  created_at?: string;
+  facilitator_notes?: string;
+  productions?: StudentProduction[];
 }
 
 export type MaterialCategory =
