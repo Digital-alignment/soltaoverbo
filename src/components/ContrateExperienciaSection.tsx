@@ -92,6 +92,8 @@ export default function ContrateExperienciaSection() {
         <img
           src={BRAND_ASSETS.logos.icon}
           alt="watermark"
+          loading="lazy"
+          decoding="async"
           className="w-96 h-96 object-contain"
         />
       </div>
@@ -106,6 +108,8 @@ export default function ContrateExperienciaSection() {
                 <img
                   src="/brand-assets/icons/icone_63.svg"
                   alt="chama viva"
+                  loading="lazy"
+                  decoding="async"
                   className="w-5 h-5 object-contain"
                 />
                 <span>para marcas, empresas e eventos</span>
@@ -128,6 +132,8 @@ export default function ContrateExperienciaSection() {
                   <img
                     src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
                     alt="fita washi"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -144,6 +150,8 @@ export default function ContrateExperienciaSection() {
                       <img
                         src={slide.image}
                         alt={slide.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                       {/* Degradê de Texto e Legenda */}

@@ -213,6 +213,8 @@ export default function Landing() {
                   <img
                     src="/brand-assets/elements/collages/writes-torn-out-sheets-paper-trendy-vintage-style-mixed-media-art.png"
                     alt="colagem poética de escrita"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-contain drop-shadow-lg transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
@@ -227,6 +229,8 @@ export default function Landing() {
                 <img
                   src="/brand-assets/icons/icone_63.svg"
                   alt="watermark"
+                  loading="lazy"
+                  decoding="async"
                   className="w-96 h-96 object-contain"
                 />
               </div>
@@ -288,6 +292,8 @@ export default function Landing() {
                     <img
                       src="/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png"
                       alt="arte e escrita solta o verbo"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg';
@@ -374,6 +380,8 @@ export default function Landing() {
                     <img
                       src="/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
                       alt="comunidade ciclo de aprofundamento"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/brand-assets/elements/collages/png-person-reading-book-flower-sitting-person.png';
@@ -399,6 +407,8 @@ export default function Landing() {
                 <img
                   src="/brand-assets/icons/icone_63.svg"
                   alt="watermark"
+                  loading="lazy"
+                  decoding="async"
                   className="w-96 h-96 object-contain"
                 />
               </div>
@@ -440,6 +450,8 @@ export default function Landing() {
                     <img
                       src="/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
                       alt="café com letras roda de escrita"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png';

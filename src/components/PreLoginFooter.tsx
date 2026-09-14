@@ -39,6 +39,8 @@ export default function PreLoginFooter() {
           <img
             src={BRAND_ASSETS.logos.icon}
             alt="emblema solta o verbo"
+            loading="lazy"
+            decoding="async"
             className="w-16 h-16 animate-spin-slow"
           />
         </div>
@@ -52,6 +54,8 @@ export default function PreLoginFooter() {
                 <img
                   src={BRAND_ASSETS.logos.footerWatermark}
                   alt="solta o verbo"
+                  loading="lazy"
+                  decoding="async"
                   className="h-14 w-auto brightness-200"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = '/logo_footer_soltaoverbo.png';
