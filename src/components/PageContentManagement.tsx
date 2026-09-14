@@ -96,6 +96,17 @@ const PAGE_OPTIONS: PageOption[] = [
       { key: 'info', name: 'Informações Globais de Contato & Redes Sociais', hasImage: false, hasButton: false },
     ],
   },
+  {
+    slug: 'tour_modal',
+    name: 'Modo Observador / Tour Virtual',
+    sections: [
+      { key: 'header', name: 'Cabeçalho Superior & Configurações Globais', hasImage: false, hasButton: true },
+      { key: 'tab_acervo', name: 'Aba 1: Acervo de Prompts', hasImage: true, hasButton: false },
+      { key: 'tab_encontros', name: 'Aba 2: Rodas ao Vivo & Café com Letras', hasImage: true, hasButton: false },
+      { key: 'tab_comunidade', name: 'Aba 3: Mural da Comunidade', hasImage: true, hasButton: false },
+      { key: 'tab_cadernos', name: 'Aba 4: Cadernos Guiados em PDF', hasImage: true, hasButton: false },
+    ],
+  },
 ];
 
 export default function PageContentManagement() {
@@ -398,6 +409,87 @@ export default function PageContentManagement() {
                       className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
                     />
                   </div>
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS PARA MODO OBSERVADOR / TOUR VIRTUAL */}
+              {selectedPageSlug === 'tour_modal' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      selo / etiqueta (badge)
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.badge || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'badge', e.target.value)}
+                      placeholder="ex: modo observador • tour virtual ou +120 exercícios"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+
+                  {sec.key !== 'header' && (
+                    <div>
+                      <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                        nome da aba na navegação
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionData.label || ''}
+                        onChange={(e) => handleSectionChange(sec.key, 'label', e.target.value)}
+                        placeholder="ex: acervo de prompts, rodas ao vivo..."
+                        className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      ícone da aba / header (lucide)
+                    </label>
+                    <select
+                      value={sectionData.icon || 'sparkles'}
+                      onChange={(e) => handleSectionChange(sec.key, 'icon', e.target.value)}
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    >
+                      <option value="sparkles">✨ sparkles / brilho</option>
+                      <option value="book-open">📖 book-open / livro aberto</option>
+                      <option value="coffee">☕ coffee / café</option>
+                      <option value="users">👥 users / comunidade</option>
+                      <option value="file-text">📄 file-text / cadernos guiados</option>
+                      <option value="flame">🔥 flame / fogueira</option>
+                      <option value="heart">❤️ heart / afeto</option>
+                      <option value="star">⭐ star / destaque</option>
+                    </select>
+                  </div>
+
+                  {sec.key === 'header' ? (
+                    <div>
+                      <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                        aviso de garantia / rodapé do modal
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionData.footer_notice || ''}
+                        onChange={(e) => handleSectionChange(sec.key, 'footer_notice', e.target.value)}
+                        placeholder="ex: acesso imediato após a inscrição"
+                        className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                      />
+                    </div>
+                  ) : (
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                        itens de destaque da aba (digite 1 por linha)
+                      </label>
+                      <textarea
+                        value={sectionData.items || ''}
+                        onChange={(e) => handleSectionChange(sec.key, 'items', e.target.value)}
+                        rows={3}
+                        placeholder="item 1&#10;item 2&#10;item 3"
+                        className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 

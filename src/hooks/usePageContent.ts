@@ -174,6 +174,52 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       email: "soltaoverbocoletivo@gmail.com",
       footer_phrase: "autodesenvolvimento em coletivo através da escrita autoral e encontros virtuais."
     }
+  },
+  tour_modal: {
+    header: {
+      badge: "modo observador • tour virtual",
+      title: "conheça a área de membros por dentro",
+      icon: "sparkles",
+      button_text: "fazer parte da comunidade",
+      button_link: "/register",
+      footer_notice: "acesso imediato após a inscrição"
+    },
+    tab_acervo: {
+      label: "acervo de prompts",
+      badge: "+120 exercícios",
+      title: "biblioteca viva de escrita diária",
+      description: "centenas de provocações poéticas, rituais de escrita e temas estruturados para destravar a sua caneta todos os dias.",
+      image_url: "/brand-assets/deployments/IMG_8846.PNG",
+      items: "prompts de autorreflexão e desaceleração\nexercícios de memória e infância\nlaboratório de escrita intuitiva",
+      icon: "book-open"
+    },
+    tab_encontros: {
+      label: "rodas ao vivo",
+      badge: "ao vivo semanal",
+      title: "café com letras & mentoria ao vivo",
+      description: "encontros toda terça-feira das 8h às 8h30 para escrever em coletivo e partilhar a caminhada com facilitação de bruna & júlia.",
+      image_url: "/brand-assets/deployments/IMG_2864.jpg",
+      items: "terças-feiras 8h-8h30 via zoom\nfogueira voluntária de leitura\ngravações 100% disponíveis no acervo",
+      icon: "coffee"
+    },
+    tab_comunidade: {
+      label: "mural da comunidade",
+      badge: "rede de apoio",
+      title: "espaço seguro de escuta & afeto",
+      description: "dois grupos dedicados (\"junto e misturado\" + \"cá entre nós\") para trocar impressões, celebrações e acolhimento sem julgamentos.",
+      image_url: "/brand-assets/deployments/IMG_8066.PNG",
+      items: "trocas diárias entre escritoras\nfeedback amoroso sem críticas técnicas\ncomunidade ativa e acolhedora",
+      icon: "users"
+    },
+    tab_cadernos: {
+      label: "cadernos guiados",
+      badge: "impressão & pdf",
+      title: "guias em pdf para escrita manual",
+      description: "materiais diagramados com carinho para você baixar, imprimir e preencher no seu ritmo, desconectada das telas.",
+      image_url: "/brand-assets/deployments/IMG_8151.PNG",
+      items: "diagramação afetiva em papel kraft\nguias de rituais e hábitos\ndiários de bordo artesanais",
+      icon: "file-text"
+    }
   }
 };
 
