@@ -22,6 +22,9 @@ import {
   Menu,
   X,
   ShieldCheck,
+  Coffee,
+  RefreshCw,
+  Briefcase,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -40,6 +43,61 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     group: 'geral',
   },
   {
+    id: 'programa_21_dias',
+    label: '21 dias de escrita',
+    icon: BookOpen,
+    group: 'geral',
+    subItems: [
+      { id: 'overview', label: 'visão geral' },
+      { id: 'cms', label: 'cms da página' },
+      { id: 'students', label: 'alunas & progresso (dia X/21)' },
+      { id: 'tasks', label: 'tarefas & organizacao' },
+      { id: 'broadcasts', label: 'comunicação & avisos' },
+    ],
+  },
+  {
+    id: 'programa_ciclo',
+    label: 'ciclo de aprofundamento',
+    icon: RefreshCw,
+    group: 'geral',
+    subItems: [
+      { id: 'overview', label: 'visão geral' },
+      { id: 'cms', label: 'cms da página' },
+      { id: 'members', label: 'assinantes premium' },
+      { id: 'meetings', label: 'encontros ao vivo' },
+      { id: 'tasks', label: 'tarefas & organizacao' },
+      { id: 'broadcasts', label: 'comunicação & avisos' },
+    ],
+  },
+  {
+    id: 'programa_cafe_com_letras',
+    label: 'café com letras',
+    icon: Coffee,
+    group: 'geral',
+    subItems: [
+      { id: 'overview', label: 'visão geral' },
+      { id: 'cms', label: 'cms da página' },
+      { id: 'participants', label: 'participantes' },
+      { id: 'meetings', label: 'agendar encontros' },
+      { id: 'tasks', label: 'tarefas & organizacao' },
+      { id: 'broadcasts', label: 'comunicação & avisos' },
+    ],
+  },
+  {
+    id: 'contrate_experiencia',
+    label: 'contrate uma experiência (b2b)',
+    icon: Briefcase,
+    group: 'geral',
+    subItems: [
+      { id: 'overview', label: 'visão geral b2b' },
+      { id: 'crm', label: 'crm de leads (kanban)' },
+      { id: 'cms', label: 'cms da página' },
+      { id: 'meetings', label: 'reuniões b2b' },
+      { id: 'materials', label: 'deck & materiais pdf' },
+      { id: 'tasks', label: 'tarefas & organizacao' },
+    ],
+  },
+  {
     id: 'users',
     label: 'alunas & membros',
     icon: Users,
@@ -53,7 +111,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   },
   {
     id: 'courses',
-    label: 'oficinas & cursos',
+    label: 'gestão de oficinas',
     icon: BookOpen,
     group: 'geral',
     subItems: [

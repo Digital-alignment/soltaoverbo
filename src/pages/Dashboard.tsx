@@ -223,51 +223,53 @@ export default function Dashboard() {
       completed: false,
       linkUrl: '/cafe-com-letras',
     },
-    {
-      id: '2',
-      dayOfMonth: 9,
-      monthName: 'agosto',
-      dayOfWeekLabel: 'terça-feira',
-      title: 'mentoria exclusiva com facilitadoras bruna & júlia',
-      description: 'encontro individual de orientação poética e acompanhamento autoral.',
-      time: '15h00',
-      countdownStr: '21h 10min',
-      category: 'admin',
-      categoryLabel: 'convite das facilitadoras',
-      modality: 'online • exclusivo',
-      completed: false,
-      isExclusiveAdmin: true,
-      linkUrl: '/profile',
-    },
-    {
-      id: '3',
-      dayOfMonth: 11,
-      monthName: 'agosto',
-      dayOfWeekLabel: 'quinta-feira',
-      title: 'lançamento oficial: novo ciclo de aprofundamento 2026',
-      description: 'transmissão especial de abertura do novo ciclo trimestral de escrita.',
-      time: '19h00',
-      category: 'launch',
-      categoryLabel: 'lançamento',
-      modality: 'online • transmissão',
-      completed: false,
-      linkUrl: '/ciclo-de-aprofundamento',
-    },
-    {
-      id: '4',
-      dayOfMonth: 12,
-      monthName: 'agosto',
-      dayOfWeekLabel: 'sexta-feira',
-      title: 'meu ritual: escrita livre no caderno de memórias',
-      description: 'momento individual de escrita espontânea e acolhimento dos sentimentos.',
-      time: '20h00',
-      category: 'personal',
-      categoryLabel: 'ritual pessoal',
-      modality: 'prática individual',
-      completed: true,
-      linkUrl: '/exercises',
-    },
   ]);
+
+  useEffect(() => {
+    async function fetchPublishedMeetings() {
+      try {
+        const { data, error } = await supabase
+          .from('product_meetings')
+          .select('*')
+          .eq('is_published', true)
+          .order('date_time', { ascending: true });
+
+        if (!error && data && data.length > 0) {
+          const fetchedEvents: AgendaEvent[] = data.map((m: any) => {
+            const dateObj = new Date(m.date_time);
+            const dayNum = dateObj.getDate();
+            const monthStr = dateObj.toLocaleDateString('pt-BR', { month: 'long' });
+            const dayOfWeekStr = dateObj.toLocaleDateString('pt-BR', { weekday: 'long' });
+            const timeStr = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            let category = 'cafe';
+            if (m.product_slug === 'programa_ciclo') category = 'launch';
+            if (m.product_slug === 'contrate_experiencia') category = 'admin';
+
+            return {
+              id: m.id,
+              dayOfMonth: dayNum,
+              monthName: monthStr,
+              dayOfWeekLabel: dayOfWeekStr,
+              title: m.title,
+              description: m.description || 'encontro ao vivo agendado.',
+              time: timeStr,
+              category,
+              categoryLabel: `ao vivo • ${m.product_slug.replace('programa_', '').replace(/_/g, ' ')}`,
+              modality: 'online • ao vivo',
+              completed: false,
+              linkUrl: m.meeting_link || '#',
+            };
+          });
+
+          setAgendaEvents((prev) => [...fetchedEvents, ...prev]);
+        }
+      } catch (err) {
+        console.warn('Could not fetch product_meetings for dashboard agenda:', err);
+      }
+    }
+    fetchPublishedMeetings();
+  }, []);
 
   // Feed da Comunidade Nossa Fogueira
   const [communityPosts] = useState<CommunityPost[]>([

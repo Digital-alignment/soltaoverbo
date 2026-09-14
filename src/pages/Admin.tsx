@@ -11,6 +11,10 @@ import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
 import PageContentManagement from '../components/PageContentManagement';
 import MediaGalleryManagement from '../components/MediaGalleryManagement';
+import Admin21DiasHub from '../components/admin/hubs/Admin21DiasHub';
+import AdminCicloHub from '../components/admin/hubs/AdminCicloHub';
+import AdminCafeHub from '../components/admin/hubs/AdminCafeHub';
+import AdminExperienciasHub from '../components/admin/hubs/AdminExperienciasHub';
 import {
   Users,
   BookOpen,
@@ -505,6 +509,12 @@ export default function Admin() {
             </div>
           </div>
         )}
+
+        {/* HUBS DE PROGRAMAS E PRODUTOS */}
+        {activeTab === 'programa_21_dias' && <Admin21DiasHub />}
+        {activeTab === 'programa_ciclo' && <AdminCicloHub />}
+        {activeTab === 'programa_cafe_com_letras' && <AdminCafeHub />}
+        {activeTab === 'contrate_experiencia' && <AdminExperienciasHub />}
 
         {/* ABA 1: GERENCIAR ALUNAS */}
         {activeTab === 'users' && (
