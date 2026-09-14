@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
 import { BRAND_ASSETS } from '../config/brandAssets';
 import {
   LayoutDashboard,
@@ -15,7 +14,6 @@ import {
   Layers,
   Images,
   Compass,
-  Bell,
   User,
   LogOut,
   ChevronLeft,
@@ -124,7 +122,6 @@ export default function AdminSidebar() {
   const activeTab = searchParams.get('tab') || 'dashboard';
   const activeSub = searchParams.get('sub') || '';
 
-  const [unreadCount, setUnreadCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const [isExpanded, setIsExpanded] = useState<boolean>(() => {
@@ -138,42 +135,6 @@ export default function AdminSidebar() {
 
   const [hoveredFlyout, setHoveredFlyout] = useState<string | null>(null);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!profile) return;
-
-    const fetchUnreadCount = async () => {
-      const { count } = await supabase
-        .from('notifications')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', profile.id)
-        .eq('is_read', false);
-
-      setUnreadCount(count || 0);
-    };
-
-    fetchUnreadCount();
-
-    const channel = supabase
-      .channel('admin-sidebar-notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${profile.id}`,
-        },
-        () => {
-          fetchUnreadCount();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [profile]);
 
   useEffect(() => {
     if (activeTab) {
@@ -293,7 +254,7 @@ export default function AdminSidebar() {
 
               {/* FLYOUT POPOVER CARD (COLLAPSED ICON-ONLY MODE) */}
               {!isExpanded && hoveredFlyout === item.id && (
-                <div className="absolute left-16 top-0 z-50 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-3.5 min-w-[220px] animate-fadeIn space-y-2">
+                <div className="absolute left-16 top-0 z-[9999] bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg p-3.5 min-w-[220px] animate-fadeIn space-y-2">
                   <div className="flex items-center gap-2 pb-2 border-b border-papelKraft/30 text-acentoAzul">
                     <Icon className="w-4.5 h-4.5" />
                     <span className="text-sm font-bold font-editorial lowercase">{item.label}</span>
@@ -340,12 +301,12 @@ export default function AdminSidebar() {
     <>
       {/* DESKTOP SIDEBAR ADMIN (COMPLETAMENTE NAVEGÁVEL NO LADO ESQUERDO) */}
       <aside
-        className={`hidden lg:flex fixed left-4 top-4 bottom-4 z-40 flex-col bg-papelClaro/95 backdrop-blur-md rounded-3xl border border-papelKraft/60 shadow-kraft-lg transition-all duration-300 overflow-hidden ${
+        className={`hidden lg:flex fixed left-4 top-4 bottom-4 z-40 flex-col bg-papelClaro/95 backdrop-blur-md rounded-3xl border border-papelKraft/60 shadow-kraft-lg transition-all duration-300 overflow-visible ${
           isExpanded ? 'w-64' : 'w-20'
         }`}
       >
         {/* CABEÇALHO DO SIDEBAR: LOGO OFICIAL + CONTROLE DE EXPANSÃO */}
-        <div className="p-4 border-b border-papelKraft/40 flex items-center justify-between gap-2 bg-bgPlataforma/40">
+        <div className="p-4 border-b border-papelKraft/40 flex items-center justify-between gap-2 bg-bgPlataforma/40 rounded-t-3xl">
           {isExpanded ? (
             <Link to="/admin" className="flex items-center gap-2 min-w-0 group">
               <img
@@ -372,32 +333,21 @@ export default function AdminSidebar() {
           </button>
         </div>
 
-        {/* BARRA DE AÇÕES DO USUÁRIO (ALUNA + NOTIFICAÇÕES + PERFIL) */}
+        {/* BARRA DE AÇÕES DO USUÁRIO (ALUNA + PERFIL DESDOBRÁVEL SEM CORTE) */}
         <div className="p-3 border-b border-papelKraft/30 bg-papelClaro/80">
           {isExpanded ? (
             <div className="flex items-center justify-between gap-2">
               {/* BOTÃO ALUNA */}
               <Link
                 to="/dashboard"
-                className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full bg-acentoTerracota/15 hover:bg-acentoTerracota/25 border border-acentoTerracota/40 text-acentoTerracota text-xs font-bold font-corpo lowercase transition-all shadow-xs cursor-pointer"
+                className="flex-1 flex items-center justify-between py-1.5 px-3 rounded-full bg-acentoTerracota/15 hover:bg-acentoTerracota/25 border border-acentoTerracota/40 text-acentoTerracota text-xs font-bold font-corpo lowercase transition-all shadow-xs cursor-pointer"
                 title="voltar para a plataforma de alunas"
               >
-                <Compass className="w-3.5 h-3.5 text-acentoTerracota" />
-                <span>aluna</span>
-              </Link>
-
-              {/* NOTIFICAÇÕES */}
-              <Link
-                to="/notifications"
-                className="relative p-2 text-tintaCarvao/80 hover:text-acentoAzul hover:bg-papelKraft/30 rounded-full border border-papelKraft/40 transition-all shadow-xs"
-                title="notificações"
-              >
-                <Bell className="w-4 h-4" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 text-[9px] font-bold bg-acentoTerracota text-white rounded-full w-4 h-4 flex items-center justify-center shadow-xs">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
+                <div className="flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5 text-acentoTerracota" />
+                  <span>aluna</span>
+                </div>
+                <span className="text-[10px] opacity-75">→</span>
               </Link>
 
               {/* PERFIL AVATAR */}
@@ -422,11 +372,11 @@ export default function AdminSidebar() {
                   </div>
                 </button>
 
-                {/* DROPDOWN DO PERFIL */}
+                {/* DROPDOWN DO PERFIL FLUTUANTE À DIREITA (SEM CORTE DE OVERFLOW) */}
                 {dropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
-                    <div className="absolute left-0 mt-2 w-52 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg z-50 overflow-hidden py-2 animate-fadeIn">
+                    <div className="absolute left-full top-0 ml-2 w-56 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg z-[9999] overflow-hidden py-2 animate-fadeIn">
                       <div className="px-4 py-2 border-b border-papelKraft/40">
                         <p className="text-xs font-bold font-corpo text-acentoAzul lowercase truncate">
                           {profile?.display_name || 'administradora'}
@@ -470,34 +420,88 @@ export default function AdminSidebar() {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-2">
-              {/* COLLAPSED ACTIONS */}
+            <div className="flex flex-col items-center gap-2.5">
+              {/* COLLAPSED ALUNA BUTTON */}
               <Link
                 to="/dashboard"
-                className="w-8 h-8 rounded-full bg-acentoTerracota/15 hover:bg-acentoTerracota/25 border border-acentoTerracota/40 text-acentoTerracota flex items-center justify-center shadow-xs"
-                title="modo aluna"
+                className="w-9 h-9 rounded-2xl bg-acentoTerracota/15 hover:bg-acentoTerracota/25 border border-acentoTerracota/40 text-acentoTerracota flex items-center justify-center shadow-xs transition-all"
+                title="plataforma aluna"
               >
                 <Compass className="w-4 h-4 text-acentoTerracota" />
               </Link>
 
-              <Link
-                to="/notifications"
-                className="relative w-8 h-8 rounded-full border border-papelKraft/40 flex items-center justify-center text-tintaCarvao/80 hover:text-acentoAzul"
-                title="notificações"
-              >
-                <Bell className="w-4 h-4" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 text-[8px] font-bold bg-acentoTerracota text-white rounded-full w-3.5 h-3.5 flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
+              {/* COLLAPSED PROFILE BUTTON */}
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen((v) => !v)}
+                  className="w-9 h-9 rounded-full bg-acentoAzul text-white font-bold flex items-center justify-center border border-acentoOliva overflow-hidden shadow-xs cursor-pointer"
+                  title="perfil admin"
+                >
+                  {profile?.profile_picture_url ? (
+                    <img
+                      src={profile.profile_picture_url}
+                      alt={profile.display_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-xs font-semibold lowercase">
+                      {profile?.display_name?.charAt(0).toLowerCase() || 'a'}
+                    </span>
+                  )}
+                </button>
+
+                {/* DROPDOWN DO PERFIL EM MODO RECOLHIDO FLUTUANTE À DIREITA */}
+                {dropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
+                    <div className="absolute left-full top-0 ml-3 w-56 bg-papelClaro rounded-2xl border border-papelKraft/60 shadow-kraft-lg z-[9999] overflow-hidden py-2 animate-fadeIn">
+                      <div className="px-4 py-2 border-b border-papelKraft/40">
+                        <p className="text-xs font-bold font-corpo text-acentoAzul lowercase truncate">
+                          {profile?.display_name || 'administradora'}
+                        </p>
+                        <p className="text-[10px] text-tintaCarvao/60 font-corpo lowercase">
+                          painel admin
+                        </p>
+                      </div>
+
+                      <Link
+                        to="/dashboard"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-tintaCarvao hover:bg-bgPlataforma hover:text-acentoAzul transition-all lowercase"
+                      >
+                        <Compass className="w-3.5 h-3.5 text-acentoTerracota" />
+                        <span>plataforma aluna</span>
+                      </Link>
+
+                      <Link
+                        to="/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-tintaCarvao hover:bg-bgPlataforma hover:text-acentoAzul transition-all lowercase"
+                      >
+                        <User className="w-3.5 h-3.5 text-acentoAzul" />
+                        <span>meu perfil</span>
+                      </Link>
+
+                      <button
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          signOut();
+                        }}
+                        className="flex items-center gap-2.5 px-4 py-2 text-xs text-acentoTerracota hover:bg-acentoTerracota/10 transition-all w-full text-left lowercase cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5 text-acentoTerracota" />
+                        <span>sair</span>
+                      </button>
+                    </div>
+                  </>
                 )}
-              </Link>
+              </div>
             </div>
           )}
         </div>
 
         {/* CORPO DO SIDEBAR COM ROLAGEM ESTILIZADA DA MARCA */}
-        <div className="flex-1 overflow-y-auto sidebar-scrollbar p-3 space-y-4">
+        <div className="flex-1 overflow-y-auto sidebar-scrollbar p-3 space-y-4 rounded-b-3xl">
           {renderNavGroup('geral', 'gestão geral')}
           {renderNavGroup('cms', 'conteúdo do site (cms)')}
           {renderNavGroup('comunidade', 'comunidade & vendas')}
@@ -505,7 +509,7 @@ export default function AdminSidebar() {
 
         {/* RODAPÉ DO SIDEBAR (INDICADOR DE VERSÃO E STATUS) */}
         {isExpanded && (
-          <div className="p-3 border-t border-papelKraft/40 bg-bgPlataforma/50 text-[10px] font-corpo text-tintaCarvao/60 lowercase text-center">
+          <div className="p-3 border-t border-papelKraft/40 bg-bgPlataforma/50 text-[10px] font-corpo text-tintaCarvao/60 lowercase text-center rounded-b-3xl">
             <span>solta o verbo • modo admin</span>
           </div>
         )}

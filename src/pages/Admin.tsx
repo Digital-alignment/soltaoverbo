@@ -324,86 +324,101 @@ export default function Admin() {
         }`}
       >
         
-        {/* CABEÇALHO PRINCIPAL DO PAINEL */}
-        <div className="border-b border-papelKraft/40 pb-4 space-y-0.5">
-          <div className="flex items-center gap-2 mb-1 text-xs font-corpo text-tintaCarvao/60 lowercase">
-            <span className="font-bold text-acentoAzul">painel administrativo</span>
-            <span>/</span>
-            <span className="font-bold text-acentoTerracota font-editorial">
-              {activeTab}
-            </span>
-            {activeSub && (
-              <>
-                <span>/</span>
-                <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul font-bold">
-                  {activeSub}
-                </span>
-              </>
-            )}
-          </div>
-
-          <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
-            painel administrativo
-          </h1>
-          <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase">
-            gestão de alunas, oficinas, banners, transmissões e moderação da plataforma
-          </p>
-        </div>
-
-        {/* CARTÕES DE MÉTRICAS GERAIS (RITUAL STATS) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
-            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
-              total de alunas
-            </span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoAzul">
-                {stats.totalUsers}
+        {/* BREADCRUMB BAR PARA ABAS DIFERENTES DE DASHBOARD */}
+        {activeTab !== 'dashboard' && (
+          <div className="flex items-center justify-between gap-2 border-b border-papelKraft/40 pb-3">
+            <div className="flex items-center gap-2 text-xs font-corpo text-tintaCarvao/60 lowercase">
+              <span className="font-bold text-acentoAzul">painel administrativo</span>
+              <span>/</span>
+              <span className="font-bold text-acentoTerracota font-editorial text-sm">
+                {activeTab}
               </span>
-              <span className="text-[10px] text-tintaCarvao/50 font-corpo">cadastros</span>
+              {activeSub && (
+                <>
+                  <span>/</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul font-bold text-[11px]">
+                    {activeSub}
+                  </span>
+                </>
+              )}
             </div>
           </div>
+        )}
 
-          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
-            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
-              membros gratuitos
-            </span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-gesto font-normal text-2xl sm:text-3xl text-tintaCarvao/80">
-                {stats.freeUsers}
-              </span>
-              <span className="text-[10px] text-tintaCarvao/50 font-corpo">alunas</span>
-            </div>
-          </div>
-
-          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
-            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
-              membros premium
-            </span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoTerracota">
-                {stats.paidUsers}
-              </span>
-              <span className="text-[10px] text-tintaCarvao/50 font-corpo">assinantes</span>
-            </div>
-          </div>
-
-          <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
-            <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
-              total de oficinas
-            </span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoOliva">
-                {stats.totalCourses}
-              </span>
-              <span className="text-[10px] text-tintaCarvao/50 font-corpo">cursos</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ABA DASHBOARD PRINCIPAL (SHORTCUTS & VISÃO GERAL) */}
+        {/* ABA DASHBOARD PRINCIPAL (CABECALHO + METRICAS + SHORTCUTS) */}
         {activeTab === 'dashboard' && (
           <div className="space-y-6 animate-fadeIn">
+            
+            {/* CABEÇALHO DA DASHBOARD */}
+            <div className="border-b border-papelKraft/40 pb-4 space-y-0.5">
+              <div className="flex items-center gap-2 mb-1 text-xs font-corpo text-tintaCarvao/60 lowercase">
+                <span className="font-bold text-acentoAzul">painel administrativo</span>
+                <span>/</span>
+                <span className="font-bold text-acentoTerracota font-editorial">
+                  dashboard
+                </span>
+              </div>
+
+              <h1 className="font-gesto font-normal text-[34px] sm:text-[44px] text-acentoAzul lowercase leading-tight">
+                painel administrativo
+              </h1>
+              <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase">
+                gestão de alunas, oficinas, banners, transmissões e moderação da plataforma
+              </p>
+            </div>
+
+            {/* CARTÕES DE MÉTRICAS GERAIS (RITUAL STATS) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+                <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+                  total de alunas
+                </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoAzul">
+                    {stats.totalUsers}
+                  </span>
+                  <span className="text-[10px] text-tintaCarvao/50 font-corpo">cadastros</span>
+                </div>
+              </div>
+
+              <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+                <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+                  membros gratuitos
+                </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-gesto font-normal text-2xl sm:text-3xl text-tintaCarvao/80">
+                    {stats.freeUsers}
+                  </span>
+                  <span className="text-[10px] text-tintaCarvao/50 font-corpo">alunas</span>
+                </div>
+              </div>
+
+              <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+                <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+                  membros premium
+                </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoTerracota">
+                    {stats.paidUsers}
+                  </span>
+                  <span className="text-[10px] text-tintaCarvao/50 font-corpo">assinantes</span>
+                </div>
+              </div>
+
+              <div className="bg-papelClaro p-4 sm:p-5 rounded-2xl border border-papelKraft/40 space-y-1 shadow-xs">
+                <span className="text-[11px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
+                  total de oficinas
+                </span>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-gesto font-normal text-2xl sm:text-3xl text-acentoOliva">
+                    {stats.totalCourses}
+                  </span>
+                  <span className="text-[10px] text-tintaCarvao/50 font-corpo">cursos</span>
+                </div>
+              </div>
+            </div>
+
+            {/* PAINEL DE VISÃO GERAL E ATALHOS RÁPIDOS */}
             <div className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-6 sm:p-8 shadow-kraft space-y-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-papelKraft/30 pb-4">
                 <div>
