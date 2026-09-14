@@ -106,7 +106,6 @@ export default function ProgramaCafeComLetras() {
     title: 'encontro mensal de escrita & aconchego',
     subtitle: 'um ritual de domingo com café quentinho, cadernos abertos e partilhas afetivas.',
   });
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
   // Estado do Carrossel de Screenshots de Depoimentos

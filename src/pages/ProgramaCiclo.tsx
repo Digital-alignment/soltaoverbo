@@ -252,66 +252,6 @@ export default function ProgramaCiclo() {
         </div>
       </section>
 
-      {/* 3. SEÇÃO VÍDEO DE APRESENTAÇÃO DE YOUTUBE */}
-      <section id="video-apresentacao" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <Play className="w-4 h-4 text-acentoTerracota fill-acentoTerracota" />
-              <span>mensagem das facilitadoras</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              assista à apresentação do ciclo de aprofundamento
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              bruna riedel e júlia alvim explicam como funcionam os 3 meses de mentoria e comunidade viva.
-            </p>
-          </div>
-
-          <div className="relative rounded-3xl bg-bgPlataforma p-3 sm:p-6 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group select-none">
-            <div className="absolute -top-2 left-8 sm:left-12 w-28 sm:w-36 h-7 sm:h-9 pointer-events-none z-30 opacity-90">
-              <img
-                src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
-                alt="fita washi"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-papelKraft/40 shadow-inner bg-acentoAzul">
-              {!isPlayingVideo ? (
-                <div
-                  onClick={() => setIsPlayingVideo(true)}
-                  className="absolute inset-0 cursor-pointer group/thumb w-full h-full"
-                >
-                  <img
-                    src="/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
-                    alt="capa do video ciclo de aprofundamento"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 group-hover/thumb:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/85 via-acentoAzul/40 to-acentoAzul/30 transition-opacity duration-300 group-hover/thumb:opacity-90" />
-
-                  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 text-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-2xl transition-all duration-300 group-hover/thumb:scale-110 group-hover/thumb:bg-acentoTerracota/90 animate-pulse mb-3">
-                      <Play className="w-7 h-7 sm:w-9 sm:h-9 lg:w-11 lg:h-11 fill-white translate-x-0.5" />
-                    </div>
-                    <span className="bg-papelClaro/95 backdrop-blur-sm text-acentoAzul font-editorial font-bold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full text-xs sm:text-base shadow-lg lowercase border border-papelKraft/50">
-                      clique para assistir ao vídeo (3 min)
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <iframe
-                  className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&rel=0`}
-                  title="Ciclo de Aprofundamento - Apresentação"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 4. OS 4 PILARES DA MENTORIA (Bento Grid) */}
       <section className="py-20 sm:py-28 bg-bgPlataforma">
