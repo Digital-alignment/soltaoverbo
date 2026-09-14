@@ -78,6 +78,18 @@ export default function UserNavbar() {
 
           {/* LADO DIREITO: Notificações, Ícone de Corona Premium & Perfil do Usuário */}
           <div className="flex items-center gap-3">
+            {/* Botão de Troca Rápida para Painel Admin (quando usuário for admin) */}
+            {profile?.role === 'admin' && (
+              <Link
+                to="/admin"
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul/20 border border-acentoAzul/30 text-acentoAzul text-xs font-bold font-corpo lowercase transition-all shadow-xs cursor-pointer"
+                title="entrar no painel administrativo"
+              >
+                <ShieldCheck className="w-4 h-4 text-acentoAzul" />
+                <span className="hidden sm:inline">painel admin</span>
+              </Link>
+            )}
+
             {/* Notificações com Badge */}
             <Link
               to="/notifications"

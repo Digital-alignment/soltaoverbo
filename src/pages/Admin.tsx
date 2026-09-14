@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingPage from '../components/LoadingPage';
@@ -38,12 +39,22 @@ type UserProfile = Database['public']['Tables']['users_profiles']['Row'] & {
 };
 type Course = Database['public']['Tables']['courses']['Row'];
 
+const VALID_TABS = ['users', 'courses', 'messages', 'banners', 'broadcasts', 'moderation', 'checkout', 'pages', 'gallery'] as const;
+type TabType = typeof VALID_TABS[number];
+
 export default function Admin() {
   const { profile } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [activeTab, setActiveTab] = useState<'users' | 'courses' | 'messages' | 'banners' | 'broadcasts' | 'moderation' | 'checkout' | 'pages' | 'gallery'>('users');
+
+  const rawTab = searchParams.get('tab');
+  const activeTab: TabType = VALID_TABS.includes(rawTab as TabType) ? (rawTab as TabType) : 'users';
+
+  const setActiveTab = (tab: TabType) => {
+    setSearchParams({ tab }, { replace: true });
+  };
   const [stats, setStats] = useState({
     totalUsers: 0,
     freeUsers: 0,
