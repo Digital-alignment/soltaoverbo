@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Upload, Image as ImageIcon, Loader, Grid } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { compressImage } from '../lib/imageCompressor';
 import RichTextEditor from './RichTextEditor';
 import MediaPickerModal from './MediaPickerModal';
 import type { Database } from '../lib/database.types';
@@ -97,7 +98,13 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
   };
 
   const uploadFileToSupabase = async (file: File): Promise<string> => {
-    const fileExt = file.name.split('.').pop();
+    const fileToUpload = await compressImage(file, {
+      maxWidth: 1200,
+      quality: 0.82,
+      outputFormat: 'image/webp',
+    });
+
+    const fileExt = fileToUpload.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `course-thumbnails/${fileName}`;
 
@@ -105,9 +112,10 @@ export default function CourseModal({ isOpen, onClose, onSuccess, course }: Cour
 
     const { error: uploadError } = await supabase.storage
       .from('banners')
-      .upload(filePath, file, {
+      .upload(filePath, fileToUpload, {
         cacheControl: '3600',
         upsert: false,
+        contentType: fileToUpload.type,
       });
 
     if (uploadError) {

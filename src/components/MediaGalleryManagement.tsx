@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { fetchCMSDataFromSupabase, SiteCMSData } from '../hooks/usePageContent';
+import { compressImage } from '../lib/imageCompressor';
 
 export interface MediaItem {
   id: string;
@@ -212,13 +213,20 @@ export default function MediaGalleryManagement({ onSelectUrl, isPickerMode = fal
           continue;
         }
 
-        const fileExt = file.name.split('.').pop();
+        // Compress and optimize image to WebP before uploading
+        const fileToUpload = await compressImage(file, {
+          maxWidth: 1920,
+          quality: 0.82,
+          outputFormat: 'image/webp',
+        });
+
+        const fileExt = fileToUpload.name.split('.').pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
         const filePath = `media-gallery/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('banners')
-          .upload(filePath, file, { upsert: true });
+          .upload(filePath, fileToUpload, { upsert: true, contentType: fileToUpload.type });
 
         if (uploadError) throw uploadError;
       }

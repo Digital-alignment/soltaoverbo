@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Image, Plus, Trash2, Eye, EyeOff, ArrowUp, ArrowDown, Link as LinkIcon, Users, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { compressImage } from '../lib/imageCompressor';
 
 interface Banner {
   id: string;
@@ -61,13 +62,19 @@ export default function BannerManagement() {
 
     setUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileToUpload = await compressImage(file, {
+        maxWidth: 1920,
+        quality: 0.82,
+        outputFormat: 'image/webp',
+      });
+
+      const fileExt = fileToUpload.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `home-banners/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('banners')
-        .upload(filePath, file);
+        .upload(filePath, fileToUpload, { contentType: fileToUpload.type });
 
       if (uploadError) throw uploadError;
 
