@@ -447,9 +447,12 @@ export default function Landing() {
                       café com letras (escrita em coletivo)
                     </h3>
 
-                    <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      toda terça-feira, das 8h às 8h30, via zoom. um tema diferente toda semana para começar a semana soltando o verbo em coletivo. incluso no ciclo de aprofundamento, e quem comprar os 21 dias de escrita tem direito a participar de 1 café com letras por mês.
-                    </p>
+                    <div className="space-y-3 text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
+                      <p>um encontro semanal para começar a semana de um jeito diferente: mais consciente, mais presente e mais perto da sua própria voz.</p>
+                      <p>às terças-feiras, das 8h às 8h30, no zoom, abrimos um espaço de escrita em coletivo com propostas temáticas que se renovam a cada encontro.</p>
+                      <p>uma prática curta, potente e possível para quem deseja cultivar a escrita como ritual.</p>
+                      <p className="text-acentoTerracota font-semibold">incluído para quem já faz parte do ciclo de aprofundamento.</p>
+                    </div>
                   </div>
 
                   <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
@@ -463,11 +466,11 @@ export default function Landing() {
                     </div>
 
                     <Link
-                      to="/programas/ciclo-de-aprofundamento"
-                      className="btn-pill-secondary text-base px-7 py-3 rounded-full border border-papelKraft/70 hover:bg-papelClaro transition-all flex items-center justify-center gap-2"
+                      to="/programas/cafe-com-letras"
+                      className="btn-pill-primary text-base px-7 py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <span>faça parte</span>
-                      <ArrowRight className="w-4 h-4 text-acentoAzul" />
+                      <span>quero fazer parte</span>
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </Link>
                   </div>
                 </div>
@@ -486,12 +489,15 @@ export default function Landing() {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <h4 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
-                      um respiro na rotina
+                      seu ritual semanal de escrita
                     </h4>
-                    <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                      ideais para quem quer experimentar a metodologia do solta o verbo de forma leve e ter um momento de pausa poética no seu mês.
+                    <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                      30 minutos para sair do automático e transformar o que está vivo em palavra. ideal para quem quer criar constância na escrita em um formato leve, acessível e transformador.
+                    </p>
+                    <p className="text-xs sm:text-sm font-semibold text-acentoTerracota lowercase pt-2 border-t border-papelKraft/40">
+                      terças, 8h às 8h30 · ao vivo no zoom · incluso no ciclo de aprofundamento
                     </p>
                   </div>
                 </div>
