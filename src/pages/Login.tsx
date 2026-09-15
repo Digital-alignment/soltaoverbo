@@ -112,35 +112,15 @@ export default function Login() {
               🔑 contas de teste (acesso rápido)
             </span>
 
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="flex items-center justify-center">
               <button
                 type="button"
                 onClick={() => handleDemoLogin('admin@soltaoverbocoletivo.com', 'admin123456')}
-                className="px-2 py-1.5 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-[11px] font-semibold flex items-center justify-center gap-1 border border-acentoAzul/20 lowercase cursor-pointer"
+                className="w-full px-3 py-2 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-semibold flex items-center justify-center gap-1.5 border border-acentoAzul/20 lowercase cursor-pointer"
                 title="preencher como admin demo"
               >
-                <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-                <span>admin</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('aluno@soltaoverbocoletivo.com', 'aluno123456')}
-                className="px-2 py-1.5 rounded-xl bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white transition-all text-[11px] font-semibold flex items-center justify-center gap-1 border border-acentoTerracota/20 lowercase cursor-pointer"
-                title="preencher como aluno demo 1"
-              >
-                <UserCheck className="w-3.5 h-3.5 shrink-0" />
-                <span>demo 1</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleDemoLogin('aluno2@soltaoverbocoletivo.com', 'aluno123456')}
-                className="px-2 py-1.5 rounded-xl bg-acentoOliva/20 hover:bg-acentoOliva text-acentoAzul hover:text-tintaCarvao transition-all text-[11px] font-semibold flex items-center justify-center gap-1 border border-acentoOliva/40 lowercase cursor-pointer"
-                title="preencher como aluna demo 2 (camila oliveira)"
-              >
-                <UserCheck className="w-3.5 h-3.5 text-acentoAzul shrink-0" />
-                <span>demo 2</span>
+                <ShieldCheck className="w-4 h-4 shrink-0" />
+                <span>acesso rápido admin demo</span>
               </button>
             </div>
           </div>
