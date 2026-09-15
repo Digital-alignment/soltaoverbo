@@ -510,122 +510,123 @@ export default function ProgramaCiclo() {
 
       {/* 5. OS 7 PILARES DO CICLO */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
               o que faz do ciclo uma jornada transformadora
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              sete pilares desenhados para sustentar a sua prática ao longo de 3 meses.
+              sete apoios desenhados para dar profundidade, constância e companhia ao seu processo de escrita.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Bento Card 1 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
-                  <Video className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  3 encontros ao vivo via zoom
+          {/* Grid Principal: 2 primeiros blocos em destaque maior */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Bloco 1 Destaque: Café com Letras */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border-2 border-acentoAzul/30 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul hover:shadow-md flex flex-col justify-between group relative overflow-hidden">
+              <div className="space-y-3">
+                <span className="text-xs font-bold text-acentoTerracota tracking-wider block lowercase">
+                  01 · ritual semanal
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  acesso a todos os cafés com letras
                 </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  27/10, 24/11 e 15/12 (encontro especial com jout jout). momentos profundos de facilitação com bruna riedel e júlia alvim.
+                <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  o ritual de terça-feira de escrita coletiva, das 8h às 8h30. toda semana, meia hora só sua antes do dia começar, com gente escrevendo junto.
                 </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>01 // encontros virtuais</span>
               </div>
             </div>
 
-            {/* Bento Card 2 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
-                  <Flame className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  grupos &quot;junto e misturado&quot; + &quot;cá entre nós&quot;
+            {/* Bloco 2 Destaque: Encontros ao Vivo */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border-2 border-acentoAzul/30 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul hover:shadow-md flex flex-col justify-between group relative overflow-hidden">
+              <div className="space-y-3">
+                <span className="text-xs font-bold text-acentoTerracota tracking-wider block lowercase">
+                  02 · encontros no zoom
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  3 encontros ao vivo, um por mês, com bruna, júlia e convidada
                 </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  pertencimento pleno a dois espaços de troca: a comunidade geral e o grupo exclusivo de membros do ciclo.
+                <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  das 19h às 20h30, fechando cada mês: o tema destravado em voz alta, com espaço para a sua história e não só para a teoria.
                 </p>
               </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>02 // 2 grupos de whatsapp</span>
+            </div>
+          </div>
+
+          {/* Grade Secundária: 5 pilares compactos sem ícone */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* Pilares 3: Whatsapp */}
+            <div className="bg-papelClaro rounded-2xl p-5 border border-papelKraft/50 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-acentoAzul/60 lowercase tracking-wide block">
+                  03 · whatsapp
+                </span>
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  comunidade no whatsapp
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm leading-relaxed font-medium lowercase">
+                  a troca do dia a dia: o insight que veio no ônibus, o trecho do livro que doeu, o apoio quando trava. dois grupos: &quot;junto e misturado&quot; e &quot;cá entre nós&quot;.
+                </p>
               </div>
             </div>
 
-            {/* Bento Card 3 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
-                  <BookOpen className="w-6 h-6 text-acentoAzul" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  21 dias de escrita 100% grátis
+            {/* Pilar 4: 21 dias */}
+            <div className="bg-papelClaro rounded-2xl p-5 border border-papelKraft/50 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-acentoAzul/60 lowercase tracking-wide block">
+                  04 · jornada autoguiada
+                </span>
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  os 21 dias de escrita liberados
                 </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  acesso integral e ilimitado a todo o programa autoguiado e acervo completo de gravações e áudios.
+                <p className="text-tintaCarvao/80 text-sm leading-relaxed font-medium lowercase">
+                  a jornada completa para escrever até virar hábito.
                 </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>03 // 21 dias + acervo completo</span>
               </div>
             </div>
 
-            {/* Bento Card 4 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
-                  <FileText className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  cadernos poéticos em pdf
+            {/* Pilar 5: Acervo */}
+            <div className="bg-papelClaro rounded-2xl p-5 border border-papelKraft/50 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-acentoAzul/60 lowercase tracking-wide block">
+                  05 · gravações
+                </span>
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  acervo de materiais gravados
                 </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  materiais de apoio artesanais preparados exclusivamente para cada ciclo temático de escrita.
+                <p className="text-tintaCarvao/80 text-sm leading-relaxed font-medium lowercase">
+                  tudo o que já construímos, disponível no seu tempo.
                 </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>04 // cadernos exclusivos</span>
               </div>
             </div>
 
-            {/* Bento Card 5 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  livro &quot;a coragem de não agradar&quot;
+            {/* Pilar 6: Plataforma */}
+            <div className="bg-papelClaro rounded-2xl p-5 border border-papelKraft/50 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-acentoAzul/60 lowercase tracking-wide block">
+                  06 · plataforma
+                </span>
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  plataforma completa
                 </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  leitura norteadora de kishimi & koga para guiar as reflexões de liberdade e pertencimento.
+                <p className="text-tintaCarvao/80 text-sm leading-relaxed font-medium lowercase">
+                  diário pessoal, área de partilha, rituais e inspirações de escrita, sempre à mão.
                 </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>05 // leitura recomendada</span>
               </div>
             </div>
 
-            {/* Bento Card 6 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
-                  <Coffee className="w-6 h-6 text-acentoAzul" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  café com letras 100% incluso
+            {/* Pilar 7: Encontros presenciais */}
+            <div className="bg-papelClaro rounded-2xl p-5 border border-papelKraft/50 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group sm:col-span-2 lg:col-span-1">
+              <div className="space-y-2">
+                <span className="text-xs font-bold text-acentoAzul/60 lowercase tracking-wide block">
+                  07 · presencial
+                </span>
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                  desconto especial nos encontros presenciais do solta o verbo
                 </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  encontros semanais de escrita coletiva todas as terças-feiras (8h às 8h30) sem nenhum custo adicional.
+                <p className="text-tintaCarvao/80 text-sm leading-relaxed font-medium lowercase">
+                  pra quando a gente se encontra fora da tela.
                 </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>06 // terças-feiras 8h</span>
               </div>
             </div>
           </div>
