@@ -24,27 +24,6 @@ import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
 import PaymentModal from '../components/PaymentModal';
 
-const liveStructure = [
-  {
-    step: '01',
-    time: '20 minutos',
-    title: 'chegada & ritual de presença',
-    description: 'abertura do zoom, desaceleração com música ou provocação inicial em texto para transicionar da rotina para o momento de escrita.',
-  },
-  {
-    step: '02',
-    time: '45 minutos',
-    title: 'escrita guiada & provocação',
-    description: 'apresentação da proposta do dia por bruna ou júlia e escrita individual sem filtro no seu próprio caderno ou plataforma.',
-  },
-  {
-    step: '03',
-    time: '25 minutos',
-    title: 'partilha poética & encerramento',
-    description: 'espaço aberto para quem desejar ler seus trechos ou partilhar reflexões do processo com acolhimento coletivo.',
-  },
-];
-
 const deploymentScreenshots = [
   { src: '/brand-assets/deployments/IMG_2847.PNG', title: 'partilha e acolhimento' },
   { src: '/brand-assets/deployments/IMG_2848.PNG', title: 'desbloqueio criativo' },
@@ -633,56 +612,7 @@ export default function ProgramaCiclo() {
         </div>
       </section>
 
-      {/* 5. A ESTRUTURA DOS ENCONTROS AO VIVO (Duração de 1h30 em 3 Etapas) */}
-      <section className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <Clock className="w-4 h-4 text-acentoTerracota" />
-              <span>dinâmica dos encontros no zoom</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              como funciona um encontro quinzenal (1h30)
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              uma estrutura pensada para conduzir você da agitação diária à entrega poética.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {liveStructure.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-bgPlataforma rounded-3xl p-7 border border-papelKraft/40 shadow-kraft flex flex-col justify-between space-y-4 hover:-translate-y-1 transition-transform"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-editorial text-3xl font-bold text-acentoTerracota">
-                      {item.step}
-                    </span>
-                    <span className="text-xs font-bold text-acentoAzul bg-papelClaro px-3 py-1 rounded-full border border-papelKraft/40 lowercase">
-                      {item.time}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
-                    {item.description}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-papelKraft/30 flex items-center gap-2 text-xs font-bold text-acentoAzul/70">
-                  <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
-                  <span>etapa 0{idx + 1} do encontro</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 6. PARA QUEM É X PARA QUEM NÃO É */}
       <section className="py-20 sm:py-28 bg-bgPlataforma">
