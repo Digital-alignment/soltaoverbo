@@ -15,6 +15,8 @@ import Admin21DiasHub from '../components/admin/hubs/Admin21DiasHub';
 import AdminCicloHub from '../components/admin/hubs/AdminCicloHub';
 import AdminCafeHub from '../components/admin/hubs/AdminCafeHub';
 import AdminExperienciasHub from '../components/admin/hubs/AdminExperienciasHub';
+import StudentInspectionDrawer from '../components/admin/StudentInspectionDrawer';
+import { StudentCourseProgress } from '../types/productHubs';
 import {
   Users,
   BookOpen,
@@ -36,6 +38,7 @@ import {
   Layers,
   LayoutDashboard,
   Plus,
+  Eye,
 } from 'lucide-react';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
@@ -69,6 +72,10 @@ export default function Admin() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+
+  // Estado para Ficha Poética da Aluna (Student Inspection Drawer)
+  const [selectedStudent, setSelectedStudent] = useState<StudentCourseProgress | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(() => {
     const saved = localStorage.getItem('admin_sidebar_expanded');
@@ -249,6 +256,32 @@ export default function Admin() {
     URL.revokeObjectURL(url);
   };
 
+  const handleOpenStudentDrawer = (u: UserProfile) => {
+    let completedCount = 0;
+    try {
+      const raw = localStorage.getItem(`soltaoverbo_completed_lessons_${u.id}`);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) completedCount = parsed.length;
+      }
+    } catch (e) {}
+
+    const studentData: StudentCourseProgress = {
+      user_id: u.id,
+      display_name: u.display_name,
+      email: u.email_public || u.email || 'e-mail não disponível',
+      profile_picture_url: u.profile_picture_url,
+      current_day: completedCount > 0 ? Math.min(21, completedCount) : 1,
+      total_days: 21,
+      completed_lessons: completedCount,
+      last_activity: u.created_at ? `membro desde ${new Date(u.created_at).toLocaleDateString('pt-BR')}` : 'registrada recentemente',
+      role: u.role,
+      bio: u.bio,
+    };
+    setSelectedStudent(studentData);
+    setIsDrawerOpen(true);
+  };
+
   const loadData = async () => {
     try {
       const { data: usersData, error: usersError } = await supabase
@@ -260,7 +293,7 @@ export default function Admin() {
 
       const usersWithEmails = (usersData || []).map((user) => ({
         ...user,
-        email: user.email || '',
+        email: user.email_public || user.email || '',
       }));
 
       const { data: coursesData } = await supabase
@@ -637,9 +670,12 @@ export default function Admin() {
                     className="bg-white p-4 rounded-2xl border border-papelKraft/40 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                   >
                     {/* Info da Aluna */}
-                    <div className="space-y-1 min-w-0 flex-1">
+                    <div
+                      onClick={() => handleOpenStudentDrawer(user)}
+                      className="space-y-1 min-w-0 flex-1 cursor-pointer group"
+                    >
                       <div className="flex items-center gap-2">
-                        <h3 className="font-editorial font-bold text-base text-acentoAzul lowercase truncate">
+                        <h3 className="font-editorial font-bold text-base text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase truncate">
                           {user.display_name}
                         </h3>
                         <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
@@ -647,8 +683,8 @@ export default function Admin() {
                         </span>
                       </div>
 
-                      <p className="text-xs font-corpo text-tintaCarvao/70 truncate">
-                        {user.email || 'e-mail não disponível'}
+                      <p className="text-xs font-corpo text-tintaCarvao/80 font-medium truncate">
+                        {user.email_public || user.email || 'e-mail não disponível'}
                       </p>
 
                       <div className="flex items-center gap-3 text-[10px] font-corpo text-tintaCarvao/50">
@@ -705,8 +741,18 @@ export default function Admin() {
                       )}
                     </div>
 
-                    {/* Seletor de Papel */}
-                    <div>
+                    {/* Botão de Ver Ficha Poética & Seletor de Papel */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenStudentDrawer(user)}
+                        className="px-3.5 py-1.5 rounded-xl bg-acentoAzul hover:bg-acentoAzul/90 text-white font-gesto text-[18px] lowercase transition-all shadow-xs flex items-center gap-1.5 cursor-pointer hover:scale-105"
+                        title="abrir ficha poética da aluna e ver seus textos no atelier"
+                      >
+                        <Search className="w-3.5 h-3.5" />
+                        <span>ver ficha →</span>
+                      </button>
+
                       <select
                         value={user.role}
                         onChange={(e) => updateUserRole(user.id, e.target.value as 'free' | 'paid' | 'admin')}
@@ -721,6 +767,15 @@ export default function Admin() {
                 ))}
               </div>
             )}
+
+            {/* PAINEL LATERAL DE INSPEÇÃO DE ALUNA (FICHA POÉTICA) */}
+            <StudentInspectionDrawer
+              isOpen={isDrawerOpen}
+              onClose={() => setIsDrawerOpen(false)}
+              student={selectedStudent}
+              productSlug="programa_21_dias"
+              productName="visão geral do coletivo"
+            />
           </div>
         )}
 
