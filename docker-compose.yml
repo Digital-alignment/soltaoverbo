@@ -13,5 +13,5 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.soltaoverbo.rule=Host(`soltaoverbocoletivo.com`) || Host(`www.soltaoverbocoletivo.com`)"
       - "traefik.http.routers.soltaoverbo.entrypoints=websecure"
-      - "traefik.http.routers.soltaoverbo.tls.certresolver=myresolver"
+      - "traefik.http.routers.soltaoverbo.tls.certresolver=letsencrypt"
       - "traefik.http.services.soltaoverbo.loadbalancer.server.port=80"
