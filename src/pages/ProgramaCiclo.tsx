@@ -13,11 +13,37 @@ import {
   X,
   Calendar,
   Quote,
+  Video,
+  Flame,
+  FileText,
+  Coffee,
+  Clock,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
 import PaymentModal from '../components/PaymentModal';
+
+const liveStructure = [
+  {
+    step: '01',
+    time: '20 minutos',
+    title: 'chegada & ritual de presença',
+    description: 'abertura do zoom, desaceleração com música ou provocação inicial em texto para transicionar da rotina para o momento de escrita.',
+  },
+  {
+    step: '02',
+    time: '45 minutos',
+    title: 'escrita guiada & provocação',
+    description: 'apresentação da proposta do dia por bruna ou júlia e escrita individual sem filtro no seu próprio caderno ou plataforma.',
+  },
+  {
+    step: '03',
+    time: '25 minutos',
+    title: 'partilha poética & encerramento',
+    description: 'espaço aberto para quem desejar ler seus trechos ou partilhar reflexões do processo com acolhimento coletivo.',
+  },
+];
 
 const deploymentScreenshots = [
   { src: '/brand-assets/deployments/IMG_2847.PNG', title: 'partilha e acolhimento' },
