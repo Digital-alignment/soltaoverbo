@@ -210,6 +210,11 @@ export default function WritingExercises() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [isAnonymousShare, setIsAnonymousShare] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [publishSuccessModal, setPublishSuccessModal] = useState<{
+    isOpen: boolean;
+    message: string;
+    isAnonymous: boolean;
+  } | null>(null);
 
   // ABA PRINCIPAL DO TOPO: 'criador' | 'rituais'
   const [mainTab, setMainTab] = useState<'criador' | 'rituais'>('criador');
@@ -707,8 +712,12 @@ export default function WritingExercises() {
         .maybeSingle();
 
       if (existingPost) {
-        alert('este texto já foi publicado na nossa fogueira!');
         setShowShareModal(false);
+        setPublishSuccessModal({
+          isOpen: true,
+          message: 'este texto já foi publicado na nossa fogueira poética!',
+          isAnonymous: isAnonymousShare,
+        });
         return;
       }
 
@@ -726,16 +735,22 @@ export default function WritingExercises() {
 
       if (postError) throw postError;
 
-      alert(
-        isAnonymousShare
-          ? 'texto publicado com sucesso na nossa fogueira de forma anônima!'
-          : 'texto publicado com sucesso na nossa fogueira!'
-      );
       setShowShareModal(false);
+      setPublishSuccessModal({
+        isOpen: true,
+        message: isAnonymousShare
+          ? 'seu texto foi publicado na nossa fogueira de forma anônima!'
+          : 'seu texto foi publicado com sucesso na nossa fogueira poética!',
+        isAnonymous: isAnonymousShare,
+      });
       await loadExercises();
     } catch (error) {
       console.error('erro ao compartilhar:', error);
-      alert('erro ao compartilhar. tente novamente.');
+      setPublishSuccessModal({
+        isOpen: true,
+        message: 'erro ao publicar o texto. por favor, tente novamente.',
+        isAnonymous: isAnonymousShare,
+      });
     }
   };
 
@@ -1602,6 +1617,62 @@ export default function WritingExercises() {
                 >
                   <Share2 className="w-4 h-4 text-white" />
                   <span>confirmar e publicar →</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL DE SUCESSO DE PUBLICAÇÃO (ESTILIZADO COM A MARCA SOLTA O VERBO) */}
+        {publishSuccessModal?.isOpen && (
+          <div className="fixed inset-0 z-[99999999] bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/50 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-5 text-center relative text-tintaCarvao">
+              <button
+                onClick={() => setPublishSuccessModal(null)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-papelKraft/20 text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40 cursor-pointer"
+                title="fechar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="w-16 h-16 rounded-full bg-acentoTerracota/15 text-acentoTerracota flex items-center justify-center mx-auto border border-acentoTerracota/30 shadow-xs">
+                <Flame className="w-8 h-8 text-acentoTerracota animate-pulse" />
+              </div>
+
+              <div className="space-y-2">
+                <span className="px-3 py-0.5 rounded-full bg-acentoOliva/15 text-acentoOliva text-xs font-bold font-corpo lowercase">
+                  partilha publicada ✓
+                </span>
+                <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  sopro enviado à fogueira
+                </h3>
+                <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/80 lowercase leading-relaxed max-w-xs mx-auto">
+                  {publishSuccessModal.message}
+                </p>
+              </div>
+
+              <div className="bg-white p-4 rounded-2xl border border-papelKraft/35 space-y-1.5 text-left">
+                <div className="flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/55">
+                  <span className="font-bold text-acentoAzul lowercase">
+                    {publishSuccessModal.isAnonymous ? 'autora anônima' : (profile?.full_name || profile?.username || 'aluna solta o verbo').toLowerCase()}
+                  </span>
+                  <span>hoje</span>
+                </div>
+                <p className="text-xs font-editorial text-acentoAzul font-bold lowercase truncate">
+                  “{title || 'texto sem título'}”
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center gap-3 pt-2 border-t border-papelKraft/30">
+                <button
+                  onClick={() => {
+                    setPublishSuccessModal(null);
+                    setIsZenMode(false);
+                  }}
+                  className="px-6 py-2.5 rounded-2xl bg-acentoAzul hover:bg-acentoAzul/90 text-white font-gesto text-[20px] lowercase shadow-sm transition-all cursor-pointer w-full flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-white" />
+                  <span>concluir & ver fogueira →</span>
                 </button>
               </div>
             </div>
