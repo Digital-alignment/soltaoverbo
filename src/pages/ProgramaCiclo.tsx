@@ -24,25 +24,39 @@ import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
 import PaymentModal from '../components/PaymentModal';
 
-const deploymentScreenshots = [
-  { src: '/brand-assets/deployments/IMG_2847.PNG', title: 'partilha e acolhimento' },
-  { src: '/brand-assets/deployments/IMG_2848.PNG', title: 'desbloqueio criativo' },
-  { src: '/brand-assets/deployments/IMG_2849.PNG', title: 'relação com o caderno' },
-  { src: '/brand-assets/deployments/IMG_2864.jpg', title: 'mensagens de alunas' },
-  { src: '/brand-assets/deployments/IMG_2865.jpg', title: 'depoimento espontâneo' },
-  { src: '/brand-assets/deployments/IMG_2867.jpg', title: 'transformação diária' },
-  { src: '/brand-assets/deployments/IMG_2868.jpg', title: 'reflexão comunitária' },
-  { src: '/brand-assets/deployments/IMG_2870.jpg', title: 'vozes da fogueira' },
-  { src: '/brand-assets/deployments/IMG_2877.jpg', title: 'carinho e presença' },
-  { src: '/brand-assets/deployments/IMG_2878.jpg', title: 'impacto da escrita' },
-  { src: '/brand-assets/deployments/IMG_8065.PNG', title: 'relato de experiência' },
-  { src: '/brand-assets/deployments/IMG_8066.PNG', title: 'prints do grupo' },
-  { src: '/brand-assets/deployments/IMG_8067.PNG', title: 'experiência dos 21 dias' },
-  { src: '/brand-assets/deployments/IMG_8068.PNG', title: 'trocas poéticas' },
-  { src: '/brand-assets/deployments/IMG_8069.PNG', title: 'ritmo pessoal' },
-  { src: '/brand-assets/deployments/IMG_8151.PNG', title: 'caderno em movimento' },
-  { src: '/brand-assets/deployments/IMG_8846.PNG', title: 'comunidade acolhedora' },
-  { src: '/brand-assets/deployments/IMG_8850.PNG', title: 'gratidão das leitoras' },
+const formTestimonials = [
+  {
+    quote: 'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
+    author: 'bárbara alcântara (babi)',
+    tag: 'café com letras & ciclo',
+  },
+  {
+    quote: 'gostei de aprender sobre a resistência, sobre a importância da troca e, principalmente, sobre o quanto é possível escrever em só 15 minutos! vocês são demais, eu encontrei aleatoriamente o solta o verbo e sou muito grata por isso.',
+    author: 'bárbara alcântara (babi)',
+    tag: 'café com letras & ciclo',
+  },
+  {
+    quote: 'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo.',
+    author: 'tom vitralli',
+    bio: 'explorador de realidades, andarilho de alma',
+    tag: '21 dias & ciclo',
+  },
+  {
+    quote: 'minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica. apesar de já escrever poesias antes, o fluxo da escrita melhorou muito!',
+    author: 'tom vitralli',
+    bio: 'explorador de realidades, andarilho de alma',
+    tag: '21 dias & ciclo',
+  },
+  {
+    quote: 'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
+    author: 'jess',
+    tag: '21 dias & ciclo',
+  },
+  {
+    quote: 'essa comunidade é um fio de vida humana, principalmente nessa transição planetária. agradeço e indico para quem busca uma comunidade aberta para avançar.',
+    author: 'jess',
+    tag: '21 dias & ciclo',
+  },
 ];
 
 const pillars = [
@@ -172,28 +186,9 @@ const realTestimonials = [
 export default function ProgramaCiclo() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
-
-  useEffect(() => {
-    if (isPaused || selectedScreenshot !== null) return;
-    const interval = setInterval(() => {
-      setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isPaused, selectedScreenshot]);
 
   const handleEnroll = () => {
     setIsPaymentModalOpen(true);
-  };
-
-  const nextSlide = () => {
-    setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-  };
-
-  const prevSlide = () => {
-    setCarouselIndex((prev) => (prev - 1 + deploymentScreenshots.length) % deploymentScreenshots.length);
   };
 
   const toggleFaq = (idx: number) => {
@@ -682,149 +677,63 @@ export default function ProgramaCiclo() {
       {/* 7. FACILITADORAS DO PROGRAMA */}
       <FoundersSection />
 
-      {/* 8. CARROSSEL DE SCREENSHOTS REAIS DE ALUNAS */}
+      {/* 8. PARTILHAS REAIS */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <img
-                src="/brand-assets/icons/icone_63.svg"
-                alt="icone"
-                className="w-5 h-5 object-contain"
-              />
-              <span>relatos & trocas reais</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              vozes da nossa fogueira comunitária
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase">
+              partilhas reais
             </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              mensagens reais enviadas pelas alunas no nosso grupo exclusivo.
-            </p>
           </div>
 
-          <div
-            className="relative max-w-5xl mx-auto"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <button
-              onClick={prevSlide}
-              aria-label="depoimento anterior"
-              className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 shadow-lg text-acentoAzul hover:bg-acentoAzul hover:text-white transition-all flex items-center justify-center cursor-pointer"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+            {formTestimonials.map((item, idx) => {
+              const washiTapeImage =
+                idx % 2 === 0
+                  ? '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png'
+                  : '/brand-assets/elements/stickers/fitas-washi-flores-azul.png';
 
-            <button
-              onClick={nextSlide}
-              aria-label="próximo depoimento"
-              className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 shadow-lg text-acentoAzul hover:bg-acentoAzul hover:text-white transition-all flex items-center justify-center cursor-pointer"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {[0, 1, 2].map((offset) => {
-                const itemIndex = (carouselIndex + offset) % deploymentScreenshots.length;
-                const item = deploymentScreenshots[itemIndex];
-                const washiTapeImage =
-                  offset % 2 === 0
-                    ? '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png'
-                    : '/brand-assets/elements/stickers/fitas-washi-flores-azul.png';
-
-                return (
-                  <div
-                    key={itemIndex}
-                    onClick={() => setSelectedScreenshot(item.src)}
-                    className="relative bg-bgPlataforma rounded-3xl p-4 sm:p-5 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none flex flex-col justify-between"
-                  >
-                    <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
-                      <img
-                        src={washiTapeImage}
-                        alt="fita washi"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-
-                    <div className="w-full h-[400px] sm:h-[440px] rounded-2xl overflow-hidden border border-papelKraft/30 relative bg-papelClaro p-2 flex items-center justify-center shadow-inner group/img mb-3">
-                      <img
-                        src={item.src}
-                        alt={item.title}
-                        className="w-full h-full object-contain object-top transition-transform duration-500 group-hover/img:scale-105"
-                      />
-                      
-                      <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
-                        <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
-                          <ZoomIn className="w-4 h-4 text-acentoTerracota" />
-                          <span>ampliar depoimento em tela cheia</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="px-2 text-center pt-1 border-t border-papelKraft/30 flex items-center justify-between">
-                      <span className="font-editorial text-sm font-bold text-acentoAzul lowercase">
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
-                        print real
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-center items-center gap-2 mt-8">
-              {deploymentScreenshots.slice(0, 8).map((_, idx) => (
-                <button
+              return (
+                <div
                   key={idx}
-                  onClick={() => setCarouselIndex(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    carouselIndex === idx
-                      ? 'w-8 bg-acentoTerracota'
-                      : 'w-2.5 bg-papelKraft/50 hover:bg-acentoAzul/50'
-                  }`}
-                />
-              ))}
-            </div>
+                  className="relative bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-kraft transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group"
+                >
+                  <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
+                    <img
+                      src={washiTapeImage}
+                      alt="fita washi"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+
+                  <div className="space-y-3 pt-3">
+                    <Quote className="w-7 h-7 text-acentoTerracota/70" />
+                    <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase italic font-editorial">
+                      &ldquo;{item.quote}&rdquo;
+                    </p>
+                  </div>
+
+                  <div className="pt-4 mt-5 border-t border-papelKraft/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-acentoAzul text-sm lowercase block">
+                        {item.author}
+                      </span>
+                      {item.bio && (
+                        <span className="text-xs text-tintaCarvao/60 font-medium lowercase block">
+                          {item.bio}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-1 rounded-full lowercase w-fit">
+                      {item.tag}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
-
-      {/* Modal de Screenshot Ampliado em Tela Cheia */}
-      {selectedScreenshot && (
-        <div
-          className="fixed inset-0 z-50 bg-acentoAzul/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-          onClick={() => setSelectedScreenshot(null)}
-        >
-          <div
-            className="bg-papelClaro rounded-3xl p-4 sm:p-6 border border-papelKraft/60 shadow-2xl max-w-2xl w-full relative animate-fadeIn flex flex-col items-center max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedScreenshot(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-acentoAzul text-white hover:bg-acentoTerracota transition-colors z-20"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-full h-full max-h-[75vh] overflow-y-auto rounded-2xl border border-papelKraft/40 mb-4 bg-white flex items-center justify-center">
-              <img
-                src={selectedScreenshot}
-                alt="depoimento ampliado"
-                className="w-full h-auto object-contain rounded-xl"
-              />
-            </div>
-
-            <button
-              onClick={() => setSelectedScreenshot(null)}
-              className="btn-pill-primary w-full py-3 rounded-full text-center text-sm font-semibold lowercase"
-            >
-              fechar imagem
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* 8.5. QUEBRA DE OBJEÇÕES (Respostas para o que te faz hesitar) */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
