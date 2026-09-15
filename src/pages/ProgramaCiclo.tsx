@@ -83,55 +83,34 @@ const pillars = [
   },
 ];
 
-const objections = [
+const objectionsList = [
   {
-    title: 'não tenho tempo',
-    description: 'a roda semanal dura meia hora, das 8h às 8h30, cabe antes do trabalho começar. o único compromisso mais longo é uma noite por mês. quem pode vir toda terça, vem; quem só consegue no fechamento, também atravessa. nada é obrigatório e tudo fica gravado.',
+    q: 'não tenho tempo',
+    a: 'a roda semanal dura meia hora, das 8h às 8h30, cabe antes do trabalho começar. o único compromisso mais longo é uma noite por mês. quem pode vir toda terça, vem; quem só consegue no fechamento, também atravessa. nada é obrigatório e tudo fica gravado.',
   },
   {
-    title: 'não sei escrever',
-    description: 'aqui ninguém corrige texto. a gente escuta gente. não existe pré-requisito além de vontade.',
+    q: 'não sei escrever',
+    a: 'aqui ninguém corrige texto. a gente escuta gente. não existe pré-requisito além de vontade.',
   },
   {
-    title: 'e se eu perder um encontro?',
-    description: 'tudo fica gravado no acervo, disponível durante toda a travessia.',
+    q: 'e se eu perder um encontro?',
+    a: 'tudo fica gravado no acervo, disponível durante toda a travessia.',
   },
   {
-    title: 'sou obrigada a ler o que escrevi?',
-    description: 'nunca. a partilha é sempre voluntária. tem gente que só escuta nos primeiros encontros, e isso também é atravessar.',
+    q: 'sou obrigada a ler o que escrevi?',
+    a: 'nunca. a partilha é sempre voluntária. tem gente que só escuta nos primeiros encontros, e isso também é atravessar.',
   },
   {
-    title: 'e se eu não me identificar?',
-    description: 'você tem garantia incondicional de 7 dias. entra, participa, sente. se não foi para você, devolvemos o valor integral, sem perguntas.',
+    q: 'e se eu não me identificar?',
+    a: 'você tem garantia incondicional de 7 dias. entra, participa, sente. se não for para você, devolvemos o valor integral, sem perguntas.',
   },
   {
-    title: 'e depois dos três meses?',
-    description: 'uma nova travessia começa, com outro tema e outro convidado. você escolhe se segue. o ciclo é contínuo, o compromisso é por travessia.',
+    q: 'e depois dos três meses?',
+    a: 'uma nova travessia começa, com outro tema e outro convidado. você escolhe se segue. o ciclo é contínuo, o compromisso é por travessia.',
   },
 ];
 
 const realTestimonials = [
-  {
-    quote:
-      'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
-    author: 'bárbara alcântara (babi)',
-    tag: 'café com letras & ciclo de aprofundamento',
-  },
-  {
-    quote:
-      'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
-    author: 'tom vitralli',
-    tag: 'membro do ciclo de aprofundamento',
-  },
-  {
-    quote:
-      'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
-    author: 'jess',
-    tag: 'membro do ciclo de aprofundamento',
-  },
-];
-
-const faqItems = [
   {
     q: 'o que é exatamente o ciclo de aprofundamento?',
     a: 'é a nossa comunidade paga, organizada em travessias de três meses. cada travessia mergulha em um tema de autodesenvolvimento, criatividade e relações humanas, apoiada por um livro-guia e por um convidado especial. a travessia atual é "a coragem de não agradar", com o livro de ichiro kishimi e fumitake koga e a presença da jout jout.',
@@ -615,7 +594,7 @@ export default function ProgramaCiclo() {
 
 
       {/* 6. PARA QUEM É X PARA QUEM NÃO É */}
-      <section className="py-20 sm:py-28 bg-bgPlataforma">
+      <section className="py-20 sm:py-28 bg-bgPlataforma border-t border-b border-papelKraft/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
@@ -628,51 +607,71 @@ export default function ProgramaCiclo() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* SIM / PARA QUEM É */}
-            <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold lowercase tracking-wider">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border-2 border-acentoOliva/30 shadow-kraft transition-all duration-300 hover:border-acentoOliva/60 space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold lowercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
-                <span>o ciclo É para você se:</span>
+                <span>o ciclo é para você se:</span>
               </div>
 
-              <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
-                <li className="flex items-start gap-3">
+              <ul className="space-y-3.5">
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/60 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoOliva/40 hover:shadow-xs">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>já fez os 21 dias de escrita (ou sente afinidade) e busca constância de longo prazo</span>
+                  <span className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    você já escreve, ou já fez os 21 dias, e sente que precisa de constância, não de mais um curso
+                  </span>
                 </li>
-                <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/60 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoOliva/40 hover:shadow-xs">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>deseja encontros ao vivo quinzenais com condução próxima e mentoria</span>
+                  <span className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    está num momento de transição e não quer atravessar sozinha
+                  </span>
                 </li>
-                <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/60 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoOliva/40 hover:shadow-xs">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>quer pertencer ativamente aos dois grupos da comunidade (&quot;junto e misturado&quot; + &quot;cá entre nós&quot;)</span>
+                  <span className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    quer encarar temas desconfortáveis com apoio e método
+                  </span>
                 </li>
-                <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/60 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoOliva/40 hover:shadow-xs">
                   <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>busca transformar a escrita de evento pontual em um hábito sustentado de vida</span>
+                  <span className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    quer pertencer de verdade, não só consumir conteúdo
+                  </span>
                 </li>
               </ul>
             </div>
 
             {/* NÃO / PARA QUEM NÃO É */}
-            <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold lowercase tracking-wider">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border-2 border-acentoTerracota/20 shadow-kraft transition-all duration-300 hover:border-acentoTerracota/50 space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold lowercase tracking-wider">
                 <XCircle className="w-4 h-4 text-acentoTerracota" />
-                <span>NÃO é para você se:</span>
+                <span>o ciclo não é para você se:</span>
               </div>
 
-              <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>busca um consumo rápido e passageiro de conteúdo sem interesse em constância</span>
+              <ul className="space-y-3.5">
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/40 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoTerracota/30 hover:shadow-xs">
+                  <XCircle className="w-5 h-5 text-acentoTerracota/80 flex-shrink-0 mt-0.5" />
+                  <span className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    busca técnica literária, gramática ou preparação para publicar um livro
+                  </span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>não deseja participar de trocas comunitárias ou ouvir outras pessoas</span>
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/40 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoTerracota/30 hover:shadow-xs">
+                  <XCircle className="w-5 h-5 text-acentoTerracota/80 flex-shrink-0 mt-0.5" />
+                  <span className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    quer conteúdo gravado sem aparecer nem escutar ninguém
+                  </span>
                 </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>busca formação universitária em teoria literária estrita ou acadêmica</span>
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/40 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoTerracota/30 hover:shadow-xs">
+                  <XCircle className="w-5 h-5 text-acentoTerracota/80 flex-shrink-0 mt-0.5" />
+                  <span className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    procura consumo rápido, sem interesse em constância
+                  </span>
+                </li>
+                <li className="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white/40 border border-papelKraft/30 transition-all hover:bg-white hover:border-acentoTerracota/30 hover:shadow-xs">
+                  <XCircle className="w-5 h-5 text-acentoTerracota/80 flex-shrink-0 mt-0.5" />
+                  <span className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    espera que a escrita resolva sem que você escreva
+                  </span>
                 </li>
               </ul>
             </div>
@@ -826,6 +825,47 @@ export default function ProgramaCiclo() {
           </div>
         </div>
       )}
+
+      {/* 8.5. QUEBRA DE OBJEÇÕES (Respostas para o que te faz hesitar) */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
+              <Quote className="w-4 h-4 text-acentoTerracota" />
+              <span>quebra de objeções</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase">
+              respostas para o que te faz hesitar
+            </h2>
+            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
+              tudo o que você precisa saber para tomar sua decisão com clareza e tranquilidade.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {objectionsList.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-acentoTerracota uppercase tracking-wider">
+                      0{idx + 1} · dúvida comum
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                    &ldquo;{item.q}&rdquo;
+                  </h3>
+                  <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                    {item.a}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* 9. BOX FINAL DE OFERTA & CHECKOUT DO CICLO */}
       <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
