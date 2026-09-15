@@ -272,7 +272,7 @@ export default function Dashboard() {
   }, []);
 
   // Feed da Comunidade Nossa Fogueira
-  const [communityPosts] = useState<CommunityPost[]>([
+  const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([
     {
       id: '1',
       author: 'bruna riedel',
@@ -292,6 +292,50 @@ export default function Dashboard() {
       likes: 21,
     },
   ]);
+
+  useEffect(() => {
+    async function fetchFogueiraPosts() {
+      try {
+        const { data: realPosts } = await supabase
+          .from('community_posts')
+          .select('*, writing_exercise:writing_exercises(*), user_profile:users_profiles(*)')
+          .eq('hidden_from_fogueira', false)
+          .order('published_at', { ascending: false });
+
+        if (realPosts && realPosts.length > 0) {
+          const mapped: CommunityPost[] = realPosts.map((rp) => {
+            const authorName = (rp.user_profile?.display_name || 'aluna solta o verbo').toLowerCase();
+            const rawTitle = (rp.writing_exercise?.title || 'partilha poética').toLowerCase();
+            const cleanContent = (rp.writing_exercise?.content || '').replace(/<[^>]*>?/gm, '').trim();
+            const excerpt = cleanContent ? cleanContent.substring(0, 90) + '...' : 'sopro poético...';
+            const date = new Date(rp.published_at);
+            const now = new Date();
+            const diffMin = Math.max(1, Math.floor((now.getTime() - date.getTime()) / (1000 * 60)));
+            const timeAgo = diffMin < 60 ? `há ${diffMin} min` : `há ${Math.floor(diffMin / 60)}h`;
+
+            return {
+              id: rp.id,
+              author: authorName,
+              avatar: rp.user_profile?.profile_picture_url || '/bruna copy copy.png',
+              title: rawTitle,
+              excerpt: excerpt,
+              timeAgo: timeAgo,
+              likes: rp.likes_count || 1,
+            };
+          });
+
+          setCommunityPosts((prev) => {
+            const existingIds = new Set(mapped.map((m) => m.id));
+            const filteredPrev = prev.filter((p) => !existingIds.has(p.id));
+            return [...mapped, ...filteredPrev];
+          });
+        }
+      } catch (e) {
+        console.warn('Could not fetch real fogueira posts:', e);
+      }
+    }
+    fetchFogueiraPosts();
+  }, []);
 
   // Meus Cadernos de Escrita
   const [notebooks] = useState<NotebookItem[]>([
