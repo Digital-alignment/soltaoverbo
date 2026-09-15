@@ -117,14 +117,47 @@ const WORD_MILESTONES = [
   { minWords: 1000000, title: 'a catedral literária em busca do tempo perdido de marcel proust' },
 ];
 
+interface RealExercise {
+  id: string;
+  title: string;
+  content: string;
+  wordCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ActiveCourseProgress {
+  course: Course | null;
+  lessons: Database['public']['Tables']['course_lessons']['Row'][];
+  currentLesson: Database['public']['Tables']['course_lessons']['Row'] | null;
+  currentLessonIndex: number;
+  completedCount: number;
+  totalLessons: number;
+  progressPercent: number;
+}
+
 export default function Dashboard() {
   const { profile, user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Estado para Mês Selecionado no Calendário
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date(2026, 7, 1)); // Agosto 2026
+  // Ejercicios reales del usuario autenticado
+  const [userExercises, setUserExercises] = useState<RealExercise[]>([]);
+
+  // Progreso real del curso activo
+  const [courseProgress, setCourseProgress] = useState<ActiveCourseProgress>({
+    course: null,
+    lessons: [],
+    currentLesson: null,
+    currentLessonIndex: 0,
+    completedCount: 0,
+    totalLessons: 21,
+    progressPercent: 0,
+  });
+
+  // Estado para Mês Selecionado no Calendário (Mês Atual por defecto)
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
   // Estado para Modal de Reler Texto do Dia no Histórico
   const [selectedDayDetail, setSelectedDayDetail] = useState<ActivityDay | null>(null);
@@ -163,37 +196,93 @@ export default function Dashboard() {
     return currentMonth.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
   }, [currentMonth]);
 
-  // Gerador do Calendário do Mês Ativo para Histórico
+  // Mapa de atividade real do usuário por data YYYY-MM-DD
+  const activityByDate = useMemo(() => {
+    const map: Record<string, { words: number; title: string; excerpt: string; id: string }[]> = {};
+    userExercises.forEach((ex) => {
+      const d = new Date(ex.updatedAt || ex.createdAt);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      if (!map[key]) map[key] = [];
+      const cleanContent = (ex.content || '').replace(/<[^>]*>?/gm, '').trim();
+      map[key].push({
+        words: ex.wordCount,
+        title: ex.title || 'exercício sem título',
+        excerpt: cleanContent ? cleanContent.substring(0, 120) + '...' : 'sopro poético...',
+        id: ex.id,
+      });
+    });
+    return map;
+  }, [userExercises]);
+
+  // Gerador do Calendário do Mês Ativo para Histórico com dados reais
   const monthDaysGrid = useMemo(() => {
-    const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
-    const firstDayOfWeek = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay();
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfWeek = new Date(year, month, 1).getDay();
 
     const emptyLeadingSlots = Array.from({ length: firstDayOfWeek });
 
     const days: ActivityDay[] = [];
     let totalWordsInMonth = 0;
     for (let day = 1; day <= daysInMonth; day++) {
-      const active = day === 5 || day === 8 || day === 9 || day === 11 || day === 12 || day === 14 || day === 15 || day === 16 || day === 17 || day === 21 || day === 23 || day === 27 || day === 29 || day === 31;
-      const wordCount = active ? 280 + ((day * 37) % 350) : 0;
+      const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dayActivities = activityByDate[key];
+      const active = Boolean(dayActivities && dayActivities.length > 0);
+      const wordCount = active ? dayActivities.reduce((acc, item) => acc + item.words, 0) : 0;
       if (active) totalWordsInMonth += wordCount;
+
+      const mainActivity = active ? dayActivities[0] : null;
+
       days.push({
         dayNum: String(day).padStart(2, '0'),
         dateStr: `${day} de ${currentMonth.toLocaleDateString('pt-BR', { month: 'short' })}`,
         active,
         level: active ? 3 : 0,
         words: wordCount,
-        title: active ? `dia ${day}: escutar o silêncio e dar forma ao sussurro` : 'sem prática gravada',
-        excerpt: active
-          ? 'um ritual diário de presença para organizar o caos interno sem a pressão de ser autor...'
-          : undefined,
+        title: active && mainActivity ? mainActivity.title.toLowerCase() : 'sem prática gravada',
+        excerpt: active && mainActivity ? mainActivity.excerpt.toLowerCase() : undefined,
       });
     }
 
     return { emptyLeadingSlots, days, totalWordsInMonth };
-  }, [currentMonth]);
+  }, [currentMonth, activityByDate]);
 
-  // Total de Palavras Acumuladas & Marco Literário Equivalente Alcançado
-  const totalWordsAccumulated = 5420; // Produção total acumulada pelo aluno
+  // Total de Palavras Acumuladas Reais pelo Aluno
+  const totalWordsAccumulated = useMemo(() => {
+    return userExercises.reduce((sum, ex) => sum + ex.wordCount, 0);
+  }, [userExercises]);
+
+  // Racha Consecutiva de Dias Reais com Atividade
+  const sustainedStreak = useMemo(() => {
+    if (userExercises.length === 0) return 0;
+    const activeDates = new Set(
+      userExercises.map((ex) => {
+        const d = new Date(ex.updatedAt || ex.createdAt);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      })
+    );
+
+    let streak = 0;
+    const checkDate = new Date();
+    const todayKey = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+
+    if (!activeDates.has(todayKey)) {
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+
+    while (true) {
+      const key = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+      if (activeDates.has(key)) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }, [userExercises]);
+
   const currentMilestone = useMemo(() => {
     let milestone = WORD_MILESTONES[0];
     for (const m of WORD_MILESTONES) {
@@ -337,12 +426,27 @@ export default function Dashboard() {
     fetchFogueiraPosts();
   }, []);
 
-  // Meus Cadernos de Escrita
-  const [notebooks] = useState<NotebookItem[]>([
-    { id: '1', title: 'caderno de sussurros & presença', updatedAt: 'hoje às 14h20', wordCount: 420 },
-    { id: '2', title: 'memórias da infância no mar', updatedAt: 'ontem', wordCount: 890 },
-    { id: '3', title: 'diário de transição autoral', updatedAt: 'há 3 dias', wordCount: 1250 },
-  ]);
+  // Meus Cadernos de Escrita Reais
+  const notebooks = useMemo<NotebookItem[]>(() => {
+    return userExercises.slice(0, 4).map((ex) => {
+      const d = new Date(ex.updatedAt || ex.createdAt);
+      const now = new Date();
+      const diffHours = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60));
+      let timeLabel = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      if (diffHours < 24 && d.getDate() === now.getDate()) {
+        timeLabel = `hoje às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+      } else if (diffHours < 48 && d.getDate() === now.getDate() - 1) {
+        timeLabel = 'ontem';
+      }
+
+      return {
+        id: ex.id,
+        title: (ex.title || 'caderno de escrita').toLowerCase(),
+        updatedAt: timeLabel,
+        wordCount: ex.wordCount,
+      };
+    });
+  }, [userExercises]);
 
   // Curadoria Descubra (Cursos, Blog & Recomendações Admin)
   const [discoverItems] = useState<DiscoverItem[]>([
@@ -382,7 +486,83 @@ export default function Dashboard() {
       const [coursesResult] = await Promise.all([coursesPromise]);
 
       if (coursesResult.error) throw coursesResult.error;
-      setCourses(coursesResult.data || []);
+      const loadedCourses = coursesResult.data || [];
+      setCourses(loadedCourses);
+
+      // Cargar ejercicios reales del usuario
+      if (user) {
+        const { data: exData, error: exErr } = await supabase
+          .from('writing_exercises')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('updated_at', { ascending: false });
+
+        if (!exErr && exData) {
+          const mapped: RealExercise[] = exData.map((ex: any) => {
+            const clean = (ex.content || '').replace(/<[^>]*>?/gm, '').trim();
+            const wordCount = clean ? clean.split(/\s+/).filter(Boolean).length : 0;
+            return {
+              id: ex.id,
+              title: ex.title || 'exercício sem título',
+              content: ex.content || '',
+              wordCount,
+              createdAt: ex.created_at,
+              updatedAt: ex.updated_at,
+            };
+          });
+          setUserExercises(mapped);
+        }
+
+        // Cargar progreso del curso activo (ej: 21 dias de escrita)
+        const targetCourse = loadedCourses.find((c) => c.title.toLowerCase().includes('21 dias')) || loadedCourses[0];
+        if (targetCourse) {
+          const { data: lessonsData } = await supabase
+            .from('course_lessons')
+            .select('*')
+            .eq('course_id', targetCourse.id)
+            .order('order_index', { ascending: true });
+
+          const lessons = lessonsData || [];
+          const savedLastLessonId = localStorage.getItem(`soltaoverbo_last_lesson_${targetCourse.id}`);
+          const savedCompletedRaw = localStorage.getItem(`soltaoverbo_completed_lessons_${user.id}`);
+          let completedIds: string[] = [];
+          if (savedCompletedRaw) {
+            try {
+              completedIds = JSON.parse(savedCompletedRaw);
+            } catch (e) {
+              console.error('Erro ao ler lições concluídas:', e);
+            }
+          }
+
+          const totalLessons = lessons.length > 0 ? lessons.length : 21;
+          const completedCount = completedIds.length;
+          const progressPercent = totalLessons > 0 ? Math.min(100, Math.round((completedCount / totalLessons) * 100)) : 0;
+
+          let currentLessonIndex = 0;
+          let currentLesson: Database['public']['Tables']['course_lessons']['Row'] | null = lessons[0] || null;
+
+          if (savedLastLessonId && lessons.length > 0) {
+            const foundIdx = lessons.findIndex((l) => l.id === savedLastLessonId);
+            if (foundIdx !== -1) {
+              currentLessonIndex = foundIdx;
+              currentLesson = lessons[foundIdx];
+            }
+          } else if (completedCount > 0 && lessons.length > 0) {
+            currentLessonIndex = Math.min(completedCount, lessons.length - 1);
+            currentLesson = lessons[currentLessonIndex];
+          }
+
+          setCourseProgress({
+            course: targetCourse,
+            lessons,
+            currentLesson,
+            currentLessonIndex,
+            completedCount,
+            totalLessons,
+            progressPercent,
+          });
+        }
+      }
 
       if (user && profile?.role === 'paid') {
         const { data: subData, error: subError } = await supabase
@@ -603,7 +783,7 @@ export default function Dashboard() {
                       <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">frequência sustentada</span>
                       <div className="flex items-baseline gap-1.5">
                         <span className="font-gesto text-2xl font-normal text-acentoTerracota">
-                          12
+                          {sustainedStreak}
                         </span>
                         <span className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70 lowercase">dias de sequência ativa</span>
                       </div>
@@ -806,9 +986,11 @@ export default function Dashboard() {
           <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft relative overflow-hidden space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs sm:text-sm font-normal font-corpo lowercase text-acentoAzul bg-white px-3.5 py-1 rounded-full border border-papelKraft/60 shadow-sm">
-                em andamento
+                {courseProgress.progressPercent > 0 ? 'em andamento' : 'jornada inicial'}
               </span>
-              <span className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase">21 dias de escrita online</span>
+              <span className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase">
+                {(courseProgress.course?.title || '21 dias de escrita online').toLowerCase()}
+              </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
@@ -816,7 +998,7 @@ export default function Dashboard() {
               <div className="sm:col-span-4 relative">
                 <div className="w-full h-32 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative bg-bgPlataforma">
                   <img
-                    src="/brand-assets/elements/collages/writes-torn-out-sheets-paper-trendy-vintage-style-mixed-media-art.png"
+                    src={courseProgress.course?.thumbnail_url || "/brand-assets/elements/collages/writes-torn-out-sheets-paper-trendy-vintage-style-mixed-media-art.png"}
                     alt="continuar jornada"
                     className="w-full h-full object-cover"
                   />
@@ -827,12 +1009,12 @@ export default function Dashboard() {
               <div className="sm:col-span-8 space-y-1">
                 <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
                   <span className="font-gesto text-2xl sm:text-3xl text-acentoTerracota font-normal mr-1.5">
-                    dia 08:
+                    dia {String(courseProgress.currentLessonIndex + 1).padStart(2, '0')}:
                   </span>
-                  escutar o silêncio e dar forma ao sussurro
+                  {courseProgress.currentLesson?.title?.toLowerCase() || 'escutar o silêncio e dar forma ao sussurro'}
                 </h3>
                 <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase line-clamp-2 leading-relaxed">
-                  um ritual diário de presença para organizar o caos interno sem a pressão de ser autor.
+                  {courseProgress.currentLesson?.description?.toLowerCase() || 'um ritual diário de presença para organizar o caos interno sem a pressão de ser autor.'}
                 </p>
               </div>
             </div>
@@ -842,23 +1024,23 @@ export default function Dashboard() {
               <div className="w-full bg-papelKraft/40 rounded-full h-2.5 overflow-hidden">
                 <div
                   className="bg-acentoTerracota h-2.5 rounded-full transition-all duration-500"
-                  style={{ width: '38%' }}
+                  style={{ width: `${courseProgress.progressPercent}%` }}
                 />
               </div>
               <div className="flex justify-between items-center text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70 pt-0.5">
                 <span>progresso da jornada</span>
-                <span className="font-normal font-corpo text-acentoAzul">38% concluído</span>
+                <span className="font-normal font-corpo text-acentoAzul">{courseProgress.progressPercent}% concluído</span>
               </div>
             </div>
 
             {/* Botão "retomar" em Muthazle (font-gesto 23px / 20px) */}
             <div className="pt-1">
               <Link
-                to="/exercises"
+                to={courseProgress.course ? `/course/${courseProgress.course.id}` : '/programs'}
                 className="btn-pill-primary px-6 py-2.5 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform"
               >
                 <Play className="w-4 h-4 text-white fill-white" />
-                <span>retomar</span>
+                <span>{courseProgress.progressPercent > 0 ? 'retomar' : 'começar jornada'}</span>
               </Link>
             </div>
           </div>
@@ -942,7 +1124,7 @@ export default function Dashboard() {
               </div>
 
               <Link
-                to="/exercises"
+                to="/exercises?new=true"
                 className="btn-pill-primary px-5 py-2 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
               >
                 <Pencil className="w-4 h-4" />
@@ -951,33 +1133,49 @@ export default function Dashboard() {
             </div>
 
             {/* Lista dos Cadernos Já Escritos */}
-            <div className="space-y-2.5">
-              {notebooks.map((nb) => (
-                <div
-                  key={nb.id}
-                  className="p-3 rounded-2xl bg-white border border-papelKraft/50 shadow-sm flex items-center justify-between hover:border-acentoAzul transition-colors"
+            {notebooks.length === 0 ? (
+              <div className="p-6 rounded-2xl bg-white border border-papelKraft/50 text-center space-y-3 shadow-sm">
+                <Feather className="w-8 h-8 text-acentoAzul/40 mx-auto" />
+                <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase">
+                  você ainda não criou nenhum texto no seu caderno.
+                </p>
+                <Link
+                  to="/exercises?new=true"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm transition-transform hover:scale-105"
                 >
-                  <div className="flex items-center gap-3">
-                    <BookMarked className="w-5 h-5 text-acentoAzul" />
-                    <div>
-                      <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase">
-                        {nb.title}
-                      </h4>
-                      <span className="text-xs font-light font-corpo text-tintaCarvao/50 block">
-                        atualizado {nb.updatedAt} • {nb.wordCount} palavras
-                      </span>
-                    </div>
-                  </div>
-
-                  <Link
-                    to="/exercises"
-                    className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoTerracota hover:underline lowercase"
+                  <Plus className="w-4 h-4 text-white" />
+                  <span>+ criar meu primeiro texto</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {notebooks.map((nb) => (
+                  <div
+                    key={nb.id}
+                    className="p-3 rounded-2xl bg-white border border-papelKraft/50 shadow-sm flex items-center justify-between hover:border-acentoAzul transition-colors"
                   >
-                    abrir →
-                  </Link>
-                </div>
-              ))}
-            </div>
+                    <div className="flex items-center gap-3">
+                      <BookMarked className="w-5 h-5 text-acentoAzul" />
+                      <div>
+                        <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase">
+                          {nb.title}
+                        </h4>
+                        <span className="text-xs font-light font-corpo text-tintaCarvao/50 block">
+                          atualizado {nb.updatedAt} • {nb.wordCount} palavras
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link
+                      to="/exercises"
+                      className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoTerracota hover:underline lowercase"
+                    >
+                      abrir →
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ========================================================
