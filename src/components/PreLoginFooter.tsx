@@ -73,13 +73,13 @@ export default function PreLoginFooter() {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   <Link
-                    to="/programs"
+                    to="/programas/21-dias-de-escrita"
                     className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
                   >
                     21 dias de escrita
                   </Link>
                   <Link
-                    to="/programs"
+                    to="/programas/ciclo-de-aprofundamento"
                     className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-acentoOliva hover:text-tintaCarvao transition-all text-xs font-medium lowercase"
                   >
                     ciclo de aprofundamento

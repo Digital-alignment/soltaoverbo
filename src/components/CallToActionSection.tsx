@@ -88,13 +88,13 @@ export default function CallToActionSection() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            <Link
-              to="/programs"
-              className="px-7 md:px-9 py-3.5 font-bold text-base rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-[0.98] whitespace-nowrap border"
+            <a
+              href="#produtos"
+              className="px-7 md:px-9 py-3.5 font-bold text-base rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-[0.98] whitespace-nowrap border text-center"
               style={{ color: '#ede5d1', borderColor: 'rgba(237,229,209,0.25)' }}
             >
               saiba mais
-            </Link>
+            </a>
           </div>
 
           <div

@@ -201,16 +201,7 @@ export default function PreLoginNavbar() {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <div className="bg-papelClaro rounded-3xl p-4 sm:p-5 border border-papelKraft/60 shadow-kraft-lg animate-fadeIn space-y-2">
-                      <div className="flex items-center justify-between px-2 pb-2 border-b border-papelKraft/30">
-                        <span className="text-[11px] font-bold text-tintaCarvao/50 lowercase tracking-widest">
-                          programas de escrita
-                        </span>
-                        <span className="text-[11px] font-medium text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
-                          4 opções disponíveis
-                        </span>
-                      </div>
-
+                    <div className="bg-papelClaro rounded-3xl p-3 sm:p-4 border border-papelKraft/60 shadow-kraft-lg animate-fadeIn">
                       {/* Lista Vertical Espaciosa y Limpia */}
                       <div className="space-y-1.5">
                         {productSubItems.map((subItem) => {
@@ -241,20 +232,6 @@ export default function PreLoginNavbar() {
                             </Link>
                           );
                         })}
-                      </div>
-
-                      <div className="pt-3 border-t border-papelKraft/30 flex items-center justify-between px-2">
-                        <span className="text-xs text-tintaCarvao/60 font-medium lowercase">
-                          conheça nosso catálogo
-                        </span>
-                        <Link
-                          to="/programs"
-                          onClick={() => handleSubItemClick(productSubItems[0])}
-                          className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold text-acentoAzul hover:bg-acentoAzul/10 transition-colors lowercase"
-                        >
-                          <span>ver todos os programas</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
                       </div>
                     </div>
                   </div>

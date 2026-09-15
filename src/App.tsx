@@ -16,7 +16,6 @@ import Profile from './pages/Profile';
 import Notifications from './pages/Notifications';
 import Admin from './pages/Admin';
 import AboutUs from './pages/AboutUs';
-import Programs from './pages/Programs';
 import Programa21Dias from './pages/Programa21Dias';
 import ProgramaCiclo from './pages/ProgramaCiclo';
 import ProgramaCafeComLetras from './pages/ProgramaCafeComLetras';
@@ -37,9 +36,9 @@ function AppContent() {
       <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/programs" element={user ? <CoursesCatalog /> : <Programs />} />
-          <Route path="/oficinas" element={user ? <CoursesCatalog /> : <Programs />} />
-          <Route path="/courses" element={user ? <CoursesCatalog /> : <Programs />} />
+          <Route path="/programs" element={user ? <CoursesCatalog /> : <Navigate to="/" replace />} />
+          <Route path="/oficinas" element={user ? <CoursesCatalog /> : <Navigate to="/" replace />} />
+          <Route path="/courses" element={user ? <CoursesCatalog /> : <Navigate to="/" replace />} />
           
           {/* Páginas de Produtos / Programas */}
           <Route path="/programas/21-dias-de-escrita" element={<Programa21Dias />} />

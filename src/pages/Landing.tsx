@@ -112,12 +112,12 @@ export default function Landing() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 solta o verbo <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  {heroSec.title || 'a narrativa muda a partir do ponto que você solta o verbo.'}
+                  {heroSec.title || 'a narrativa muda a partir do ponto que você a observa.'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                {heroSec.subtitle || 'reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.'}
+                {heroSec.subtitle || 'reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e vida) mais consciente. dê contorno ao que te habita, ao que pede passagem e ao que ainda não encontrou palavras.'}
               </p>
 
               {/* Botões CTA Principais */}
