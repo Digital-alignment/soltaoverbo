@@ -17,6 +17,7 @@ import {
   ZoomIn,
   X,
   BookOpen,
+  Quote,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
@@ -69,17 +70,39 @@ const eventGallery: EventPhoto[] = [
   },
 ];
 
-const deploymentScreenshots = [
-  { src: '/brand-assets/deployments/IMG_2864.jpg', title: 'depoimento de oficina B2B' },
-  { src: '/brand-assets/deployments/IMG_2865.jpg', title: 'feedback de encontro presencial' },
-  { src: '/brand-assets/deployments/IMG_2867.jpg', title: 'transformação de equipe' },
-  { src: '/brand-assets/deployments/IMG_2868.jpg', title: 'presença no evento' },
-  { src: '/brand-assets/deployments/IMG_2870.jpg', title: 'relato de vivência sob medida' },
-  { src: '/brand-assets/deployments/IMG_2877.jpg', title: 'carinho dos participantes' },
-  { src: '/brand-assets/deployments/IMG_2878.jpg', title: 'potência da escrita em grupo' },
-  { src: '/brand-assets/deployments/IMG_8065.PNG', title: 'experiência transformadora' },
-  { src: '/brand-assets/deployments/IMG_8068.PNG', title: 'conexões autênticas' },
-  { src: '/brand-assets/deployments/IMG_8850.PNG', title: 'gratidão dos parceiros' },
+const formTestimonials = [
+  {
+    quote: 'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
+    author: 'bárbara alcântara (babi)',
+    tag: 'café com letras & ciclo',
+  },
+  {
+    quote: 'gostei de aprender sobre a resistência, sobre a importância da troca e, principalmente, sobre o quanto é possível escrever em só 15 minutos! vocês são demais, eu encontrei aleatoriamente o solta o verbo e sou muito grata por isso.',
+    author: 'bárbara alcântara (babi)',
+    tag: 'café com letras & ciclo',
+  },
+  {
+    quote: 'o simples fato de estar em sangha, ouvindo escritas pessoais diverse e se inspirando nelas, é o néctar da solta o verbo.',
+    author: 'tom vitralli',
+    bio: 'explorador de realidades, andarilho de alma',
+    tag: '21 dias & ciclo',
+  },
+  {
+    quote: 'minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica. apesar de já escrever poesias antes, o fluxo da escrita melhorou muito!',
+    author: 'tom vitralli',
+    bio: 'explorador de realidades, andarilho de alma',
+    tag: '21 dias & ciclo',
+  },
+  {
+    quote: 'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
+    author: 'jess',
+    tag: '21 dias & ciclo',
+  },
+  {
+    quote: 'essa comunidade é um fio de vida humana, principalmente nessa transição planetária. agradeço e indico para quem busca uma comunidade aberta para avançar.',
+    author: 'jess',
+    tag: '21 dias & ciclo',
+  },
 ];
 
 const creationSteps = [
@@ -112,35 +135,31 @@ const creationSteps = [
 const b2bFaqItems = [
   {
     q: 'as experiências podem ser presenciais ou virtuais?',
-    a: 'sim! realizamos vivências presenciais em qualquer cidade do brasil (mediante alinhamento de logística) e também oficinas virtuais interativas ao vivo via zoom.',
+    a: 'sim, os dois formatos. presencial, a gente leva todo o ritual pra dentro do seu espaço. online, adaptamos a vivência sem perder a profundidade do encontro.',
   },
   {
     q: 'qual é o número mínimo ou máximo de participantes?',
-    a: 'adaptamos o formato para pequenos grupos de liderança (10 a 15 pessoas), encontros de médio porte ou grandes auditórios e festivais.',
+    a: 'não trabalhamos com número fixo. pra formatos mais íntimos, como oficinas corporativas, o grupo costuma ser pequeno. já em festivais e instalações, a experiência é fixa no espaço, e pode receber quantas pessoas quiserem participar. o número ideal depende do formato e do lugar, e isso a gente alinha junto com você.',
   },
   {
-    q: 'como funciona a personalização dos temas?',
-    a: 'toda a curadoria poética e os exercícios de escrita são criados sob medida para dialogar com a cultura da sua empresa, tema do retiro ou propósito da marca.',
+    q: 'quanto custa contratar uma experiência?',
+    a: 'o investimento varia de acordo com o formato, a duração e o tamanho do grupo. por isso cada proposta é personalizada, fale com a gente pelo whatsapp e te passamos os valores certinhos pro seu caso.',
   },
   {
-    q: 'quanto tempo dura uma oficina ou vivência?',
-    a: 'as oficinas variam entre 1h30 (formato pílula de desaceleração), 3 horas (oficina imersiva completa) ou jornadas em ciclos de vários encontros.',
+    q: 'com quanto tempo de antecedência preciso contratar?',
+    a: 'o ideal é fechar com pelo menos 1 mês de antecedência, pra gente ter tempo de fazer o diagnóstico, desenhar o roteiro autoral e alinhar tudo com calma antes do dia.',
   },
   {
-    q: 'que tipo de material é oferecido aos participantes?',
-    a: 'entregamos cadernos poéticos artesanais e materiais gráficos sob medida para acompanharem a jornada de escrita física e permanecerem como memória.',
+    q: 'quem conduz a experiência?',
+    a: 'bruna e júlia, as criadoras da solta o verbo, conduzem pessoalmente cada experiência. nada é terceirizado, quem desenha o roteiro é quem está com o grupo no dia.',
   },
   {
-    q: 'como a escrita expressiva atua na saúde mental e clima das equipes?',
-    a: 'baseados nas pesquisas de james pennebaker, a escrita expressiva reduz a sobrecarga mental, cria segurança psicológica e abre pontes de empatia sem julgamento.',
-  },
-  {
-    q: 'vocês emitem nota fiscal e atendem empresas de qualquer lugar do brasil?',
-    a: 'sim! emitimos nota fiscal para empresas e organizações e realizamos deslocamentos presenciais para qualquer região do brasil.',
+    q: 'e se o meu time não tem afinidade com escrita? isso funciona mesmo assim?',
+    a: 'funciona, e costuma ser exatamente com esses grupos que a experiência mais surpreende. não pedimos talento, só presença. a escrita aqui é ferramenta, não performance.',
   },
   {
     q: 'como faço para solicitar uma proposta personalizada?',
-    a: 'basta clicar nos botões de whatsapp nesta página para conversar diretamente com bruna e júlia. respondemos rapidamente com todas as informações necessárias!',
+    a: 'basta clicar nos botões de whatsapp desta página pra conversar direto com bruna e júlia. respondemos rápido com todas as informações necessárias.',
   },
 ];
 
@@ -161,11 +180,6 @@ export default function ContrateExperiencia() {
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  // Estado do carrossel de screenshots de depoimentos
-  const [screenshotIndex, setScreenshotIndex] = useState(0);
-  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
-  const [isScreenshotPaused, setIsScreenshotPaused] = useState(false);
-
   const whatsappUrl =
     contactsSec.whatsapp ||
     'https://wa.me/5548991316277?text=ol%C3%A1!%20gostaria%20de%20solicitar%20uma%20proposta%20personalizada%20para%20uma%20experi%C3%AAncia%20do%20solta%20o%20verbo.';
@@ -178,15 +192,6 @@ export default function ContrateExperiencia() {
     }, 4500);
     return () => clearInterval(interval);
   }, [isCarouselPaused]);
-
-  // Auto-play do carrossel de screenshots de depoimentos (4s)
-  useEffect(() => {
-    if (isScreenshotPaused || selectedScreenshot !== null) return;
-    const interval = setInterval(() => {
-      setScreenshotIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isScreenshotPaused, selectedScreenshot]);
 
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul">
@@ -794,155 +799,63 @@ export default function ContrateExperiencia() {
       {/* 6. FACILITADORAS DO PROGRAMA */}
       <FoundersSection />
 
-      {/* 7. CARROSSEL DE SCREENSHOTS REAIS DE DEPOIMENTOS & IMPRESSÕES B2B */}
+      {/* 7. PARTILHAS REAIS */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <img
-                src="/brand-assets/icons/icone_63.svg"
-                alt="icone"
-                className="w-5 h-5 object-contain"
-              />
-              <span>relatos & impressões reais</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              o que dizem quem já viveu nossas experiências
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase">
+              partilhas reais
             </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              depoimentos e trocas espontâneas após nossas oficinas e encontros presenciais.
-            </p>
           </div>
 
-          <div
-            className="relative max-w-5xl mx-auto"
-            onMouseEnter={() => setIsScreenshotPaused(true)}
-            onMouseLeave={() => setIsScreenshotPaused(false)}
-          >
-            <button
-              onClick={() =>
-                setScreenshotIndex(
-                  (prev) => (prev - 1 + deploymentScreenshots.length) % deploymentScreenshots.length
-                )
-              }
-              aria-label="depoimento anterior"
-              className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 shadow-lg text-acentoAzul hover:bg-acentoAzul hover:text-white transition-all flex items-center justify-center cursor-pointer"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+            {formTestimonials.map((item, idx) => {
+              const washiTapeImage =
+                idx % 2 === 0
+                  ? '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png'
+                  : '/brand-assets/elements/stickers/fitas-washi-flores-azul.png';
 
-            <button
-              onClick={() =>
-                setScreenshotIndex((prev) => (prev + 1) % deploymentScreenshots.length)
-              }
-              aria-label="próximo depoimento"
-              className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 shadow-lg text-acentoAzul hover:bg-acentoAzul hover:text-white transition-all flex items-center justify-center cursor-pointer"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {[0, 1, 2].map((offset) => {
-                const itemIndex = (screenshotIndex + offset) % deploymentScreenshots.length;
-                const item = deploymentScreenshots[itemIndex];
-                const washiTapeImage =
-                  offset % 2 === 0
-                    ? '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png'
-                    : '/brand-assets/elements/stickers/fitas-washi-flores-azul.png';
-
-                return (
-                  <div
-                    key={itemIndex}
-                    onClick={() => setSelectedScreenshot(item.src)}
-                    className="relative bg-bgPlataforma rounded-3xl p-4 sm:p-5 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none flex flex-col justify-between"
-                  >
-                    <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
-                      <img
-                        src={washiTapeImage}
-                        alt="fita washi"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-
-                    <div className="w-full h-[400px] sm:h-[440px] rounded-2xl overflow-hidden border border-papelKraft/30 relative bg-papelClaro p-2 flex items-center justify-center shadow-inner group/img mb-3">
-                      <img
-                        src={item.src}
-                        alt={item.title}
-                        className="w-full h-full object-contain object-top transition-transform duration-500 group-hover/img:scale-105"
-                      />
-                      
-                      <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
-                        <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
-                          <ZoomIn className="w-4 h-4 text-acentoTerracota" />
-                          <span>ampliar depoimento em tela cheia</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="px-2 text-center pt-1 border-t border-papelKraft/30 flex items-center justify-between">
-                      <span className="font-editorial text-sm font-bold text-acentoAzul lowercase">
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
-                        print real
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-center items-center gap-2 mt-8">
-              {deploymentScreenshots.slice(0, 8).map((_, idx) => (
-                <button
+              return (
+                <div
                   key={idx}
-                  onClick={() => setScreenshotIndex(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    screenshotIndex === idx
-                      ? 'w-8 bg-acentoTerracota'
-                      : 'w-2.5 bg-papelKraft/50 hover:bg-acentoAzul/50'
-                  }`}
-                />
-              ))}
-            </div>
+                  className="relative bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-kraft transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group"
+                >
+                  <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
+                    <img
+                      src={washiTapeImage}
+                      alt="fita washi"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+
+                  <div className="space-y-3 pt-3">
+                    <Quote className="w-7 h-7 text-acentoTerracota/70" />
+                    <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase italic font-editorial">
+                      &ldquo;{item.quote}&rdquo;
+                    </p>
+                  </div>
+
+                  <div className="pt-4 mt-5 border-t border-papelKraft/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <span className="font-bold text-acentoAzul text-sm lowercase block">
+                        {item.author}
+                      </span>
+                      {item.bio && (
+                        <span className="text-xs text-tintaCarvao/60 font-medium lowercase block">
+                          {item.bio}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-1 rounded-full lowercase w-fit">
+                      {item.tag}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
-
-      {/* Modal de Screenshot Ampliado */}
-      {selectedScreenshot && (
-        <div
-          className="fixed inset-0 z-50 bg-acentoAzul/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-          onClick={() => setSelectedScreenshot(null)}
-        >
-          <div
-            className="bg-papelClaro rounded-3xl p-4 sm:p-6 border border-papelKraft/60 shadow-2xl max-w-2xl w-full relative animate-fadeIn flex flex-col items-center max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedScreenshot(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-acentoAzul text-white hover:bg-acentoTerracota transition-colors z-20"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-full h-full max-h-[75vh] overflow-y-auto rounded-2xl border border-papelKraft/40 mb-4 bg-white flex items-center justify-center">
-              <img
-                src={selectedScreenshot}
-                alt="depoimento ampliado"
-                className="w-full h-auto object-contain rounded-xl"
-              />
-            </div>
-
-            <button
-              onClick={() => setSelectedScreenshot(null)}
-              className="btn-pill-primary w-full py-3 rounded-full text-center text-sm font-semibold lowercase"
-            >
-              fechar imagem
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* 8. BANNER FINAL DE CONVERSÃO NO WHATSAPP (Sem Preço) */}
       <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
@@ -953,11 +866,11 @@ export default function ContrateExperiencia() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase">
-              pronto para levar a solta o verbo até o seu grupo?
+              vamos desenhar algo especial juntos?
             </h2>
 
             <p className="text-papelClaro/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
-              fale diretamente com bruna riedel e júlia alvim pelo whatsapp para alinhar datas, formatos e receber uma proposta sob medida.
+              fale diretamente com a gente no whatsapp e receba a proposta detalhada.
             </p>
 
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -968,7 +881,7 @@ export default function ContrateExperiencia() {
                 className="btn-pill-accent text-lg px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3 w-full sm:w-auto lowercase cursor-pointer"
               >
                 <MessageCircle className="w-5 h-5 fill-white text-acentoAzul" />
-                <span>conversar no whatsapp agora</span>
+                <span>solicitar proposta no whatsapp</span>
               </a>
             </div>
           </div>
