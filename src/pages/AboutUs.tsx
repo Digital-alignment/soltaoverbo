@@ -15,6 +15,18 @@ interface EventPhoto {
   washiTape: string;
 }
 
+interface CreatedEvent {
+  id: string;
+  title: string;
+  location: string;
+  year: string;
+  shortDescription: string;
+  fullDescription: string;
+  image: string;
+  washiTape: string;
+  highlights: string[];
+}
+
 const eventGallery: EventPhoto[] = [
   {
     image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
@@ -54,9 +66,43 @@ const eventGallery: EventPhoto[] = [
   },
 ];
 
+const createdEvents: CreatedEvent[] = [
+  {
+    id: 'fatto-a-femme',
+    title: 'feira fatto à femme',
+    location: 'florianópolis',
+    year: '2026',
+    shortDescription: 'instalação de escrita e roda de partilha com o público da feira, criando uma pausa poética no meio do evento.',
+    fullDescription: 'uma vivência poética ocupando o espaço público da feira fatto à femme em florianópolis. criamos um varal de histórias e uma mesa de escrita aberta onde centenas de pessoas pararam entre as alamedas da feira para colocar sentimentos no papel, pendurar suas frases no varal e compartilhar pausas necessárias em meio à movimentação do evento.',
+    image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
+    highlights: [
+      'varal poético comunitário com mais de 100 mensagens penduradas',
+      'rodas espontâneas de escuta e acolhimento com os visitantes da feira',
+      'espaço de desaceleração e reconexão autoral no meio do evento'
+    ]
+  },
+  {
+    id: 'o-experienciar',
+    title: 'o experienciar',
+    location: 'florianópolis',
+    year: '2026',
+    shortDescription: 'oficina presencial de escrita expressiva e presença para desacelerar e olhar para dentro.',
+    fullDescription: 'uma imersão presencial intimista focada no autodesenvolvimento e na escrita sem filtro. durante quatro horas, facilitamos rituais de presença, dinâmicas de escuta em dupla, café com prosa e produção autoral guiada em um ambiente integrado com a natureza.',
+    image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
+    highlights: [
+      'práticas de escrita expressiva baseadas nas pesquisas de james pennebaker',
+      'roda de partilha segura, afetiva e totalmente livre de julgamentos',
+      'cadernos artesanais e kit de rituais entregues a cada participante'
+    ]
+  }
+];
+
 export default function AboutUs() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<EventPhoto | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CreatedEvent | null>(null);
 
   const { getSection } = usePageContent('about');
   const heroSec = getSection('hero', {
@@ -349,56 +395,64 @@ export default function AboutUs() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1: Fatto à Femme */}
-            <div className="bg-papelClaro rounded-3xl p-6 border border-papelKraft/60 shadow-sm space-y-4">
-              <div className="w-full h-48 rounded-2xl overflow-hidden border border-papelKraft/40">
-                <img
-                  src="/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
-                  alt="feira fatto à femme"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <span className="text-xs font-bold text-acentoTerracota lowercase block">
-                florianópolis · 2026
-              </span>
-              <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
-                feira fatto à femme
-              </h3>
-              <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
-                instalação de escrita e roda de partilha com o público da feira, criando uma pausa poética no meio do evento.
-              </p>
-            </div>
+            {createdEvents.map((evt) => (
+              <div
+                key={evt.id}
+                onClick={() => setSelectedEvent(evt)}
+                className="relative bg-papelClaro rounded-3xl p-6 border border-papelKraft/60 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group flex flex-col justify-between select-none"
+              >
+                <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
+                  <img
+                    src={evt.washiTape}
+                    alt="fita washi"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
 
-            {/* Card 2: O Experienciar */}
-            <div className="bg-papelClaro rounded-3xl p-6 border border-papelKraft/60 shadow-sm space-y-4">
-              <div className="w-full h-48 rounded-2xl overflow-hidden border border-papelKraft/40">
-                <img
-                  src="/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
-                  alt="evento o experienciar"
-                  className="w-full h-full object-cover"
-                />
+                <div className="space-y-4">
+                  <div className="w-full h-52 rounded-2xl overflow-hidden border border-papelKraft/40 relative shadow-sm group/photo bg-bgPlataforma">
+                    <img
+                      src={evt.image}
+                      alt={evt.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover/photo:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+                      <span className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2 rounded-full text-xs shadow-md border border-papelKraft/50 lowercase">
+                        ver detalhes do evento →
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-xs font-bold text-acentoTerracota lowercase block tracking-wider">
+                    {evt.location} · {evt.year}
+                  </span>
+
+                  <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors">
+                    {evt.title}
+                  </h3>
+
+                  <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
+                    {evt.shortDescription}
+                  </p>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-papelKraft/40 flex items-center justify-between text-xs font-bold text-acentoAzul">
+                  <span>ver fotos & história</span>
+                  <ArrowRight className="w-4 h-4 text-acentoTerracota group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
-              <span className="text-xs font-bold text-acentoTerracota lowercase block">
-                florianópolis · 2026
-              </span>
-              <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
-                o experienciar
-              </h3>
-              <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
-                oficina presencial de escrita expressiva e presença para desacelerar e olhar para dentro.
-              </p>
-            </div>
+            ))}
 
             {/* Card 3: Próximo em breve */}
-            <div className="bg-acentoAzul text-white rounded-3xl p-6 border border-white/20 shadow-sm space-y-4 flex flex-col justify-between">
-              <div className="space-y-4">
-                <span className="text-xs font-bold text-acentoOliva lowercase block">
+            <div className="bg-acentoAzul text-white rounded-3xl p-6 sm:p-8 border border-white/20 shadow-kraft-lg space-y-4 flex flex-col justify-between relative overflow-hidden group">
+              <div className="space-y-4 relative z-10">
+                <span className="text-xs font-bold text-acentoOliva lowercase block tracking-widest">
                   em breve
                 </span>
-                <h3 className="text-xl font-bold font-editorial text-papelClaro lowercase">
+                <h3 className="text-2xl font-bold font-editorial text-papelClaro lowercase">
                   o próximo, em breve
                 </h3>
-                <p className="text-papelClaro/85 text-sm leading-relaxed font-medium lowercase">
+                <p className="text-papelClaro/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
                   estamos preparando os próximos encontros presenciais. quer saber em primeira mão quando abrirmos vagas?
                 </p>
               </div>
@@ -407,7 +461,7 @@ export default function AboutUs() {
                 href="https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20saber%20quando%20abrem%20vagas%20para%20os%20pr%C3%B3ximos%20eventos%20presenciais."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-pill-accent text-xs font-bold px-5 py-3 rounded-full text-center lowercase block hover:scale-105 transition-all shadow-md text-tintaCarvao"
+                className="btn-pill-accent text-sm font-bold px-6 py-3.5 rounded-full text-center lowercase block hover:scale-105 transition-all shadow-md text-tintaCarvao relative z-10"
               >
                 quero saber quando abrir
               </a>
@@ -431,7 +485,76 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Modal de Foto Ampliada */}
+      {/* Modal Pop-up Detalhado de Evento Realizado */}
+      {selectedEvent && (
+        <div
+          className="fixed inset-0 z-50 bg-acentoAzul/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setSelectedEvent(null)}
+        >
+          <div
+            className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-2xl max-w-3xl w-full relative animate-fadeIn max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative mb-6">
+              <div className="w-full h-72 sm:h-96 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative bg-bgPlataforma">
+                <img
+                  src={selectedEvent.image}
+                  alt={selectedEvent.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="absolute top-3 left-4 px-3.5 py-1.5 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 text-acentoTerracota text-xs font-bold lowercase shadow-md">
+                {selectedEvent.location} · {selectedEvent.year}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-editorial text-3xl sm:text-4xl font-bold text-acentoAzul lowercase">
+                {selectedEvent.title}
+              </h3>
+
+              <p className="text-tintaCarvao/90 text-base sm:text-lg leading-relaxed font-medium lowercase border-b border-papelKraft/30 pb-4">
+                {selectedEvent.fullDescription}
+              </p>
+
+              <div className="space-y-2.5 pt-1">
+                <span className="text-xs font-bold text-acentoAzul lowercase tracking-wider block">
+                  destaques do evento:
+                </span>
+                <ul className="space-y-2">
+                  {selectedEvent.highlights.map((hl, hIdx) => (
+                    <li key={hIdx} className="flex items-start gap-3 text-tintaCarvao/85 text-sm font-medium lowercase">
+                      <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                      <span>{hl}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => setSelectedEvent(null)}
+                  className="btn-pill-primary flex-1 py-3.5 rounded-full text-center text-sm font-semibold lowercase cursor-pointer shadow-md"
+                >
+                  fechar detalhes
+                </button>
+                <a
+                  href="https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20saber%20mais%20sobre%20os%20eventos%20presenciais."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-bgPlataforma text-acentoAzul hover:bg-papelKraft/20 border border-papelKraft/60 px-6 py-3.5 rounded-full text-center text-sm font-semibold lowercase flex items-center justify-center gap-2"
+                >
+                  <span>falar no whatsapp</span>
+                  <ArrowRight className="w-4 h-4 text-acentoAzul" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Foto Ampliada da Galeria */}
       {selectedPhoto && (
         <div
           className="fixed inset-0 z-50 bg-acentoAzul/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"

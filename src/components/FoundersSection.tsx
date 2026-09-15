@@ -68,7 +68,7 @@ export default function FoundersSection() {
             conheça as co-criadoras
           </h2>
           <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-            duas trajetórias que se uniram para desenhar um espaço seguro de escrita, escuta e autoria.
+            duas trajetórias que se uniram para desenhar um espaço seguro de escrita, escuta e autoria. as duas mudaram de vida escrevendo e é isso que desejam espalhar ao soltarem o verbo.
           </p>
         </div>
 
