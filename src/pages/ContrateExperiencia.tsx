@@ -149,8 +149,8 @@ export default function ContrateExperiencia() {
   const { getSection: getContactSection } = usePageContent('contacts');
 
   const heroSec = getSection('hero', {
-    title: 'experiências de escrita autoral sob medida',
-    subtitle: 'levamos rituais de escrita consciente, integração humana e expressão autêntica para empresas, festivais e coletivos.',
+    title: 'momentos que reconectam um grupo com a própria palavra.',
+    subtitle: 'levamos rituais de escrita consciente, integração humana e expressão autêntica para dentro da sua empresa, do seu evento ou do seu festival.',
   });
 
   const contactsSec = getContactSection('info', {
@@ -211,12 +211,12 @@ export default function ContrateExperiencia() {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
                 contrate uma experiência: <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  {heroSec.title || 'a arte do encontro no seu evento.'}
+                  {heroSec.title || 'momentos que reconectam um grupo com a própria palavra.'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                {heroSec.subtitle || 'levamos a escrita consciente, rodas de partilha e curadoria poética para empresas, retiros, festivais e marcas. vivências sob medida que criam pontes de escuta autêntica e marcam momentos inesquecíveis.'}
+                {heroSec.subtitle || 'levamos rituais de escrita consciente, integração humana e expressão autêntica para dentro da sua empresa, do seu evento ou do seu festival.'}
               </p>
 
               {/* Destaque B2B de Alinhamento Direto */}
