@@ -40,9 +40,10 @@ interface WeekPhase {
 const journeyPhases: WeekPhase[] = [
   {
     number: '01',
-    title: 'semana 1: soltar as amarras (dias 1 a 7)',
+    title: 'semana 1: olhar para dentro (dias 1 a 7)',
     subtitle: 'desbloquear a voz e silenciar a crítica interna',
-    description: 'nos primeiros sete dias, o foco é perder o medo da folha em branco. você aprende a escrever sem julgar a própria palavra, liberando o fluxo espontâneo de consciência.',
+    description:
+      'antes de qualquer outra coisa, existe você: as memórias que te formaram, as emoções que passaram por você como rios. esta semana é um convite para parar, respirar e voltar para dentro.',
     image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
     washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
     audioTeaser: 'áudio 01: perdendo o medo da folha em branco (5 min)',
@@ -54,9 +55,10 @@ const journeyPhases: WeekPhase[] = [
   },
   {
     number: '02',
-    title: 'semana 2: aprofundar e reorganizar (dias 8 a 14)',
-    subtitle: 'mapear memórias e dar forma ao caos emocional',
-    description: 'na segunda semana, navegamos em camadas mais profundas. a escrita passa a funcionar como uma bússola interna para organizar pensamentos soltos e dar novo significado a cenas vividas.',
+    title: 'semana 2: olhar para fora (dias 8 a 14)',
+    subtitle: 'perceber o mundo e dar forma ao caos emocional',
+    description:
+      'o mundo ao seu redor está cheio de espelhos: cada pessoa, cada gesto, cada detalhe do ambiente reflete algo em você. esta semana amplia o olhar de dentro para fora.',
     image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
     washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
     audioTeaser: 'áudio 08: a bússola das emoções e memórias (6 min)',
@@ -68,9 +70,10 @@ const journeyPhases: WeekPhase[] = [
   },
   {
     number: '03',
-    title: 'semana 3: autoria e consolidação (dias 15 a 21)',
-    subtitle: 'afirmar sua voz autêntica e sustentar o hábito',
-    description: 'na reta final, você consolida a escrita como uma prática viva e sustentável. um convite para assumir a autoria da própria história com clareza, liberdade e coragem.',
+    title: 'semana 3: olhar para o entre (dias 15 a 21)',
+    subtitle: 'afirmar sua voz autêntica e cultivar o hábito',
+    description:
+      'duas semanas de olhar, pra dentro e pra fora. agora é hora de tecer: integrar o que ficou dentro com o que você percebeu fora, e projetar caminhos para o que vem a seguir.',
     image: '/brand-assets/gallery/events/_MG_9849.jpg',
     washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png',
     audioTeaser: 'áudio 15: seu manifesto de autoria e coragem (7 min)',

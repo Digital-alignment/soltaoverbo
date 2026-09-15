@@ -1,141 +1,120 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import {
   Coffee,
   CheckCircle2,
-  XCircle,
-  Pencil,
   ArrowRight,
   ShieldCheck,
-  Headphones,
-  Flame,
-  FileText,
   Clock,
   Calendar,
-  Heart,
-  Play,
-  Volume2,
-  Video,
-  Users,
+  Quote,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ZoomIn,
-  X,
-  MessageCircle,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
 import FoundersSection from '../components/FoundersSection';
-import { usePageContent } from '../hooks/usePageContent';
+import PaymentModal from '../components/PaymentModal';
 
-interface DynamicStep {
-  step: string;
-  time: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  color: string;
-}
-
-const cafeDynamic: DynamicStep[] = [
+const pillars = [
   {
     step: '01',
-    time: '5 minutos',
-    title: 'boas-vindas & check-in poético',
-    subtitle: 'como você chega para esta nova semana?',
-    description: 'começamos acendendo a presença. uma breve acolhida e o convite para compartilhar uma única palavra que represente como você chega para a semana.',
-    color: 'bg-acentoAzul/10 text-acentoAzul border-acentoAzul/30',
+    category: 'ritual de terça-feira',
+    title: 'começar a semana pela sua voz',
+    description:
+      'meia hora, das 8h às 8h30, antes das reuniões, das mensagens e das urgências dos outros. você entra na semana tendo escutado a si mesma primeiro. o resto do dia acontece a partir de outro lugar.',
   },
   {
     step: '02',
-    time: '15 minutos',
-    title: 'escrita coletiva & disparador poético',
-    description: 'bruna e júlia trazem uma provocação lírica ou estímulo provocador. 15 minutos de caneta no papel, escrevendo sem filtro e sem buscar perfeição técnica.',
-    color: 'bg-acentoTerracota/10 text-acentoTerracota border-acentoTerracota/30',
+    category: 'autoconhecimento',
+    title: 'escrita sem julgamento',
+    description:
+      'não tem bonito ou feio, certo ou errado e nem forma certa. você para de escrever para ser lida e começa a escrever para se entender (é aí que a escrita vira ferramenta).',
   },
   {
     step: '03',
-    time: '10 minutos',
-    title: 'partilha opcional & conexão comunitária',
-    description: 'espaço livre e sem julgamento para quem deseja ler em voz alta seu texto ou compartilhar no grupo exclusivo de whatsapp da comunidade.',
-    color: 'bg-acentoOliva/20 text-tintaCarvao border-acentoOliva/40',
+    category: 'espaço seguro',
+    title: 'vulnerabilidade e conexão',
+    description:
+      'você descobre que se vulnerabilizar, antes de mais nada, é se permitir enregar a própria história de outra maneira. e aqui você faz isso num ambiente seguro, sem obrigação de performar nem de mostrar.',
+  },
+  {
+    step: '04',
+    category: 'comunidade ativa',
+    title: 'roda contínua no whatsapp',
+    description:
+      'o grupo onde os textos da terça seguem circulando e onde o exercício do dia é enviado, para quem não conseguiu estar na roda escrever no seu tempo.',
   },
 ];
 
-const deploymentScreenshots = [
-  { src: '/brand-assets/deployments/IMG_2864.jpg', title: 'trocas poéticas da segunda-feira' },
-  { src: '/brand-assets/deployments/IMG_2865.jpg', title: 'escrita com café quente' },
-  { src: '/brand-assets/deployments/IMG_2867.jpg', title: 'transformação da semana' },
-  { src: '/brand-assets/deployments/IMG_2868.jpg', title: 'presença e escuta ativa' },
-  { src: '/brand-assets/deployments/IMG_2870.jpg', title: 'vozes da comunidade' },
-  { src: '/brand-assets/deployments/IMG_2877.jpg', title: 'carinho de segunda de manhã' },
-  { src: '/brand-assets/deployments/IMG_2878.jpg', title: 'potência da escrita em grupo' },
-  { src: '/brand-assets/deployments/IMG_8065.PNG', title: 'relato do café com letras' },
-  { src: '/brand-assets/deployments/IMG_8066.PNG', title: 'mensagens da roda' },
-  { src: '/brand-assets/deployments/IMG_8067.PNG', title: 'experiência transformadora' },
-  { src: '/brand-assets/deployments/IMG_8068.PNG', title: 'conexões acolhedoras' },
-  { src: '/brand-assets/deployments/IMG_8069.PNG', title: 'ritmo de presença' },
-  { src: '/brand-assets/deployments/IMG_8151.PNG', title: 'cadernos abertos' },
-  { src: '/brand-assets/deployments/IMG_8846.PNG', title: 'laços de afeto' },
-  { src: '/brand-assets/deployments/IMG_8850.PNG', title: 'gratidão da comunidade' },
+const realTestimonials = [
+  {
+    quote:
+      'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
+    author: 'bárbara alcântara (babi)',
+    tag: 'participante do café com letras',
+  },
+  {
+    quote:
+      'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
+    author: 'tom vitralli',
+    tag: 'participante do café com letras',
+  },
+  {
+    quote:
+      'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
+    author: 'jess',
+    tag: 'participante do café com letras',
+  },
 ];
 
 const faqItems = [
   {
-    q: 'quando acontecem os encontros do café com letras?',
-    a: 'todas as terças-feiras, das 8:00 às 8:30 da manhã (horário de brasília), ao vivo via zoom. exatamente 30 minutos para alinhar a semana.',
+    q: 'quando acontecem os encontros?',
+    a: 'toda terça-feira, das 8h às 8h30 da manhã (horário de brasília), ao vivo no zoom.',
   },
   {
-    q: 'e se eu não puder participar ao vivo na terça às 8h?',
-    a: 'se você não puder participar ao vivo, o exercício será enviado no grupo do WhatsApp "café com letras" da comunidade.',
+    q: 'o café é semanal ou mensal?',
+    a: 'semanal. toda terça temos nosso encontro marcado.',
+  },
+  {
+    q: 'o encontro fica gravado?',
+    a: 'não. o café é ao vivo. é um ritual de presença.',
+  },
+  {
+    q: 'e se eu não puder participar numa terça?',
+    a: 'você não fica de fora: enviamos o exercício do dia no grupo de whatsapp, para você escrever no seu tempo e partilhar com a gente. não existe falta nem cobrança: você vem nas terças que puder.',
   },
   {
     q: 'sou obrigada a ler meu texto em voz alta?',
-    a: 'de jeito nenhum! a leitura é 100% opcional. você pode participar do encontro apenas para escrever, ouvir e sentir a energia do grupo.',
+    a: 'nunca. a partilha é sempre voluntária (e isso também é escrever junto).',
   },
   {
-    q: 'membros do ciclo de aprofundamento têm acesso gratuito?',
-    a: 'sim! se você já é assinante do ciclo de aprofundamento, o café com letras já está 100% incluído no seu plano sem nenhum custo adicional.',
+    q: 'preciso ter experiência com escrita?',
+    a: 'não. aqui é um espaço sem julgamento onde não se corrige texto, se escuta gente. o único pré-requisito é vontade de escrever e estar junto.',
+  },
+  {
+    q: 'preciso escrever à mão?',
+    a: 'gostamos de papel e caneta, mas escreva como for melhor para você. você também tem acesso à nossa plataforma digital e pode escrever por lá (e compartilhar na nossa área de partilha).',
+  },
+  {
+    q: 'quem está no ciclo de aprofundamento paga?',
+    a: 'não. o café com letras está incluído na travessia do ciclo, sem custo adicional.',
+  },
+  {
+    q: 'posso cancelar quando quiser?',
+    a: 'sim. é um passe mensal, sem fidelidade. e você tem garantia incondicional de 7 dias: se não for para você, devolvemos o valor integral.',
+  },
+  {
+    q: 'preciso levar algum material?',
+    a: 'só caderno, caneta e um café. o resto deixa com a gente.',
   },
 ];
 
 export default function ProgramaCafeComLetras() {
-  const { getSection } = usePageContent('programa_cafe_com_letras');
-  const heroSec = getSection('hero', {
-    title: 'encontro mensal de escrita & aconchego',
-    subtitle: 'um ritual de domingo com café quentinho, cadernos abertos e partilhas afetivas.',
-  });
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  
-  // Estado do Carrossel de Screenshots de Depoimentos
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
 
-  const navigate = useNavigate();
-  const youtubeVideoId = 'dQw4w9WgXcQ';
-
-  // Auto-play do carrossel a cada 4 segundos
-  useEffect(() => {
-    if (isPaused || selectedScreenshot !== null) return;
-    const interval = setInterval(() => {
-      setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isPaused, selectedScreenshot]);
-
-  const handleEnroll = () => {
-    localStorage.setItem('checkout_intent', 'cafecomletras');
-    navigate('/register?product=cafecomletras');
-  };
-
-  const nextSlide = () => {
-    setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-  };
-
-  const prevSlide = () => {
-    setCarouselIndex((prev) => (prev - 1 + deploymentScreenshots.length) % deploymentScreenshots.length);
+  const toggleFaq = (idx: number) => {
+    setOpenFaqIndex(openFaqIndex === idx ? null : idx);
   };
 
   return (
@@ -143,252 +122,150 @@ export default function ProgramaCafeComLetras() {
       {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
-      {/* 2. HERO SECTION DE VENDAS DO CAFÉ COM LETRAS */}
+      {/* 2. HERO SECTION */}
       <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Coluna Esquerda: Copy Persuasivo & Manifesto */}
+            {/* Coluna Esquerda: Hero Copy */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
                 <Coffee className="w-4 h-4 text-acentoTerracota" />
-                <span>rodas semanais de escrita coletiva</span>
+                <span>roda semanal de escrita coletiva · 30 minutos · online</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                café com letras <br className="hidden sm:inline" />
-                <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  {heroSec.title || 'escrita em coletivo'}
+                café com letras <br />
+                <span className="font-gesto text-acentoTerracota font-normal text-4xl sm:text-5xl lg:text-6xl block mt-1">
+                  ritual de escrita semanal
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                {heroSec.subtitle || 'quer saber como é estar com a gente? participe de um café com letras, e conheça a nossa comunidade.'}
+                uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.
               </p>
 
-              {/* Destaque Logístico & Preço */}
-              <div className="p-5 bg-papelClaro rounded-2xl border border-papelKraft/50 shadow-sm max-w-xl space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-papelKraft/30">
-                  <div>
-                    <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase tracking-wider block">
-                      passe mensal do café
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
-                        R$ 97,00
-                      </span>
-                      <span className="text-xs sm:text-sm text-tintaCarvao/70 lowercase font-medium">
-                        /mês (ou grátis no ciclo)
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-xs font-semibold text-acentoOliva bg-acentoOliva/10 px-3.5 py-1.5 rounded-full border border-acentoOliva/30 w-fit">
-                    <ShieldCheck className="w-4 h-4 text-acentoOliva" />
-                    <span>garantia de 7 dias</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 text-xs text-tintaCarvao/80 font-medium lowercase">
-                  <div className="flex items-center gap-2 bg-bgPlataforma p-2.5 rounded-xl border border-papelKraft/30">
-                    <Calendar className="w-4 h-4 text-acentoTerracota flex-shrink-0" />
-                    <span>toda terça-feira</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-bgPlataforma p-2.5 rounded-xl border border-papelKraft/30">
-                    <Clock className="w-4 h-4 text-acentoTerracota flex-shrink-0" />
-                    <span>8:00 às 8:30 a.m. (30 min)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Botões CTA Principais */}
-              <div className="pt-2 flex flex-wrap items-center gap-4">
+              {/* Botão CTA Principal */}
+              <div className="pt-4 flex flex-wrap items-center gap-4">
                 <button
-                  onClick={handleEnroll}
-                  className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
                 >
-                  <span>garantir minha xícara por R$ 97/mês</span>
-                  <Pencil className="w-5 h-5 text-white" />
+                  <span>sim, quero minha xícara por R$97/mês</span>
+                  <ArrowRight className="w-5 h-5 text-white" />
+                </button>
+
+                <a
+                  href="#como-funciona"
+                  className="bg-papelClaro hover:bg-papelClaro/80 border border-papelKraft/60 text-acentoAzul text-base sm:text-lg px-7 py-4 rounded-full font-medium transition-all shadow-xs flex items-center gap-2 lowercase"
+                >
+                  <span>como funciona o café com letras ↓</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Coluna Direita: Box de Oferta e Frase Inspiradora */}
+            <div className="lg:col-span-5 relative">
+              <div className="rounded-3xl bg-papelClaro p-8 sm:p-10 border border-papelKraft/60 shadow-kraft-lg space-y-6">
+                <div className="space-y-3 pb-4 border-b border-papelKraft/40">
+                  <div className="flex items-center gap-2 text-xs font-bold text-acentoTerracota lowercase">
+                    <Calendar className="w-4 h-4" />
+                    <span>toda terça-feira · 8h às 8h30 (30 min) · zoom</span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-bold font-editorial text-acentoAzul">
+                      R$ 97,00
+                    </span>
+                    <span className="text-sm font-medium text-tintaCarvao/70 lowercase">
+                      /mês
+                    </span>
+                  </div>
+                  <p className="text-xs text-acentoOliva font-bold lowercase bg-acentoOliva/10 px-3 py-1 rounded-full w-fit">
+                    100% incluso para quem está no ciclo de aprofundamento
+                  </p>
+                  <p className="text-xs text-tintaCarvao/60 font-medium lowercase flex items-center gap-1.5 pt-1">
+                    <ShieldCheck className="w-4 h-4 text-acentoOliva" />
+                    <span>garantia incondicional de 7 dias</span>
+                  </p>
+                </div>
+
+                <div className="p-4 bg-bgPlataforma rounded-2xl border border-papelKraft/50 space-y-2">
+                  <blockquote className="font-editorial text-xl font-bold text-acentoAzul lowercase">
+                    “escrever junto é descobrir que a sua palavra não estava sozinha.”
+                  </blockquote>
+                </div>
+
+                <button
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="w-full btn-pill-primary text-base py-3.5 rounded-full shadow-md hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer lowercase"
+                >
+                  <span>sim, quero minha xícara por R$97/mês</span>
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </button>
               </div>
             </div>
-
-            {/* Coluna Direita: Scrapbook Bento Card com Arte Retro */}
-            <div className="lg:col-span-5 relative">
-              <div className="relative rounded-3xl bg-papelClaro p-6 sm:p-8 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group">
-                {/* Sticker Fita Washi */}
-                <div className="absolute -top-2 right-8 w-28 h-7 pointer-events-none z-20 opacity-90">
-                  <img
-                    src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
-                    alt="fita washi"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-
-                <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
-                  <img
-                    src={heroSec.image_url || "/brand-assets/elements/collages/png-person-reading-book-flower-sitting-person.png"}
-                    alt="café com letras solta o verbo"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg';
-                    }}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
-                    “o café esquenta a xícara, a escrita acolhe a semana e a palavra cria laços reais.”
-                  </blockquote>
-                  <p className="text-xs text-tintaCarvao/60 font-mono lowercase pt-2 border-t border-papelKraft/30">
-                    rodas de terça // solta o verbo colectivo
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. OS 4 PILARES DO CAFÉ COM LETRAS (Bento Grid) */}
+      {/* 3. A INSPIRAÇÃO TEM HORA MARCADA */}
+      <section id="como-funciona" className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="p-6 bg-bgPlataforma rounded-3xl border border-papelKraft/60 space-y-3 shadow-xs">
+            <Quote className="w-8 h-8 text-acentoAzul/30" />
+            <blockquote className="font-editorial text-2xl sm:text-3xl font-bold text-acentoAzul lowercase">
+              “escrevo quando estou inspirado. e faço questão de estar inspirado às nove horas de cada manhã.”
+            </blockquote>
+            <p className="text-xs font-bold text-tintaCarvao/60 lowercase tracking-wider">
+              (peter de vries)
+            </p>
+          </div>
+
+          <div className="space-y-4 text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
+            <p className="font-bold text-acentoTerracota text-xl">a nossa hora é às oito.</p>
+            <p className="font-bold text-acentoAzul">inspiração não é sorte, é encontro marcado.</p>
+            <p>
+              mas verdade seja dita, às vezes a gente precisa de um empurrãozinho para escrever. e para isso o café com letras existe: para te inspirar a fazer isso em coletivo. toda terça, às 8h, tem gente sentando junto. você não precisa decidir se hoje é o dia, não precisa achar assunto, não precisa estar inspirada antes de começar: a hora já está marcada e o tema, pronto.
+            </p>
+            <p>
+              o tema muda toda semana. a magia desse encontro você descobre na prática: quando escrevemos sobre um tema, ele passa a ser mais vivo em você. com mais consciência, o que antes teria passado batido vira a oportunidade de enxergar o seu entorno de uma nova maneira.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. OS 4 PILARES */}
       <section className="py-20 sm:py-28 bg-bgPlataforma">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <img
-                src="/brand-assets/icons/icone_63.svg"
-                alt="icone"
-                className="w-5 h-5 object-contain"
-              />
-              <span>propósito & essência</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              por que o café com letras vai transformar sua semana
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
+              que trinta minutos por semana fazem com você
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              quatro pilares pensados para caber de verdade na sua rotina e na sua vida.
+              quatro pilares pensados para caber de verdade na sua rotina e ainda assim mexer com ela.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Bento Card 1 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
-                  <Coffee className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  ritual de terça-feira
-                </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  30 minutos das 8h às 8h30 para começar a semana com presença, calma e foco antes do barulho do cotidiano.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>01 // presença semanal</span>
-              </div>
-            </div>
-
-            {/* Bento Card 2 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
-                  <Pencil className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  escrita sem julgamento
-                </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  foco total no autoconhecimento. não buscamos perfeição técnica nem regras, apenas o hábito de soltar a palavra.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>02 // autoconhecimento</span>
-              </div>
-            </div>
-
-            {/* Bento Card 3 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
-                  <Heart className="w-6 h-6 text-acentoAzul" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  vulnerabilidade & conexão
-                </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  um ambiente humano e acolhedor onde estar vulnerável é um ato de coragem e aproximação genuína.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>03 // espaço seguro</span>
-              </div>
-            </div>
-
-            {/* Bento Card 4 */}
-            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
-                  <MessageCircle className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  grupo de partilha no whatsapp
-                </h3>
-                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  espaço opcional de troca contínua para compartilhar os textos produzidos e manter o calor da roda vivo.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>04 // comunidade ativa</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. A DINÂMICA DO ENCONTRO DE 30 MINUTOS */}
-      <section className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <Clock className="w-4 h-4 text-acentoTerracota" />
-              <span>dinâmica do encontro (30 min)</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              como funcionam as terças de manhã
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              uma estrutura leve de 30 minutos via zoom para ajustar o tom da sua semana.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {cafeDynamic.map((item, idx) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {pillars.map((item) => (
               <div
-                key={idx}
-                className="bg-bgPlataforma rounded-3xl p-7 border border-papelKraft/40 shadow-kraft flex flex-col justify-between space-y-4 hover:-translate-y-1 transition-transform"
+                key={item.step}
+                className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/60 shadow-sm flex flex-col justify-between space-y-4"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="font-editorial text-3xl font-bold text-acentoTerracota">
+                    <span className="font-gesto text-3xl text-acentoTerracota">
                       {item.step}
                     </span>
-                    <span className="text-xs font-bold text-acentoAzul bg-papelClaro px-3 py-1 rounded-full border border-papelKraft/40 lowercase">
-                      {item.time}
+                    <span className="text-xs font-bold text-acentoAzul bg-acentoAzul/10 px-3 py-1 rounded-full lowercase">
+                      {item.category}
                     </span>
                   </div>
-
-                  <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
                     {item.title}
                   </h3>
-
-                  <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  <p className="text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase">
                     {item.description}
                   </p>
-                </div>
-
-                <div className="pt-3 border-t border-papelKraft/30 flex items-center gap-2 text-xs font-bold text-acentoAzul/70">
-                  <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
-                  <span>etapa 0{idx + 1} do café</span>
                 </div>
               </div>
             ))}
@@ -396,306 +273,103 @@ export default function ProgramaCafeComLetras() {
         </div>
       </section>
 
-      {/* 6. PARA QUEM É X PARA QUEM NÃO É */}
-      <section className="py-20 sm:py-28 bg-bgPlataforma">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              o café com letras é para você?
-            </h2>
-            <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              transparência sobre o propósito das nossas rodas.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* SIM / PARA QUEM É */}
-            <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold lowercase tracking-wider">
-                <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
-                <span>o café É para você se:</span>
-              </div>
-
-              <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>quer começar a terça-feira com foco, calma e presença interior</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>busca um grupo acolhedor para praticar a escrita sem cobrança ou vaidade</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>precisa de um empurrão poético curto de 30 minutos na sua rotina</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>acredita na vulnerabilidade e na palavra como pontes de conexão</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* NÃO / PARA QUEM NÃO É */}
-            <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold lowercase tracking-wider">
-                <XCircle className="w-4 h-4 text-acentoTerracota" />
-                <span>NÃO é para você se:</span>
-              </div>
-
-              <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>busca aulas técnicas de redação formal ou correção ortográfica</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>procura um ambiente de competição estética ou crítica literária severa</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>não deseja dedicar 30 minutos na semana para olhar para dentro</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. FACILITADORAS DO PROGRAMA */}
+      {/* 5. QUEM SERVE ESSE CAFÉ */}
       <FoundersSection />
 
-      {/* 8. CARROSSEL DE SCREENSHOTS REAIS DE ALUNAS */}
-      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <img
-                src="/brand-assets/icons/icone_63.svg"
-                alt="icone"
-                className="w-5 h-5 object-contain"
-              />
-              <span>relatos & impressões do café</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              vozes e prints de quem já toma esse café com a gente
+      {/* 6. VOZES DE QUEM JÁ TOMA ESSE CAFÉ COM A GENTE */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
+              vozes de quem já toma esse café com a gente
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              mensagens reais enviadas pelas alunas nas nossas rodas de segunda-feira.
+              mensagens reais de quem escreve com a gente nas terças.
             </p>
           </div>
 
-          <div
-            className="relative max-w-5xl mx-auto"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <button
-              onClick={prevSlide}
-              aria-label="depoimento anterior"
-              className="absolute -left-4 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 shadow-lg text-acentoAzul hover:bg-acentoAzul hover:text-white transition-all flex items-center justify-center cursor-pointer"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={nextSlide}
-              aria-label="próximo depoimento"
-              className="absolute -right-4 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-papelClaro/90 backdrop-blur-sm border border-papelKraft/60 shadow-lg text-acentoAzul hover:bg-acentoAzul hover:text-white transition-all flex items-center justify-center cursor-pointer"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {[0, 1, 2].map((offset) => {
-                const itemIndex = (carouselIndex + offset) % deploymentScreenshots.length;
-                const item = deploymentScreenshots[itemIndex];
-                const washiTapeImage =
-                  offset % 2 === 0
-                    ? '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png'
-                    : '/brand-assets/elements/stickers/fitas-washi-flores-azul.png';
-
-                return (
-                  <div
-                    key={itemIndex}
-                    onClick={() => setSelectedScreenshot(item.src)}
-                    className="relative bg-bgPlataforma rounded-3xl p-4 sm:p-5 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none flex flex-col justify-between"
-                  >
-                    <div className="absolute -top-3.5 left-6 w-28 h-7 pointer-events-none z-20 opacity-90">
-                      <img
-                        src={washiTapeImage}
-                        alt="fita washi"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-
-                    <div className="w-full h-[400px] sm:h-[440px] rounded-2xl overflow-hidden border border-papelKraft/30 relative bg-papelClaro p-2 flex items-center justify-center shadow-inner group/img mb-3">
-                      <img
-                        src={item.src}
-                        alt={item.title}
-                        className="w-full h-full object-contain object-top transition-transform duration-500 group-hover/img:scale-105"
-                      />
-                      
-                      <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
-                        <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
-                          <ZoomIn className="w-4 h-4 text-acentoTerracota" />
-                          <span>ampliar depoimento em tela cheia</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="px-2 text-center pt-1 border-t border-papelKraft/30 flex items-center justify-between">
-                      <span className="font-editorial text-sm font-bold text-acentoAzul lowercase">
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
-                        print real
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex justify-center items-center gap-2 mt-8">
-              {deploymentScreenshots.slice(0, 8).map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCarouselIndex(idx)}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    carouselIndex === idx
-                      ? 'w-8 bg-acentoTerracota'
-                      : 'w-2.5 bg-papelKraft/50 hover:bg-acentoAzul/50'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Modal de Screenshot Ampliado em Tela Cheia */}
-      {selectedScreenshot && (
-        <div
-          className="fixed inset-0 z-50 bg-acentoAzul/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-          onClick={() => setSelectedScreenshot(null)}
-        >
-          <div
-            className="bg-papelClaro rounded-3xl p-4 sm:p-6 border border-papelKraft/60 shadow-2xl max-w-2xl w-full relative animate-fadeIn flex flex-col items-center max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedScreenshot(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-acentoAzul text-white hover:bg-acentoTerracota transition-colors z-20"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-full h-full max-h-[75vh] overflow-y-auto rounded-2xl border border-papelKraft/40 mb-4 bg-white flex items-center justify-center">
-              <img
-                src={selectedScreenshot}
-                alt="depoimento ampliado"
-                className="w-full h-auto object-contain rounded-xl"
-              />
-            </div>
-
-            <button
-              onClick={() => setSelectedScreenshot(null)}
-              className="btn-pill-primary w-full py-3 rounded-full text-center text-sm font-semibold lowercase"
-            >
-              fechar imagem
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* 9. BOX FINAL DE OFERTA & CHECKOUT DO CAFÉ */}
-      <section className="py-24 sm:py-32 bg-bgPlataforma relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-14 border border-white/20 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold lowercase tracking-wider">
-              <span>vem tomar esse café com a gente</span>
-            </div>
-
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase">
-              pronta para transformar a sua semana?
-            </h2>
-
-            <p className="text-papelClaro/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
-              garanta seu passe mensal do café com letras e tenha acesso a todas as rodas ao vivo das terças às 8h e ao grupo exclusivo.
-            </p>
-
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
-              <span className="text-xs font-bold text-papelClaro/70 lowercase tracking-wider block">
-                passe mensal acessível
-              </span>
-
-              <div className="flex justify-center items-baseline gap-2">
-                <span className="text-4xl sm:text-5xl font-bold font-editorial text-white">
-                  R$ 97,00
-                </span>
-                <span className="text-sm text-papelClaro/80 lowercase">
-                  /mês (100% grátis para assinantes do ciclo)
-                </span>
-              </div>
-
-              <div className="flex items-center justify-center gap-2 text-xs font-bold text-acentoOliva pt-2 border-t border-white/15">
-                <ShieldCheck className="w-4 h-4 text-acentoOliva" />
-                <span>garantia incondicional de 7 dias sem riscos</span>
-              </div>
-            </div>
-
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={handleEnroll}
-                className="btn-pill-accent text-lg px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3 w-full sm:w-auto lowercase cursor-pointer"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {realTestimonials.map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-bgPlataforma rounded-3xl p-8 border border-papelKraft/60 shadow-sm flex flex-col justify-between space-y-6"
               >
-                <span>sim! quero garantir minha vaga por R$ 97/mês</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
+                <Quote className="w-8 h-8 text-acentoAzul/30" />
+                <p className="text-tintaCarvao/90 text-base leading-relaxed font-medium italic lowercase">
+                  “{item.quote}”
+                </p>
+                <div className="pt-4 border-t border-papelKraft/40">
+                  <h4 className="font-bold text-acentoAzul text-base lowercase">
+                    {item.author}
+                  </h4>
+                  <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                    {item.tag}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 10. FAQ DO CAFÉ COM LETRAS */}
-      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+      {/* 7. CTA FINAL */}
+      <section className="py-20 bg-acentoAzul text-white relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
+          <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-papelClaro lowercase leading-tight">
+            sua próxima terça pode começar diferente
+          </h2>
+          <p className="text-papelClaro/85 text-lg sm:text-xl font-medium lowercase max-w-2xl mx-auto">
+            você não precisa esperar a vontade chegar, nem ter assunto, nem saber escrever. precisa só aparecer numa terça, às 8h.
+          </p>
+          <div className="p-4 bg-white/10 rounded-2xl max-w-md mx-auto border border-white/20">
+            <span className="text-papelClaro font-bold text-lg block lowercase">
+              97 reais · 100% incluso para quem está no ciclo de aprofundamento
+            </span>
+          </div>
+          <div className="pt-4 flex items-center justify-center">
+            <button
+              onClick={() => setIsPaymentModalOpen(true)}
+              className="btn-pill-accent text-lg px-9 py-4 rounded-full shadow-lg hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
+            >
+              <span>sim, quero minha xícara por R$97/mês</span>
+              <ArrowRight className="w-5 h-5 text-tintaCarvao" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. FAQ DO CAFÉ COM LETRAS */}
+      <section className="py-20 sm:py-28 bg-papelClaro">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase mb-3">
               perguntas frequentes sobre o café com letras
             </h2>
           </div>
 
           <div className="space-y-4">
-            {faqItems.map((item, index) => {
-              const isOpen = openFaqIndex === index;
+            {faqItems.map((faq, idx) => {
+              const isOpen = openFaqIndex === idx;
               return (
                 <div
-                  key={index}
-                  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
-                    isOpen
-                      ? 'bg-papelClaro border-acentoTerracota/50 shadow-kraft-lg'
-                      : 'bg-bgPlataforma/70 border-papelKraft/40 hover:border-acentoAzul/40'
-                  }`}
+                  key={idx}
+                  className="bg-bgPlataforma rounded-2xl border border-papelKraft/60 overflow-hidden shadow-xs"
                 >
                   <button
-                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                    className="w-full p-5 sm:p-6 text-left flex justify-between items-center gap-4 cursor-pointer focus:outline-none select-none"
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full text-left p-6 flex items-center justify-between gap-4 font-editorial font-bold text-lg text-acentoAzul lowercase cursor-pointer"
                   >
-                    <span className="font-bold text-lg sm:text-xl font-editorial text-acentoAzul lowercase">
-                      {item.q}
-                    </span>
+                    <span>{faq.q}</span>
                     <ChevronDown
                       className={`w-5 h-5 text-acentoAzul transition-transform duration-300 ${
-                        isOpen ? 'rotate-180 text-acentoTerracota' : ''
+                        isOpen ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 sm:px-6 pb-6 pt-2 border-t border-papelKraft/30 text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase">
-                      {item.a}
+                    <div className="px-6 pb-6 text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase border-t border-papelKraft/30 pt-4">
+                      {faq.a}
                     </div>
                   )}
                 </div>
@@ -705,8 +379,15 @@ export default function ProgramaCafeComLetras() {
         </div>
       </section>
 
-      {/* 11. PreLoginFooter Poético com Shader WebGL */}
+      {/* Rodapé Pré-Login */}
       <PreLoginFooter />
+
+      {/* Modal de Pagamento */}
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        productKey="cafecomletras"
+      />
     </div>
   );
 }

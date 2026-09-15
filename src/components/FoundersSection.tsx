@@ -20,12 +20,13 @@ const founders: Founder[] = [
     photo: '/bruna copy copy.png',
     iconSvg: '/brand-assets/icons/icone_60.svg',
     washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
-    summary: 'mineira que escolheu viver perto do mar, bruna riedel é geógrafa licenciada, escritora, community manager e designer de conexões e experiências.',
+    summary:
+      'de uma comuna em israel a uma horta comunitária em florianópolis, bruna riedel é geógrafa e escritora que encontrou na palavra a ferramenta pra construir pertencimento.',
     bio: [
-      'mineira que escolheu viver perto do mar, bruna riedel é geógrafa licenciada, escritora, community manager e designer de conexões e experiências.',
-      'há dez anos em florianópolis, trabalha criando ambientes onde pessoas possam aprender, se relacionar, trocar e se transformarem juntas.',
-      'ao longo de sua trajetória, co-criou um comitê de sustentabilidade dentro de uma organização de impacto socioambiental e liderou movimentos de agroecologia.',
-      'co-criadora e facilitadora da solta o verbo, bruna desenha experiências em que a escrita se torna uma ferramenta poderosa para gerar consciência, liberdade e autoria.',
+      'aos dezoito anos morou numa comuna em israel, dividindo casa e salário com quinze amigos. antes disso, três meses num kibutz, e depois deu aula de hebraico pra refugiados da etiópia. foi ali que entendeu que pertencer é ser corresponsável pelo coletivo.',
+      'formou-se em geografia na udesc, com pesquisa sobre um grupo que transformou um terreno baldio em horta comunitária, com pessoas em situação de rua plantando onde antes só tinha mato.',
+      'repetiu esse gesto em instituições diferentes: impact hub, salto inclusão produtiva, tribos lab, e há quatro anos o instituto amuta, aplicando o design de conexões. seu trabalho parte das pesquisas de james pennebaker sobre escrita expressiva e da curva do esquecimento de ebbinghaus, e acredita que todo mundo já sabe escrever, só precisa de um canal guiado pra se escutar.',
+      'cofundadora e facilitadora da solta o verbo, ao lado de júlia alvim, onde aplica na palavra o que aprendeu na horta e na comuna: que ninguém pertence sozinho.',
     ],
   },
   {
@@ -35,12 +36,12 @@ const founders: Founder[] = [
     photo: '/jo.png',
     iconSvg: '/brand-assets/icons/icone_62.svg',
     washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
-    summary: 'de gerente em multinacional para um caminho autoral, julia alvim é contadora de histórias que encontrou na escrita a ferramenta de transição de vida.',
+    summary:
+      'julia alvim é contadora de histórias. encontrou na escrita a ferramenta da própria travessia e é o que hoje sustenta seu trabalho com outras pessoas.',
     bio: [
-      'de gerente em multinacional para um caminho autoral, julia alvim é contadora de histórias que encontrou na escrita a ferramenta que guiou sua própria transição de vida para um destino mais alinhado com sua verdade.',
-      'dedica-se em aprofundar seus estudos sobre relações humanas, criatividade e autoconhecimento. produziu eventos, retiros e encontros no brasil e na europa.',
-      'criou projetos coletivos como o children of the universe e o \'segundas intenções\' no substack, uma newsletter para inspirar pessoas a acreditarem que a mudança acontece de dentro para fora.',
-      'co-criadora e facilitadora do solta o verbo, julia desenha jornadas em que a expressão através da escrita se torna um espaço seguro para reorganizar emoções e ressignificar narrativas.',
+      'saiu de um cargo de gerência em multinacional para seguir um caminho autoral mais alinhado com sua verdade e explora todas as possibilidades de comunicação através da arte para contar uma boa história.',
+      'atualmente trabalha com comunicação digital, criação de conteúdo de vídeo e produção de eventos, retiros e encontros no brasil e na europa. criou projetos coletivos como o children of the universe e o "segundas intenções", newsletter no substack. é movida pela possibilidade de aprender algo novo.',
+      'co-criadora e facilitadora do solta o verbo, desenha jornadas em que a expressão através da escrita se torna um espaço seguro para reorganizar emoções e ressignificar narrativas.',
     ],
   },
 ];

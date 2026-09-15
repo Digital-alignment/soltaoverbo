@@ -1,147 +1,170 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import {
   Users,
   CheckCircle2,
   XCircle,
-  Pencil,
   ArrowRight,
   ShieldCheck,
-  Headphones,
-  Flame,
-  FileText,
-  Clock,
-  Heart,
-  Play,
-  Volume2,
-  Video,
   BookOpen,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ZoomIn,
-  X,
-  Sparkles,
-  MessageCircle,
+  Calendar,
+  Quote,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
-import FoundersSection from '../components/FoundersSection';
-import PaymentModal, { ProductKey } from '../components/PaymentModal';
-import { usePageContent } from '../hooks/usePageContent';
+import PaymentModal from '../components/PaymentModal';
 
-interface DynamicStep {
-  step: string;
-  time: string;
-  title: string;
-  description: string;
-  color: string;
-}
-
-const liveStructure: DynamicStep[] = [
+const pillars = [
   {
-    step: '01',
-    time: '15 minutos',
-    title: 'abertura & ritual de presença',
-    description: 'centramento, escuta inicial e desaceleração do ritmo cotidiano para entrar no espaço poético.',
-    color: 'bg-acentoAzul/10 text-acentoAzul border-acentoAzul/30',
+    title: 'acesso a todos os cafés com letras',
+    description: 'o ritual de terça-feira de escrita coletiva, das 8h às 8h30. toda semana, meia hora só sua antes do dia começar, com gente escrevendo junto.',
+    highlight: true,
   },
   {
-    step: '02',
-    time: '40 minutos',
-    title: 'provocação poética & laboratório em tempo real',
-    description: 'bruna e júlia trazem o tema central do ciclo e conduzem um exercício prático de escrita ao vivo.',
-    color: 'bg-acentoTerracota/10 text-acentoTerracota border-acentoTerracota/30',
+    title: '3 encontros ao vivo, um por mês, com bruna, júlia e convidada',
+    description: 'das 19h às 20h30, fechando cada mês: o tema destravado em voz alta, com espaço para a sua história e não só para a teoria.',
+    highlight: true,
   },
   {
-    step: '03',
-    time: '35 minutos',
-    title: 'fogueira de leitura & partilha afetiva',
-    description: 'espaço voluntário e acolhedor para ler os textos produzidos no encontro e receber escuta atenta.',
-    color: 'bg-acentoOliva/20 text-tintaCarvao border-acentoOliva/40',
+    title: 'comunidade no whatsapp',
+    description: 'a troca do dia a dia: o insight que veio no ônibus, o trecho do livro que doeu, o apoio quando trava. dois grupos: "junto e misturado" e "cá entre nós".',
+    highlight: false,
+  },
+  {
+    title: 'os 21 dias de escrita liberados',
+    description: 'a jornada completa para escrever até virar hábito.',
+    highlight: false,
+  },
+  {
+    title: 'acervo de materiais gravados',
+    description: 'tudo o que já construímos, disponível no seu tempo.',
+    highlight: false,
+  },
+  {
+    title: 'plataforma completa',
+    description: 'diário pessoal, área de partilha, rituais e inspirações de escrita, sempre à mão.',
+    highlight: false,
+  },
+  {
+    title: 'desconto especial nos encontros presenciais do solta o verbo',
+    description: 'pra quando a gente se encontra fora da tela.',
+    highlight: false,
   },
 ];
 
-const deploymentScreenshots = [
-  { src: '/brand-assets/deployments/IMG_2864.jpg', title: 'troca viva nos encontros' },
-  { src: '/brand-assets/deployments/IMG_2865.jpg', title: 'escrita como refúgio' },
-  { src: '/brand-assets/deployments/IMG_2867.jpg', title: 'transformação constante' },
-  { src: '/brand-assets/deployments/IMG_2868.jpg', title: 'acolhimento comunitário' },
-  { src: '/brand-assets/deployments/IMG_2870.jpg', title: 'vozes da fogueira ao vivo' },
-  { src: '/brand-assets/deployments/IMG_2877.jpg', title: 'carinho das facilitadoras' },
-  { src: '/brand-assets/deployments/IMG_2878.jpg', title: 'potência da partilha' },
-  { src: '/brand-assets/deployments/IMG_8065.PNG', title: 'depoimento de aluna' },
-  { src: '/brand-assets/deployments/IMG_8066.PNG', title: 'mensagens da comunidade' },
-  { src: '/brand-assets/deployments/IMG_8067.PNG', title: 'experiência do ciclo' },
-  { src: '/brand-assets/deployments/IMG_8068.PNG', title: 'conexões autênticas' },
-  { src: '/brand-assets/deployments/IMG_8069.PNG', title: 'ritmo de escrita' },
-  { src: '/brand-assets/deployments/IMG_8151.PNG', title: 'cadernos em movimento' },
-  { src: '/brand-assets/deployments/IMG_8846.PNG', title: 'vínculos de afeto' },
-  { src: '/brand-assets/deployments/IMG_8850.PNG', title: 'gratidão no ciclo' },
+const objections = [
+  {
+    title: 'não tenho tempo',
+    description: 'a roda semanal dura meia hora, das 8h às 8h30, cabe antes do trabalho começar. o único compromisso mais longo é uma noite por mês. quem pode vir toda terça, vem; quem só consegue no fechamento, também atravessa. nada é obrigatório e tudo fica gravado.',
+  },
+  {
+    title: 'não sei escrever',
+    description: 'aqui ninguém corrige texto. a gente escuta gente. não existe pré-requisito além de vontade.',
+  },
+  {
+    title: 'e se eu perder um encontro?',
+    description: 'tudo fica gravado no acervo, disponível durante toda a travessia.',
+  },
+  {
+    title: 'sou obrigada a ler o que escrevi?',
+    description: 'nunca. a partilha é sempre voluntária. tem gente que só escuta nos primeiros encontros, e isso também é atravessar.',
+  },
+  {
+    title: 'e se eu não me identificar?',
+    description: 'você tem garantia incondicional de 7 dias. entra, participa, sente. se não foi para você, devolvemos o valor integral, sem perguntas.',
+  },
+  {
+    title: 'e depois dos três meses?',
+    description: 'uma nova travessia começa, com outro tema e outro convidado. você escolhe se segue. o ciclo é contínuo, o compromisso é por travessia.',
+  },
+];
+
+const realTestimonials = [
+  {
+    quote:
+      'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
+    author: 'bárbara alcântara (babi)',
+    tag: 'café com letras & ciclo de aprofundamento',
+  },
+  {
+    quote:
+      'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
+    author: 'tom vitralli',
+    tag: 'membro do ciclo de aprofundamento',
+  },
+  {
+    quote:
+      'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
+    author: 'jess',
+    tag: 'membro do ciclo de aprofundamento',
+  },
 ];
 
 const faqItems = [
   {
-    q: 'qual é o valor do investimento no ciclo de aprofundamento?',
-    a: 'o investimento no ciclo completo de 3 meses é R$ 597,00 no PIX (com ~12% de desconto à vista) ou 3x de R$ 225,67 sem juros no cartão (total de R$ 677,00). inclui encontros semanais, 21 dias de escrita grátis, acervo e os 2 grupos da comunidade.',
+    q: 'o que é exatamente o ciclo de aprofundamento?',
+    a: 'é a nossa comunidade paga, organizada em travessias de três meses. cada travessia mergulha em um tema de autodesenvolvimento, criatividade e relações humanas, apoiada por um livro-guia e por um convidado especial. a travessia atual é "a coragem de não agradar", com o livro de ichiro kishimi e fumitake koga e a presença da jout jout.',
   },
   {
-    q: 'já faço parte da comunidade gratuita, por que assinar o ciclo agora?',
-    a: 'o ciclo é a forma de sustentar a comunidade viva e remunerar o trabalho semanal de facilitação de bruna e júlia. membros ativos anteriores contam com uma condição especial de fundadoras com benefícios dedicados.',
+    q: 'são só três encontros em três meses?',
+    a: 'não. o ciclo é uma rotina semanal: toda terça-feira acontece o café com letras, nossa roda de escrita coletiva, e a conversa segue todos os dias nos grupos de whatsapp. os três encontros ao vivo são os fechamentos de cada mês, onde tudo o que foi escrito se reúne e se aprofunda. ao longo da travessia são cerca de doze terças escrevendo em grupo.',
+  },
+  {
+    q: 'qual é o valor?',
+    a: 'r$597,00 no pix pela travessia completa de 3 meses, ou 3x de r$225,67 sem juros no cartão. inclui todos os cafés com letras, os três encontros ao vivo de fechamento, os dois grupos de whatsapp, os 21 dias de escrita, o acervo completo e acesso a toda plataforma.',
   },
   {
     q: 'quando acontecem os encontros ao vivo?',
-    a: 'os encontros do ciclo acontecem quinzenalmente via zoom (1h30 de duração) mais o café com letras semanal (terças às 8h). a agenda completa é enviada com antecedência.',
+    a: 'os fechamentos de mês são em 27 de outubro, 24 de novembro e 15 de dezembro, sempre numa terça-feira, das 19h às 20h30, no zoom. tudo fica gravado.',
   },
   {
-    q: 'e se eu não puder participar ao vivo de algum encontro?',
-    a: 'sem problemas! todos os encontros são gravados na íntegra e disponibilizados na sua área de membros em até 24 horas, junto com os cadernos de apoio em pdf.',
+    q: 'e o café com letras, quando é?',
+    a: 'toda terça-feira, das 8h às 8h30. são trinta minutos de escrita coletiva para começar o dia e a semana pela sua própria voz, antes de o mundo começar a pedir coisas.',
   },
   {
-    q: 'sou obrigada a ler meus textos nos encontros ao vivo?',
-    a: 'de forma alguma! a leitura e a partilha na fogueira são 100% voluntárias. você pode participar apenas ouvindo, escrevendo e sentindo a energia do grupo.',
+    q: 'o ciclo é uma mentoria?',
+    a: 'não. bruna e júlia conduzem as rodas e sustentam o espaço, mas quem escreve a sua história é você. é escrita coletiva, partilha e travessia em comunidade, não aula, não consultoria, não mentoria.',
+  },
+  {
+    q: 'as inscrições fecham em 1º de outubro, mas o primeiro encontro é só em 27. o que acontece nesse intervalo?',
+    a: 'esse tempo é de propósito e ele já é parte da travessia. assim que você entra, recebe acesso imediato à plataforma, aos 21 dias de escrita, ao acervo e aos dois grupos, e participa dos cafés com letras toda terça. é também o período para começar a leitura do livro com calma, para que você chegue no dia 27 já escrevendo, e não começando do zero.',
+  },
+  {
+    q: 'a jout jout participa de todos os encontros?',
+    a: 'a jout jout é a convidada especial do terceiro e último encontro da travessia. os dois primeiros são conduzidos por bruna e júlia, que preparam o terreno para que essa conversa final aconteça com você já tendo escrito bastante sobre o tema.',
+  },
+  {
+    q: 'até quando posso me inscrever?',
+    a: 'as inscrições para esta travessia vão até 1º de outubro. depois dessa data, a turma fecha para preservar a intimidade dos encontros e a próxima oportunidade será na travessia seguinte, em três meses.',
+  },
+  {
+    q: 'preciso ler o livro?',
+    a: 'recomendamos, mas não é obrigatório. os encontros são conduzidos de forma que você acompanhe mesmo sem ter terminado a leitura. o livro aprofunda, não é pré-requisito.',
+  },
+  {
+    q: 'sou obrigada a ler meus textos nos encontros?',
+    a: 'não. a partilha é sempre voluntária e o silêncio também é forma de presença.',
   },
   {
     q: 'como funciona a garantia de 7 dias?',
-    a: 'você pode se inscrever, participar do primeiro encontro ao vivo e explorar toda a plataforma. se sentir que o ciclo não é para você neste momento, basta solicitar o reembolso integral em até 7 dias sem nenhuma complicação.',
+    a: 'você tem sete dias a partir da compra para pedir reembolso integral, sem justificativa. basta escrever para soltaoverbocoletivo@gmail.com.',
+  },
+  {
+    q: 'e quando a travessia terminar?',
+    a: 'uma nova começa, com outro tema, livro e convidado. membros ativos têm prioridade de vaga e você decide se continua.',
+  },
+  {
+    q: 'preciso ter experiência com escrita?',
+    a: 'não. o solta o verbo não é sobre técnica acadêmica ou gramática rígida, mas sobre escuta interna, presença e liberdade narrativa.',
   },
 ];
 
 export default function ProgramaCiclo() {
-  const { getSection } = usePageContent('programa_ciclo');
-  const heroSec = getSection('hero', {
-    title: 'o ciclo de aprofundamento',
-    subtitle: 'uma jornada contínua para quem deseja transformar a escrita em prática diária de presença e autocompaixão.',
-  });
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-  
-  // Estado do Carrossel de Screenshots de Depoimentos
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
 
-  const navigate = useNavigate();
-
-  // Auto-play do carrossel a cada 4 segundos
-  useEffect(() => {
-    if (isPaused || selectedScreenshot !== null) return;
-    const interval = setInterval(() => {
-      setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isPaused, selectedScreenshot]);
-
-  const handleEnroll = () => {
-    setIsPaymentModalOpen(true);
-  };
-
-  const nextSlide = () => {
-    setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
-  };
-
-  const prevSlide = () => {
-    setCarouselIndex((prev) => (prev - 1 + deploymentScreenshots.length) % deploymentScreenshots.length);
+  const toggleFaq = (idx: number) => {
+    setOpenFaqIndex(openFaqIndex === idx ? null : idx);
   };
 
   return (
@@ -149,131 +172,280 @@ export default function ProgramaCiclo() {
       {/* 1. Header Navbar Sticky */}
       <PreLoginNavbar />
 
-      {/* 2. HERO SECTION DE VENDAS DO CICLO DE APROFUNDAMENTO */}
+      {/* 2. HERO SECTION */}
       <section className="relative pt-12 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            {/* Coluna Esquerda: Copy Persuasivo & Oferta */}
+            {/* Coluna Esquerda: Hero Copy */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
+              <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
                 <Users className="w-4 h-4 text-acentoTerracota" />
-                <span>mentoria ao vivo (3 meses) & comunidade viva</span>
+                <span>travessia de 3 meses · turma aberta · vagas limitadas</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                ciclo de aprofundamento: <br className="hidden sm:inline" />
-                <span className="font-gesto text-acentoTerracota font-normal text-5xl sm:text-6xl lg:text-7xl block mt-1">
-                  {heroSec.title || 'onde a escrita ganha laços e maturidade.'}
+                ciclo de aprofundamento <br />
+                <span className="font-gesto text-acentoTerracota font-normal text-4xl sm:text-5xl lg:text-6xl block mt-1">
+                  para quem quer ir mais fundo
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                {heroSec.subtitle || '3 meses de imersão contínua com encontros ao vivo, mentoria com bruna riedel e júlia alvim, 2 grupos de comunidade ("junto e misturado" + "cá entre nós") e acesso total ao programa 21 dias de escrita.'}
+                três meses de escrita acompanhada para atravessar, em comunidade, um tema que você vem evitando sozinha.
               </p>
 
-              {/* Destaque de Preço & Garantia (Alineado con Product Canvas 2026) */}
-              <div className="p-5 bg-papelClaro rounded-2xl border border-papelKraft/50 shadow-sm max-w-xl space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-papelKraft/30">
-                  <div>
-                    <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase tracking-wider block">
-                      investimento trimestral
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
-                        R$ 597,00
-                      </span>
-                      <span className="text-xs sm:text-sm text-tintaCarvao/70 lowercase font-medium">
-                        no PIX (ou 3x R$ 225,67 sem juros)
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-xs font-semibold text-acentoOliva bg-acentoOliva/10 px-3.5 py-1.5 rounded-full border border-acentoOliva/30 w-fit">
-                    <ShieldCheck className="w-4 h-4 text-acentoOliva" />
-                    <span>garantia de 7 dias</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs text-tintaCarvao/80 font-medium lowercase">
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
-                    <span>21 dias de escrita 100% incluído</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-acentoOliva flex-shrink-0" />
-                    <span>grupos junto e misturado + cá entre nós</span>
-                  </span>
-                </div>
-              </div>
+              <p className="text-tintaCarvao/80 text-base sm:text-lg leading-relaxed max-w-2xl font-medium lowercase pt-2 border-t border-papelKraft/40">
+                tem perguntas que não cabem num fim de semana de curso. elas pedem tempo, companhia e um lugar seguro para serem escritas. o ciclo de aprofundamento é esse lugar: a cada três meses escolhemos um tema de autodesenvolvimento, criatividade e relações humanas, um livro que sustenta a conversa e um convidado especial para atravessar com a gente. no meio do caminho, sua escrita deixa de ser exercício e vira decisão.
+              </p>
 
               {/* Botão CTA Principal */}
-              <div className="pt-2 flex flex-wrap items-center gap-4">
+              <div className="pt-4">
                 <button
-                  onClick={handleEnroll}
-                  className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
                 >
-                  <span>garantir minha vaga no ciclo — R$ 597 no PIX</span>
-                  <Pencil className="w-5 h-5 text-white" />
+                  <span>quero atravessar: R$597 no pix</span>
+                  <ArrowRight className="w-5 h-5 text-white" />
                 </button>
               </div>
             </div>
 
-            {/* Coluna Direita: Scrapbook Card da Comunidade */}
+            {/* Coluna Direita: Box de Oferta e Investimento */}
             <div className="lg:col-span-5 relative">
-              <div className="relative rounded-3xl bg-papelClaro p-6 sm:p-8 border border-papelKraft/40 shadow-kraft-lg overflow-hidden group">
-                {/* Sticker Fita Washi */}
-                <div className="absolute -top-2 right-8 w-28 h-7 pointer-events-none z-20 opacity-90">
-                  <img
-                    src="/brand-assets/elements/stickers/fitas-washi-flores-terracota.png"
-                    alt="fita washi"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-
-                <div className="w-full h-64 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative mb-5">
-                  <img
-                    src={heroSec.image_url || "/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"}
-                    alt="ciclo de aprofundamento solta o verbo"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-
+              <div className="rounded-3xl bg-acentoAzul text-white p-8 sm:p-10 shadow-kraft-lg relative overflow-hidden border border-white/20 space-y-6">
                 <div className="space-y-2">
-                  <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
-                    “a escrita deixa de ser um evento pontual e vira parte da sua rotina e identidade.”
-                  </blockquote>
-                  <p className="text-xs text-tintaCarvao/60 font-mono lowercase pt-2 border-t border-papelKraft/30">
-                    comunidade cá entre nós // solta o verbo colectivo
+                  <span className="text-xs font-bold text-acentoOliva lowercase tracking-wider block">
+                    investimento na travessia completa (3 meses)
+                  </span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl sm:text-5xl font-bold font-editorial text-papelClaro">
+                      R$ 597,00
+                    </span>
+                    <span className="text-xs sm:text-sm text-papelClaro/80 lowercase font-medium">
+                      no pix
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-papelClaro/70 lowercase font-medium">
+                    ou 3x R$ 225,67 sem juros no cartão
                   </p>
                 </div>
+
+                <ul className="space-y-3 pt-4 border-t border-white/20 text-papelClaro/90 text-sm font-medium lowercase">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>escrita coletiva toda terça, das 8h às 8h30</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>3 encontros ao vivo de fechamento de mês</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>21 dias de escrita 100% incluído</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>garantia incondicional de 7 dias</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>acesso integral à plataforma, aos materiais gravados e área de partilha</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>acesso à comunidade no whatsapp</span>
+                  </li>
+                </ul>
+
+                <button
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  className="w-full btn-pill-accent text-base py-3.5 rounded-full shadow-md hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer lowercase"
+                >
+                  <span>quero atravessar: R$597 no pix</span>
+                  <ArrowRight className="w-4 h-4 text-tintaCarvao" />
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* 3. UMA TRAVESSIA DE 3 MESES, NUM MOVIMENTO CONTÍNUO */}
+      <section className="py-16 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 text-center sm:text-left">
+          <span className="text-xs font-bold text-acentoTerracota lowercase tracking-widest block">
+            como funciona
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
+            uma travessia de 3 meses, num movimento contínuo
+          </h2>
+          <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
+            o ciclo funciona em travessias. cada travessia dura três meses e gira em torno de um único tema, escolhido porque incomoda e porque move.
+          </p>
+          <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
+            para sustentar esse tema, três coisas acontecem juntas: um livro que serve de terreno comum; três encontros ao vivo, um por mês, conduzidos por bruna e júlia, com um convidado especial que traz outra camada ao assunto; um ritual semanal de escrita, o café com letras, toda terça-feira, para que a prática não dependa de motivação.
+          </p>
+          <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
+            quando a travessia termina, uma nova começa: com outro tema, outro livro, outro convidado (e a gente espera sempre ter você dando continuidade com a gente &lt;3).
+          </p>
+        </div>
+      </section>
 
-      {/* 4. OS 4 PILARES DA MENTORIA (Bento Grid) */}
-      <section className="py-20 sm:py-28 bg-bgPlataforma">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
-              <img
-                src="/brand-assets/icons/icone_63.svg"
-                alt="icone"
-                className="w-5 h-5 object-contain"
-              />
-              <span>estrutura da mentoria</span>
+      {/* 4. A PRÓXIMA TRAVESSIA: A CORAGEM DE NÃO AGRADAR */}
+      <section className="py-20 sm:py-28 bg-bgPlataforma relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          {/* Header da próxima travessia */}
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs sm:text-sm font-bold lowercase border border-acentoOliva/40">
+              <Calendar className="w-4 h-4 text-acentoAzul" />
+              <span>inscrições abertas até 1º de outubro</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+            <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
+              a próxima travessia: a coragem de não agradar
+            </h2>
+            <p className="text-acentoTerracota text-lg sm:text-xl font-gesto lowercase">
+              três meses para se libertar da opinião dos outros, atravessar suas próprias limitações e se tornar a pessoa que você deseja ser.
+            </p>
+            <div className="p-6 bg-papelClaro rounded-2xl border border-papelKraft/50 text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase space-y-3 shadow-xs">
+              <span className="font-bold text-acentoAzul block">por que esse tema, agora:</span>
+              <p>
+                o cargo que você aceitou. a conversa que você não teve. o "tudo bem" que saiu da sua boca quando nada estava bem. a gente aprende cedo que ser amada é ser conveniente (e passa anos escrevendo uma história que agrada a todos, menos a quem a escreve). nesta travessia, vamos usar a escrita para encontrar onde exatamente você entregou a caneta para outra pessoa. e para retomá-la. quantas decisões da sua vida foram tomadas para não decepicionar alguém? é essa pergunta que vamos escrever juntas.
+              </p>
+            </div>
+          </div>
+
+          {/* Os 4 blocos da travessia */}
+          <div className="space-y-8">
+            {/* Bloco 1: O livro */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-sm space-y-4">
+              <div className="flex items-center gap-3">
+                <BookOpen className="w-6 h-6 text-acentoAzul" />
+                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  bloco 1: o livro que nos acompanha
+                </h3>
+              </div>
+              <p className="text-tintaCarvao/90 text-base leading-relaxed font-medium lowercase">
+                <strong className="text-acentoAzul">"a coragem de não agradar"</strong>, de ichiro kishimi e fumitake koga. um diálogo entre um filósofo e um jovem sobre como a filosofia pode libertar você da opinião dos outros, superar suas limitações e se tornar a pessoa que deseja ser. é um livro que provoca, discorda de você e devolve responsabilidade, exatamente o tipo de leitura que rende escrita.
+              </p>
+              <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                ele não é lição de casa. é terreno comum: lemos no mesmo ritmo, sublinhamos o que dói e escrevemos a partir dali. cada encontro do mês parte de uma parte específica do livro. a leitura é recomendada, não obrigatória: os encontros são conduzidos para que você acompanhe mesmo sem ter terminado.
+              </p>
+            </div>
+
+            {/* Bloco 2: Encontros de Aprofundamento */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-sm space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  bloco 2: encontros de aprofundamento
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base font-medium lowercase">
+                  três encontros ao vivo no zoom, um por mês, sempre numa terça-feira, das 19h às 20h30. cada um fecha um mês de escrita e mergulha em uma das três coragens da travessia.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {/* Encontro 1 */}
+                <div className="p-5 bg-bgPlataforma rounded-2xl border border-papelKraft/50 space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-bold text-acentoAzul text-base lowercase">
+                      01 · terça, 27 de outubro · 19h às 20h30
+                    </span>
+                    <span className="text-xs bg-papelKraft/40 px-3 py-1 rounded-full text-tintaCarvao font-medium lowercase">
+                      facilitam: bruna riedel e júlia alvim
+                    </span>
+                  </div>
+                  <h4 className="text-lg font-bold font-editorial text-acentoTerracota lowercase">
+                    a coragem de largar a história que me define
+                  </h4>
+                  <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
+                    que história sobre mim eu já posso parar de repetir? todo mundo carrega uma versão de si mesma contada tantas vezes que virou identidade. aqui a gente escreve para descobrir onde essa história deixou de ser verdade e passou a ser apenas hábito.
+                  </p>
+                  <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                    no livro: negar o trauma e sair da comparação.
+                  </p>
+                </div>
+
+                {/* Encontro 2 */}
+                <div className="p-5 bg-bgPlataforma rounded-2xl border border-papelKraft/50 space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-bold text-acentoAzul text-base lowercase">
+                      02 · terça, 24 de novembro · 19h às 20h30
+                    </span>
+                    <span className="text-xs bg-papelKraft/40 px-3 py-1 rounded-full text-tintaCarvao font-medium lowercase">
+                      facilitam: bruna riedel e júlia alvim
+                    </span>
+                  </div>
+                  <h4 className="text-lg font-bold font-editorial text-acentoTerracota lowercase">
+                    a coragem de não agradar
+                  </h4>
+                  <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
+                    o que é minha responsabilidade e o que não é? o mês em que a travessia aperta. vamos separar, no papel, o que é seu do que você carregou por medo de decepicionar, e escrever as conversas que você nunca teve.
+                  </p>
+                  <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                    no livro: descartar as tarefas dos outros.
+                  </p>
+                </div>
+
+                {/* Encontro 3 */}
+                <div className="p-5 bg-acentoAzul/10 rounded-2xl border border-acentoAzul/30 space-y-2 relative overflow-hidden">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-bold text-acentoAzul text-base lowercase">
+                      03 · terça, 15 de dezembro · 19h às 20h30
+                    </span>
+                    <span className="text-xs bg-acentoTerracota text-white px-3 py-1 rounded-full font-bold lowercase">
+                      convidada especial: jout jout
+                    </span>
+                  </div>
+                  <h4 className="text-lg font-bold font-editorial text-acentoAzul lowercase">
+                    a coragem de pertencer e viver agora
+                  </h4>
+                  <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
+                    como posso pertencer sem me diminuir e viver este dia como uma dança? o encontro final recebe jout jout, que fez da própria voz um ofício público, e conhece o preço e a alegria disso. ela chega no fim porque é ponto de chegada, não ponto de partida.
+                  </p>
+                  <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                    no livro: pertencimento, contribuição e o aqui e agora.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bloco 3 & 4 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-papelClaro rounded-3xl p-6 border border-papelKraft/60 shadow-sm space-y-3">
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase">
+                  bloco 3: encontros semanais no café com letras
+                </h3>
+                <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
+                  nosso ritual toda terça-feira, das 8h às 8h30. meia hora de escrita coletiva para começar o dia pela sua própria voz, antes de o mundo começar a pedir coisas de você. você vem às que puder: nada é obrigatório, nenhuma é igual à outra.
+                </p>
+              </div>
+
+              <div className="bg-papelClaro rounded-3xl p-6 border border-papelKraft/60 shadow-sm space-y-3">
+                <h3 className="text-lg font-bold font-editorial text-acentoAzul lowercase">
+                  bloco 4: troca contínua no grupo de whatsapp
+                </h3>
+                <p className="text-tintaCarvao/85 text-sm leading-relaxed font-medium lowercase">
+                  todos os dias, no seu ritmo. entre uma terça e outra, a conversa não para. são dois espaços: "junto e misturado", a comunidade ampla, e "cá entre nós", o grupo exclusivo de quem está na travessia, mais reservado, para uma troca mais próxima.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. OS 7 PILARES DO CICLO */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
               o que faz do ciclo uma jornada transformadora
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              quatro pilares desenhados para dar profundidade, constância e apoio ao seu processo de escrita.
+              sete pilares desenhados para sustentar a sua prática ao longo de 3 meses.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Bento Card 1 */}
             <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
@@ -281,14 +453,14 @@ export default function ProgramaCiclo() {
                   <Video className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  encontros ao vivo no zoom
+                  3 encontros ao vivo via zoom
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  mentorias quinzenais com exercícios guiados em tempo real, partilhas e acesso livre ao café com letras.
+                  27/10, 24/11 e 15/12 (encontro especial com jout jout). momentos profundos de facilitação com bruna riedel e júlia alvim.
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>01 // mentoria + café com letras</span>
+                <span>01 // encontros virtuais</span>
               </div>
             </div>
 
@@ -343,6 +515,42 @@ export default function ProgramaCiclo() {
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
                 <span>04 // cadernos exclusivos</span>
+              </div>
+            </div>
+
+            {/* Bento Card 5 */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
+                  <BookOpen className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                  livro &quot;a coragem de não agradar&quot;
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  leitura norteadora de kishimi & koga para guiar as reflexões de liberdade e pertencimento.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
+                <span>05 // leitura recomendada</span>
+              </div>
+            </div>
+
+            {/* Bento Card 6 */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
+                  <Coffee className="w-6 h-6 text-acentoAzul" />
+                </div>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
+                  café com letras 100% incluso
+                </h3>
+                <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                  encontros semanais de escrita coletiva todas as terças-feiras (8h às 8h30) sem nenhum custo adicional.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
+                <span>06 // terças-feiras 8h</span>
               </div>
             </div>
           </div>

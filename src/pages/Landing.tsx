@@ -27,8 +27,8 @@ export default function Landing() {
     setPaymentModalOpen(true);
   };
   const heroSec = getSection('hero', {
-    title: 'a narrativa muda a partir do ponto que você solta o verbo.',
-    subtitle: 'reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.',
+    title: 'a narrativa muda a partir do ponto que você a observa.',
+    subtitle: 'reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e vida) mais consciente. dê contorno ao que te habita, ao que pede passagem e ao que ainda não encontrou palavras.',
     button_text: 'conhecer os programas',
     button_link: '#produtos',
   });
@@ -68,21 +68,21 @@ export default function Landing() {
   const testimonials = [
     {
       quote:
-        'o solta o verbo me devolveu a coragem de colocar no papel aquilo que eu nem sabia que precisava dizer. a comunidade é um abraço quente em dias frios.',
-      author: 'marina lima',
+        'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
+      author: 'bárbara alcântara (babi)',
+      role: 'café com letras & ciclo de aprofundamento',
+    },
+    {
+      quote:
+        'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
+      author: 'tom vitralli',
+      role: 'aluno dos 21 dias de escrita',
+    },
+    {
+      quote:
+        'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
+      author: 'jess',
       role: 'aluna dos 21 dias de escrita',
-    },
-    {
-      quote:
-        'os encontros do ciclo de aprofundamento viraram o momento mais esperado da minha semana. as facilitadoras conduzem cada roda com uma sensibilidade única.',
-      author: 'carla mendes',
-      role: 'membro do ciclo de aprofundamento',
-    },
-    {
-      quote:
-        'participar do café com letras foi um divisor de águas. descobri que a escrita não precisa ser solitária, mas sim uma partilha viva.',
-      author: 'luciana albuquerque',
-      role: 'participante do café com letras',
     },
   ];
 
@@ -497,7 +497,7 @@ export default function Landing() {
               os fundamentos do nosso movimento
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              nossa prática é sustentada por valores que colocam a humanidade e a presença no centro.
+              entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria.
             </p>
           </div>
 

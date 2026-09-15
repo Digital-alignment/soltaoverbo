@@ -8,24 +8,40 @@ interface FaqItem {
 
 const faqData: FaqItem[] = [
   {
+    question: 'preciso ter experiência com escrita para participar?',
+    answer: 'não. aqui não se trata de técnica acadêmica, gramática impecável ou talento literário. o que a gente pratica é escuta interna, presença e liberdade narrativa.',
+  },
+  {
+    question: 'o solta o verbo é um curso de escrita criativa?',
+    answer: 'não exatamente. a escrita é a nossa ferramenta, não o nosso produto final. o que buscamos é autodesenvolvimento: dar contorno ao que te habita, reconhecer as narrativas que você repete e reescrevê-las com mais verdade e consciência. quem sai daqui escrevendo melhor, sai também se conhecendo melhor.',
+  },
+  {
+    question: 'isso é terapia?',
+    answer: 'não. não somos psicólogas e o solta o verbo não substitui acompanhamento terapêutico. é um espaço de escuta, criação e coletividade, com propostas guiadas e cuidado com o que aparece. se você está em processo terapêutico, a escrita costuma caminhar muito bem ao lado dele.',
+  },
+  {
+    question: 'quem conduz os encontros?',
+    answer: 'nós, bru e ju, co-criadoras e facilitadoras do coletivo. saiba mais na página "sobre nós".',
+  },
+  {
     question: 'como funciona o acesso aos 21 dias de escrita?',
-    answer: 'ao garantir sua vaga no 21 dias de escrita, você recebe acesso imediato à plataforma. a cada dia é liberado um novo exercício guiado, áudio de reflexão e o espaço da nossa fogueira para partilha com o grupo.',
+    answer: 'ao comprar os 21 dias de escrita, você recebe acesso imediato à plataforma. a cada dia é liberado um novo exercício guiado com áudio de reflexão, além do acesso à área de membros, nosso espaço de partilha com o grupo. você também tem acesso gratuito aos 21 dias de escrita ao fazer parte do ciclo de aprofundamento.',
   },
   {
-    question: 'o que está incluído no ciclo de aprofundamento?',
-    answer: 'o ciclo de aprofundamento é a nossa comunidade paga por assinatura. inclui encontros quinzenais ao vivo no zoom com bruna e júlia, acesso ilimitado à fogueira comunitária, acervo completo de gravações, mentoria coletiva e materiais exclusivos.',
+    question: 'o que é o ciclo de aprofundamento?',
+    answer: 'é a nossa comunidade paga, organizada em travessias de três meses. cada travessia mergulha em um tema de autodesenvolvimento, criatividade e relações humanas, apoiada por um livro-guia e por um convidado especial. a travessia atual é "a coragem de não agradar", com o livro de ichiro kishimi e fumitake koga e a presença da jout jout. para saber mais, acesse "ciclo de aprofundamento" na aba de programas.',
   },
   {
-    question: 'preciso ter experiência prévia com escrita?',
-    answer: 'não! o solta o verbo não é sobre técnica acadêmica ou gramática rígida, mas sobre escuta interna, presença e liberdade narrativa. qualquer pessoa disposta a escrever sua própria história é bem-vinda.',
+    question: 'o que é o café com letras?',
+    answer: 'uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.',
   },
   {
     question: 'quais são as formas de pagamento disponíveis?',
-    answer: 'aceitamos pagamento à vista via pix (com desconto especial), cartão de crédito com parcelamento em até 3x sem juros, e boleto bancário.',
+    answer: 'pix à vista com desconto especial, cartão de crédito em até 3x sem juros e boleto bancário.',
   },
   {
-    question: 'como funciona a comunidade gratuita x paga?',
-    answer: 'estamos fazendo a transição para tornar a nossa comunidade ainda mais acolhedora e sustentável. o 21 dias de escrita dá acesso durante a jornada. o ciclo de aprofundamento é o espaço vivo contínuo com encontros ao vivo.',
+    question: 'é necessário instalar algum aplicativo?',
+    answer: 'não. você pode acessar pelo navegador ou instalar nossa plataforma como web app no seu celular (no navegador do celular, toque no menu de opções / compartilhar e depois em "adicionar à tela de início").',
   },
 ];
 

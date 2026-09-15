@@ -13,7 +13,7 @@ export default function PreLoginFooter() {
     instagram: 'https://www.instagram.com/soltaoverbo.coletivo/',
     instagram_handle: '@soltaoverbo.coletivo',
     whatsapp: 'https://wa.link/w67ibp',
-    email: 'info@soltaoverbocoletivo.com',
+    email: 'soltaoverbocoletivo@gmail.com',
     footer_phrase: 'autodesenvolvimento em coletivo através da escrita guiada.',
   });
 
@@ -117,7 +117,7 @@ export default function PreLoginFooter() {
                       label: 'whatsapp',
                     },
                     {
-                      href: contactsSec.email ? (contactsSec.email.startsWith('mailto:') ? contactsSec.email : `mailto:${contactsSec.email}`) : 'mailto:info@soltaoverbocoletivo.com',
+                      href: contactsSec.email ? (contactsSec.email.startsWith('mailto:') ? contactsSec.email : `mailto:${contactsSec.email}`) : 'mailto:soltaoverbocoletivo@gmail.com',
                       icon: Mail,
                       label: 'e-mail',
                     },
@@ -169,7 +169,7 @@ export default function PreLoginFooter() {
                   </div>
 
                   <p className="font-gesto text-2xl sm:text-3xl text-papelClaro leading-snug font-normal my-4">
-                    “a escrita cura o que o silêncio aprisiona.”
+                    “escrita como ferramenta de autoconhecimento.”
                   </p>
 
                   <h4 className="font-editorial font-bold text-2xl sm:text-3xl text-papelClaro lowercase tracking-tight">

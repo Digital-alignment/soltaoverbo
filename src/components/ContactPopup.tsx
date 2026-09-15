@@ -14,7 +14,7 @@ export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
     instagram_handle: '@soltaoverbo.coletivo',
     whatsapp: 'https://wa.link/w67ibp',
     whatsapp_number: 'envie uma mensagem',
-    email: 'info@soltaoverbocoletivo.com',
+    email: 'soltaoverbocoletivo@gmail.com',
   });
 
   useEffect(() => {
@@ -96,15 +96,15 @@ export default function ContactPopup({ isOpen, onClose }: ContactPopupProps) {
           </a>
 
           <a
-            href={contactsSec.email ? (contactsSec.email.startsWith('mailto:') ? contactsSec.email : `mailto:${contactsSec.email}`) : 'mailto:info@soltaoverbocoletivo.com'}
-            className="flex items-center gap-4 p-4 rounded-2xl bg-white hover:bg-white/80 transition-all duration-300 hover:scale-105 group"
+            href={contactsSec.email ? (contactsSec.email.startsWith('mailto:') ? contactsSec.email : `mailto:${contactsSec.email}`) : 'mailto:soltaoverbocoletivo@gmail.com'}
+            className="flex items-center gap-3 text-popupText hover:text-acentoAzul transition-colors group"
           >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ backgroundColor: '#bac706' }}>
-              <Mail className="w-7 h-7 text-white" />
+            <div className="w-10 h-10 rounded-full bg-acentoTerracota/10 group-hover:bg-acentoTerracota/20 flex items-center justify-center transition-colors">
+              <Mail className="w-5 h-5 text-acentoTerracota" />
             </div>
-            <div className="text-left flex-1">
-              <p className="font-bold text-popupText text-lg">e-mail</p>
-              <p className="text-popupText/70 text-sm">{contactsSec.email || 'info@soltaoverbocoletivo.com'}</p>
+            <div>
+              <p className="text-xs text-popupText/60 font-semibold uppercase tracking-wider">E-mail</p>
+              <p className="text-popupText/70 text-sm">{contactsSec.email || 'soltaoverbocoletivo@gmail.com'}</p>
             </div>
           </a>
         </div>

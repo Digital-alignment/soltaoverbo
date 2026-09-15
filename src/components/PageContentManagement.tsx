@@ -416,7 +416,7 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                       type="email"
                       value={sectionData.email || ''}
                       onChange={(e) => handleSectionChange(sec.key, 'email', e.target.value)}
-                      placeholder="info@soltaoverbocoletivo.com"
+                      placeholder="soltaoverbocoletivo@gmail.com"
                       className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
                     />
                   </div>

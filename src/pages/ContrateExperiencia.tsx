@@ -123,6 +123,22 @@ const b2bFaqItems = [
     a: 'toda a curadoria poética e os exercícios de escrita são criados sob medida para dialogar com a cultura da sua empresa, tema do retiro ou propósito da marca.',
   },
   {
+    q: 'quanto tempo dura uma oficina ou vivência?',
+    a: 'as oficinas variam entre 1h30 (formato pílula de desaceleração), 3 horas (oficina imersiva completa) ou jornadas em ciclos de vários encontros.',
+  },
+  {
+    q: 'que tipo de material é oferecido aos participantes?',
+    a: 'entregamos cadernos poéticos artesanais e materiais gráficos sob medida para acompanharem a jornada de escrita física e permanecerem como memória.',
+  },
+  {
+    q: 'como a escrita expressiva atua na saúde mental e clima das equipes?',
+    a: 'baseados nas pesquisas de james pennebaker, a escrita expressiva reduz a sobrecarga mental, cria segurança psicológica e abre pontes de empatia sem julgamento.',
+  },
+  {
+    q: 'vocês emitem nota fiscal e atendem empresas de qualquer lugar do brasil?',
+    a: 'sim! emitimos nota fiscal para empresas e organizações e realizamos deslocamentos presenciais para qualquer região do brasil.',
+  },
+  {
     q: 'como faço para solicitar uma proposta personalizada?',
     a: 'basta clicar nos botões de whatsapp nesta página para conversar diretamente com bruna e júlia. respondemos rapidamente com todas as informações necessárias!',
   },
@@ -368,10 +384,89 @@ export default function ContrateExperiencia() {
         </div>
       </section>
 
-      {/* 4. FORMATOS DE EXPERIÊNCIAS DISPONÍVEIS (3 Bento Cards) */}
+      {/* 4. PRA QUEM É ISSO & POR QUE A ESCRITA */}
+      <section className="py-20 sm:py-24 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Box 1: Pra quem é isso */}
+            <div className="bg-bgPlataforma rounded-3xl p-7 sm:p-8 border border-papelKraft/40 shadow-sm space-y-4">
+              <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block">
+                público & contextos
+              </span>
+              <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                pra quem é isso?
+              </h3>
+              <ul className="space-y-3 text-tintaCarvao/85 text-sm sm:text-base font-medium lowercase">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>empresas & líderes:</strong> que buscam promover saúde mental, humanização, escuta ativa e integração genuína de equipes.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>retiros & imersões:</strong> facilitadores de autoconhecimento que desejam incluir rodas de partilha e rituais poéticos de escrita.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>festivais & eventos culturais:</strong> momentos de desaceleração e presença em meio a programações intensas.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>marcas & comemorações:</strong> ativações poéticas com cadernos afetivos e momentos memoráveis.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Box 2: Por que a escrita */}
+            <div className="bg-bgPlataforma rounded-3xl p-7 sm:p-8 border border-papelKraft/40 shadow-sm space-y-4">
+              <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block">
+                fundamentação & impacto
+              </span>
+              <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                por que a escrita?
+              </h3>
+              <ul className="space-y-3 text-tintaCarvao/85 text-sm sm:text-base font-medium lowercase">
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>desaceleração consciente:</strong> uma pausa no piloto automático e nas telas para respirar e sentir.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>segurança psicológica:</strong> criar um ambiente onde todos se sentem acolhidos para se expressar sem julgamento.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>escuta ativa:</strong> ouvir o outro com presença genuína, fortalecendo a empatia do grupo.</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                  <span><strong>expressão autêntica:</strong> colocar no papel sentimentos que muitas vezes não encontram espaço na fala cotidiana.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* TEORIA + PRÁTICA (Pennebaker & Ebbinghaus) */}
+          <div className="bg-bgPlataforma rounded-3xl p-7 sm:p-10 border border-papelKraft/60 shadow-sm space-y-4 max-w-6xl mx-auto relative overflow-hidden">
+            <span className="text-xs font-bold text-acentoTerracota lowercase tracking-widest block">
+              teoria + prática / o que sustenta a nossa escrita
+            </span>
+            <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-acentoAzul lowercase">
+              nosso trabalho nasce de estudo e de vivência
+            </h3>
+            <p className="text-tintaCarvao/90 text-base sm:text-lg leading-relaxed font-medium lowercase">
+              não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de <strong>james pennebaker</strong> sobre escrita expressiva e seus efeitos no bem-estar emocional, e a <strong>curva do esquecimento de ebbinghaus</strong>, que mostra por que a escrita precisa ser prática sustentada e não um evento isolado.
+            </p>
+            <p className="text-acentoAzul font-bold text-base sm:text-lg lowercase pt-2">
+              é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam vivas depois que a gente vai embora.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. FORMATOS DE EXPERIÊNCIAS DISPONÍVEIS (4 Bento Cards + 1 Banner Separado) */}
       <section id="formatos" className="py-20 sm:py-28 bg-bgPlataforma">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+          <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-papelClaro border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <Compass className="w-4 h-4 text-acentoTerracota" />
               <span>formatos sob medida</span>
@@ -380,24 +475,24 @@ export default function ContrateExperiencia() {
               como levamos a experiência até você
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              três caminhos autorais adaptados para o formato e objetivo da sua iniciativa.
+              quatro caminhos autorais adaptados para o formato e objetivo da sua iniciativa.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {/* Bento Card 1: Empresas */}
-            <div className="bg-papelClaro rounded-3xl p-7 sm:p-8 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-6 group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
                   <Building2 className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block mb-1">
                   formato 01 // corporativo
                 </span>
-                <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
                   oficinas corporativas & integração
                 </h3>
-                <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium mb-6">
+                <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
                   vivências práticas para empresas que buscam fortalecer a empatia, desacelerar a rotina de trabalho e cultivar um clima de confiança através da escrita consciente.
                 </p>
               </div>
@@ -407,27 +502,27 @@ export default function ContrateExperiencia() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
+                  className="w-full py-2.5 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
                 >
-                  <span>solicitar proposta para empresas</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>solicitar proposta</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
 
             {/* Bento Card 2: Retiros & Festivais */}
-            <div className="bg-papelClaro rounded-3xl p-7 sm:p-8 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-6 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
+                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center mb-5 group-hover:bg-acentoTerracota group-hover:text-white transition-all">
                   <Users className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block mb-1">
                   formato 02 // imersões
                 </span>
-                <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
                   retiros, festivais & coletivos
                 </h3>
-                <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium mb-6">
+                <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
                   rituais de abertura e encerramento, rodas de escuta ao redor do fogo e curadoria de cadernos de bordo para eventos de bem-estar e autoconhecimento.
                 </p>
               </div>
@@ -437,27 +532,27 @@ export default function ContrateExperiencia() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-full bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
+                  className="w-full py-2.5 rounded-full bg-acentoTerracota/10 hover:bg-acentoTerracota text-acentoTerracota hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
                 >
-                  <span>solicitar proposta para retiros</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>solicitar proposta</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
 
             {/* Bento Card 3: Marcas & Ativações */}
-            <div className="bg-papelClaro rounded-3xl p-7 sm:p-8 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-6 group-hover:bg-acentoOliva transition-all">
+                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center mb-5 group-hover:bg-acentoOliva transition-all">
                   <Sparkles className="w-6 h-6 text-acentoAzul" />
                 </div>
                 <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block mb-1">
                   formato 03 // marcas
                 </span>
-                <h3 className="text-2xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
                   ativações de marca & festas
                 </h3>
-                <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium mb-6">
+                <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
                   curadoria de ambientes afetivos, escrita poética personalizada ao vivo e brindes gráficos memoráveis para marcas e celebrações especiais.
                 </p>
               </div>
@@ -467,13 +562,67 @@ export default function ContrateExperiencia() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-full bg-acentoOliva/30 hover:bg-acentoOliva text-acentoAzul transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
+                  className="w-full py-2.5 rounded-full bg-acentoOliva/30 hover:bg-acentoOliva text-acentoAzul transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
                 >
-                  <span>solicitar proposta para marcas</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>solicitar proposta</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
+
+            {/* Bento Card 4: Vivências de Escrita Escolas & Coletivos */}
+            <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                  <Pencil className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block mb-1">
+                  formato 04 // vivências
+                </span>
+                <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
+                  escrita para quem está aprendendo
+                </h3>
+                <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
+                  atividades e oficinas de escrita criativa para escolas, educadores e grupos de desenvolvimento pessoal, cultivando a imaginação e a voz autêntica.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-papelKraft/30">
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
+                >
+                  <span>solicitar proposta</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* BANNER SEPARADO: PALAVRAS SOB MEDIDA (Textos para momentos especiais) */}
+          <div className="max-w-7xl mx-auto bg-papelClaro rounded-3xl p-7 sm:p-10 border border-papelKraft/60 shadow-kraft-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider bg-acentoTerracota/10 px-3 py-1 rounded-full inline-block">
+                palavras sob medida // projetos sob encomenda
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase">
+                textos autorais para momentos especiais
+              </h3>
+              <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium max-w-3xl">
+                escrevemos textos poéticos sob medida para casamentos, homenagens, celebrações de vida e marcos institucionais de empresas: ouvimos a sua história e a devolvemos em palavras inesquecíveis.
+              </p>
+            </div>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-pill-primary text-base px-8 py-3.5 rounded-full flex items-center gap-2 flex-shrink-0 cursor-pointer lowercase shadow-md"
+            >
+              <span>encomendar um texto</span>
+              <ArrowRight className="w-4 h-4 text-white" />
+            </a>
           </div>
         </div>
       </section>

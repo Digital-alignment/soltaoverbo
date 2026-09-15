@@ -23,12 +23,16 @@ export interface SiteCMSData {
 export const DEFAULT_CMS_DATA: SiteCMSData = {
   landing: {
     hero: {
-      title: "a narrativa muda a partir do ponto que você solta o verbo.",
-      subtitle: "reescreva sua história, amplie perspectivas e abra espaço para uma escrita mais consciente. um convite para questionar narrativas impostas e escrever seu próprio caminho.",
+      title: "a narrativa muda a partir do ponto que você a observa.",
+      subtitle: "reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e vida) mais consciente. dê contorno ao que te habita, ao que pede passagem e ao que ainda não encontrou palavras.",
       body_text: "escrever é mais do que juntar palavras: é um jeito de ouvir o que vive dentro, organizar o caos e dar forma ao que ainda é sussurro.",
       button_text: "conhecer os programas",
       button_link: "#produtos",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
+    },
+    fundamentos: {
+      title: "os fundamentos do nosso movimento",
+      subtitle: "entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria."
     },
     manifesto: {
       title: "por que soltar o verbo?",
@@ -44,6 +48,14 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       button_link: "/programs",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
     },
+    teoria_pratica: {
+      title: "teoria + prática / o que sustenta a nossa escrita",
+      highlight: "nosso trabalho nasce de estudo e de vivência.",
+      body_text: "não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.",
+      highlight_final: "é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.",
+      button_text: "enviar e-mail",
+      button_link: "mailto:soltaoverbocoletivo@gmail.com"
+    },
     comunidade: {
       title: "nossa fogueira",
       subtitle: "uma comunidade acolhedora para partilhar processos e escritos",
@@ -56,9 +68,21 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   about: {
     hero: {
       title: "uma comunidade viva",
-      subtitle: "a escrita é nosso eixo central — mas o encontro, a escuta e a criação coletiva sustentam toda a nossa jornada. um convite para desacelerar, cultivar presença e dar forma ao que vive dentro.",
-      body_text: "escrever é um ato de coragem para dizer ao mundo: eu existo e minha história tem valor.",
-      image_url: "/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg"
+      subtitle: "auto desenvolvimento em coletivo",
+      body_text: "existimos para que ninguém precise atravessar as próprias perguntas sozinha. somos uma comunidade viva que usa a escrita para reconhecer as narrativas herdadas, questioná-las e reescrevê-las com mais verdade, consciência e liberdade. sua história deve ser vivida e contada a partir da sua perspectiva, e ninguém mais. quem escreve, dirige e vive a sua vida?",
+      quote_text: "reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e uma vida) mais consciente.",
+      image_url: "/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg",
+      button_text: "ver nossos encontros",
+      button_link: "#encontros",
+      card_quote: "escrever é encarar com verdade e presença as partes de nós que ainda não tinham nome."
+    },
+    manifesto_full: {
+      title: "o que acreditamos",
+      body_1: "acreditamos que somos capazes de transformar a nossa vida quando reconhecemos as narrativas que nos atravessam.",
+      body_2: "muitas vezes repetimos histórias que nos foram introjetadas sem perceber que também temos o poder de escolher outras palavras, outros sentidos e outros capítulos para, assim, criar novos começos e melhores finais.",
+      body_3: "usamos a escrita como a ferramenta acessível e profundamente transformadora que ela é. por meio dela, trilhamos um caminho de dar contorno ao que nos habita: tornar visíveis as histórias que carregamos para então questioná-las e reescrevê-las com mais verdade, consciência e liberdade.",
+      body_4: "solta o verbo é um convite para despertar a própria voz ao escutá-la através da escrita.",
+      footer_highlight: "acreditamos na escrita como caminho de aprendizagem, verdade e transformação em coletivo. nossos pilares nascem da escuta de si, da troca com o outro e da coragem de escrever uma vida mais verdadeira."
     },
     origem: {
       title: "história & fundação",
@@ -68,8 +92,8 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
     },
     pilares: {
       title: "pilares & ritual autoral",
-      subtitle: "encontros reais, vínculos, expressão e potência criativa",
-      body_text: "nossos quatro pilares sustentam cada roda, oficina e partilha: proporcionar encontros sem máscaras, criar redes de apoio, dar vazão ao sentir e libertar a potência criativa.",
+      subtitle: "encontros reais, vínculos, expressão, potência criativa e aprender fazendo",
+      body_text: "nossos cinco pilares sustentam cada roda, oficina e partilha: proporcionar encontros sem máscaras, criar redes de apoio, dar vazão ao sentir, libertar a potência criativa e aprender fazendo.",
       button_text: "conhecer as facilitadoras →",
       button_link: "#criadoras",
       image_url: "/brand-assets/gallery/events/_MG_9991.jpg"
@@ -93,7 +117,7 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   programa_21_dias: {
     hero: {
-      title: "21 dias de escrita autoral & respiro interno",
+      title: "escrever até virar hábito",
       subtitle: "uma jornada guiada para desbloquear sua expressão, criar hábitos de escrita leve e reencontrar a sua voz autêntica sem autocrítica.",
       body_text: "21 propostas diárias em texto e áudio para você escrever no seu ritmo e transformar sua relação com a palavra.",
       button_text: "inscrever-se nos 21 dias (r$ 77) →",
@@ -111,17 +135,18 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   programa_cafe_com_letras: {
     hero: {
-      title: "encontro semanal de escrita & aconchego",
-      subtitle: "um ritual de terça-feira das 8h às 8h30 com café quentinho, cadernos abertos e partilhas afetivas.",
-      body_text: "encontros ao vivo para escrever em grupo, exercitar a escuta poética e criar conexões verdadeiras.",
-      button_text: "garantir ingresso no café (r$ 97/mês) →",
+      title: "roda semanal de escrita coletiva · 30 minutos · online",
+      subtitle: "ritual de escrita semanal",
+      body_text: "uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.",
+      button_text: "sim, quero minha xícara por R$97/mês",
       button_link: "#inscricao",
       image_url: "/brand-assets/gallery/events/_MG_9849.jpg"
     },
     detalhes: {
-      title: "como funciona o café com letras",
-      subtitle: "meia hora de escrita guiada e roda de leitura poética todas as terças às 8h",
-      body_text: "preparamos o ambiente para você se sentir em casa. a cada edição, um tema inédito inspira nossos rituais de escrita e trocas humanas.",
+      title: "a inspiração tem hora marcada",
+      subtitle: "toda terça-feira das 8h às 8h30 no zoom",
+      quote_text: "“escrevo quando estou inspirado. e faço questão de estar inspirado às nove horas de cada manhã.” (peter de vries). a nossa hora é às oito.",
+      body_text: "inspiração não é sorte, é encontro marcado. toda terça, às 8h, tem gente sentando junto. você não precisa decidir se hoje é o dia, não precisa achar assunto, não precisa estar inspirada antes de começar: a hora já está marcada e o tema, pronto.",
       button_text: "participar da próxima edição →",
       button_link: "#inscricao",
       image_url: "/brand-assets/gallery/events/_MG_9991.jpg"
@@ -129,17 +154,18 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   programa_ciclo: {
     hero: {
-      title: "o ciclo de aprofundamento",
-      subtitle: "uma jornada contínua para quem deseja transformar a escrita em prática diária de presença e autocompaixão.",
-      body_text: "encontros ao vivo, mentoria coletiva com bruna e júlia, acervo completo de oficinas e comunidade exclusiva.",
-      button_text: "fazer parte do ciclo (r$ 597/trimestre) →",
+      title: "travessia de 3 meses · turma aberta · vagas limitadas",
+      subtitle: "para quem quer ir mais fundo",
+      body_text: "três meses de escrita acompanhada para atravessar, em comunidade, um tema que você vem evitando sozinha.",
+      intro_paragraph: "tem perguntas que não cabem num fim de semana de curso. elas pedem tempo, companhia e um lugar seguro para serem escritas. o ciclo de aprofundamento é esse lugar: a cada três meses escolhemos um tema de autodesenvolvimento, criatividade e relações humanas, um livro que sustenta a conversa e um convidado especial para atravessar com a gente. no meio do caminho, sua escrita deixa de ser exercício e vira decisão.",
+      button_text: "quero atravessar: R$597 no pix",
       button_link: "#planos",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
     },
     detalhes: {
-      title: "experiência & rituais do ciclo",
-      subtitle: "sustentação em comunidade para o seu processo autoral",
-      body_text: "no ciclo, a escrita ganha profundidade. você terá acompanhamento constante, exercícios avançados e um grupo seguro para partilhar suas criações.",
+      title: "uma travessia de 3 meses, num movimento contínuo",
+      subtitle: "o ciclo funciona em travessias de três meses girando em torno de um único tema",
+      body_text: "para sustentar esse tema, três coisas acontecem juntas: um livro que serve de terreno comum; três encontros ao vivo, um por mês, conduzidos por bruna e júlia, com um convidado especial que traz outra camada ao assunto; um ritual semanal de escrita, o café com letras, toda terça-feira, para que a prática não dependa de motivação.",
       button_text: "garantir minha vaga no ciclo →",
       button_link: "#planos",
       image_url: "/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
@@ -147,9 +173,9 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   contrate_experiencia: {
     hero: {
-      title: "crie com a gente",
-      subtitle: "criamos laboratórios e rituais de escrita autoral sob medida para marcas, festivais, eventos e encontros coletivos.",
-      body_text: "desenvolvemos vivências presenciais e virtuais customizadas para a cultura da sua equipe ou evento.",
+      title: "contrate uma experiência: momentos que reconectam um grupo com a própria palavra.",
+      subtitle: "experiências sob medida & oficinas b2b",
+      body_text: "levamos rituais de escrita consciente, integração humana e expressão autêntica para dentro da sua empresa, do seu evento ou do seu festival.",
       button_text: "falar com a equipe no whatsapp →",
       button_link: "https://wa.me/5531999999999",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"

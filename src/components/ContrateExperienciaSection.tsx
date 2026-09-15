@@ -67,21 +67,24 @@ export default function ContrateExperienciaSection() {
   const highlights = [
     {
       icon: Building2,
-      badge: 'empresas & corporativo',
+      badge: 'empresas e organizações',
       title: 'oficinas corporativas',
-      description: 'workshops de escrita consciente para aliviar o estresse, integrar equipes e estimular a comunicação autêntica no trabalho.',
+      description:
+        'a escrita como pausa e cuidado dentro da rotina de trabalho: um encontro que aproxima as pessoas e revela novas maneiras de se relacionar.',
     },
     {
       icon: Users2,
       badge: 'eventos e experiências',
-      title: 'experiência de escrita em eventos',
-      description: 'encontros presenciais ou virtuais sob medida para festivais, comunidades, retiros e grupos de reflexão.',
+      title: 'experiência com escrita em eventos',
+      description:
+        'a escrita como convite à presença em festivais, retiros e encontros: um momento de pausa que muda a relação com o espaço, consigo e com os outros.',
     },
     {
       icon: Compass,
-      badge: 'marcas & curadoria',
-      title: 'curadoria narrativa personalizada',
-      description: 'criação de cadernos artesanais, temas exclusivos e dinâmicas guiadas pensadas para o propósito da sua marca.',
+      badge: 'escolas e educação',
+      title: 'escrita para quem está aprendendo',
+      description:
+        'atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.',
     },
   ];
 
@@ -112,7 +115,7 @@ export default function ContrateExperienciaSection() {
                   decoding="async"
                   className="w-5 h-5 object-contain"
                 />
-                <span>para marcas, empresas e eventos</span>
+                <span>experiências sob medida</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
@@ -120,7 +123,7 @@ export default function ContrateExperienciaSection() {
               </h2>
 
               <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
-                leve uma experiência de escrita da solta o verbo para a sua organização, e desenvolva o senso de pertencimento a partir da escrita expressiva.
+                leve uma experiência de escrita da solta o verbo para a sua organização e cultive pertencimento a partir da escrita expressiva.
               </p>
             </div>
 
@@ -203,7 +206,7 @@ export default function ContrateExperienciaSection() {
             </div>
           </div>
 
-          {/* Highlights Bento Grid Compacto e Dinâmico (Sem o botão interno 'saiba mais') */}
+          {/* Highlights Bento Grid 3 Colunas (Boxes de Vivência) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {highlights.map(({ icon: Icon, badge, title, description }, idx) => (
               <div
@@ -231,21 +234,59 @@ export default function ContrateExperienciaSection() {
             ))}
           </div>
 
-          {/* NOVA BOX DE TEORIA E REFERÊNCIAS (Item 1.3 - Pennebaker & Ebbinghaus) */}
+          {/* BOX 4 SEPARADA: Textos para momentos especiais (Format de Autoria) */}
+          <div className="relative pt-2">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-bold text-tintaCarvao/60 lowercase tracking-wider">
+                e também escrevemos
+              </span>
+              <div className="h-[1px] flex-1 bg-papelKraft/40" />
+            </div>
+            <div className="bg-bgPlataforma/90 rounded-2xl p-6 sm:p-7 border border-papelKraft/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold text-acentoTerracota lowercase tracking-wider bg-acentoTerracota/10 px-2.5 py-1 rounded-full">
+                  palavras sob medida
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  textos para momentos especiais
+                </h3>
+                <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium max-w-2xl">
+                  textos autorais para casamentos, homenagens, celebrações e marcos de empresas: ouvimos a sua história e devolvemos em palavras.
+                </p>
+              </div>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-pill-secondary text-sm px-6 py-2.5 rounded-full border border-papelKraft/70 hover:bg-papelClaro transition-all flex items-center gap-2 flex-shrink-0 cursor-pointer lowercase"
+              >
+                <span>solicitar um texto sob medida</span>
+                <ArrowRight className="w-4 h-4 text-acentoAzul" />
+              </a>
+            </div>
+          </div>
+
+          {/* NOVA SEÇÃO DE TEORIA E PRÁTICA (Item 1.5 - Pennebaker & Ebbinghaus) */}
           <div className="bg-bgPlataforma rounded-2xl p-6 sm:p-8 border border-papelKraft/60 shadow-sm space-y-4 relative overflow-hidden">
-            <span className="text-xs font-bold text-acentoTerracota uppercase tracking-widest block">
-              base científica & metodológica
+            <span className="text-xs font-bold text-acentoTerracota lowercase tracking-widest block">
+              teoria + prática / o que sustenta a nossa escrita.
             </span>
+            <blockquote className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
+              “nosso trabalho nasce de estudo e de vivência.”
+            </blockquote>
             <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
-              nosso trabalho é construído a partir de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem estar emocional, e a curva do esquecimento de ebbinghaus, que reforça a importância da prática recorrente da escrita e não apenas de um encontro isolado.
+              não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.
             </p>
-            <div className="pt-2">
+            <p className="text-acentoAzul font-bold text-sm sm:text-base lowercase">
+              é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.
+            </p>
+            <div className="pt-3">
               <a
                 href="mailto:soltaoverbocoletivo@gmail.com"
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-acentoAzul text-white text-xs sm:text-sm font-bold lowercase hover:bg-acentoAzul/90 transition-all cursor-pointer shadow-xs"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-acentoAzul text-white text-sm font-bold lowercase hover:bg-acentoAzul/90 transition-all cursor-pointer shadow-md"
               >
                 <span>enviar e-mail</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-4 h-4 text-white" />
               </a>
             </div>
           </div>
