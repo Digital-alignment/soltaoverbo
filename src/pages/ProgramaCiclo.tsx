@@ -124,7 +124,7 @@ const objectionsList = [
   },
 ];
 
-const realTestimonials = [
+const faqItems = [
   {
     q: 'o que é exatamente o ciclo de aprofundamento?',
     a: 'é a nossa comunidade paga, organizada em travessias de três meses. cada travessia mergulha em um tema de autodesenvolvimento, criatividade e relações humanas, apoiada por um livro-guia e por um convidado especial. a travessia atual é "a coragem de não agradar", com o livro de ichiro kishimi e fumitake koga e a presença da jout jout.',
