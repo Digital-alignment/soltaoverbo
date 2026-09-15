@@ -293,6 +293,115 @@ export default function ContrateExperiencia() {
         </div>
       </section>
 
+      {/* 2.5. PRA QUEM É ISSO */}
+      <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-4">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm">
+              <Users className="w-4 h-4 text-acentoTerracota" />
+              <span>públicos & formatos</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase">
+              pra quem é isso
+            </h2>
+            <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
+              se você cuida de pessoas dentro de uma empresa, organiza um evento que quer sair do lugar comum, ou representa uma marca que busca se aproximar do público de um jeito mais humano, a solta o verbo tem uma experiência pensada pra você.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {/* Card 1 */}
+            <div className="bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                  <Building2 className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-bold text-acentoTerracota uppercase tracking-wider block">
+                  01 · empresas & rh
+                </span>
+                <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  times de rh e people que querem cuidar de verdade da equipe
+                </p>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota flex items-center justify-center group-hover:bg-acentoTerracota group-hover:text-white transition-all">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-bold text-acentoTerracota uppercase tracking-wider block">
+                  02 · eventos & retiros
+                </span>
+                <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  produtoras de eventos, retiros e festivais que buscam rituais de presença
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-acentoOliva/30 text-tintaCarvao flex items-center justify-center group-hover:bg-acentoOliva transition-all">
+                  <Heart className="w-6 h-6 text-acentoAzul" />
+                </div>
+                <span className="text-xs font-bold text-acentoTerracota uppercase tracking-wider block">
+                  03 · marcas & ativações
+                </span>
+                <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  marcas que querem ativações com significado, não só brinde
+                </p>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-bgPlataforma rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/60 hover:shadow-md flex flex-col justify-between group">
+              <div className="space-y-4">
+                <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center group-hover:bg-acentoAzul group-hover:text-white transition-all">
+                  <Compass className="w-6 h-6" />
+                </div>
+                <span className="text-xs font-bold text-acentoTerracota uppercase tracking-wider block">
+                  04 · coletivos
+                </span>
+                <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
+                  coletivos e comunidades que precisam de um espaço pra se escutar
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2.8. POR QUE ESCRITA */}
+      <section className="py-20 sm:py-28 bg-bgPlataforma border-t border-b border-papelKraft/40">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-papelClaro rounded-3xl p-8 sm:p-12 border-2 border-acentoAzul/20 shadow-kraft text-center space-y-6 relative overflow-hidden">
+            {/* Sticker Fita Washi */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-36 h-8 pointer-events-none z-20 opacity-90">
+              <img
+                src="/brand-assets/elements/stickers/fitas-washi-flores-azul.png"
+                alt="fita washi"
+                className="w-full h-full object-contain"
+              />
+            </div>
+
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider shadow-sm pt-2">
+              <BookOpen className="w-4 h-4 text-acentoTerracota" />
+              <span>fundamentação & metodologia</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase">
+              por que escrita
+            </h2>
+
+            <p className="text-tintaCarvao/90 text-base sm:text-lg leading-relaxed font-medium lowercase max-w-3xl mx-auto">
+              não é só uma dinâmica bonitinha. nosso trabalho parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem estar emocional, e a curva do esquecimento de ebbinghaus, que reforça a importância da prática recorrente, não só de um encontro isolado. cada experiência também é desenhada com a metodologia design de conexões, criada pra gerar pertencimento real entre as pessoas de um grupo, não só preencher uma tarde de agenda.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* 3. CARRUSEL DE FOTOS DE EVENTOS PRESENCIAIS (Polaroid Scrapbook Grid) */}
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
