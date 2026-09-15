@@ -326,26 +326,47 @@ export default function Landing() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative z-10">
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
+                    {/* Etiqueta superior */}
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-acentoOliva text-xs sm:text-sm font-semibold lowercase">
+                      <span>travessia de 3 meses · turma com vagas limitadas</span>
+                    </div>
+
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-papelClaro lowercase">
                       ciclo de aprofundamento
                     </h3>
 
                     <p className="text-papelClaro/90 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      o espaço contínuo de mentoria e escrita em grupo. encontros quinzenais ao vivo com bruna e júlia, mentoria em tempo real, acervo completo de gravações e acesso à comunidade.
+                      uma travessia de 3 meses onde mergulhamos fundo num tema que incomoda (e que move). autodesenvolvimento, criatividade e relações humanas com escrita, livro, comunidade e encontros ao vivo.
                     </p>
 
-                    <ul className="space-y-3 pt-2 text-papelClaro/90 font-medium text-base lowercase">
-                      <li className="flex items-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>encontros quinzenais ao vivo no zoom com mentorias coletivas</span>
+                    <ul className="space-y-3 pt-2 text-papelClaro/90 font-medium text-sm sm:text-base lowercase">
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>3 encontros ao vivo (1 por mês) com bruna, júlia e convidada</span>
                       </li>
-                      <li className="flex items-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>acesso contínuo à fogueira de partilha e canais exclusivos</span>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>acesso a todos os cafés com letras - o ritual de terça-feira de escrita coletiva.</span>
                       </li>
-                      <li className="flex items-center gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>acervo completo de todas as aulas, oficinas e materiais gravados</span>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>comunidade no whatsapp</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>acesso aos 21 dias de escrita na plataforma</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>acesso as aulas gravadas na plataforma completa</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>acesso a todas as facilidades da plataforma: página de escrita, fogueira de partilha, rituais e inspirações de escrita</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                        <span>desconto especial nos encontros presenciais do solta o verbo</span>
                       </li>
                     </ul>
                   </div>
@@ -376,10 +397,10 @@ export default function Landing() {
                 </div>
 
                 <div className="lg:col-span-5 flex flex-col justify-between bg-white/10 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-white/20 space-y-5 shadow-sm">
-                  <div className="w-full h-48 sm:h-56 rounded-xl overflow-hidden border border-white/20 relative shadow-sm group">
+                  <div className="w-full h-48 sm:h-52 rounded-xl overflow-hidden border border-white/20 relative shadow-sm group">
                     <img
                       src="/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
-                      alt="comunidade ciclo de aprofundamento"
+                      alt="a coragem de não agradar - ciclo de aprofundamento"
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -389,12 +410,18 @@ export default function Landing() {
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <h4 className="text-xl font-bold font-editorial text-papelClaro lowercase">
-                      o que você vivencia no ciclo?
-                    </h4>
-                    <p className="text-papelClaro/85 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                      uma comunidade madura, onde a escrita é tratada com profundidade, acolhimento e compromisso com o desenvolvimento humano contínuo.
+                  <div className="space-y-3">
+                    <div className="inline-block px-3 py-1 rounded-md bg-acentoTerracota/90 text-white text-xs font-bold lowercase tracking-wide">
+                      travessia em curso: a coragem de não agradar
+                    </div>
+
+                    <div className="space-y-1.5 text-sm text-papelClaro/95 font-medium lowercase">
+                      <p><strong className="text-acentoOliva font-semibold">livro-guia:</strong> a coragem de não agradar — ichiro kishimi & fumitake koga</p>
+                      <p><strong className="text-acentoOliva font-semibold">convidada especial:</strong> jout jout</p>
+                    </div>
+
+                    <p className="text-papelClaro/85 text-xs sm:text-sm leading-relaxed lowercase font-medium pt-2 border-t border-white/15">
+                      três meses para se libertar da opinião dos outros, atravessar seus limites e se tornar quem você quer ser.
                     </p>
                   </div>
                 </div>
