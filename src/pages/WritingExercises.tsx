@@ -1654,9 +1654,24 @@ export default function WritingExercises() {
                       <Settings className="w-4 h-4" />
                     </button>
 
+                    {/* BOTÃO PUBLICAR (ENTRE CONFIGURAÇÃO E CONCLUIR NO HEADER) */}
+                    <button
+                      onClick={async () => {
+                        if (!currentExercise) {
+                          await handleSave();
+                        }
+                        setShowShareModal(true);
+                      }}
+                      className="px-3.5 py-1.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-semibold lowercase transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+                      title="publicar na fogueira"
+                    >
+                      <Share2 className="w-4 h-4 text-white" />
+                      <span>publicar</span>
+                    </button>
+
                     <button
                       onClick={handleExitZenMode}
-                      className="p-2 rounded-xl bg-white hover:bg-papelClaro border border-papelKraft/50 text-tintaCarvao/70 hover:text-tintaCarvao transition-colors flex items-center gap-1.5 text-xs font-semibold lowercase"
+                      className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white hover:bg-papelClaro border border-papelKraft/50 text-tintaCarvao/70 hover:text-tintaCarvao transition-colors flex items-center gap-1.5 text-xs font-semibold lowercase"
                       title="concluir e fechar modo foco"
                     >
                       <Minimize2 className="w-4 h-4" />
@@ -1705,13 +1720,6 @@ export default function WritingExercises() {
                       title="baixar texto"
                     >
                       <Download className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setShowShareModal(true)}
-                      className="p-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white text-xs font-semibold lowercase transition-all shadow-xs"
-                      title="partilhar na fogueira"
-                    >
-                      <Share2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
