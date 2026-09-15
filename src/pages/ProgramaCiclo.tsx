@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Users,
   CheckCircle2,
@@ -7,12 +7,38 @@ import {
   ShieldCheck,
   BookOpen,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  X,
   Calendar,
   Quote,
 } from 'lucide-react';
 import PreLoginNavbar from '../components/PreLoginNavbar';
 import PreLoginFooter from '../components/PreLoginFooter';
+import FoundersSection from '../components/FoundersSection';
 import PaymentModal from '../components/PaymentModal';
+
+const deploymentScreenshots = [
+  { src: '/brand-assets/deployments/IMG_2847.PNG', title: 'partilha e acolhimento' },
+  { src: '/brand-assets/deployments/IMG_2848.PNG', title: 'desbloqueio criativo' },
+  { src: '/brand-assets/deployments/IMG_2849.PNG', title: 'relação com o caderno' },
+  { src: '/brand-assets/deployments/IMG_2864.jpg', title: 'mensagens de alunas' },
+  { src: '/brand-assets/deployments/IMG_2865.jpg', title: 'depoimento espontâneo' },
+  { src: '/brand-assets/deployments/IMG_2867.jpg', title: 'transformação diária' },
+  { src: '/brand-assets/deployments/IMG_2868.jpg', title: 'reflexão comunitária' },
+  { src: '/brand-assets/deployments/IMG_2870.jpg', title: 'vozes da fogueira' },
+  { src: '/brand-assets/deployments/IMG_2877.jpg', title: 'carinho e presença' },
+  { src: '/brand-assets/deployments/IMG_2878.jpg', title: 'impacto da escrita' },
+  { src: '/brand-assets/deployments/IMG_8065.PNG', title: 'relato de experiência' },
+  { src: '/brand-assets/deployments/IMG_8066.PNG', title: 'prints do grupo' },
+  { src: '/brand-assets/deployments/IMG_8067.PNG', title: 'experiência dos 21 dias' },
+  { src: '/brand-assets/deployments/IMG_8068.PNG', title: 'trocas poéticas' },
+  { src: '/brand-assets/deployments/IMG_8069.PNG', title: 'ritmo pessoal' },
+  { src: '/brand-assets/deployments/IMG_8151.PNG', title: 'caderno em movimento' },
+  { src: '/brand-assets/deployments/IMG_8846.PNG', title: 'comunidade acolhedora' },
+  { src: '/brand-assets/deployments/IMG_8850.PNG', title: 'gratidão das leitoras' },
+];
 
 const pillars = [
   {
@@ -162,6 +188,29 @@ const faqItems = [
 export default function ProgramaCiclo() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused || selectedScreenshot !== null) return;
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [isPaused, selectedScreenshot]);
+
+  const handleEnroll = () => {
+    setIsPaymentModalOpen(true);
+  };
+
+  const nextSlide = () => {
+    setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
+  };
+
+  const prevSlide = () => {
+    setCarouselIndex((prev) => (prev - 1 + deploymentScreenshots.length) % deploymentScreenshots.length);
+  };
 
   const toggleFaq = (idx: number) => {
     setOpenFaqIndex(openFaqIndex === idx ? null : idx);
