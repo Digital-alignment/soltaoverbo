@@ -365,7 +365,7 @@ export default function Profile() {
               
               {/* Foto com Crop Trigger */}
               <div className="relative group shrink-0">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-white text-3xl font-bold border-2 border-papelKraft/60 overflow-hidden bg-acentoAzul shadow-xs">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full flex items-center justify-center text-white text-3xl font-bold border border-papelKraft/60 overflow-hidden bg-acentoAzul shadow-xs">
                   {profile.profile_picture_url ? (
                     <img
                       src={`${profile.profile_picture_url}?v=${Date.now()}`}
@@ -373,7 +373,7 @@ export default function Profile() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    profile.display_name.charAt(0).toUpperCase()
+                    profile.display_name.charAt(0).toLowerCase()
                   )}
                 </div>
 
@@ -413,7 +413,7 @@ export default function Profile() {
                 </div>
 
                 {profile.bio ? (
-                  <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/85 leading-relaxed lowercase max-w-2xl">
+                  <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/85 leading-relaxed lowercase max-w-2xl italic bg-white/70 p-3 rounded-2xl border border-papelKraft/30">
                     "{profile.bio}"
                   </p>
                 ) : (
@@ -429,10 +429,11 @@ export default function Profile() {
                       href={profile.substack_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors"
+                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors shadow-xs"
                     >
-                      <ExternalLink className="w-3 h-3 text-acentoTerracota" />
+                      <FileText className="w-3 h-3 text-acentoTerracota" />
                       <span>substack</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-tintaCarvao/40" />
                     </a>
                   )}
 
@@ -441,10 +442,11 @@ export default function Profile() {
                       href={profile.instagram_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors"
+                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors shadow-xs"
                     >
                       <Instagram className="w-3 h-3 text-acentoTerracota" />
                       <span>instagram</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-tintaCarvao/40" />
                     </a>
                   )}
 
@@ -453,17 +455,18 @@ export default function Profile() {
                       href={profile.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors"
+                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors shadow-xs"
                     >
                       <Linkedin className="w-3 h-3 text-acentoTerracota" />
                       <span>linkedin</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-tintaCarvao/40" />
                     </a>
                   )}
 
                   {profile.email_public && (
                     <a
                       href={`mailto:${profile.email_public}`}
-                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors"
+                      className="px-3 py-1 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors shadow-xs"
                     >
                       <Mail className="w-3 h-3 text-acentoTerracota" />
                       <span>{profile.email_public}</span>
@@ -715,7 +718,7 @@ export default function Profile() {
 
                       <div className="flex items-center justify-between pt-2 border-t border-papelKraft/30 text-xs font-corpo text-tintaCarvao/60">
                         <span className="flex items-center gap-1">
-                          <Heart className="w-3.5 h-3.5 text-red-500 fill-current" />
+                          <Heart className="w-3.5 h-3.5 text-acentoTerracota fill-current" />
                           <span>{post.likes_count} curtidas</span>
                         </span>
                         <span className="flex items-center gap-1">

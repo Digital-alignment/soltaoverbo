@@ -14,6 +14,9 @@ import {
   Sparkles,
   User,
   Check,
+  Instagram,
+  Linkedin,
+  ExternalLink,
 } from 'lucide-react';
 
 interface StudentInspectionDrawerProps {
@@ -180,6 +183,73 @@ export default function StudentInspectionDrawer({
                   <span>última atividade: {student.last_activity}</span>
                 </span>
               </div>
+
+              {/* BIO DA ALUNA PARA O ADMIN */}
+              {student.bio && (
+                <div className="pt-2">
+                  <p className="text-xs font-corpo text-tintaCarvao/85 italic lowercase leading-relaxed bg-white/70 p-3 rounded-xl border border-papelKraft/40">
+                    "{student.bio}"
+                  </p>
+                </div>
+              )}
+
+              {/* REDES SOCIAIS E CONTATO PÚBLICO DA ALUNA */}
+              {(student.substack_url || student.instagram_url || student.linkedin_url || student.email_public) && (
+                <div className="flex flex-wrap items-center gap-2 pt-2">
+                  {student.substack_url && (
+                    <a
+                      href={student.substack_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 rounded-xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors cursor-pointer shadow-xs"
+                      title="Substack"
+                    >
+                      <FileText className="w-3 h-3 text-acentoTerracota" />
+                      <span>substack</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-tintaCarvao/40 ml-0.5" />
+                    </a>
+                  )}
+
+                  {student.instagram_url && (
+                    <a
+                      href={student.instagram_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 rounded-xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors cursor-pointer shadow-xs"
+                      title="Instagram"
+                    >
+                      <Instagram className="w-3 h-3 text-acentoTerracota" />
+                      <span>instagram</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-tintaCarvao/40 ml-0.5" />
+                    </a>
+                  )}
+
+                  {student.linkedin_url && (
+                    <a
+                      href={student.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 rounded-xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors cursor-pointer shadow-xs"
+                      title="LinkedIn"
+                    >
+                      <Linkedin className="w-3 h-3 text-acentoTerracota" />
+                      <span>linkedin</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-tintaCarvao/40 ml-0.5" />
+                    </a>
+                  )}
+
+                  {student.email_public && (
+                    <a
+                      href={`mailto:${student.email_public}`}
+                      className="px-2.5 py-1 rounded-xl bg-white hover:bg-papelKraft/30 text-acentoAzul border border-papelKraft/40 text-[11px] font-corpo lowercase flex items-center gap-1 transition-colors cursor-pointer shadow-xs"
+                      title="E-mail Público"
+                    >
+                      <Mail className="w-3 h-3 text-acentoTerracota" />
+                      <span>{student.email_public}</span>
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

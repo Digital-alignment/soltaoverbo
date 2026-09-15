@@ -74,6 +74,11 @@ export interface StudentCourseProgress {
   created_at?: string;
   facilitator_notes?: string;
   productions?: StudentProduction[];
+  bio?: string | null;
+  instagram_url?: string | null;
+  linkedin_url?: string | null;
+  substack_url?: string | null;
+  email_public?: string | null;
 }
 
 export type MaterialCategory =

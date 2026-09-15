@@ -128,6 +128,11 @@ export default function ProductAlunasTable({
             completed_lessons: completedCount,
             last_activity: lastAct,
             role: p.role || 'paid',
+            bio: p.bio,
+            instagram_url: p.instagram_url,
+            linkedin_url: p.linkedin_url,
+            substack_url: p.substack_url,
+            email_public: p.email_public,
           };
         });
         setStudents(mapped);

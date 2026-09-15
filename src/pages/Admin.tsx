@@ -277,6 +277,10 @@ export default function Admin() {
       last_activity: u.created_at ? `membro desde ${new Date(u.created_at).toLocaleDateString('pt-BR')}` : 'registrada recentemente',
       role: u.role,
       bio: u.bio,
+      instagram_url: u.instagram_url,
+      linkedin_url: u.linkedin_url,
+      substack_url: u.substack_url,
+      email_public: u.email_public,
     };
     setSelectedStudent(studentData);
     setIsDrawerOpen(true);
