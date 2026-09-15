@@ -52,7 +52,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
     },
     cafe: {
       title: 'café com letras',
-      subtitle: 'rodas temáticas semanais de escrita ao vivo toda terça-feira 8h–8h30',
+      subtitle: 'encontro semanal de escrita ao vivo toda terça-feira 8h–8h30',
       priceText: 'R$ 97,00',
       installmentText: '/ mês (incluso no ciclo de aprofundamento)',
       whatsappMessage: 'Olá! Quero me inscrever no café com letras (R$ 97,00/mês) via PIX.',

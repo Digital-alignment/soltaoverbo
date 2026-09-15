@@ -79,7 +79,7 @@ export default function PreLoginNavbar() {
     {
       to: '/programas/cafe-com-letras',
       label: 'café com letras',
-      desc: 'rodas temáticas de escrita',
+      desc: 'encontro semanal de escrita',
       icon: Coffee,
     },
     {
