@@ -23,7 +23,8 @@ import {
 import type { EditorFontFamily } from './EditorSettingsModal';
 
 interface RichTextEditorProps {
-  value: string;
+  value?: string;
+  content?: string;
   onChange: (value: string) => void;
   onSave?: () => void;
   placeholder?: string;
@@ -31,6 +32,7 @@ interface RichTextEditorProps {
   zoomLevel?: number;
   onZoomChange?: (newZoom: number) => void;
   fontFamily?: EditorFontFamily;
+  editorSettings?: any;
 }
 
 const FORMAT_OPTIONS = [
@@ -55,6 +57,7 @@ const FONT_FAMILY_MAP: Record<EditorFontFamily, string> = {
 
 export default function RichTextEditor({
   value,
+  content,
   onChange,
   onSave,
   placeholder,
@@ -63,6 +66,8 @@ export default function RichTextEditor({
   onZoomChange,
   fontFamily = 'editorial',
 }: RichTextEditorProps) {
+  const actualValue = value !== undefined ? value : content !== undefined ? content : '';
+
   const editorRef = useRef<HTMLDivElement>(null);
   const formatMenuRef = useRef<HTMLDivElement>(null);
   const fontSizeMenuRef = useRef<HTMLDivElement>(null);
@@ -82,10 +87,14 @@ export default function RichTextEditor({
   const cmdStr = isMac ? 'cmd' : 'ctrl';
 
   useEffect(() => {
-    if (editorRef.current && value && !editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = value;
+    if (editorRef.current) {
+      if (editorRef.current.innerHTML !== actualValue) {
+        if (document.activeElement !== editorRef.current) {
+          editorRef.current.innerHTML = actualValue;
+        }
+      }
     }
-  }, []);
+  }, [actualValue]);
 
   // Fechar menus ao clicar fora
   useEffect(() => {

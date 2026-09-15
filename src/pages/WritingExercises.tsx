@@ -674,13 +674,36 @@ export default function WritingExercises() {
   };
 
   const handleShare = async () => {
-    if (!currentExercise || !profile) return;
+    if (!profile) return;
+
+    let targetExercise = currentExercise;
+    if (!targetExercise) {
+      await handleSave();
+      targetExercise = currentExercise;
+    }
+
+    if (!targetExercise) {
+      const { data: latest } = await supabase
+        .from('writing_exercises')
+        .select('*')
+        .eq('user_id', profile.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      targetExercise = latest;
+    }
+
+    if (!targetExercise) {
+      alert('por favor, digite um conteúdo antes de publicar.');
+      return;
+    }
 
     try {
       const { data: existingPost } = await supabase
         .from('community_posts')
         .select('id')
-        .eq('writing_exercise_id', currentExercise.id)
+        .eq('writing_exercise_id', targetExercise.id)
         .maybeSingle();
 
       if (existingPost) {
@@ -692,12 +715,12 @@ export default function WritingExercises() {
       const { error: updateError } = await supabase
         .from('writing_exercises')
         .update({ is_published: true })
-        .eq('id', currentExercise.id);
+        .eq('id', targetExercise.id);
 
       if (updateError) throw updateError;
 
       const { error: postError } = await supabase.from('community_posts').insert({
-        writing_exercise_id: currentExercise.id,
+        writing_exercise_id: targetExercise.id,
         user_id: profile.id,
       });
 
@@ -1520,6 +1543,71 @@ export default function WritingExercises() {
           onUpdateSettings={handleUpdateSettings}
         />
 
+        {/* MODAL DE PUBLICAÇÃO NA FOGUEIRA COMUNIDADE */}
+        {showShareModal && (
+          <div className="fixed inset-0 z-[9999999] bg-tintaCarvao/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
+            <div className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-6 sm:p-8 max-w-md w-full shadow-kraft-lg space-y-5 relative text-tintaCarvao">
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-papelKraft/20 text-tintaCarvao/60 hover:text-tintaCarvao transition-colors border border-papelKraft/40 cursor-pointer"
+                title="fechar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="space-y-1">
+                <span className="px-2.5 py-0.5 rounded-full bg-acentoTerracota/15 text-acentoTerracota text-xs font-bold lowercase inline-block font-corpo">
+                  partilha comunitária
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
+                  publicar na fogueira
+                </h3>
+                <p className="text-xs font-corpo text-tintaCarvao/70 lowercase leading-relaxed">
+                  ao publicar, seu texto ficará visível para todas as alunas da comunidade na fogueira poética.
+                </p>
+              </div>
+
+              <div className="bg-white p-4 rounded-2xl border border-papelKraft/35 space-y-2">
+                <h4 className="font-editorial font-bold text-sm sm:text-base text-acentoAzul lowercase truncate">
+                  “{title || 'texto sem título'}”
+                </h4>
+                <p className="text-xs font-corpo text-tintaCarvao/80 line-clamp-3 lowercase italic">
+                  "{content.replace(/<[^>]*>/g, '').substring(0, 140)}..."
+                </p>
+              </div>
+
+              <label className="flex items-center gap-3 p-3 rounded-2xl bg-white/70 border border-papelKraft/30 cursor-pointer hover:bg-white transition-colors">
+                <input
+                  type="checkbox"
+                  checked={isAnonymousShare}
+                  onChange={(e) => setIsAnonymousShare(e.target.checked)}
+                  className="w-4 h-4 rounded text-acentoTerracota focus:ring-acentoTerracota border-papelKraft/50"
+                />
+                <div className="text-xs font-corpo lowercase">
+                  <span className="font-bold text-tintaCarvao block">publicar de forma anônima</span>
+                  <span className="text-tintaCarvao/60 text-[11px]">seu nome não será exibido no cartão da fogueira</span>
+                </div>
+              </label>
+
+              <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-papelKraft/30">
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-tintaCarvao/70 hover:bg-papelKraft/20 lowercase transition-colors cursor-pointer"
+                >
+                  cancelar
+                </button>
+                <button
+                  onClick={handleShare}
+                  className="px-5 py-2.5 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <Share2 className="w-4 h-4 text-white" />
+                  <span>confirmar e publicar →</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* MODO FOCO / ZEN EDITOR EM TELA CHEIA (100% COBRINDO A TELA VIA REACT PORTAL NO DOM BODY) */}
         {isZenMode &&
           createPortal(
@@ -1692,6 +1780,7 @@ export default function WritingExercises() {
                 {/* Editor RichText */}
                 <div className="flex-1 my-4">
                   <RichTextEditor
+                    value={content}
                     content={content}
                     onChange={setContent}
                     placeholder="comece a soltar a sua voz aqui sem interrupções..."
