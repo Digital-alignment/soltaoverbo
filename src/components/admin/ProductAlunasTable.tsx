@@ -39,9 +39,9 @@ export default function ProductAlunasTable({
   const fetchEnrolledStudents = async () => {
     setLoading(true);
     try {
-      // Query profiles from Supabase
+      // Query users_profiles from Supabase
       const { data: profiles, error } = await supabase
-        .from('profiles')
+        .from('users_profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -91,17 +91,45 @@ export default function ProductAlunasTable({
         ]);
       } else {
         // Map real profiles into student progress items
-        const mapped: StudentCourseProgress[] = profiles.map((p, idx) => ({
-          user_id: p.id,
-          display_name: (p.display_name || p.full_name || 'aluna').toLowerCase(),
-          email: (p.email || 'aluna@soltaoverbocoletivo.com').toLowerCase(),
-          profile_picture_url: p.profile_picture_url,
-          current_day: showProgressDay ? (idx % 21) + 1 : 0,
-          total_days: 21,
-          completed_lessons: showProgressDay ? (idx % 21) + 1 : 0,
-          last_activity: 'ativo recentemente',
-          role: p.role || 'paid',
-        }));
+        const mapped: StudentCourseProgress[] = profiles.map((p) => {
+          let completedCount = 0;
+          try {
+            const raw = localStorage.getItem(`soltaoverbo_completed_lessons_${p.id}`);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed)) {
+                completedCount = parsed.length;
+              }
+            }
+          } catch (e) {
+            console.error('Erro ao ler progresso da aluna:', e);
+          }
+
+          const totalDays = 21;
+          const currentDay = completedCount > 0 ? Math.min(totalDays, completedCount) : 1;
+
+          let lastAct = 'registrado recentemente';
+          if (p.updated_at || p.created_at) {
+            const actDate = new Date(p.updated_at || p.created_at);
+            const now = new Date();
+            const isToday = actDate.toDateString() === now.toDateString();
+            lastAct = isToday
+              ? `hoje às ${actDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`
+              : `${actDate.toLocaleDateString('pt-BR')}`;
+          }
+
+          return {
+            user_id: p.id,
+            display_name: (p.display_name || p.email_public?.split('@')[0] || 'aluna solta o verbo').toLowerCase(),
+            email: (p.email_public || 'aluna@soltaoverbocoletivo.com').toLowerCase(),
+            profile_picture_url: p.profile_picture_url,
+            current_day: showProgressDay ? currentDay : 0,
+            total_days: totalDays,
+            completed_lessons: completedCount,
+            last_activity: lastAct,
+            role: p.role || 'paid',
+          };
+        });
         setStudents(mapped);
       }
     } catch (err) {

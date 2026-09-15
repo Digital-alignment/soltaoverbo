@@ -135,8 +135,19 @@ export default function CourseDetail() {
           console.error('Erro ao ler citações:', e);
         }
       }
+
+      // Carregar lições concluídas salvas do usuário
+      const storageKey = `soltaoverbo_completed_lessons_${profile?.id || 'guest'}`;
+      const savedCompleted = localStorage.getItem(storageKey);
+      if (savedCompleted) {
+        try {
+          setCompletedLessonIds(JSON.parse(savedCompleted));
+        } catch (e) {
+          console.error('Erro ao ler lições concluídas:', e);
+        }
+      }
     }
-  }, [courseId]);
+  }, [courseId, profile?.id]);
 
   useEffect(() => {
     if (selectedLesson && courseId) {
@@ -592,13 +603,23 @@ export default function CourseDetail() {
                       {/* BOTÃO EM DESTAQUE: MARCAR COMO CONCLUÍDA */}
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
                           if (selectedLesson) {
-                            setCompletedLessonIds((prev) =>
-                              prev.includes(selectedLesson.id)
-                                ? prev.filter((id) => id !== selectedLesson.id)
-                                : [...prev, selectedLesson.id]
-                            );
+                            const isCurrentlyCompleted = completedLessonIds.includes(selectedLesson.id);
+                            const updated = isCurrentlyCompleted
+                              ? completedLessonIds.filter((id) => id !== selectedLesson.id)
+                              : [...completedLessonIds, selectedLesson.id];
+
+                            setCompletedLessonIds(updated);
+                            const storageKey = `soltaoverbo_completed_lessons_${profile?.id || 'guest'}`;
+                            localStorage.setItem(storageKey, JSON.stringify(updated));
+
+                            if (profile?.id) {
+                              await supabase
+                                .from('users_profiles')
+                                .update({ updated_at: new Date().toISOString() })
+                                .eq('id', profile.id);
+                            }
                           }
                         }}
                         className={`px-5 sm:px-6 py-2.5 rounded-2xl font-gesto text-[24px] sm:text-[26px] lowercase transition-all inline-flex items-center justify-center gap-2 shadow-md cursor-pointer ${

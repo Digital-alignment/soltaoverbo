@@ -44,6 +44,8 @@ export default function StudentInspectionDrawer({
   const [sendingMessage, setSendingMessage] = useState(false);
   const [messageSentSuccess, setMessageSentSuccess] = useState(false);
 
+  const [realProductions, setRealProductions] = useState<StudentProduction[]>([]);
+
   useEffect(() => {
     if (student) {
       const storedNote = localStorage.getItem(`facilitator_notes_${student.user_id}_${productSlug}`);
@@ -52,6 +54,32 @@ export default function StudentInspectionDrawer({
       setMessageSentSuccess(false);
       setMessageSubject(`aviso individual • ${productName}`);
       setMessageBody('');
+
+      // Fetch student's real writing exercises from Supabase
+      supabase
+        .from('writing_exercises')
+        .select('*')
+        .eq('user_id', student.user_id)
+        .order('created_at', { ascending: false })
+        .then(({ data, error }) => {
+          if (!error && data && data.length > 0) {
+            const mapped: StudentProduction[] = data.map((ex) => {
+              const cleanText = (ex.content || '').replace(/<[^>]*>?/gm, '').trim();
+              const words = cleanText ? cleanText.split(/\s+/).filter(Boolean).length : 0;
+              return {
+                id: ex.id,
+                title: (ex.title || 'sem título').toLowerCase(),
+                excerpt: cleanText ? cleanText.substring(0, 150).toLowerCase() + '...' : 'sem conteúdo...',
+                word_count: words,
+                created_at: new Date(ex.created_at).toLocaleDateString('pt-BR'),
+                folder_name: ex.is_published ? 'fogueira (publicado)' : 'caderno autoral',
+              };
+            });
+            setRealProductions(mapped);
+          } else {
+            setRealProductions([]);
+          }
+        });
     }
   }, [student, productSlug]);
 
@@ -81,33 +109,36 @@ export default function StudentInspectionDrawer({
     }, 600);
   };
 
-  // Generate demo productions if none present
-  const productions: StudentProduction[] = student.productions || [
-    {
-      id: 'p1',
-      title: 'carta para mim mesma no dia 14',
-      excerpt: 'hoje escrevo sem pressa de chegar a lugar nenhum, apenas sentindo o ritmo das palavras no papel...',
-      word_count: 342,
-      created_at: 'hoje às 11:20',
-      folder_name: 'diário 21 dias',
-    },
-    {
-      id: 'p2',
-      title: 'o silêncio entre as frases',
-      excerpt: 'percebi que a coragem de soltar o verbo começa quando aceitamos as pausas sem medo...',
-      word_count: 518,
-      created_at: 'há 2 dias',
-      folder_name: 'caderno autoral',
-    },
-    {
-      id: 'p3',
-      title: 'provocação #03 • escuta interna',
-      excerpt: 'a primeira camada do texto sempre esconde a pergunta que realmente gostaríamos de responder...',
-      word_count: 280,
-      created_at: 'há 5 dias',
-      folder_name: 'rituais poéticos',
-    },
-  ];
+  // Use real productions if available, else fallback to student productions or demo
+  const productions: StudentProduction[] =
+    realProductions.length > 0
+      ? realProductions
+      : student.productions || [
+          {
+            id: 'p1',
+            title: 'carta para mim mesma no dia 14',
+            excerpt: 'hoje escrevo sem pressa de chegar a lugar nenhum, apenas sentindo o ritmo das palavras no papel...',
+            word_count: 342,
+            created_at: 'hoje às 11:20',
+            folder_name: 'diário 21 dias',
+          },
+          {
+            id: 'p2',
+            title: 'o silêncio entre as frases',
+            excerpt: 'percebi que a coragem de soltar o verbo começa quando aceitamos as pausas sem medo...',
+            word_count: 518,
+            created_at: 'há 2 dias',
+            folder_name: 'caderno autoral',
+          },
+          {
+            id: 'p3',
+            title: 'provocação #03 • escuta interna',
+            excerpt: 'a primeira camada do texto sempre esconde a pergunta que realmente gostaríamos de responder...',
+            word_count: 280,
+            created_at: 'há 5 dias',
+            folder_name: 'rituais poéticos',
+          },
+        ];
 
   const totalDays = student.total_days || (productSlug === 'programa_21_dias' ? 21 : 12);
   const currentDay = student.current_day || 1;
