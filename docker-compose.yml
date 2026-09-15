@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  soltaoverbo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: soltaoverbo
+    restart: always
+    ports:
+      - "8080:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.soltaoverbo.rule=Host(`soltaoverbocoletivo.com`) || Host(`www.soltaoverbocoletivo.com`)"
+      - "traefik.http.routers.soltaoverbo.entrypoints=websecure"
+      - "traefik.http.routers.soltaoverbo.tls.certresolver=myresolver"
+      - "traefik.http.services.soltaoverbo.loadbalancer.server.port=80"
