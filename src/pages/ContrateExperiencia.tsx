@@ -632,7 +632,7 @@ export default function ContrateExperiencia() {
                   retiros, festivais & coletivos
                 </h3>
                 <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
-                  rituais de abertura e encerramento, rodas de escuta ao redor do fogo e curadoria de cadernos de bordo para eventos de bem-estar e autoconhecimento.
+                  rituais de abertura e encerramento, rodas de partilha e cadernos de bordo, pensados pra festivais, retiros e encontros que já nascem com escuta no centro.
                 </p>
               </div>
 
@@ -679,20 +679,20 @@ export default function ContrateExperiencia() {
               </div>
             </div>
 
-            {/* Bento Card 4: Vivências de Escrita Escolas & Coletivos */}
+            {/* Bento Card 4: Educação */}
             <div className="bg-papelClaro rounded-3xl p-6 sm:p-7 border border-papelKraft/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-acentoAzul/40 hover:shadow-md flex flex-col justify-between group">
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-acentoAzul/10 text-acentoAzul flex items-center justify-center mb-5 group-hover:bg-acentoAzul group-hover:text-white transition-all">
                   <Pencil className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-bold text-acentoTerracota lowercase tracking-wider block mb-1">
-                  formato 04 // vivências
+                  formato 04 // educação
                 </span>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
                   escrita para quem está aprendendo
                 </h3>
                 <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
-                  atividades e oficinas de escrita criativa para escolas, educadores e grupos de desenvolvimento pessoal, cultivando a imaginação e a voz autêntica.
+                  atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.
                 </p>
               </div>
 
@@ -703,7 +703,7 @@ export default function ContrateExperiencia() {
                   rel="noopener noreferrer"
                   className="w-full py-2.5 rounded-full bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white transition-all text-xs font-bold flex items-center justify-center gap-2 lowercase"
                 >
-                  <span>solicitar proposta</span>
+                  <span>solicitar proposta para escolas</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
