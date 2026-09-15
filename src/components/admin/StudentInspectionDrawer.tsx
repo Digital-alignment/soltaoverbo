@@ -109,36 +109,8 @@ export default function StudentInspectionDrawer({
     }, 600);
   };
 
-  // Use real productions if available, else fallback to student productions or demo
-  const productions: StudentProduction[] =
-    realProductions.length > 0
-      ? realProductions
-      : student.productions || [
-          {
-            id: 'p1',
-            title: 'carta para mim mesma no dia 14',
-            excerpt: 'hoje escrevo sem pressa de chegar a lugar nenhum, apenas sentindo o ritmo das palavras no papel...',
-            word_count: 342,
-            created_at: 'hoje às 11:20',
-            folder_name: 'diário 21 dias',
-          },
-          {
-            id: 'p2',
-            title: 'o silêncio entre as frases',
-            excerpt: 'percebi que a coragem de soltar o verbo começa quando aceitamos as pausas sem medo...',
-            word_count: 518,
-            created_at: 'há 2 dias',
-            folder_name: 'caderno autoral',
-          },
-          {
-            id: 'p3',
-            title: 'provocação #03 • escuta interna',
-            excerpt: 'a primeira camada do texto sempre esconde a pergunta que realmente gostaríamos de responder...',
-            word_count: 280,
-            created_at: 'há 5 dias',
-            folder_name: 'rituais poéticos',
-          },
-        ];
+  // Use real productions if available
+  const productions: StudentProduction[] = realProductions;
 
   const totalDays = student.total_days || (productSlug === 'programa_21_dias' ? 21 : 12);
   const currentDay = student.current_day || 1;
@@ -345,34 +317,46 @@ export default function StudentInspectionDrawer({
                 </p>
               </div>
 
-              <div className="space-y-3">
-                {productions.map((prod) => (
-                  <div
-                    key={prod.id}
-                    className="bg-white p-4 sm:p-5 rounded-2xl border border-papelKraft/40 shadow-xs space-y-2 hover:border-acentoAzul/60 transition-all"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <h5 className="font-editorial font-bold text-base text-acentoAzul lowercase">
-                        {prod.title}
-                      </h5>
-                      {prod.folder_name && (
-                        <span className="px-2 py-0.5 rounded-lg bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
-                          {prod.folder_name}
-                        </span>
-                      )}
-                    </div>
+              {productions.length === 0 ? (
+                <div className="p-8 rounded-2xl bg-white border border-papelKraft/40 text-center space-y-2 shadow-xs">
+                  <FileText className="w-8 h-8 text-acentoAzul/40 mx-auto" />
+                  <p className="text-sm font-editorial font-bold text-acentoAzul lowercase">
+                    nenhum texto criado no atelier ainda
+                  </p>
+                  <p className="text-xs font-corpo text-tintaCarvao/60 lowercase">
+                    esta aluna ainda não gravou nem publicou rascunhos no estúdio de escrita.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {productions.map((prod) => (
+                    <div
+                      key={prod.id}
+                      className="bg-white p-4 sm:p-5 rounded-2xl border border-papelKraft/40 shadow-xs space-y-2 hover:border-acentoAzul/60 transition-all"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <h5 className="font-editorial font-bold text-base text-acentoAzul lowercase">
+                          {prod.title}
+                        </h5>
+                        {prod.folder_name && (
+                          <span className="px-2 py-0.5 rounded-lg bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
+                            {prod.folder_name}
+                          </span>
+                        )}
+                      </div>
 
-                    <p className="text-xs font-corpo text-tintaCarvao/80 italic lowercase leading-relaxed">
-                      "{prod.excerpt}"
-                    </p>
+                      <p className="text-xs font-corpo text-tintaCarvao/80 italic lowercase leading-relaxed">
+                        "{prod.excerpt}"
+                      </p>
 
-                    <div className="pt-2 border-t border-papelKraft/20 flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/50 lowercase">
-                      <span>{prod.word_count} palavras</span>
-                      <span>{prod.created_at}</span>
+                      <div className="pt-2 border-t border-papelKraft/20 flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/50 lowercase">
+                        <span>{prod.word_count} palavras</span>
+                        <span>{prod.created_at}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
