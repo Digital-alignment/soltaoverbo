@@ -652,20 +652,118 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   contrate_experiencia: {
     hero: {
-      title: "contrate uma experiência: momentos que reconectam um grupo com a própria palavra.",
-      subtitle: "experiências sob medida & oficinas b2b",
-      body_text: "levamos rituais de escrita consciente, integração humana e expressão autêntica para dentro da sua empresa, do seu evento ou do seu festival.",
-      button_text: "falar com a equipe no whatsapp →",
-      button_link: "https://wa.me/5531999999999",
-      image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
+      badge_text: "experiências sob medida & oficinas b2b",
+      title: "contrate uma experiência:",
+      subtitle_gesto: "momentos que reconectam um grupo com a própria palavra.",
+      subtitle: "levamos rituais de escrita consciente, integração humana e expressão autêntica para dentro da sua empresa, do seu evento ou do seu festival.",
+      highlight_box_title: "propostas exclusivas sob medida para o seu grupo",
+      button_text: "solicitar proposta no whatsapp",
+      button_secondary_text: "ver formatos de experiência",
+      image_url: "/brand-assets/gallery/events/13062026-IMG_6581-2.jpg",
+      quote_text: "“transformar a rotina de uma equipe começa quando abrimos espaço para a escuta genuína.”"
     },
-    proposta: {
-      title: "experiência de escrita em eventos",
-      subtitle: "saúde mental, escuta ativa e coesão através da palavra",
-      body_text: "nossos rituais de escrita promovem conexão genuína, redução de estresse e fortalecimento da autoria individual em ambientes corporativos e eventos especiais.",
-      button_text: "solicitar proposta personalizada →",
-      button_link: "https://wa.me/5531999999999",
-      image_url: "/brand-assets/gallery/events/_MG_0015.jpg"
+    pra_quem_e: {
+      badge_text: "públicos & formatos",
+      title: "pra quem é isso",
+      subtitle: "se você cuida de pessoas dentro de uma empresa, organiza um evento que quer sair do lugar comum, ou representa uma marca que busca se aproximar do público de um jeito mais humano, a solta o verbo tem uma experiência pensada pra você.",
+      c1_title: "empresas & rh",
+      c1_desc: "times de rh e people que querem cuidar de verdade da equipe",
+      c2_title: "eventos & retiros",
+      c2_desc: "produtoras de eventos, retiros e festivais que buscam rituais de presença",
+      c3_title: "marcas & ativações",
+      c3_desc: "marcas que querem ativações com significado, não só brinde",
+      c4_title: "coletivos",
+      c4_desc: "coletivos e comunidades que precisam de um espaço pra se escutar"
+    },
+    por_que_escrita: {
+      badge_text: "fundamentação & metodologia",
+      title: "por que escrita",
+      body_text: "não é só uma dinâmica bonitinha. nosso trabalho parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem estar emocional, e a curva do esquecimento de ebbinghaus, que reforça a importância da prática recorrente, não só de um encontro isolado. cada experiência também é desenhada com a metodologia design de conexões, criada pra gerar pertencimento real entre as pessoas de um grupo, não só preencher uma tarde de agenda."
+    },
+    galeria: {
+      badge_text: "galeria de experiências presenciais",
+      title: "registros dos nossos encontros e oficinas",
+      subtitle: "momentos de partilha, cadernos abertos e rituais de presença em retiros, empresas e festivais pelo brasil.",
+      p1_title: "oficinas corporativas & integração",
+      p1_sub: "vivências de escrita guiada para desacelerar equipes",
+      p1_img: "/brand-assets/gallery/events/13062026-IMG_6581-2.jpg",
+      p2_title: "rodas de partilha em retiros",
+      p2_sub: "curadoria de ambiente e escuta sem julgamento",
+      p2_img: "/brand-assets/gallery/events/13062026-IMG_5364-2.jpg",
+      p3_title: "experiências para marcas & eventos",
+      p3_sub: "ativações poéticas sob medida com cadernos afetivos",
+      p3_img: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg",
+      p4_title: "imersões presenciais & festivais",
+      p4_sub: "espaço seguro para acolher histórias humanas",
+      p4_img: "/brand-assets/gallery/events/_MG_0015.jpg",
+      p5_title: "dinâmicas de escuta ativa",
+      p5_sub: "transformando a rotina de trabalho em presença",
+      p5_img: "/brand-assets/gallery/events/_MG_9849.jpg",
+      p6_title: "rituais de abertura & encerramento",
+      p6_sub: "reescrevendo narrativas em comunidade",
+      p6_img: "/brand-assets/gallery/events/_MG_9991.jpg"
+    },
+    fundamentacao_boxes: {
+      box1_title: "pra quem é isso?",
+      box1_bullet1: "empresas & líderes: que buscam promover saúde mental, humanização, escuta ativa e integração genuína de equipes.",
+      box1_bullet2: "retiros & imersões: facilitadores de autoconhecimento que desejam incluir rodas de partilha e rituais poéticos de escrita.",
+      box1_bullet3: "festivais & eventos culturais: momentos de desaceleração e presença em meio a programações intensas.",
+      box1_bullet4: "marcas & comemorações: ativações poéticas com cadernos afetivos e momentos memoráveis.",
+      box2_title: "por que a escrita?",
+      box2_bullet1: "desaceleração consciente: uma pausa no piloto automático e nas telas para respirar e sentir.",
+      box2_bullet2: "segurança psicológica: criar um ambiente onde todos se sentem acolhidos para se expressar sem julgamento.",
+      box2_bullet3: "escuta ativa: ouvir o outro com presença genuína, fortalecendo a empatia do grupo.",
+      box2_bullet4: "expressão autêntica: colocar no papel sentimentos que muitas vezes não encontram espaço na fala cotidiana.",
+      pennebaker_title: "nosso trabalho nasce de estudo e de vivência",
+      pennebaker_desc: "não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática sustentada e não um evento isolado.",
+      pennebaker_highlight: "é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam vivas depois que a gente vai embora."
+    },
+    formatos: {
+      badge_text: "formatos sob medida",
+      title: "como levamos a experiência até você",
+      subtitle: "quatro caminhos autorais adaptados para o formato e objetivo da sua iniciativa.",
+      f1_title: "oficinas corporativas & integração",
+      f1_desc: "vivências práticas para empresas que buscam fortalecer a empatia, desacelerar a rotina de trabalho e cultivar um clima de confiança através da escrita consciente.",
+      f2_title: "retiros, festivais & coletivos",
+      f2_desc: "rituais de abertura e encerramento, rodas de partilha e cadernos de bordo, pensados pra festivais, retiros e encontros que já nascem com escuta no centro.",
+      f3_title: "ativações de marca & festas",
+      f3_desc: "curadoria de ambientes afetivos, escrita poética personalizada ao vivo e brindes gráficos memoráveis para marcas e celebrações especiais.",
+      f4_title: "escrita para quem está aprendendo",
+      f4_desc: "atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.",
+      sob_medida_title: "textos autorais para momentos especiais",
+      sob_medida_desc: "escrevemos textos poéticos sob medida para casamentos, homenagens, celebrações de vida e marcos institucionais de empresas: ouvimos a sua história e a devolvemos em palavras inesquecíveis.",
+      sob_medida_button: "encomendar um texto"
+    },
+    passo_a_passo: {
+      badge_text: "passo a passo da contratação",
+      title: "como construímos a experiência juntos",
+      subtitle: "quatro etapas simples para criar uma vivência perfeita para o seu grupo.",
+      e1_step: "01", e1_title: "diagnóstico & alinhamento", e1_sub: "escutar para entender sua intenção", e1_desc: "conversamos com você para compreender o propósito do evento, perfil dos participantes e o impacto desejado para a experiência.",
+      e2_step: "02", e2_title: "curadoria & roteiro autoral", e2_sub: "experiência 100% sob medida", e2_desc: "desenhamos propostas de escrita exclusivas, seleção de músicas, dinâmicas de acolhimento e cadernos de apoio personalizados.",
+      e3_step: "03", e3_title: "facilitação & condução viva", e3_sub: "presença afetuosa de bruna e júlia", e3_desc: "conduzimos a vivência com leveza, sensibilidade e profissionalismo, criando uma atmosfera onde todos se sentem seguros para participar.",
+      e4_step: "04", e4_title: "desdobramentos & memórias", e4_sub: "lembrança duradoura para o grupo", e4_desc: "entrega de cadernos poéticos e síntese da experiência para que os aprendizados permaneçam vivos após o encontro."
+    },
+    depoimentos: {
+      badge_text: "relatos & impressões reais",
+      title: "vozes e vivências da comunidade",
+      subtitle: "depoimentos reais de quem já participou das nossas oficinas e encontros.",
+      selected_ids: "t1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5,d6,d7,d8"
+    },
+    final_cta: {
+      badge_text: "vamos desenhar uma experiência juntos?",
+      title: "vamos desenhar uma experiência juntos?",
+      subtitle: "fale diretamente conosco pelo whatsapp e receba uma proposta personalizada para a sua empresa, evento ou retiro.",
+      button_text: "solicitar proposta no whatsapp"
+    },
+    faq: {
+      title: "perguntas frequentes sobre contratação b2b",
+      q1: "as experiências podem ser presenciais ou virtuais?", a1: "sim, os dois formatos. presencial, a gente leva todo o ritual pra dentro do seu espaço. online, adaptamos a vivência sem perder a profundidade do encontro.",
+      q2: "qual é o número mínimo ou máximo de participantes?", a2: "não trabalhamos com número fixo. pra formatos mais íntimos, como oficinas corporativas, o grupo costuma ser pequeno. já em festivais e instalações, a experiência é fixa no espaço, e pode receber quantas pessoas quiserem participar. o número ideal depende do formato e do lugar, e isso a gente alinha junto com você.",
+      q3: "quanto custa contratar uma experiência?", a3: "o investimento varia de acordo com o formato, a duração e o tamanho do grupo. por isso cada proposta é personalizada, fale com a gente pelo whatsapp e te passamos os valores certinhos pro seu caso.",
+      q4: "com quanto tempo de antecedência preciso contratar?", a4: "o ideal é fechar com pelo menos 1 mês de antecedência, pra gente ter tempo de fazer o diagnóstico, desenhar o roteiro autoral e alinhar tudo com calma antes do dia.",
+      q5: "quem conduz a experiência?", a5: "bruna e júlia, as criadoras da solta o verbo, conduzem pessoalmente cada experiência. nada é terceirizado, quem desenha o roteiro é quem está com o grupo no dia.",
+      q6: "e se o meu time não tem afinidade com escrita? isso funciona mesmo assim?", a6: "funciona, e costuma ser exatamente com esses grupos que a experiência mais surpreende. não pedimos talento, só presença. a escrita aqui é ferramenta, não performance.",
+      q7: "como faço para solicitar uma proposta personalizada?", a7: "basta clicar nos botões de whatsapp desta página pra conversar direto com bruna e júlia. respondemos rápido com todas as informações necessárias."
     }
   },
   contacts: {

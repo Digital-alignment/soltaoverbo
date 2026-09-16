@@ -150,8 +150,16 @@ const PAGE_OPTIONS: PageOption[] = [
     slug: 'contrate_experiencia',
     name: 'Contrate uma Experiência',
     sections: [
-      { key: 'hero', name: 'Hero para Marcas & Empresas', hasImage: true, hasButton: true },
-      { key: 'proposta', name: 'Proposta de Rituais Corporativos', hasImage: true, hasButton: true },
+      { key: 'hero', name: '01. Hero para Marcas & Empresas', hasImage: true, hasButton: true },
+      { key: 'pra_quem_e', name: '02. Pra Quem É (Públicos & Formatos)', hasImage: false, hasButton: false },
+      { key: 'por_que_escrita', name: '03. Por Que Escrita (Fundamentação & Metodologia)', hasImage: false, hasButton: false },
+      { key: 'galeria', name: '04. Galeria de Experiências Presenciais (6 cards)', hasImage: true, hasButton: false },
+      { key: 'fundamentacao_boxes', name: '05. Fundamentação, Bullets & Pennebaker', hasImage: false, hasButton: false },
+      { key: 'formatos', name: '06. Formatos Sob Medida & Textos Autorais', hasImage: false, hasButton: true },
+      { key: 'passo_a_passo', name: '07. Passo a Passo da Contratação (4 etapas)', hasImage: false, hasButton: false },
+      { key: 'depoimentos', name: '08. Relatos & Prints Reais da Comunidade', hasImage: false, hasButton: false },
+      { key: 'final_cta', name: '09. Banner Call to Action Final', hasImage: false, hasButton: true },
+      { key: 'faq', name: '10. Perguntas Frequentes B2B (7 itens)', hasImage: false, hasButton: false },
     ],
   },
   {
@@ -1802,6 +1810,209 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                       className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
                     />
                   </div>
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS DA PÁGINA CONTRATE UMA EXPERIÊNCIA (contrate_experiencia) */}
+              {selectedPageSlug === 'contrate_experiencia' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  {sec.key === 'hero' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">subtítulo em manuscrito (gesto)</label>
+                        <input type="text" value={sectionData.subtitle_gesto || ''} onChange={(e) => handleSectionChange(sec.key, 'subtitle_gesto', e.target.value)} placeholder="momentos que reconectam..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">título da caixa de destaque</label>
+                        <input type="text" value={sectionData.highlight_box_title || ''} onChange={(e) => handleSectionChange(sec.key, 'highlight_box_title', e.target.value)} placeholder="propostas exclusivas..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">texto botão secundário</label>
+                        <input type="text" value={sectionData.button_secondary_text || ''} onChange={(e) => handleSectionChange(sec.key, 'button_secondary_text', e.target.value)} placeholder="ver formatos de experiência" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">citação em destaque no card lateral</label>
+                        <input type="text" value={sectionData.quote_text || ''} onChange={(e) => handleSectionChange(sec.key, 'quote_text', e.target.value)} placeholder="“transformar a rotina de uma equipe...”" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'pra_quem_e' && (
+                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">card 01: título & descrição</label>
+                        <input type="text" value={sectionData.c1_title || ''} onChange={(e) => handleSectionChange(sec.key, 'c1_title', e.target.value)} placeholder="empresas & rh" className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase font-bold" />
+                        <input type="text" value={sectionData.c1_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'c1_desc', e.target.value)} placeholder="times de rh e people..." className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase" />
+                      </div>
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">card 02: título & descrição</label>
+                        <input type="text" value={sectionData.c2_title || ''} onChange={(e) => handleSectionChange(sec.key, 'c2_title', e.target.value)} placeholder="eventos & retiros" className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase font-bold" />
+                        <input type="text" value={sectionData.c2_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'c2_desc', e.target.value)} placeholder="produtoras de eventos..." className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase" />
+                      </div>
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">card 03: título & descrição</label>
+                        <input type="text" value={sectionData.c3_title || ''} onChange={(e) => handleSectionChange(sec.key, 'c3_title', e.target.value)} placeholder="marcas & ativações" className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase font-bold" />
+                        <input type="text" value={sectionData.c3_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'c3_desc', e.target.value)} placeholder="marcas que querem ativações..." className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase" />
+                      </div>
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">card 04: título & descrição</label>
+                        <input type="text" value={sectionData.c4_title || ''} onChange={(e) => handleSectionChange(sec.key, 'c4_title', e.target.value)} placeholder="coletivos" className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase font-bold" />
+                        <input type="text" value={sectionData.c4_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'c4_desc', e.target.value)} placeholder="coletivos e comunidades..." className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase" />
+                      </div>
+                    </div>
+                  )}
+
+                  {sec.key === 'por_que_escrita' && (
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">texto explicativo da metodologia (body_text)</label>
+                      <textarea value={sectionData.body_text || ''} onChange={(e) => handleSectionChange(sec.key, 'body_text', e.target.value)} rows={4} placeholder="não é só uma dinâmica bonitinha..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase resize-none" />
+                    </div>
+                  )}
+
+                  {sec.key === 'galeria' && (
+                    <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[1, 2, 3, 4, 5, 6].map((num) => (
+                        <div key={num} className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoAzul lowercase block">foto {num}: título, subtítulo & imagem</label>
+                          <input type="text" value={sectionData[`p${num}_title`] || ''} onChange={(e) => handleSectionChange(sec.key, `p${num}_title`, e.target.value)} placeholder="título..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <input type="text" value={sectionData[`p${num}_sub`] || ''} onChange={(e) => handleSectionChange(sec.key, `p${num}_sub`, e.target.value)} placeholder="subtítulo..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                          <input type="text" value={sectionData[`p${num}_img`] || ''} onChange={(e) => handleSectionChange(sec.key, `p${num}_img`, e.target.value)} placeholder="/brand-assets/gallery/events/..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {sec.key === 'fundamentacao_boxes' && (
+                    <div className="md:col-span-2 space-y-3">
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-2">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">box 1: pra quem é isso (título & 4 tópicos)</label>
+                        <input type="text" value={sectionData.box1_title || ''} onChange={(e) => handleSectionChange(sec.key, 'box1_title', e.target.value)} placeholder="pra quem é isso?" className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                        <input type="text" value={sectionData.box1_bullet1 || ''} onChange={(e) => handleSectionChange(sec.key, 'box1_bullet1', e.target.value)} placeholder="tópico 1..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        <input type="text" value={sectionData.box1_bullet2 || ''} onChange={(e) => handleSectionChange(sec.key, 'box1_bullet2', e.target.value)} placeholder="tópico 2..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        <input type="text" value={sectionData.box1_bullet3 || ''} onChange={(e) => handleSectionChange(sec.key, 'box1_bullet3', e.target.value)} placeholder="tópico 3..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        <input type="text" value={sectionData.box1_bullet4 || ''} onChange={(e) => handleSectionChange(sec.key, 'box1_bullet4', e.target.value)} placeholder="tópico 4..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                      </div>
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-2">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">box 2: por que a escrita (título & 4 tópicos)</label>
+                        <input type="text" value={sectionData.box2_title || ''} onChange={(e) => handleSectionChange(sec.key, 'box2_title', e.target.value)} placeholder="por que a escrita?" className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                        <input type="text" value={sectionData.box2_bullet1 || ''} onChange={(e) => handleSectionChange(sec.key, 'box2_bullet1', e.target.value)} placeholder="tópico 1..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        <input type="text" value={sectionData.box2_bullet2 || ''} onChange={(e) => handleSectionChange(sec.key, 'box2_bullet2', e.target.value)} placeholder="tópico 2..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        <input type="text" value={sectionData.box2_bullet3 || ''} onChange={(e) => handleSectionChange(sec.key, 'box2_bullet3', e.target.value)} placeholder="tópico 3..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                        <input type="text" value={sectionData.box2_bullet4 || ''} onChange={(e) => handleSectionChange(sec.key, 'box2_bullet4', e.target.value)} placeholder="tópico 4..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                      </div>
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-2">
+                        <label className="text-[11px] font-bold text-acentoAzul lowercase block">bloco teórico: pennebaker & ebbinghaus</label>
+                        <input type="text" value={sectionData.pennebaker_title || ''} onChange={(e) => handleSectionChange(sec.key, 'pennebaker_title', e.target.value)} placeholder="nosso trabalho nasce de estudo..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                        <textarea value={sectionData.pennebaker_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'pennebaker_desc', e.target.value)} rows={2} placeholder="descrição científica..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        <input type="text" value={sectionData.pennebaker_highlight || ''} onChange={(e) => handleSectionChange(sec.key, 'pennebaker_highlight', e.target.value)} placeholder="é por isso que..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold text-acentoAzul" />
+                      </div>
+                    </div>
+                  )}
+
+                  {sec.key === 'formatos' && (
+                    <div className="md:col-span-2 space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoAzul lowercase block">formato 01: corporativo</label>
+                          <input type="text" value={sectionData.f1_title || ''} onChange={(e) => handleSectionChange(sec.key, 'f1_title', e.target.value)} placeholder="título..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <textarea value={sectionData.f1_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'f1_desc', e.target.value)} rows={2} placeholder="descrição..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        </div>
+                        <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoAzul lowercase block">formato 02: imersões</label>
+                          <input type="text" value={sectionData.f2_title || ''} onChange={(e) => handleSectionChange(sec.key, 'f2_title', e.target.value)} placeholder="título..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <textarea value={sectionData.f2_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'f2_desc', e.target.value)} rows={2} placeholder="descrição..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        </div>
+                        <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoAzul lowercase block">formato 03: marcas</label>
+                          <input type="text" value={sectionData.f3_title || ''} onChange={(e) => handleSectionChange(sec.key, 'f3_title', e.target.value)} placeholder="título..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <textarea value={sectionData.f3_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'f3_desc', e.target.value)} rows={2} placeholder="descrição..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        </div>
+                        <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoAzul lowercase block">formato 04: educação</label>
+                          <input type="text" value={sectionData.f4_title || ''} onChange={(e) => handleSectionChange(sec.key, 'f4_title', e.target.value)} placeholder="título..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <textarea value={sectionData.f4_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'f4_desc', e.target.value)} rows={2} placeholder="descrição..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        </div>
+                      </div>
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                        <label className="text-[11px] font-bold text-acentoTerracota lowercase block">banner separado: palavras sob medida</label>
+                        <input type="text" value={sectionData.sob_medida_title || ''} onChange={(e) => handleSectionChange(sec.key, 'sob_medida_title', e.target.value)} placeholder="textos autorais para momentos especiais" className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                        <textarea value={sectionData.sob_medida_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'sob_medida_desc', e.target.value)} rows={2} placeholder="escrevemos textos poéticos..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        <input type="text" value={sectionData.sob_medida_button || ''} onChange={(e) => handleSectionChange(sec.key, 'sob_medida_button', e.target.value)} placeholder="encomendar um texto" className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold text-acentoAzul" />
+                      </div>
+                    </div>
+                  )}
+
+                  {sec.key === 'passo_a_passo' && (
+                    <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[1, 2, 3, 4].map((num) => (
+                        <div key={num} className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoTerracota lowercase block">etapa 0{num}: título, subtítulo & descrição</label>
+                          <input type="text" value={sectionData[`e${num}_step`] || `0${num}`} onChange={(e) => handleSectionChange(sec.key, `e${num}_step`, e.target.value)} placeholder={`0${num}`} className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <input type="text" value={sectionData[`e${num}_title`] || ''} onChange={(e) => handleSectionChange(sec.key, `e${num}_title`, e.target.value)} placeholder="título..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <input type="text" value={sectionData[`e${num}_sub`] || ''} onChange={(e) => handleSectionChange(sec.key, `e${num}_sub`, e.target.value)} placeholder="subtítulo em manuscrito..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs font-gesto" />
+                          <textarea value={sectionData[`e${num}_desc`] || ''} onChange={(e) => handleSectionChange(sec.key, `e${num}_desc`, e.target.value)} rows={2} placeholder="descrição da etapa..." className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {sec.key === 'depoimentos' && (
+                    <div className="md:col-span-2 space-y-3">
+                      <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                        selecionar depoimentos e prints a serem exibidos nesta página (separados por vírgula ou selecionados abaixo)
+                      </label>
+                      <input
+                        type="text"
+                        value={sectionData.selected_ids || 't1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5,d6,d7,d8'}
+                        onChange={(e) => handleSectionChange(sec.key, 'selected_ids', e.target.value)}
+                        placeholder="t1,t2,t3,d1,d2,d3..."
+                        className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                      />
+                      <div className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40">
+                        <span className="text-[11px] font-bold text-acentoTerracota lowercase block mb-2">
+                          seleção rápida do banco global de depoimentos:
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {['t1','t2','t3','t4','t5','t6','d1','d2','d3','d4','d5','d6','d7','d8','d9','d10','d11','d12','d13','d14','d15','d16','d17','d18'].map((id) => {
+                            const currentArr = (sectionData.selected_ids || 't1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5,d6,d7,d8').split(',').map((s: string) => s.trim()).filter(Boolean);
+                            const isSelected = currentArr.includes(id);
+                            return (
+                              <button
+                                key={id}
+                                type="button"
+                                onClick={() => {
+                                  let newArr = [...currentArr];
+                                  if (isSelected) {
+                                    newArr = newArr.filter((x) => x !== id);
+                                  } else {
+                                    newArr.push(id);
+                                  }
+                                  handleSectionChange(sec.key, 'selected_ids', newArr.join(','));
+                                }}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition cursor-pointer lowercase ${
+                                  isSelected ? 'bg-acentoAzul text-white' : 'bg-white text-tintaCarvao/70 border border-papelKraft/40'
+                                }`}
+                              >
+                                {id}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {sec.key === 'faq' && (
+                    <div className="md:col-span-2 space-y-3">
+                      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                        <div key={num} className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1.5">
+                          <label className="text-[11px] font-bold text-acentoAzul lowercase block">pergunta {num}</label>
+                          <input type="text" value={sectionData[`q${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `q${num}`, e.target.value)} placeholder={`pergunta ${num}...`} className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase font-bold" />
+                          <textarea value={sectionData[`a${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `a${num}`, e.target.value)} rows={2} placeholder={`resposta ${num}...`} className="w-full px-2.5 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
