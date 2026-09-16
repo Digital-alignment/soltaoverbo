@@ -27,63 +27,114 @@ export default function Landing() {
     setPaymentModalOpen(true);
   };
   const heroSec = getSection('hero', {
+    badge_text: 'comunidade de autodesenvolvimento através da escrita',
     title: 'a narrativa muda a partir do ponto que você a observa.',
     subtitle: 'reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e vida) mais consciente. dê contorno ao que te habita, ao que pede passagem e ao que ainda não encontrou palavras.',
     button_text: 'conhecer os programas',
     button_link: '#produtos',
+    button_secondary_text: 'saiba mais',
+    button_secondary_link: '#sobre-nos',
   });
+
+  const prodHeaderSec = getSection('produtos_header', {
+    title: 'escolha a experiência ideal para o seu momento',
+    subtitle: 'saiba como você pode fazer parte da nossa comunidade.',
+  });
+
+  const prod21Sec = getSection('produto_21dias', {
+    title: '21 dias de escrita',
+    body_text: 'uma jornada prática de 21 dias para desbloquear sua voz e criar um hábito vivo de escrita guiada. receba exercícios diários, áudios inspiradores e acesso à área de membros.',
+    bullet_1: '21 exercícios práticos de escrita consciente liberados dia a dia',
+    bullet_2: 'acesso a área de membros, espaço de compartilhamento de textos e conexão',
+    bullet_3: '1 café com letras por mês com a comunidade',
+    price: 'R$ 77,00',
+    price_subtext: '(ou 2x R$ 38,50)',
+    button_text: 'garantir minha vaga',
+    image_url: '/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png',
+    for_who_title: 'para quem é este programa?',
+    for_who_text: 'ideal para quem deseja destravar a escrita, organizar pensamentos soltos e criar uma rotina constante sem pressão de perfeccionismo.',
+  });
+
+  const prodCicloSec = getSection('produto_ciclo', {
+    badge_text: 'travessia de 3 meses · turma com vagas limitadas',
+    title: 'ciclo de aprofundamento',
+    body_text: 'uma travessia de 3 meses onde mergulhamos fundo num tema que incomoda (e que move). autodesenvolvimento, criatividade e relações humanas com escrita, livro, comunidade e encontros ao vivo.',
+    bullet_1: '3 encontros ao vivo (1 por mês) com bruna, júlia e convidada',
+    bullet_2: 'acesso a todos os cafés com letras - o ritual de terça-feira de escrita coletiva.',
+    bullet_3: 'comunidade no whatsapp',
+    bullet_4: 'acesso aos 21 dias de escrita na plataforma',
+    bullet_5: 'acesso as aulas gravadas na plataforma completa',
+    bullet_6: 'acesso a todas as facilidades da plataforma: página de escrita, fogueira de partilha, rituais e inspirações de escrita',
+    bullet_7: 'desconto especial nos encontros presenciais do solta o verbo',
+    price: 'R$ 597,00',
+    price_subtext: '/ trimestre (ou 3x R$ 225,67 sem juros)',
+    button_text: 'fazer parte do ciclo',
+    image_url: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    journey_badge: 'travessia em curso: a coragem de não agradar',
+    book_info: 'a coragem de não agradar — ichiro kishimi & fumitake koga',
+    guest_info: 'jout jout',
+    synopsis: 'três meses para se libertar da opinião dos outros, atravessar seus limites e se tornar quem você quer ser.',
+  });
+
+  const prodCafeSec = getSection('produto_cafe', {
+    title: 'café com letras (escrita em coletivo)',
+    p1: 'um encontro semanal para começar a semana de um jeito diferente: mais consciente, mais presente e mais perto da sua própria voz.',
+    p2: 'às terças-feiras, das 8h às 8h30, no zoom, abrimos um espaço de escrita em coletivo com propostas temáticas que se renovam a cada encontro.',
+    p3: 'uma prática curta, potente e possível para quem deseja cultivar a escrita como ritual.',
+    highlight: 'incluído para quem já faz parte do ciclo de aprofundamento.',
+    price: 'R$ 97,00 / mês',
+    button_text: 'quero fazer parte',
+    button_link: '/programas/cafe-com-letras',
+    image_url: '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg',
+    card_title: 'seu ritual semanal de escrita',
+    card_text: '30 minutos para sair do automático e transformar o que está vivo em palavra. ideal para quem quer criar constância na escrita em um formato leve, acessível e transformador.',
+    card_info: 'terças, 8h às 8h30 · ao vivo no zoom · incluso no ciclo de aprofundamento',
+  });
+
+  const fundamentosSec = getSection('fundamentos', {
+    title: 'os fundamentos do nosso movimento',
+    subtitle: 'entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria.',
+    p1_title: 'essência humana',
+    p1_desc: 'escrever é mais do que juntar palavras: é um jeito de ouvir o que vive dentro, organizar o caos e dar forma ao que ainda é sussurro.',
+    p2_title: 'disciplina criativa',
+    p2_desc: 'criar hábitos de escrita que não pesem como obrigação, mas que funcionem como pequenos rituais de presença e alívio mental.',
+    p3_title: 'viver em coletivo',
+    p3_desc: 'acreditamos que ninguém deveria atravessar transições sozinha. estar em comunidade protege a saúde mental e reduz a solidão.',
+    p4_title: 'ampliar o olhar',
+    p4_desc: 'escrever e escutar em grupo exercita empatia, alarga perspectivas e ajuda a encontrar novos significados para velhas cenas.',
+    p5_title: 'sair do modo passivo',
+    p5_desc: 'a escrita ajuda a questionar narrativas herdadas, tomar decisões mais conscientes e transformar preocupação em movimento.',
+    p6_title: 'autonomia e coragem',
+    p6_desc: 'o propósito é que cada pessoa se torne autora da própria história, com ferramentas internas e clareza de direção.',
+  });
+
+  const depoimentosSec = getSection('depoimentos', {
+    badge_text: 'vozes da nossa comunidade',
+    title: 'o que dizem as pessoas que soltam o verbo',
+    t1_quote: 'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
+    t1_author: 'bárbara alcântara (babi)',
+    t1_role: 'café com letras & ciclo de aprofundamento',
+    t2_quote: 'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
+    t2_author: 'tom vitralli',
+    t2_role: 'aluno dos 21 dias de escrita',
+    t3_quote: 'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
+    t3_author: 'jess',
+    t3_role: 'aluna dos 21 dias de escrita',
+  });
+
   const pillars = [
-    {
-      title: 'essência humana',
-      description:
-        'escrever é mais do que juntar palavras: é um jeito de ouvir o que vive dentro, organizar o caos e dar forma ao que ainda é sussurro.',
-    },
-    {
-      title: 'disciplina criativa',
-      description:
-        'criar hábitos de escrita que não pesem como obrigação, mas que funcionem como pequenos rituais de presença e alívio mental.',
-    },
-    {
-      title: 'viver em coletivo',
-      description:
-        'acreditamos que ninguém deveria atravessar transições sozinha. estar em comunidade protege a saúde mental e reduz a solidão.',
-    },
-    {
-      title: 'ampliar o olhar',
-      description:
-        'escrever e escutar em grupo exercita empatia, alarga perspectivas e ajuda a encontrar novos significados para velhas cenas.',
-    },
-    {
-      title: 'sair do modo passivo',
-      description:
-        'a escrita ajuda a questionar narrativas herdadas, tomar decisões mais conscientes e transformar preocupação em movimento.',
-    },
-    {
-      title: 'autonomia e coragem',
-      description:
-        'o propósito é que cada pessoa se torne autora da própria história, com ferramentas internas e clareza de direção.',
-    },
+    { title: fundamentosSec.p1_title || 'essência humana', description: fundamentosSec.p1_desc || 'escrever é mais do que juntar palavras...' },
+    { title: fundamentosSec.p2_title || 'disciplina criativa', description: fundamentosSec.p2_desc || 'criar hábitos de escrita...' },
+    { title: fundamentosSec.p3_title || 'viver em coletivo', description: fundamentosSec.p3_desc || 'acreditamos que ninguém deveria...' },
+    { title: fundamentosSec.p4_title || 'ampliar o olhar', description: fundamentosSec.p4_desc || 'escrever e escutar em grupo...' },
+    { title: fundamentosSec.p5_title || 'sair do modo passivo', description: fundamentosSec.p5_desc || 'a escrita ajuda a questionar...' },
+    { title: fundamentosSec.p6_title || 'autonomia e coragem', description: fundamentosSec.p6_desc || 'o propósito é que cada pessoa...' },
   ];
 
   const testimonials = [
-    {
-      quote:
-        'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
-      author: 'bárbara alcântara (babi)',
-      role: 'café com letras & ciclo de aprofundamento',
-    },
-    {
-      quote:
-        'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
-      author: 'tom vitralli',
-      role: 'aluno dos 21 dias de escrita',
-    },
-    {
-      quote:
-        'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
-      author: 'jess',
-      role: 'aluna dos 21 dias de escrita',
-    },
+    { quote: depoimentosSec.t1_quote, author: depoimentosSec.t1_author, role: depoimentosSec.t1_role },
+    { quote: depoimentosSec.t2_quote, author: depoimentosSec.t2_author, role: depoimentosSec.t2_role },
+    { quote: depoimentosSec.t3_quote, author: depoimentosSec.t3_author, role: depoimentosSec.t3_role },
   ];
 
   return (
@@ -106,7 +157,7 @@ export default function Landing() {
                     (e.target as HTMLElement).style.display = 'none';
                   }}
                 />
-                <span>comunidade de autodesenvolvimento através da escrita</span>
+                <span>{heroSec.badge_text || 'comunidade de autodesenvolvimento através da escrita'}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
@@ -131,10 +182,10 @@ export default function Landing() {
                 </a>
 
                 <a
-                  href="#sobre-nos"
+                  href={heroSec.button_secondary_link || '#sobre-nos'}
                   className="bg-acentoAzul text-white hover:bg-acentoAzul/90 hover:scale-105 text-base sm:text-lg px-8 py-3.5 rounded-full font-medium transition-all shadow-md flex items-center gap-2.5 cursor-pointer"
                 >
-                  <span>saiba mais</span>
+                  <span>{heroSec.button_secondary_text || 'saiba mais'}</span>
                   <ArrowRight className="w-5 h-5 text-white flex-shrink-0" />
                 </a>
               </div>
@@ -200,10 +251,10 @@ export default function Landing() {
               {/* Coluna Esquerda: Título & Subtítulo alinhados para o lado esquerdo no desktop */}
               <div className="lg:col-span-7 text-center lg:text-left space-y-4">
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase leading-[1.15]">
-                  escolha a experiência ideal para o seu momento
+                  {prodHeaderSec.title || 'escolha a experiência ideal para o seu momento'}
                 </h2>
                 <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase max-w-2xl mx-auto lg:mx-0">
-                  saiba como você pode fazer parte da nossa comunidade.
+                  {prodHeaderSec.subtitle || 'saiba como você pode fazer parte da nossa comunidade.'}
                 </p>
               </div>
 
@@ -239,25 +290,25 @@ export default function Landing() {
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
-                      21 dias de escrita
+                      {prod21Sec.title || '21 dias de escrita'}
                     </h3>
 
                     <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      uma jornada prática de 21 dias para desbloquear sua voz e criar um hábito vivo de escrita guiada. receba exercícios diários, áudios inspiradores e acesso à área de membros.
+                      {prod21Sec.body_text || 'uma jornada prática de 21 dias para desbloquear sua voz e criar um hábito vivo de escrita guiada. receba exercícios diários, áudios inspiradores e acesso à área de membros.'}
                     </p>
 
                     <ul className="space-y-3 pt-2 text-tintaCarvao/90 font-medium text-base lowercase">
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>21 exercícios práticos de escrita consciente liberados dia a dia</span>
+                        <span>{prod21Sec.bullet_1 || '21 exercícios práticos de escrita consciente liberados dia a dia'}</span>
                       </li>
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>acesso a área de membros, espaço de compartilhamento de textos e conexão</span>
+                        <span>{prod21Sec.bullet_2 || 'acesso a área de membros, espaço de compartilhamento de textos e conexão'}</span>
                       </li>
                       <li className="flex items-center gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                        <span>1 café com letras por mês com a comunidade</span>
+                        <span>{prod21Sec.bullet_3 || '1 café com letras por mês com a comunidade'}</span>
                       </li>
                     </ul>
                   </div>
@@ -269,10 +320,10 @@ export default function Landing() {
                       </span>
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul">
-                          R$ 77,00
+                          {prod21Sec.price || 'R$ 77,00'}
                         </span>
                         <span className="text-xs sm:text-sm font-medium text-tintaCarvao/70 lowercase">
-                          (ou 2x R$ 38,50)
+                          {prod21Sec.price_subtext || '(ou 2x R$ 38,50)'}
                         </span>
                       </div>
                     </div>
@@ -281,7 +332,7 @@ export default function Landing() {
                       onClick={() => openPayment('21dias')}
                       className="btn-pill-primary text-base px-7 py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <span>garantir minha vaga</span>
+                      <span>{prod21Sec.button_text || 'garantir minha vaga'}</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -290,7 +341,7 @@ export default function Landing() {
                 <div className="lg:col-span-5 flex flex-col justify-between bg-papelClaro p-6 sm:p-8 rounded-2xl border border-papelKraft/50 space-y-5 shadow-sm">
                   <div className="w-full h-48 sm:h-56 rounded-xl overflow-hidden border border-papelKraft/40 relative shadow-sm group">
                     <img
-                      src="/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png"
+                      src={prod21Sec.image_url || '/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png'}
                       alt="arte e escrita solta o verbo"
                       loading="lazy"
                       decoding="async"
@@ -303,10 +354,10 @@ export default function Landing() {
 
                   <div className="space-y-2">
                     <h4 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
-                      para quem é este programa?
+                      {prod21Sec.for_who_title || 'para quem é este programa?'}
                     </h4>
                     <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                      ideal para quem deseja destravar a escrita, organizar pensamentos soltos e criar uma rotina constante sem pressão de perfeccionismo.
+                      {prod21Sec.for_who_text || 'ideal para quem deseja destravar a escrita, organizar pensamentos soltos e criar uma rotina constante sem pressão de perfeccionismo.'}
                     </p>
                   </div>
                 </div>
@@ -328,45 +379,45 @@ export default function Landing() {
                   <div className="space-y-4">
                     {/* Etiqueta superior */}
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-acentoOliva text-xs sm:text-sm font-semibold lowercase">
-                      <span>travessia de 3 meses · turma com vagas limitadas</span>
+                      <span>{prodCicloSec.badge_text || 'travessia de 3 meses · turma com vagas limitadas'}</span>
                     </div>
 
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-papelClaro lowercase">
-                      ciclo de aprofundamento
+                      {prodCicloSec.title || 'ciclo de aprofundamento'}
                     </h3>
 
                     <p className="text-papelClaro/90 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      uma travessia de 3 meses onde mergulhamos fundo num tema que incomoda (e que move). autodesenvolvimento, criatividade e relações humanas com escrita, livro, comunidade e encontros ao vivo.
+                      {prodCicloSec.body_text || 'uma travessia de 3 meses onde mergulhamos fundo num tema que incomoda (e que move). autodesenvolvimento, criatividade e relações humanas com escrita, livro, comunidade e encontros ao vivo.'}
                     </p>
 
                     <ul className="space-y-3 pt-2 text-papelClaro/90 font-medium text-sm sm:text-base lowercase">
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>3 encontros ao vivo (1 por mês) com bruna, júlia e convidada</span>
+                        <span>{prodCicloSec.bullet_1 || '3 encontros ao vivo (1 por mês) com bruna, júlia e convidada'}</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>acesso a todos os cafés com letras - o ritual de terça-feira de escrita coletiva.</span>
+                        <span>{prodCicloSec.bullet_2 || 'acesso a todos os cafés com letras - o ritual de terça-feira de escrita coletiva.'}</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>comunidade no whatsapp</span>
+                        <span>{prodCicloSec.bullet_3 || 'comunidade no whatsapp'}</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>acesso aos 21 dias de escrita na plataforma</span>
+                        <span>{prodCicloSec.bullet_4 || 'acesso aos 21 dias de escrita na plataforma'}</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>acesso as aulas gravadas na plataforma completa</span>
+                        <span>{prodCicloSec.bullet_5 || 'acesso as aulas gravadas na plataforma completa'}</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>acesso a todas as facilidades da plataforma: página de escrita, fogueira de partilha, rituais e inspirações de escrita</span>
+                        <span>{prodCicloSec.bullet_6 || 'acesso a todas as facilidades da plataforma: página de escrita, fogueira de partilha, rituais e inspirações de escrita'}</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                        <span>desconto especial nos encontros presenciais do solta o verbo</span>
+                        <span>{prodCicloSec.bullet_7 || 'desconto especial nos encontros presenciais do solta o verbo'}</span>
                       </li>
                     </ul>
                   </div>
@@ -378,10 +429,10 @@ export default function Landing() {
                       </span>
                       <div className="flex items-baseline gap-2">
                         <span className="text-2xl sm:text-3xl font-bold font-editorial text-white">
-                          R$ 597,00
+                          {prodCicloSec.price || 'R$ 597,00'}
                         </span>
                         <span className="text-xs sm:text-sm font-medium text-papelClaro/80 lowercase">
-                          / trimestre (ou 3x R$ 225,67 sem juros)
+                          {prodCicloSec.price_subtext || '/ trimestre (ou 3x R$ 225,67 sem juros)'}
                         </span>
                       </div>
                     </div>
@@ -390,7 +441,7 @@ export default function Landing() {
                       onClick={() => openPayment('ciclo')}
                       className="btn-pill-accent text-base px-7 py-3 rounded-full shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <span>fazer parte do ciclo</span>
+                      <span>{prodCicloSec.button_text || 'fazer parte do ciclo'}</span>
                       <Users className="w-4 h-4" />
                     </button>
                   </div>
@@ -399,7 +450,7 @@ export default function Landing() {
                 <div className="lg:col-span-5 flex flex-col justify-between bg-white/10 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-white/20 space-y-5 shadow-sm">
                   <div className="w-full h-48 sm:h-52 rounded-xl overflow-hidden border border-white/20 relative shadow-sm group">
                     <img
-                      src="/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
+                      src={prodCicloSec.image_url || '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg'}
                       alt="a coragem de não agradar - ciclo de aprofundamento"
                       loading="lazy"
                       decoding="async"
@@ -412,16 +463,16 @@ export default function Landing() {
 
                   <div className="space-y-3">
                     <div className="inline-block px-3 py-1 rounded-md bg-acentoTerracota/90 text-white text-xs font-bold lowercase tracking-wide">
-                      travessia em curso: a coragem de não agradar
+                      {prodCicloSec.journey_badge || 'travessia em curso: a coragem de não agradar'}
                     </div>
 
                     <div className="space-y-1.5 text-sm text-papelClaro/95 font-medium lowercase">
-                      <p><strong className="text-acentoOliva font-semibold">livro-guia:</strong> a coragem de não agradar — ichiro kishimi & fumitake koga</p>
-                      <p><strong className="text-acentoOliva font-semibold">convidada especial:</strong> jout jout</p>
+                      <p><strong className="text-acentoOliva font-semibold">livro-guia:</strong> {prodCicloSec.book_info || 'a coragem de não agradar — ichiro kishimi & fumitake koga'}</p>
+                      <p><strong className="text-acentoOliva font-semibold">convidada especial:</strong> {prodCicloSec.guest_info || 'jout jout'}</p>
                     </div>
 
                     <p className="text-papelClaro/85 text-xs sm:text-sm leading-relaxed lowercase font-medium pt-2 border-t border-white/15">
-                      três meses para se libertar da opinião dos outros, atravessar seus limites e se tornar quem você quer ser.
+                      {prodCicloSec.synopsis || 'três meses para se libertar da opinião dos outros, atravessar seus limites e se tornar quem você quer ser.'}
                     </p>
                   </div>
                 </div>
@@ -444,14 +495,14 @@ export default function Landing() {
                 <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
                   <div className="space-y-4">
                     <h3 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase">
-                      café com letras (escrita em coletivo)
+                      {prodCafeSec.title || 'café com letras (escrita em coletivo)'}
                     </h3>
 
                     <div className="space-y-3 text-tintaCarvao/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                      <p>um encontro semanal para começar a semana de um jeito diferente: mais consciente, mais presente e mais perto da sua própria voz.</p>
-                      <p>às terças-feiras, das 8h às 8h30, no zoom, abrimos um espaço de escrita em coletivo com propostas temáticas que se renovam a cada encontro.</p>
-                      <p>uma prática curta, potente e possível para quem deseja cultivar a escrita como ritual.</p>
-                      <p className="text-acentoTerracota font-semibold">incluído para quem já faz parte do ciclo de aprofundamento.</p>
+                      <p>{prodCafeSec.p1 || 'um encontro semanal para começar a semana de um jeito diferente: mais consciente, mais presente e mais perto da sua própria voz.'}</p>
+                      <p>{prodCafeSec.p2 || 'às terças-feiras, das 8h às 8h30, no zoom, abrimos um espaço de escrita em coletivo com propostas temáticas que se renovam a cada encontro.'}</p>
+                      <p>{prodCafeSec.p3 || 'uma prática curta, potente e possível para quem deseja cultivar a escrita como ritual.'}</p>
+                      <p className="text-acentoTerracota font-semibold">{prodCafeSec.highlight || 'incluído para quem já faz parte do ciclo de aprofundamento.'}</p>
                     </div>
                   </div>
 
@@ -461,15 +512,15 @@ export default function Landing() {
                         encontro semanal ao vivo
                       </span>
                       <span className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase block">
-                        R$ 97,00 / mês
+                        {prodCafeSec.price || 'R$ 97,00 / mês'}
                       </span>
                     </div>
 
                     <Link
-                      to="/programas/cafe-com-letras"
+                      to={prodCafeSec.button_link || '/programas/cafe-com-letras'}
                       className="btn-pill-primary text-base px-7 py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <span>quero fazer parte</span>
+                      <span>{prodCafeSec.button_text || 'quero fazer parte'}</span>
                       <ArrowRight className="w-4 h-4 text-white" />
                     </Link>
                   </div>
@@ -478,7 +529,7 @@ export default function Landing() {
                 <div className="lg:col-span-5 flex flex-col justify-between bg-papelClaro p-6 sm:p-8 rounded-2xl border border-papelKraft/50 space-y-5 shadow-sm">
                   <div className="w-full h-48 sm:h-56 rounded-xl overflow-hidden border border-papelKraft/40 relative shadow-sm group">
                     <img
-                      src="/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
+                      src={prodCafeSec.image_url || '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg'}
                       alt="café com letras roda de escrita"
                       loading="lazy"
                       decoding="async"
@@ -491,13 +542,13 @@ export default function Landing() {
 
                   <div className="space-y-3">
                     <h4 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
-                      seu ritual semanal de escrita
+                      {prodCafeSec.card_title || 'seu ritual semanal de escrita'}
                     </h4>
                     <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                      30 minutos para sair do automático e transformar o que está vivo em palavra. ideal para quem quer criar constância na escrita em um formato leve, acessível e transformador.
+                      {prodCafeSec.card_text || '30 minutos para sair do automático e transformar o que está vivo em palavra. ideal para quem quer criar constância na escrita em um formato leve, acessível e transformador.'}
                     </p>
                     <p className="text-xs sm:text-sm font-semibold text-acentoTerracota lowercase pt-2 border-t border-papelKraft/40">
-                      terças, 8h às 8h30 · ao vivo no zoom · incluso no ciclo de aprofundamento
+                      {prodCafeSec.card_info || 'terças, 8h às 8h30 · ao vivo no zoom · incluso no ciclo de aprofundamento'}
                     </p>
                   </div>
                 </div>
@@ -527,11 +578,50 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              os fundamentos do nosso movimento
+              {fundamentosSec.title || 'os fundamentos do nosso movimento'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria.
+              {fundamentosSec.subtitle || 'entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria.'}
             </p>
+          </div>
+
+          {/* Grid de Cards dos Pilares (Largura mais compacta max-w-5xl mx-auto) */}
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 relative z-10">
+            {pillars.map((pillar, index) => (
+              <div
+                key={index}
+                className="bg-papelClaro/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-papelKraft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-papelKraft relative overflow-hidden flex flex-col justify-between"
+              >
+                <span className="text-4xl sm:text-5xl font-gesto text-acentoAzul/30 absolute top-2 right-5 select-none">
+                  0{index + 1}
+                </span>
+
+                <div>
+                  <div className="w-6 h-1 rounded-full bg-acentoOliva mb-3.5" />
+                  <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase mb-2">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                    {pillar.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. DEPOIMENTOS & PROVA SOCIAL */}
+      <section className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase mb-4 shadow-sm">
+              <Heart className="w-4 h-4 text-acentoTerracota" />
+              <span>{depoimentosSec.badge_text || 'vozes da nossa comunidade'}</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
+              {depoimentosSec.title || 'o que dizem as pessoas que soltam o verbo'}
+            </h2>
           </div>
 
           {/* Grid de Cards dos Pilares (Largura mais compacta max-w-5xl mx-auto) */}

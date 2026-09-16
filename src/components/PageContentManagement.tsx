@@ -34,10 +34,13 @@ const PAGE_OPTIONS: PageOption[] = [
     slug: 'landing',
     name: 'Home / Landing Page',
     sections: [
-      { key: 'hero', name: 'Seção Hero / Abertura Principal', hasImage: true, hasButton: true },
-      { key: 'manifesto', name: 'Seção Manifesto & Prosa', hasImage: true, hasButton: false },
-      { key: 'experiencias', name: 'Seção de Experiências & Rituais', hasImage: true, hasButton: true },
-      { key: 'comunidade', name: 'Seção Comunidade & Fogueira', hasImage: true, hasButton: true },
+      { key: 'hero', name: '01. Hero / Abertura Principal', hasImage: true, hasButton: true },
+      { key: 'produtos_header', name: '02. Cabeçalho da Seção de Programas', hasImage: false, hasButton: false },
+      { key: 'produto_21dias', name: '03. Card Produto 21 Dias de Escrita', hasImage: true, hasButton: true },
+      { key: 'produto_ciclo', name: '04. Card Produto Ciclo de Aprofundamento', hasImage: true, hasButton: true },
+      { key: 'produto_cafe', name: '05. Card Produto Café com Letras', hasImage: true, hasButton: true },
+      { key: 'fundamentos', name: '06. Seção Fundamentos & 6 Pilares', hasImage: false, hasButton: false },
+      { key: 'depoimentos', name: '07. Seção Depoimentos & Prova Social', hasImage: false, hasButton: false },
     ],
   },
   {
@@ -513,6 +516,159 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                         className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
                       />
                     </div>
+                  )}
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS DA LANDING PAGE */}
+              {selectedPageSlug === 'landing' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  {/* Hero badge & secondary button */}
+                  {sec.key === 'hero' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          selo / etiqueta superior (badge)
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.badge_text || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)}
+                          placeholder="comunidade de autodesenvolvimento através da escrita"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          texto botão secundário ("saiba mais")
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.button_secondary_text || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'button_secondary_text', e.target.value)}
+                          placeholder="saiba mais"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Produto 21 Dias */}
+                  {sec.key === 'produto_21dias' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">preço do investimento</label>
+                        <input type="text" value={sectionData.price || ''} onChange={(e) => handleSectionChange(sec.key, 'price', e.target.value)} placeholder="R$ 77,00" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">subtexto parcelamento</label>
+                        <input type="text" value={sectionData.price_subtext || ''} onChange={(e) => handleSectionChange(sec.key, 'price_subtext', e.target.value)} placeholder="(ou 2x R$ 38,50)" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2 space-y-2">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">benefícios (3 itens)</label>
+                        <input type="text" value={sectionData.bullet_1 || ''} onChange={(e) => handleSectionChange(sec.key, 'bullet_1', e.target.value)} placeholder="item 1" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase mb-1" />
+                        <input type="text" value={sectionData.bullet_2 || ''} onChange={(e) => handleSectionChange(sec.key, 'bullet_2', e.target.value)} placeholder="item 2" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase mb-1" />
+                        <input type="text" value={sectionData.bullet_3 || ''} onChange={(e) => handleSectionChange(sec.key, 'bullet_3', e.target.value)} placeholder="item 3" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">título caixa direita ("para quem é")</label>
+                        <input type="text" value={sectionData.for_who_title || ''} onChange={(e) => handleSectionChange(sec.key, 'for_who_title', e.target.value)} placeholder="para quem é este programa?" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">descrição caixa direita ("para quem é")</label>
+                        <input type="text" value={sectionData.for_who_text || ''} onChange={(e) => handleSectionChange(sec.key, 'for_who_text', e.target.value)} placeholder="ideal para quem deseja..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Produto Ciclo */}
+                  {sec.key === 'produto_ciclo' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge superior</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="travessia de 3 meses..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">preço da assinatura</label>
+                        <input type="text" value={sectionData.price || ''} onChange={(e) => handleSectionChange(sec.key, 'price', e.target.value)} placeholder="R$ 597,00" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">subtexto parcelamento</label>
+                        <input type="text" value={sectionData.price_subtext || ''} onChange={(e) => handleSectionChange(sec.key, 'price_subtext', e.target.value)} placeholder="/ trimestre (ou 3x R$ 225,67 sem juros)" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta travessia em curso</label>
+                        <input type="text" value={sectionData.journey_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'journey_badge', e.target.value)} placeholder="travessia em curso: a coragem de não agradar" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">livro-guia</label>
+                        <input type="text" value={sectionData.book_info || ''} onChange={(e) => handleSectionChange(sec.key, 'book_info', e.target.value)} placeholder="a coragem de não agradar..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">convidada especial</label>
+                        <input type="text" value={sectionData.guest_info || ''} onChange={(e) => handleSectionChange(sec.key, 'guest_info', e.target.value)} placeholder="jout jout" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">sinopse da travessia</label>
+                        <input type="text" value={sectionData.synopsis || ''} onChange={(e) => handleSectionChange(sec.key, 'synopsis', e.target.value)} placeholder="três meses para se libertar..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Produto Café com Letras */}
+                  {sec.key === 'produto_cafe' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">preço mensal</label>
+                        <input type="text" value={sectionData.price || ''} onChange={(e) => handleSectionChange(sec.key, 'price', e.target.value)} placeholder="R$ 97,00 / mês" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">destaque incluso no ciclo</label>
+                        <input type="text" value={sectionData.highlight || ''} onChange={(e) => handleSectionChange(sec.key, 'highlight', e.target.value)} placeholder="incluído para quem já faz parte do ciclo..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">título cartão direito</label>
+                        <input type="text" value={sectionData.card_title || ''} onChange={(e) => handleSectionChange(sec.key, 'card_title', e.target.value)} placeholder="seu ritual semanal de escrita" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">tag de informação horário</label>
+                        <input type="text" value={sectionData.card_info || ''} onChange={(e) => handleSectionChange(sec.key, 'card_info', e.target.value)} placeholder="terças, 8h às 8h30 · ao vivo no zoom..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Depoimentos */}
+                  {sec.key === 'depoimentos' && (
+                    <>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("vozes da nossa comunidade")</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="vozes da nossa comunidade" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2 space-y-3 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">depoimento 1 (bárbara)</label>
+                        <textarea value={sectionData.t1_quote || ''} onChange={(e) => handleSectionChange(sec.key, 't1_quote', e.target.value)} rows={2} placeholder="citação..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.t1_author || ''} onChange={(e) => handleSectionChange(sec.key, 't1_author', e.target.value)} placeholder="bárbara alcântara (babi)" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.t1_role || ''} onChange={(e) => handleSectionChange(sec.key, 't1_role', e.target.value)} placeholder="café com letras & ciclo..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+                      <div className="md:col-span-2 space-y-3 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">depoimento 2 (tom vitralli)</label>
+                        <textarea value={sectionData.t2_quote || ''} onChange={(e) => handleSectionChange(sec.key, 't2_quote', e.target.value)} rows={2} placeholder="citação..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.t2_author || ''} onChange={(e) => handleSectionChange(sec.key, 't2_author', e.target.value)} placeholder="tom vitralli" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.t2_role || ''} onChange={(e) => handleSectionChange(sec.key, 't2_role', e.target.value)} placeholder="aluno dos 21 dias de escrita" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+                      <div className="md:col-span-2 space-y-3 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">depoimento 3 (jess)</label>
+                        <textarea value={sectionData.t3_quote || ''} onChange={(e) => handleSectionChange(sec.key, 't3_quote', e.target.value)} rows={2} placeholder="citação..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.t3_author || ''} onChange={(e) => handleSectionChange(sec.key, 't3_author', e.target.value)} placeholder="jess" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.t3_role || ''} onChange={(e) => handleSectionChange(sec.key, 't3_role', e.target.value)} placeholder="aluna dos 21 dias de escrita" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+                    </>
                   )}
                 </div>
               )}

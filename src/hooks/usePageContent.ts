@@ -23,46 +23,94 @@ export interface SiteCMSData {
 export const DEFAULT_CMS_DATA: SiteCMSData = {
   landing: {
     hero: {
+      badge_text: "comunidade de autodesenvolvimento através da escrita",
       title: "a narrativa muda a partir do ponto que você a observa.",
       subtitle: "reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e vida) mais consciente. dê contorno ao que te habita, ao que pede passagem e ao que ainda não encontrou palavras.",
-      body_text: "escrever é mais do que juntar palavras: é um jeito de ouvir o que vive dentro, organizar o caos e dar forma ao que ainda é sussurro.",
       button_text: "conhecer os programas",
       button_link: "#produtos",
-      image_url: "/brand-assets/gallery/events/13062026-IMG_6581-2.jpg"
+      button_secondary_text: "saiba mais",
+      button_secondary_link: "#sobre-nos",
+      image_url: ""
+    },
+    produtos_header: {
+      title: "escolha a experiência ideal para o seu momento",
+      subtitle: "saiba como você pode fazer parte da nossa comunidade."
+    },
+    produto_21dias: {
+      title: "21 dias de escrita",
+      body_text: "uma jornada prática de 21 dias para desbloquear sua voz e criar um hábito vivo de escrita guiada. receba exercícios diários, áudios inspiradores e acesso à área de membros.",
+      bullet_1: "21 exercícios práticos de escrita consciente liberados dia a dia",
+      bullet_2: "acesso a área de membros, espaço de compartilhamento de textos e conexão",
+      bullet_3: "1 café com letras por mês com a comunidade",
+      price: "R$ 77,00",
+      price_subtext: "(ou 2x R$ 38,50)",
+      button_text: "garantir minha vaga",
+      image_url: "/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png",
+      for_who_title: "para quem é este programa?",
+      for_who_text: "ideal para quem deseja destravar a escrita, organizar pensamentos soltos e criar uma rotina constante sem pressão de perfeccionismo."
+    },
+    produto_ciclo: {
+      badge_text: "travessia de 3 meses · turma com vagas limitadas",
+      title: "ciclo de aprofundamento",
+      body_text: "uma travessia de 3 meses onde mergulhamos fundo num tema que incomoda (e que move). autodesenvolvimento, criatividade e relações humanas com escrita, livro, comunidade e encontros ao vivo.",
+      bullet_1: "3 encontros ao vivo (1 por mês) com bruna, júlia e convidada",
+      bullet_2: "acesso a todos os cafés com letras - o ritual de terça-feira de escrita coletiva.",
+      bullet_3: "comunidade no whatsapp",
+      bullet_4: "acesso aos 21 dias de escrita na plataforma",
+      bullet_5: "acesso as aulas gravadas na plataforma completa",
+      bullet_6: "acesso a todas as facilidades da plataforma: página de escrita, fogueira de partilha, rituais e inspirações de escrita",
+      bullet_7: "desconto especial nos encontros presenciais do solta o verbo",
+      price: "R$ 597,00",
+      price_subtext: "/ trimestre (ou 3x R$ 225,67 sem juros)",
+      button_text: "fazer parte do ciclo",
+      image_url: "/brand-assets/gallery/events/13062026-IMG_5364-2.jpg",
+      journey_badge: "travessia em curso: a coragem de não agradar",
+      book_info: "a coragem de não agradar — ichiro kishimi & fumitake koga",
+      guest_info: "jout jout",
+      synopsis: "três meses para se libertar da opinião dos outros, atravessar seus limites e se tornar quem você quer ser."
+    },
+    produto_cafe: {
+      title: "café com letras (escrita em coletivo)",
+      p1: "um encontro semanal para começar a semana de um jeito diferente: mais consciente, mais presente e mais perto da sua própria voz.",
+      p2: "às terças-feiras, das 8h às 8h30, no zoom, abrimos um espaço de escrita em coletivo com propostas temáticas que se renovam a cada encontro.",
+      p3: "uma prática curta, potente e possível para quem deseja cultivar a escrita como ritual.",
+      highlight: "incluído para quem já faz parte do ciclo de aprofundamento.",
+      price: "R$ 97,00 / mês",
+      button_text: "quero fazer parte",
+      button_link: "/programas/cafe-com-letras",
+      image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg",
+      card_title: "seu ritual semanal de escrita",
+      card_text: "30 minutos para sair do automático e transformar o que está vivo em palavra. ideal para quem quer criar constância na escrita em um formato leve, acessível e transformador.",
+      card_info: "terças, 8h às 8h30 · ao vivo no zoom · incluso no ciclo de aprofundamento"
     },
     fundamentos: {
       title: "os fundamentos do nosso movimento",
-      subtitle: "entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria."
+      subtitle: "entre prática, presença e partilha, criamos espaço para aprender, se reconhecer e seguir com mais autoria.",
+      p1_title: "essência humana",
+      p1_desc: "escrever é mais do que juntar palavras: é um jeito de ouvir o que vive dentro, organizar o caos e dar forma ao que ainda é sussurro.",
+      p2_title: "disciplina criativa",
+      p2_desc: "criar hábitos de escrita que não pesem como obrigação, mas que funcionem como pequenos rituais de presença e alívio mental.",
+      p3_title: "viver em coletivo",
+      p3_desc: "acreditamos que ninguém deveria atravessar transições sozinha. estar em comunidade protege a saúde mental e reduz a solidão.",
+      p4_title: "ampliar o olhar",
+      p4_desc: "escrever e escutar em grupo exercita empatia, alarga perspectivas e ajuda a encontrar novos significados para velhas cenas.",
+      p5_title: "sair do modo passivo",
+      p5_desc: "a escrita ajuda a questionar narrativas herdadas, tomar decisões mais conscientes e transformar preocupação em movimento.",
+      p6_title: "autonomia e coragem",
+      p6_desc: "o propósito é que cada pessoa se torne autora da própria história, com ferramentas internas e clareza de direção."
     },
-    manifesto: {
-      title: "por que soltar o verbo?",
-      subtitle: "a escrita consciente como ferramenta de transformação e presença",
-      body_text: "acreditamos que a palavra dita e escrita tem o poder de libertar o que estava preso. em um mundo acelerado, soltar o verbo é um ato de coragem e desaceleração.",
-      image_url: "/brand-assets/gallery/events/13062026-IMG_5364-2.jpg"
-    },
-    experiencias: {
-      title: "nossas experiências & programas",
-      subtitle: "encontros virtuais e presenciais criados para soltar a sua palavra",
-      body_text: "escolha o formato que melhor se adapta ao seu momento presente: os 21 dias de escrita, o ciclo de aprofundamento ou os encontros do café com letras.",
-      button_text: "ver todos os programas →",
-      button_link: "/programs",
-      image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg"
-    },
-    teoria_pratica: {
-      title: "teoria + prática / o que sustenta a nossa escrita",
-      highlight: "nosso trabalho nasce de estudo e de vivência.",
-      body_text: "não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.",
-      highlight_final: "é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.",
-      button_text: "enviar e-mail",
-      button_link: "mailto:soltaoverbocoletivo@gmail.com"
-    },
-    comunidade: {
-      title: "nossa fogueira",
-      subtitle: "uma comunidade acolhedora para partilhar processos e escritos",
-      body_text: "a fogueira é nosso espaço coletivo onde alunas partilham textos, recebem escuta atenta e trocam impressões poéticas sem julgamento.",
-      button_text: "entrar na fogueira →",
-      button_link: "/login",
-      image_url: "/brand-assets/gallery/events/_MG_0015.jpg"
+    depoimentos: {
+      badge_text: "vozes da nossa comunidade",
+      title: "o que dizem as pessoas que soltam o verbo",
+      t1_quote: "em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.",
+      t1_author: "bárbara alcântara (babi)",
+      t1_role: "café com letras & ciclo de aprofundamento",
+      t2_quote: "o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.",
+      t2_author: "tom vitralli",
+      t2_role: "aluno dos 21 dias de escrita",
+      t3_quote: "conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.",
+      t3_author: "jess",
+      t3_role: "aluna dos 21 dias de escrita"
     }
   },
   about: {
