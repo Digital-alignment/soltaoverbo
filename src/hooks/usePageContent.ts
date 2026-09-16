@@ -376,17 +376,18 @@ export function usePageContent(pageSlug: string) {
   const getSection = (sectionKey: string, defaults?: SectionContent): SectionContent => {
     const defaultSec = (DEFAULT_CMS_DATA[pageSlug] || {})[sectionKey] || {};
     const customSection = pageContent[sectionKey] || {};
+
+    const cleanCustom = Object.fromEntries(
+      Object.entries(customSection).filter(([_, v]) => v !== undefined && v !== null && v !== '')
+    );
+    const cleanDefaults = defaults
+      ? Object.fromEntries(Object.entries(defaults).filter(([_, v]) => v !== undefined && v !== null && v !== ''))
+      : {};
+
     return {
-      title: customSection.title ?? defaults?.title ?? defaultSec.title ?? '',
-      subtitle: customSection.subtitle ?? defaults?.subtitle ?? defaultSec.subtitle ?? '',
-      body_text: customSection.body_text ?? defaults?.body_text ?? defaultSec.body_text ?? '',
-      quote_text: customSection.quote_text ?? defaults?.quote_text ?? defaultSec.quote_text ?? '',
-      image_url: customSection.image_url ?? defaults?.image_url ?? defaultSec.image_url ?? '',
-      button_text: customSection.button_text ?? defaults?.button_text ?? defaultSec.button_text ?? '',
-      button_link: customSection.button_link ?? defaults?.button_link ?? defaultSec.button_link ?? '',
       ...defaultSec,
-      ...defaults,
-      ...customSection,
+      ...cleanCustom,
+      ...cleanDefaults,
     };
   };
 
