@@ -27,88 +27,119 @@ interface CreatedEvent {
   highlights: string[];
 }
 
-const eventGallery: EventPhoto[] = [
-  {
-    image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
-    title: 'oficinas presenciais',
-    subtitle: 'vivências de escrita consciente & integração',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
-  },
-  {
-    image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
-    title: 'rodas de partilha',
-    subtitle: 'cadernos abertos, diálogos profundos e escuta',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
-  },
-  {
-    image: '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg',
-    title: 'experiências sob medida',
-    subtitle: 'encontros para retiros, festivais e coletivos',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png',
-  },
-  {
-    image: '/brand-assets/gallery/events/_MG_0015.jpg',
-    title: 'curadoria de ambiente',
-    subtitle: 'espaço seguro para acolher histórias humanas',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
-  },
-  {
-    image: '/brand-assets/gallery/events/_MG_9849.jpg',
-    title: 'conexões autênticas',
-    subtitle: 'transformando a rotina através da poesia',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
-  },
-  {
-    image: '/brand-assets/gallery/events/_MG_9991.jpg',
-    title: 'rituais de presença',
-    subtitle: 'reescrevendo narrativas em comunidade',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png',
-  },
-];
-
-const createdEvents: CreatedEvent[] = [
-  {
-    id: 'fatto-a-femme',
-    title: 'feira fatto à femme',
-    location: 'florianópolis',
-    year: '2026',
-    shortDescription: 'instalação de escrita e roda de partilha com o público da feira, criando uma pausa poética no meio do evento.',
-    fullDescription: 'uma vivência poética ocupando o espaço público da feira fatto à femme em florianópolis. criamos um varal de histórias e uma mesa de escrita aberta onde centenas de pessoas pararam entre as alamedas da feira para colocar sentimentos no papel, pendurar suas frases no varal e compartilhar pausas necessárias em meio à movimentação do evento.',
-    image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
-    highlights: [
-      'varal poético comunitário com mais de 100 mensagens penduradas',
-      'rodas espontâneas de escuta e acolhimento com os visitantes da feira',
-      'espaço de desaceleração e reconexão autoral no meio do evento'
-    ]
-  },
-  {
-    id: 'o-experienciar',
-    title: 'o experienciar',
-    location: 'florianópolis',
-    year: '2026',
-    shortDescription: 'oficina presencial de escrita expressiva e presença para desacelerar e olhar para dentro.',
-    fullDescription: 'uma imersão presencial intimista focada no autodesenvolvimento e na escrita sem filtro. durante quatro horas, facilitamos rituais de presença, dinâmicas de escuta em dupla, café com prosa e produção autoral guiada em um ambiente integrado com a natureza.',
-    image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
-    washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
-    highlights: [
-      'práticas de escrita expressiva baseadas nas pesquisas de james pennebaker',
-      'roda de partilha segura, afetiva e totalmente livre de julgamentos',
-      'cadernos artesanais e kit de rituais entregues a cada participante'
-    ]
-  }
-];
-
 export default function AboutUs() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<EventPhoto | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<CreatedEvent | null>(null);
 
   const { getSection } = usePageContent('about');
+
   const heroSec = getSection('hero', {
+    badge_text: 'nossa essência & manifesto',
+    title_prefix: 'solta o verbo:',
     title: 'auto desenvolvimento em coletivo',
     subtitle: 'existimos para que ninguém precise atravessar as próprias perguntas sozinha. somos uma comunidade viva que usa a escrita para reconhecer as narrativas herdadas, questioná-las e reescrevê-las com mais verdade, consciência e liberdade. sua história deve ser vivida e contada a partir da sua perspectiva, e ninguém mais. quem escreve, dirige e vive a sua vida?',
+    italic_quote: 'reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e uma vida) mais consciente.',
+    button_text: 'conhecer as facilitadoras',
+    button_link: '#criadoras',
+    button_secondary_text: 'ver nossos encontros',
+    button_secondary_link: '#encontros',
     image_url: '/whatsapp_image_2025-12-11_at_3.24.18_pm.jpeg',
+    card_quote: 'escrever é encarar com verdade e presença as partes de nós que ainda não tinham nome.',
+  });
+
+  const manifestoSec = getSection('manifesto', {
+    badge_text: 'manifesto',
+    title: 'o que acreditamos',
+    p1: 'acreditamos que somos capazes de transformar a nossa vida quando reconhecemos as narrativas que nos atravessam.',
+    p2: 'muitas vezes repetimos histórias que nos foram introjetadas sem perceber que também temos o poder de escolher outras palavras, outros sentidos e outros capítulos para, assim, criar novos começos e melhores finais.',
+    p3: 'usamos a escrita como a ferramenta acessível e profundamente transformadora que ela é. por meio dela, trilhamos um caminho de dar contorno ao que nos habita: tornar visíveis as histórias que carregamos para então questioná-las e reescrevê-las com mais verdade, consciência e liberdade.',
+    highlight_quote: 'solta o verbo é um convite para despertar a própria voz ao escutá-la através da escrita.',
+    box_p1: 'acreditamos na escrita como caminho de aprendizagem, verdade e transformação em coletivo. nossos pilares nascem da escuta de si, da troca com o outro e da coragem de escrever uma vida mais verdadeira.',
+    box_p2: 'aqui, aprender é se escutar, partilhar caminhos e dar linguagem ao que é essencial. cultivamos uma escrita que aproxima da própria verdade e transforma quando encontra o coletivo.',
+  });
+
+  const pilaresSec = getSection('pilares', {
+    title: 'o que nos move todos os dias',
+    subtitle: 'nossos cinco pilares que sustentam cada experiência e cada roda de escrita.',
+    pilar_1_title: 'encontros reais',
+    pilar_1_desc: 'onde cada pessoa pode chegar como está. conversas que abrem espaço para o que realmente importa, sem máscaras ou julgamento.',
+    pilar_2_title: 'vínculos & proteção',
+    pilar_2_desc: 'rituais que fortalecem a confiança e criam uma rede de apoio genuína contra a solidão e o isolamento dos tempos atuais.',
+    pilar_3_title: 'expressão & autoria',
+    pilar_3_desc: 'exercícios guiados que colocam o sentir em movimento, dando forma poética às emoções e organizando o caos interno.',
+    pilar_4_title: 'potência criativa',
+    pilar_4_desc: 'transformar padrões limitantes e narrativas herdadas em força de vida e liberdade de escolha.',
+    pilar_5_title: 'aprender fazendo',
+    pilar_5_desc: 'acreditamos que o aprendizado está no ato: fazer, testar, errar, tentar de outro jeito. escrever é o nosso ponto de partida, mas o que muda uma vida não é entender uma ideia: é experimentá-la. aqui a gente aprende a caminhando, caminhando.',
+  });
+
+  const galeriaSec = getSection('galeria', {
+    badge_text: 'diário visual',
+    title: 'nossos encontros em imagens',
+    subtitle: 'registros da nossa participação em feiras, oficinas presenciais e momentos de partilha.',
+    photo_1_title: 'oficinas presenciais',
+    photo_1_subtitle: 'vivências de escrita consciente & integração',
+    photo_1_image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+    photo_2_title: 'rodas de partilha',
+    photo_2_subtitle: 'cadernos abertos, diálogos profundos e escuta',
+    photo_2_image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    photo_3_title: 'experiências sob medida',
+    photo_3_subtitle: 'encontros para retiros, festivais e coletivos',
+    photo_3_image: '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg',
+    photo_4_title: 'curadoria de ambiente',
+    photo_4_subtitle: 'espaço seguro para acolher histórias humanas',
+    photo_4_image: '/brand-assets/gallery/events/_MG_0015.jpg',
+    photo_5_title: 'conexões autênticas',
+    photo_5_subtitle: 'transformando a rotina através da poesia',
+    photo_5_image: '/brand-assets/gallery/events/_MG_9849.jpg',
+    photo_6_title: 'rituais de presença',
+    photo_6_subtitle: 'reescrevendo narrativas em comunidade',
+    photo_6_image: '/brand-assets/gallery/events/_MG_9991.jpg',
+  });
+
+  const eventosSec = getSection('eventos_criados', {
+    badge_text: 'presenciais',
+    title: 'os eventos que criamos',
+    subtitle: 'a escrita também sai da tela, e como é bom a gente estar pertinho <3',
+    evt1_title: 'feira fatto à femme',
+    evt1_location: 'florianópolis',
+    evt1_year: '2026',
+    evt1_short: 'instalação de escrita e roda de partilha com o público da feira, criando uma pausa poética no meio do evento.',
+    evt1_full: 'uma vivência poética ocupando o espaço público da feira fatto à femme em florianópolis. criamos um varal de histórias e uma mesa de escrita aberta onde centenas de pessoas pararam entre as alamedas da feira para colocar sentimentos no papel, pendurar suas frases no varal e compartilhar pausas necessárias em meio à movimentação do evento.',
+    evt1_image: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+    evt1_hl1: 'varal poético comunitário com mais de 100 mensagens penduradas',
+    evt1_hl2: 'rodas espontâneas de escuta e acolhimento com os visitantes da feira',
+    evt1_hl3: 'espaço de desaceleração e reconexão autoral no meio do evento',
+    evt2_title: 'o experienciar',
+    evt2_location: 'florianópolis',
+    evt2_year: '2026',
+    evt2_short: 'oficina presencial de escrita expressiva e presença para desacelerar e olhar para dentro.',
+    evt2_full: 'uma imersão presencial intimista focada no autodesenvolvimento e na escrita sem filtro. durante quatro horas, facilitamos rituais de presença, dinâmicas de escuta em dupla, café com prosa e produção autoral guiada em um ambiente integrado com a natureza.',
+    evt2_image: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    evt2_hl1: 'práticas de escrita expressiva baseadas nas pesquisas de james pennebaker',
+    evt2_hl2: 'roda de partilha segura, afetiva e totalmente livre de julgamentos',
+    evt2_hl3: 'cadernos artesanais e kit de rituais entregues a cada participante',
+    next_badge: 'em breve',
+    next_title: 'o próximo, em breve',
+    next_text: 'estamos preparando os próximos encontros presenciais. quer saber em primeira mão quando abrirmos vagas?',
+    next_button_text: 'quero saber quando abrir',
+    next_button_link: 'https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20saber%20quando%20abrem%20vagas%20para%20os%20pr%C3%B3ximos%20eventos%20presenciais.',
+    footer_text: 'quer levar a solta o verbo para o seu evento, retiro ou coletivo? a gente desenha a vivência junto com você.',
+    footer_button_text: 'falar com a gente',
+    footer_button_link: 'https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20levar%20uma%20experi%C3%AAncia%20da%20solta%20o%20verbo%20para%20nosso%20evento.',
+  });
+
+  const ecossistemaSec = getSection('ecossistema_digital', {
+    badge_text: 'o nosso ecossistema digital',
+    title: 'um ambiente livre de algoritmos e distrações',
+    subtitle: 'nossa plataforma foi desenhada para que você possa publicar textos, interagir com leitoras apaixonadas por palavras e manter um diário de bordo digital com privacidade e respeito.',
+    bullet_1: 'editor limpo e focado no essencial da escrita',
+    bullet_2: 'acesso à fogueira de partilha comunitária diária',
+    bullet_3: 'encontros ao vivo e acervo completo gravado',
+    button_text: 'começar minhas 48 horas grátis',
+    button_link: '/register',
+    image_url: '/whatsapp_image_2025-12-11_at_4.25.25_pm.jpeg',
   });
 
   const { scrollYProgress } = useScroll({
@@ -117,30 +148,52 @@ export default function AboutUs() {
   });
 
   const pillars = [
+    { icon: Heart, title: pilaresSec.pilar_1_title || 'encontros reais', description: pilaresSec.pilar_1_desc || 'onde cada pessoa pode chegar como está...' },
+    { icon: Users, title: pilaresSec.pilar_2_title || 'vínculos & proteção', description: pilaresSec.pilar_2_desc || 'rituais que fortalecem...' },
+    { icon: Pencil, title: pilaresSec.pilar_3_title || 'expressão & autoria', description: pilaresSec.pilar_3_desc || 'exercícios guiados...' },
+    { icon: Compass, title: pilaresSec.pilar_4_title || 'potência criativa', description: pilaresSec.pilar_4_desc || 'transformar padrões limitantes...' },
+    { icon: BookOpen, title: pilaresSec.pilar_5_title || 'aprender fazendo', description: pilaresSec.pilar_5_desc || 'acreditamos que o aprendizado...' },
+  ];
+
+  const eventGallery: EventPhoto[] = [
+    { image: galeriaSec.photo_1_image || '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg', title: galeriaSec.photo_1_title || 'oficinas presenciais', subtitle: galeriaSec.photo_1_subtitle || 'vivências de escrita consciente & integração', washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png' },
+    { image: galeriaSec.photo_2_image || '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg', title: galeriaSec.photo_2_title || 'rodas de partilha', subtitle: galeriaSec.photo_2_subtitle || 'cadernos abertos, diálogos profundos e escuta', washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png' },
+    { image: galeriaSec.photo_3_image || '/brand-assets/gallery/events/13062026-IMG_6666-2.jpg', title: galeriaSec.photo_3_title || 'experiências sob medida', subtitle: galeriaSec.photo_3_subtitle || 'encontros para retiros, festivais e coletivos', washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png' },
+    { image: galeriaSec.photo_4_image || '/brand-assets/gallery/events/_MG_0015.jpg', title: galeriaSec.photo_4_title || 'curadoria de ambiente', subtitle: galeriaSec.photo_4_subtitle || 'espaço seguro para acolher histórias humanas', washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png' },
+    { image: galeriaSec.photo_5_image || '/brand-assets/gallery/events/_MG_9849.jpg', title: galeriaSec.photo_5_title || 'conexões autênticas', subtitle: galeriaSec.photo_5_subtitle || 'transformando a rotina através da poesia', washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png' },
+    { image: galeriaSec.photo_6_image || '/brand-assets/gallery/events/_MG_9991.jpg', title: galeriaSec.photo_6_title || 'rituais de presença', subtitle: galeriaSec.photo_6_subtitle || 'reescrevendo narrativas em comunidade', washiTape: '/brand-assets/elements/stickers/fitas-washi-realistica-azul.png' },
+  ];
+
+  const createdEvents: CreatedEvent[] = [
     {
-      icon: Heart,
-      title: 'encontros reais',
-      description: 'onde cada pessoa pode chegar como está. conversas que abrem espaço para o que realmente importa, sem máscaras ou julgamento.',
+      id: 'fatto-a-femme',
+      title: eventosSec.evt1_title || 'feira fatto à femme',
+      location: eventosSec.evt1_location || 'florianópolis',
+      year: eventosSec.evt1_year || '2026',
+      shortDescription: eventosSec.evt1_short || 'instalação de escrita e roda de partilha...',
+      fullDescription: eventosSec.evt1_full || 'uma vivência poética ocupando o espaço público...',
+      image: eventosSec.evt1_image || '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+      washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png',
+      highlights: [
+        eventosSec.evt1_hl1 || 'varal poético comunitário com mais de 100 mensagens penduradas',
+        eventosSec.evt1_hl2 || 'rodas espontâneas de escuta e acolhimento com os visitantes da feira',
+        eventosSec.evt1_hl3 || 'espaço de desaceleração e reconexão autoral no meio do evento',
+      ],
     },
     {
-      icon: Users,
-      title: 'vínculos & proteção',
-      description: 'rituais que fortalecem a confiança e criam uma rede de apoio genuína contra a solidão e o isolamento dos tempos atuais.',
-    },
-    {
-      icon: Pencil,
-      title: 'expressão & autoria',
-      description: 'exercícios guiados que colocam o sentir em movimento, dando forma poética às emoções e organizando o caos interno.',
-    },
-    {
-      icon: Compass,
-      title: 'potência criativa',
-      description: 'transformar padrões limitantes e narrativas herdadas em força de vida e liberdade de escolha.',
-    },
-    {
-      icon: BookOpen,
-      title: 'aprender fazendo',
-      description: 'acreditamos que o aprendizado está no ato: fazer, testar, errar, tentar de outro jeito. escrever é o nosso ponto de partida, mas o que muda uma vida não é entender uma ideia: é experimentá-la. aqui a gente aprende a caminhar, caminhando.',
+      id: 'o-experienciar',
+      title: eventosSec.evt2_title || 'o experienciar',
+      location: eventosSec.evt2_location || 'florianópolis',
+      year: eventosSec.evt2_year || '2026',
+      shortDescription: eventosSec.evt2_short || 'oficina presencial de escrita expressiva...',
+      fullDescription: eventosSec.evt2_full || 'uma imersão presencial intimista focada...',
+      image: eventosSec.evt2_image || '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+      washiTape: '/brand-assets/elements/stickers/fitas-washi-flores-azul.png',
+      highlights: [
+        eventosSec.evt2_hl1 || 'práticas de escrita expressiva baseadas nas pesquisas de james pennebaker',
+        eventosSec.evt2_hl2 || 'roda de partilha segura, afetiva e totalmente livre de julgamentos',
+        eventosSec.evt2_hl3 || 'cadernos artesanais e kit de rituais entregues a cada participante',
+      ],
     },
   ];
 
@@ -170,38 +223,38 @@ export default function AboutUs() {
                   alt="chama viva"
                   className="w-5 h-5 object-contain"
                 />
-                <span>nossa essência & manifesto</span>
+                <span>{heroSec.badge_text || 'nossa essência & manifesto'}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                solta o verbo: <br className="hidden sm:inline" />
+                {heroSec.title_prefix || 'solta o verbo:'} <br className="hidden sm:inline" />
                 <span className="font-gesto text-acentoTerracota font-normal text-4xl sm:text-5xl lg:text-6xl block mt-1">
-                  auto desenvolvimento em coletivo
+                  {heroSec.title || 'auto desenvolvimento em coletivo'}
                 </span>
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
-                existimos para que ninguém precise atravessar as próprias perguntas sozinha. somos uma comunidade viva que usa a escrita para reconhecer as narrativas herdadas, questioná-las e reescrevê-las com mais verdade, consciência e liberdade. sua história deve ser vivida e contada a partir da sua perspectiva, e ninguém mais. quem escreve, dirige e vive a sua vida?
+                {heroSec.subtitle || 'existimos para que ninguém precise atravessar as próprias perguntas sozinha...'}
               </p>
 
               <p className="text-tintaCarvao/70 text-base sm:text-lg italic font-medium lowercase border-t border-papelKraft/30 pt-3">
-                reescreva sua história ao ampliar a perspectiva e abrir espaço para uma escrita (e uma vida) mais consciente.
+                {heroSec.italic_quote || 'reescreva sua história ao ampliar a perspectiva...'}
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <a
-                  href="#criadoras"
+                  href={heroSec.button_link || '#criadoras'}
                   className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5"
                 >
-                  <span>conhecer as facilitadoras</span>
+                  <span>{heroSec.button_text || 'conhecer as facilitadoras'}</span>
                   <ArrowRight className="w-5 h-5 text-white" />
                 </a>
 
                 <a
-                  href="#encontros"
+                  href={heroSec.button_secondary_link || '#encontros'}
                   className="bg-papelClaro text-acentoAzul border border-papelKraft/50 hover:bg-bgPlataforma text-base sm:text-lg px-8 py-3.5 rounded-full font-medium transition-all shadow-sm flex items-center gap-2.5 cursor-pointer lowercase"
                 >
-                  <span>ver nossos encontros</span>
+                  <span>{heroSec.button_secondary_text || 'ver nossos encontros'}</span>
                   <BookOpen className="w-5 h-5 text-acentoAzul" />
                 </a>
               </div>
@@ -227,7 +280,7 @@ export default function AboutUs() {
                 </div>
 
                 <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
-                  “escrever é encarar com verdade e presença as partes de nós que ainda não tinham nome.”
+                  “{heroSec.card_quote || 'escrever é encarar com verdade e presença as partes de nós que ainda não tinham nome.'}”
                 </blockquote>
               </div>
             </div>
@@ -239,33 +292,25 @@ export default function AboutUs() {
       <section className="py-20 sm:py-28 bg-papelClaro border-t border-b border-papelKraft/50 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
           <span className="text-xs font-bold text-acentoTerracota lowercase tracking-widest block">
-            manifesto
+            {manifestoSec.badge_text || 'manifesto'}
           </span>
           <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
-            o que acreditamos
+            {manifestoSec.title || 'o que acreditamos'}
           </h2>
 
           <div className="space-y-6 text-tintaCarvao/90 text-lg sm:text-xl leading-relaxed font-medium lowercase">
-            <p>
-              acreditamos que somos capazes de transformar a nossa vida quando reconhecemos as narrativas que nos atravessam.
-            </p>
-            <p>
-              muitas vezes repetimos histórias que nos foram introjetadas sem perceber que também temos o poder de escolher outras palavras, outros sentidos e outros capítulos para, assim, criar novos começos e melhores finais.
-            </p>
-            <p>
-              usamos a escrita como a ferramenta acessível e profundamente transformadora que ela é. por meio dela, trilhamos um caminho de dar contorno ao que nos habita: tornar visíveis as histórias que carregamos para então questioná-las e reescrevê-las com mais verdade, consciência e liberdade.
-            </p>
+            <p>{manifestoSec.p1 || 'acreditamos que somos capazes de transformar a nossa vida quando reconhecemos as narrativas que nos atravessam.'}</p>
+            <p>{manifestoSec.p2 || 'muitas vezes repetimos histórias que nos foram introjetadas sem perceber que também temos o poder de escolher outras palavras...'}</p>
+            <p>{manifestoSec.p3 || 'usamos a escrita como a ferramenta acessível e profundamente transformadora que ela é...'}</p>
             <p className="font-editorial text-2xl text-acentoTerracota font-bold">
-              solta o verbo é um convite para despertar a própria voz ao escutá-la através da escrita.
+              {manifestoSec.highlight_quote || 'solta o verbo é um convite para despertar a própria voz ao escutá-la através da escrita.'}
             </p>
           </div>
 
           <div className="p-8 bg-bgPlataforma rounded-3xl border border-papelKraft/60 text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase space-y-4 max-w-3xl mx-auto">
-            <p>
-              acreditamos na escrita como caminho de aprendizagem, verdade e transformação em coletivo. nossos pilares nascem da escuta de si, da troca com o outro e da coragem de escrever uma vida mais verdadeira.
-            </p>
+            <p>{manifestoSec.box_p1 || 'acreditamos na escrita como caminho de aprendizagem...'}</p>
             <p className="text-acentoAzul font-bold">
-              aqui, aprender é se escutar, partilhar caminhos e dar linguagem ao que é essencial. cultivamos uma escrita que aproxima da própria verdade e transforma quando encontra o coletivo.
+              {manifestoSec.box_p2 || 'aqui, aprender é se escutar, partilhar caminhos e dar linguagem...'}`
             </p>
           </div>
         </div>
@@ -276,10 +321,10 @@ export default function AboutUs() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              o que nos move todos os dias
+              {pilaresSec.title || 'o que nos move todos os dias'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              nossos cinco pilares que sustentam cada experiência e cada roda de escrita.
+              {pilaresSec.subtitle || 'nossos cinco pilares que sustentam cada experiência e cada roda de escrita.'}
             </p>
           </div>
 
@@ -332,13 +377,13 @@ export default function AboutUs() {
                 alt="galeria"
                 className="w-5 h-5 object-contain"
               />
-              <span>diário visual</span>
+              <span>{galeriaSec.badge_text || 'diário visual'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              nossos encontros em imagens
+              {galeriaSec.title || 'nossos encontros em imagens'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              registros da nossa participação em feiras, oficinas presenciais e momentos de partilha.
+              {galeriaSec.subtitle || 'registros da nossa participação em feiras, oficinas presenciais e momentos de partilha.'}
             </p>
           </div>
 
@@ -384,13 +429,13 @@ export default function AboutUs() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <span className="text-xs font-bold text-acentoTerracota lowercase tracking-widest block">
-              presenciais
+              {eventosSec.badge_text || 'presenciais'}
             </span>
             <h2 className="text-3xl sm:text-5xl font-bold font-editorial text-acentoAzul lowercase">
-              os eventos que criamos
+              {eventosSec.title || 'os eventos que criamos'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              a escrita também sai da tela, e como é bom a gente estar pertinho &lt;3
+              {eventosSec.subtitle || 'a escrita também sai da tela, e como é bom a gente estar pertinho <3'}
             </p>
           </div>
 
@@ -447,38 +492,38 @@ export default function AboutUs() {
             <div className="bg-acentoAzul text-white rounded-3xl p-6 sm:p-8 border border-white/20 shadow-kraft-lg space-y-4 flex flex-col justify-between relative overflow-hidden group">
               <div className="space-y-4 relative z-10">
                 <span className="text-xs font-bold text-acentoOliva lowercase block tracking-widest">
-                  em breve
+                  {eventosSec.next_badge || 'em breve'}
                 </span>
                 <h3 className="text-2xl font-bold font-editorial text-papelClaro lowercase">
-                  o próximo, em breve
+                  {eventosSec.next_title || 'o próximo, em breve'}
                 </h3>
                 <p className="text-papelClaro/85 text-sm sm:text-base leading-relaxed font-medium lowercase">
-                  estamos preparando os próximos encontros presenciais. quer saber em primeira mão quando abrirmos vagas?
+                  {eventosSec.next_text || 'estamos preparando os próximos encontros presenciais...'}
                 </p>
               </div>
 
               <a
-                href="https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20saber%20quando%20abrem%20vagas%20para%20os%20pr%C3%B3ximos%20eventos%20presenciais."
+                href={eventosSec.next_button_link || "https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20saber%20quando%20abrem%20vagas%20para%20os%20pr%C3%B3ximos%20eventos%20presenciais."}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-pill-accent text-sm font-bold px-6 py-3.5 rounded-full text-center lowercase block hover:scale-105 transition-all shadow-md text-tintaCarvao relative z-10"
               >
-                quero saber quando abrir
+                {eventosSec.next_button_text || 'quero saber quando abrir'}
               </a>
             </div>
           </div>
 
           <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row items-center justify-between gap-6 bg-papelClaro p-6 rounded-3xl shadow-xs">
             <p className="text-tintaCarvao/90 font-medium text-base lowercase">
-              quer levar a solta o verbo para o seu evento, retiro ou coletivo? a gente desenha a vivência junto com você.
+              {eventosSec.footer_text || 'quer levar a solta o verbo para o seu evento, retiro ou coletivo? a gente desenha a vivência junto com você.'}
             </p>
             <a
-              href="https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20levar%20uma%20experi%C3%AAncia%20da%20solta%20o%20verbo%20para%20nosso%20evento."
+              href={eventosSec.footer_button_link || "https://wa.me/5511999999999?text=ol%C3%A1!%20gostaria%20de%20levar%20uma%20experi%C3%AAncia%20da%20solta%20o%20verbo%20para%20nosso%20evento."}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-pill-primary text-sm px-6 py-3 rounded-full flex items-center gap-2 flex-shrink-0 cursor-pointer lowercase"
             >
-              <span>falar com a gente</span>
+              <span>{eventosSec.footer_button_text || 'falar com a gente'}</span>
               <ArrowRight className="w-4 h-4 text-white" />
             </a>
           </div>
@@ -594,38 +639,38 @@ export default function AboutUs() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
               <div className="lg:col-span-7 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-acentoOliva text-xs font-semibold lowercase tracking-wider">
-                  <span>o nosso ecossistema digital</span>
+                  <span>{ecossistemaSec.badge_text || 'o nosso ecossistema digital'}</span>
                 </div>
 
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase leading-tight">
-                  um ambiente livre de algoritmos e distrações
+                  {ecossistemaSec.title || 'um ambiente livre de algoritmos e distrações'}
                 </h2>
 
                 <p className="text-papelClaro/85 text-base sm:text-lg leading-relaxed lowercase font-medium">
-                  nossa plataforma foi desenhada para que você possa publicar textos, interagir com leitoras apaixonadas por palavras e manter um diário de bordo digital com privacidade e respeito.
+                  {ecossistemaSec.subtitle || 'nossa plataforma foi desenhada para que você possa publicar textos...'}
                 </p>
 
                 <ul className="space-y-3 text-papelClaro/90 font-medium text-base lowercase">
                   <li className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                    <span>editor limpo e focado no essencial da escrita</span>
+                    <span>{ecossistemaSec.bullet_1 || 'editor limpo e focado no essencial da escrita'}</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                    <span>acesso à fogueira de partilha comunitária diária</span>
+                    <span>{ecossistemaSec.bullet_2 || 'acesso à fogueira de partilha comunitária diária'}</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0" />
-                    <span>encontros ao vivo e acervo completo gravado</span>
+                    <span>{ecossistemaSec.bullet_3 || 'encontros ao vivo e acervo completo gravado'}</span>
                   </li>
                 </ul>
 
                 <div className="pt-4 flex items-center gap-4">
                   <Link
-                    to="/register"
+                    to={ecossistemaSec.button_link || "/register"}
                     className="btn-pill-accent text-base px-8 py-3.5 rounded-full shadow-lg hover:scale-105 transition-all flex items-center gap-2.5 lowercase text-tintaCarvao font-bold"
                   >
-                    <span>começar minhas 48 horas grátis</span>
+                    <span>{ecossistemaSec.button_text || 'começar minhas 48 horas grátis'}</span>
                     <Pencil className="w-5 h-5 text-tintaCarvao" />
                   </Link>
                 </div>
@@ -634,7 +679,7 @@ export default function AboutUs() {
               <div className="lg:col-span-5">
                 <div className="rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-papelClaro p-2">
                   <img
-                    src="/whatsapp_image_2025-12-11_at_4.25.25_pm.jpeg"
+                    src={ecossistemaSec.image_url || "/whatsapp_image_2025-12-11_at_4.25.25_pm.jpeg"}
                     alt="plataforma solta o verbo"
                     className="w-full h-auto rounded-xl object-cover"
                   />

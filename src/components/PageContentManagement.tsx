@@ -72,9 +72,12 @@ const PAGE_OPTIONS: PageOption[] = [
     slug: 'about',
     name: 'Sobre Nós (Nossa História)',
     sections: [
-      { key: 'hero', name: 'Cabeçalho Principal', hasImage: true, hasButton: false },
-      { key: 'origem', name: 'História & Fundação', hasImage: true, hasButton: false },
-      { key: 'pilares', name: 'Pilares & Ritual Autoral', hasImage: true, hasButton: true },
+      { key: 'hero', name: '01. Hero / Nossa Essência & Manifesto', hasImage: true, hasButton: true },
+      { key: 'manifesto', name: '02. Seção Manifesto (O Que Acreditamos)', hasImage: false, hasButton: false },
+      { key: 'pilares', name: '03. Seção 5 Pilares (O Que Nos Move)', hasImage: false, hasButton: false },
+      { key: 'galeria', name: '04. Seção Diário Visual (Galeria de Encontros)', hasImage: true, hasButton: false },
+      { key: 'eventos_criados', name: '05. Seção Os Eventos Que Criamos (Feira Fatto & Experienciar)', hasImage: true, hasButton: true },
+      { key: 'ecossistema_digital', name: '06. Seção Ecossistema Digital & Membros', hasImage: true, hasButton: true },
     ],
   },
   {
@@ -751,6 +754,245 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                           <textarea value={sectionData[`a${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `a${num}`, e.target.value)} rows={2} placeholder={`resposta ${num}...`} className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
                         </div>
                       ))}
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS DA PÁGINA SOBRE NÓS (about) */}
+              {selectedPageSlug === 'about' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  {sec.key === 'hero' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          selo / etiqueta superior (badge)
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.badge_text || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)}
+                          placeholder="nossa essência & manifesto"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          prefixo do título ("solta o verbo:")
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.title_prefix || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'title_prefix', e.target.value)}
+                          placeholder="solta o verbo:"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          frase em itálico (abaixo da descrição)
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.italic_quote || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'italic_quote', e.target.value)}
+                          placeholder="reescreva sua história ao ampliar a perspectiva..."
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          citação do card scrapbook (direita)
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.card_quote || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'card_quote', e.target.value)}
+                          placeholder="escrever é encarar com verdade..."
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          texto do 2º botão ("ver nossos encontros")
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.button_secondary_text || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'button_secondary_text', e.target.value)}
+                          placeholder="ver nossos encontros"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          link do 2º botão
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.button_secondary_link || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'button_secondary_link', e.target.value)}
+                          placeholder="#encontros"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'manifesto' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          etiqueta badge ("manifesto")
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.badge_text || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)}
+                          placeholder="manifesto"
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                        />
+                      </div>
+                      <div className="md:col-span-2 space-y-2">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">parágrafos do manifesto (p1, p2, p3)</label>
+                        <textarea value={sectionData.p1 || ''} onChange={(e) => handleSectionChange(sec.key, 'p1', e.target.value)} rows={2} placeholder="parágrafo 1..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <textarea value={sectionData.p2 || ''} onChange={(e) => handleSectionChange(sec.key, 'p2', e.target.value)} rows={2} placeholder="parágrafo 2..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <textarea value={sectionData.p3 || ''} onChange={(e) => handleSectionChange(sec.key, 'p3', e.target.value)} rows={2} placeholder="parágrafo 3..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          frase destacada em terracota (conclusão do manifesto)
+                        </label>
+                        <input
+                          type="text"
+                          value={sectionData.highlight_quote || ''}
+                          onChange={(e) => handleSectionChange(sec.key, 'highlight_quote', e.target.value)}
+                          placeholder="solta o verbo é um convite para..."
+                          className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-semibold"
+                        />
+                      </div>
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">textos do quadro inferior</label>
+                        <textarea value={sectionData.box_p1 || ''} onChange={(e) => handleSectionChange(sec.key, 'box_p1', e.target.value)} rows={2} placeholder="texto do quadro parágrafo 1..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <textarea value={sectionData.box_p2 || ''} onChange={(e) => handleSectionChange(sec.key, 'box_p2', e.target.value)} rows={2} placeholder="texto destacado do quadro..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase font-semibold" />
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'pilares' && (
+                    <>
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <div key={num} className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                          <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">pilar #{num}</label>
+                          <input type="text" value={sectionData[`pilar_${num}_title`] || ''} onChange={(e) => handleSectionChange(sec.key, `pilar_${num}_title`, e.target.value)} placeholder={`título pilar ${num}...`} className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-semibold" />
+                          <textarea value={sectionData[`pilar_${num}_desc`] || ''} onChange={(e) => handleSectionChange(sec.key, `pilar_${num}_desc`, e.target.value)} rows={2} placeholder={`descrição pilar ${num}...`} className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {sec.key === 'galeria' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("diário visual")</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="diário visual" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      {[1, 2, 3, 4, 5, 6].map((num) => (
+                        <div key={num} className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                          <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">foto da galeria #{num}</label>
+                          <div className="grid grid-cols-2 gap-2">
+                            <input type="text" value={sectionData[`photo_${num}_title`] || ''} onChange={(e) => handleSectionChange(sec.key, `photo_${num}_title`, e.target.value)} placeholder={`título foto ${num}...`} className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                            <input type="text" value={sectionData[`photo_${num}_subtitle`] || ''} onChange={(e) => handleSectionChange(sec.key, `photo_${num}_subtitle`, e.target.value)} placeholder={`subtítulo foto ${num}...`} className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          </div>
+                          <input type="text" value={sectionData[`photo_${num}_image`] || ''} onChange={(e) => handleSectionChange(sec.key, `photo_${num}_image`, e.target.value)} placeholder={`URL da foto ${num}...`} className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-mono" />
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {sec.key === 'eventos_criados' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("presenciais")</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="presenciais" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+
+                      {/* Evento 1 */}
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">evento #1 (ex: feira fatto à femme)</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <input type="text" value={sectionData.evt1_title || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_title', e.target.value)} placeholder="título..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt1_location || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_location', e.target.value)} placeholder="cidade..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt1_year || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_year', e.target.value)} placeholder="ano..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                        <input type="text" value={sectionData.evt1_short || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_short', e.target.value)} placeholder="descrição curta no card..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        <textarea value={sectionData.evt1_full || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_full', e.target.value)} rows={2} placeholder="descrição completa no modal..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <input type="text" value={sectionData.evt1_image || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_image', e.target.value)} placeholder="URL da foto do evento..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-mono" />
+                        <div className="space-y-1">
+                          <label className="block text-[10px] font-bold text-acentoAzul lowercase">destaques do evento 1 (3 itens)</label>
+                          <input type="text" value={sectionData.evt1_hl1 || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_hl1', e.target.value)} placeholder="destaque 1..." className="w-full px-3 py-1 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt1_hl2 || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_hl2', e.target.value)} placeholder="destaque 2..." className="w-full px-3 py-1 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt1_hl3 || ''} onChange={(e) => handleSectionChange(sec.key, 'evt1_hl3', e.target.value)} placeholder="destaque 3..." className="w-full px-3 py-1 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+
+                      {/* Evento 2 */}
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">evento #2 (ex: o experienciar)</label>
+                        <div className="grid grid-cols-3 gap-2">
+                          <input type="text" value={sectionData.evt2_title || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_title', e.target.value)} placeholder="título..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt2_location || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_location', e.target.value)} placeholder="cidade..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt2_year || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_year', e.target.value)} placeholder="ano..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                        <input type="text" value={sectionData.evt2_short || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_short', e.target.value)} placeholder="descrição curta no card..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        <textarea value={sectionData.evt2_full || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_full', e.target.value)} rows={2} placeholder="descrição completa no modal..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        <input type="text" value={sectionData.evt2_image || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_image', e.target.value)} placeholder="URL da foto do evento..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-mono" />
+                        <div className="space-y-1">
+                          <label className="block text-[10px] font-bold text-acentoAzul lowercase">destaques do evento 2 (3 itens)</label>
+                          <input type="text" value={sectionData.evt2_hl1 || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_hl1', e.target.value)} placeholder="destaque 1..." className="w-full px-3 py-1 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt2_hl2 || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_hl2', e.target.value)} placeholder="destaque 2..." className="w-full px-3 py-1 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.evt2_hl3 || ''} onChange={(e) => handleSectionChange(sec.key, 'evt2_hl3', e.target.value)} placeholder="destaque 3..." className="w-full px-3 py-1 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+
+                      {/* Card 3: Próximo em breve */}
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">card #3 (próximo evento em breve)</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.next_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'next_badge', e.target.value)} placeholder="em breve" className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.next_title || ''} onChange={(e) => handleSectionChange(sec.key, 'next_title', e.target.value)} placeholder="o próximo, em breve" className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                        <input type="text" value={sectionData.next_text || ''} onChange={(e) => handleSectionChange(sec.key, 'next_text', e.target.value)} placeholder="estamos preparando os próximos..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.next_button_text || ''} onChange={(e) => handleSectionChange(sec.key, 'next_button_text', e.target.value)} placeholder="quero saber quando abrir" className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.next_button_link || ''} onChange={(e) => handleSectionChange(sec.key, 'next_button_link', e.target.value)} placeholder="https://wa.me/..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+
+                      {/* Quadro Rodapé B2B */}
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">faixa inferior (convite para eventos sob medida)</label>
+                        <input type="text" value={sectionData.footer_text || ''} onChange={(e) => handleSectionChange(sec.key, 'footer_text', e.target.value)} placeholder="quer levar a solta o verbo para o seu evento..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.footer_button_text || ''} onChange={(e) => handleSectionChange(sec.key, 'footer_button_text', e.target.value)} placeholder="falar com a gente" className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.footer_button_link || ''} onChange={(e) => handleSectionChange(sec.key, 'footer_button_link', e.target.value)} placeholder="https://wa.me/..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'ecossistema_digital' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("o nosso ecossistema digital")</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="o nosso ecossistema digital" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2 space-y-2">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">lista de diferenciais (3 itens)</label>
+                        <input type="text" value={sectionData.bullet_1 || ''} onChange={(e) => handleSectionChange(sec.key, 'bullet_1', e.target.value)} placeholder="item 1..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        <input type="text" value={sectionData.bullet_2 || ''} onChange={(e) => handleSectionChange(sec.key, 'bullet_2', e.target.value)} placeholder="item 2..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        <input type="text" value={sectionData.bullet_3 || ''} onChange={(e) => handleSectionChange(sec.key, 'bullet_3', e.target.value)} placeholder="item 3..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
                     </>
                   )}
                 </div>
