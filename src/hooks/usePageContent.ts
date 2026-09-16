@@ -548,8 +548,8 @@ export function usePageContent(pageSlug: string) {
 
     return {
       ...defaultSec,
-      ...cleanCustom,
       ...cleanDefaults,
+      ...cleanCustom,
     };
   };
 
