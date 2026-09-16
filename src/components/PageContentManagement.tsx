@@ -123,8 +123,12 @@ const PAGE_OPTIONS: PageOption[] = [
     slug: 'programa_cafe_com_letras',
     name: 'Café com Letras',
     sections: [
-      { key: 'hero', name: 'Hero do Encontro Café com Letras', hasImage: true, hasButton: true },
-      { key: 'detalhes', name: 'Prosa & Detalhes do Evento', hasImage: true, hasButton: true },
+      { key: 'hero', name: '01. Hero & Oferta de Entrada', hasImage: true, hasButton: true },
+      { key: 'inspiracao', name: '02. A Inspiração Tem Hora Marcada', hasImage: false, hasButton: false },
+      { key: 'pilares', name: '03. Os 4 Pilares da Experiência', hasImage: false, hasButton: false },
+      { key: 'depoimentos', name: '04. Relatos & Prints Reais da Comunidade', hasImage: false, hasButton: false },
+      { key: 'final_cta', name: '05. Convite Final & Checkout', hasImage: false, hasButton: true },
+      { key: 'faq', name: '06. Perguntas Frequentes (10 itens)', hasImage: false, hasButton: false },
     ],
   },
   {
@@ -1291,6 +1295,195 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                     <div className="md:col-span-2 space-y-3">
                       <span className="text-xs font-bold text-acentoAzul lowercase block">5 perguntas e respostas da faq</span>
                       {[1, 2, 3, 4, 5].map((num) => (
+                        <div key={num} className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1">
+                          <label className="text-[11px] font-bold text-acentoTerracota">pergunta & resposta #{num}</label>
+                          <input type="text" value={sectionData[`q${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `q${num}`, e.target.value)} placeholder={`pergunta ${num}...`} className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase" />
+                          <textarea value={sectionData[`a${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `a${num}`, e.target.value)} rows={2} placeholder={`resposta ${num}...`} className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase resize-none" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS DA PÁGINA CAFÉ COM LETRAS (programa_cafe_com_letras) */}
+              {selectedPageSlug === 'programa_cafe_com_letras' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  {sec.key === 'hero' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge topo</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="roda semanal de escrita..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">subtítulo em manuscrito (gesto)</label>
+                        <input type="text" value={sectionData.subtitle_gesto || ''} onChange={(e) => handleSectionChange(sec.key, 'subtitle_gesto', e.target.value)} placeholder="ritual de escrita semanal" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">botão secundário (como funciona)</label>
+                        <input type="text" value={sectionData.button_secondary_text || ''} onChange={(e) => handleSectionChange(sec.key, 'button_secondary_text', e.target.value)} placeholder="como funciona o café..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">selo de horário / agenda (box)</label>
+                        <input type="text" value={sectionData.schedule_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'schedule_badge', e.target.value)} placeholder="toda terça-feira · 8h..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">preço mensal</label>
+                        <input type="text" value={sectionData.price_text || ''} onChange={(e) => handleSectionChange(sec.key, 'price_text', e.target.value)} placeholder="R$ 97,00" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">unidade de preço</label>
+                        <input type="text" value={sectionData.price_subtext || ''} onChange={(e) => handleSectionChange(sec.key, 'price_subtext', e.target.value)} placeholder="/mês" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">badge ciclo incluso</label>
+                        <input type="text" value={sectionData.ciclo_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'ciclo_badge', e.target.value)} placeholder="100% incluso para quem..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">texto de garantia</label>
+                        <input type="text" value={sectionData.guarantee_text || ''} onChange={(e) => handleSectionChange(sec.key, 'guarantee_text', e.target.value)} placeholder="garantia incondicional..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">frase em citação poética</label>
+                        <input type="text" value={sectionData.quote || ''} onChange={(e) => handleSectionChange(sec.key, 'quote', e.target.value)} placeholder="“escrever junto é descobrir...”" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'inspiracao' && (
+                    <>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">citação destaque (topo)</label>
+                        <textarea value={sectionData.quote_text || ''} onChange={(e) => handleSectionChange(sec.key, 'quote_text', e.target.value)} rows={2} placeholder="“escrevo quando estou inspirado...”" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase resize-none" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">autor da citação</label>
+                        <input type="text" value={sectionData.quote_author || ''} onChange={(e) => handleSectionChange(sec.key, 'quote_author', e.target.value)} placeholder="(peter de vries)" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">frase terracota em destaque</label>
+                        <input type="text" value={sectionData.title_terracota || ''} onChange={(e) => handleSectionChange(sec.key, 'title_terracota', e.target.value)} placeholder="a nossa hora é às oito." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">frase azul em destaque</label>
+                        <input type="text" value={sectionData.title_azul || ''} onChange={(e) => handleSectionChange(sec.key, 'title_azul', e.target.value)} placeholder="inspiração não é sorte..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">parágrafo 1 de prosa</label>
+                        <textarea value={sectionData.p1 || ''} onChange={(e) => handleSectionChange(sec.key, 'p1', e.target.value)} rows={3} placeholder="mas verdade seja dita..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase resize-none" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">parágrafo 2 de prosa</label>
+                        <textarea value={sectionData.p2 || ''} onChange={(e) => handleSectionChange(sec.key, 'p2', e.target.value)} rows={3} placeholder="o tema muda toda semana..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase resize-none" />
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'pilares' && (
+                    <div className="md:col-span-2 space-y-3">
+                      <span className="text-xs font-bold text-acentoAzul lowercase block">os 4 pilares da experiência</span>
+                      {[1, 2, 3, 4].map((num) => (
+                        <div key={num} className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-2">
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <label className="text-[11px] font-bold text-acentoTerracota block">número #{num}</label>
+                              <input type="text" value={sectionData[`p${num}_step`] || `0${num}`} onChange={(e) => handleSectionChange(sec.key, `p${num}_step`, e.target.value)} placeholder={`0${num}`} className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                            </div>
+                            <div className="col-span-2">
+                              <label className="text-[11px] font-bold text-acentoAzul block">categoria / tag #{num}</label>
+                              <input type="text" value={sectionData[`p${num}_category`] || ''} onChange={(e) => handleSectionChange(sec.key, `p${num}_category`, e.target.value)} placeholder="ex: autoconhecimento" className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="text-[11px] font-bold text-acentoAzul block">título pilar #{num}</label>
+                            <input type="text" value={sectionData[`p${num}_title`] || ''} onChange={(e) => handleSectionChange(sec.key, `p${num}_title`, e.target.value)} placeholder="título..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase" />
+                          </div>
+                          <div>
+                            <label className="text-[11px] font-bold text-tintaCarvao/70 block">descrição pilar #{num}</label>
+                            <textarea value={sectionData[`p${num}_desc`] || ''} onChange={(e) => handleSectionChange(sec.key, `p${num}_desc`, e.target.value)} rows={2} placeholder="descrição..." className="w-full px-3 py-1 bg-white border border-papelKraft/40 rounded-lg text-xs lowercase resize-none" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {sec.key === 'depoimentos' && (
+                    <div className="md:col-span-2 space-y-3">
+                      <div className="p-3 bg-papelClaro rounded-xl border border-papelKraft/50">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                          selecionar depoimentos e prints do banco global
+                        </label>
+                        <p className="text-[11px] text-tintaCarvao/70 mb-2 lowercase">
+                          marque abaixo quais relatos e prints do banco global devem aparecer na página:
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-56 overflow-y-auto p-1">
+                          {[
+                            { id: 'd1', label: 'print 1: partilha e acolhimento' },
+                            { id: 'd2', label: 'print 2: desbloqueio criativo' },
+                            { id: 'd3', label: 'print 3: relação com caderno' },
+                            { id: 'd4', label: 'print 4: mensagens alunas' },
+                            { id: 'd5', label: 'print 5: depoimento espontâneo' },
+                            { id: 'd6', label: 'print 6: transformação diária' },
+                            { id: 'd7', label: 'print 7: reflexão comunitária' },
+                            { id: 'd8', label: 'print 8: vozes da fogueira' },
+                            { id: 'd9', label: 'print 9: carinho e presença' },
+                            { id: 'd10', label: 'print 10: impacto da escrita' },
+                            { id: 'd11', label: 'print 11: relato de experiência' },
+                            { id: 'd12', label: 'print 12: prints do grupo' },
+                            { id: 'd13', label: 'print 13: experiência 21 dias' },
+                            { id: 'd14', label: 'print 14: trocas poéticas' },
+                            { id: 'd15', label: 'print 15: ritmo pessoal' },
+                            { id: 'd16', label: 'print 16: caderno em movimento' },
+                            { id: 'd17', label: 'print 17: comunidade acolhedora' },
+                            { id: 'd18', label: 'print 18: gratidão das leitoras' },
+                            { id: 't1', label: 'depoimento babi (escrita)' },
+                            { id: 't2', label: 'depoimento babi (resistência)' },
+                            { id: 't3', label: 'depoimento tom (sangha)' },
+                            { id: 't4', label: 'depoimento tom (fluxo)' },
+                            { id: 't5', label: 'depoimento jess (resgate)' },
+                            { id: 't6', label: 'depoimento jess (fio de vida)' },
+                          ].map((item) => {
+                            const currentSelected = (sectionData.selected_ids || 't1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5').split(',').map(s => s.trim());
+                            const isChecked = currentSelected.includes(item.id);
+
+                            return (
+                              <label key={item.id} className="flex items-center gap-2 p-2 bg-white rounded-lg border border-papelKraft/30 text-xs font-corpo text-tintaCarvao cursor-pointer hover:border-acentoAzul select-none">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    let updated: string[];
+                                    if (e.target.checked) {
+                                      updated = [...currentSelected, item.id];
+                                    } else {
+                                      updated = currentSelected.filter(id => id !== item.id);
+                                    }
+                                    handleSectionChange(sec.key, 'selected_ids', updated.join(','));
+                                  }}
+                                  className="rounded border-papelKraft text-acentoAzul focus:ring-acentoAzul"
+                                />
+                                <span className="line-clamp-1">{item.label}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {sec.key === 'final_cta' && (
+                    <>
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">destaque de preço e ciclo</label>
+                        <input type="text" value={sectionData.price_text || ''} onChange={(e) => handleSectionChange(sec.key, 'price_text', e.target.value)} placeholder="97 reais · 100% incluso..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {sec.key === 'faq' && (
+                    <div className="md:col-span-2 space-y-3">
+                      <span className="text-xs font-bold text-acentoAzul lowercase block">10 perguntas e respostas da faq</span>
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                         <div key={num} className="p-3 bg-bgPlataforma rounded-xl border border-papelKraft/40 space-y-1">
                           <label className="text-[11px] font-bold text-acentoTerracota">pergunta & resposta #{num}</label>
                           <input type="text" value={sectionData[`q${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `q${num}`, e.target.value)} placeholder={`pergunta ${num}...`} className="w-full px-3 py-1.5 bg-white border border-papelKraft/40 rounded-xl text-xs lowercase" />

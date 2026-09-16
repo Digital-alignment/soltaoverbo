@@ -473,21 +473,60 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   },
   programa_cafe_com_letras: {
     hero: {
-      title: "roda semanal de escrita coletiva · 30 minutos · online",
-      subtitle: "ritual de escrita semanal",
-      body_text: "uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.",
+      badge_text: "roda semanal de escrita coletiva · 30 minutos · online",
+      title: "café com letras",
+      subtitle_gesto: "ritual de escrita semanal",
+      subtitle: "uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.",
       button_text: "sim, quero minha xícara por R$97/mês",
-      button_link: "#inscricao",
+      button_secondary_text: "como funciona o café com letras ↓",
+      schedule_badge: "toda terça-feira · 8h às 8h30 (30 min) · zoom",
+      price_text: "R$ 97,00",
+      price_subtext: "/mês",
+      ciclo_badge: "100% incluso para quem está no ciclo de aprofundamento",
+      guarantee_text: "garantia incondicional de 7 dias",
+      quote: "“escrever junto é descobrir que a sua palavra não estava sozinha.”",
       image_url: "/brand-assets/gallery/events/_MG_9849.jpg"
     },
-    detalhes: {
-      title: "a inspiração tem hora marcada",
-      subtitle: "toda terça-feira das 8h às 8h30 no zoom",
-      quote_text: "“escrevo quando estou inspirado. e faço questão de estar inspirado às nove horas de cada manhã.” (peter de vries). a nossa hora é às oito.",
-      body_text: "inspiração não é sorte, é encontro marcado. toda terça, às 8h, tem gente sentando junto. você não precisa decidir se hoje é o dia, não precisa achar assunto, não precisa estar inspirada antes de começar: a hora já está marcada e o tema, pronto.",
-      button_text: "participar da próxima edição →",
-      button_link: "#inscricao",
-      image_url: "/brand-assets/gallery/events/_MG_9991.jpg"
+    inspiracao: {
+      quote_text: "“escrevo quando estou inspirado. e faço questão de estar inspirado às nove horas de cada manhã.”",
+      quote_author: "(peter de vries)",
+      title_terracota: "a nossa hora é às oito.",
+      title_azul: "inspiração não é sorte, é encontro marcado.",
+      p1: "mas verdade seja dita, às vezes a gente precisa de um empurrãozinho para escrever. e para isso o café com letras existe: para te inspirar a fazer isso em coletivo. toda terça, às 8h, tem gente sentando junto. você não precisa decidir se hoje é o dia, não precisa achar assunto, não precisa estar inspirada antes de começar: a hora já está marcada e o tema, pronto.",
+      p2: "o tema muda toda semana. a magia desse encontro você descobre na prática: quando escrevemos sobre um tema, ele passa a ser mais vivo em você. com mais consciência, o que antes teria passado batido vira a oportunidade de enxergar o seu entorno de uma nova maneira."
+    },
+    pilares: {
+      title: "que trinta minutos por semana fazem com você",
+      subtitle: "quatro pilares pensados para caber de verdade na sua rotina e ainda assim mexer com ela.",
+      p1_step: "01", p1_category: "ritual de terça-feira", p1_title: "começar a semana pela sua voz", p1_desc: "meia hora, das 8h às 8h30, antes das reuniões, das mensagens e das urgências dos outros. você entra na semana tendo escutado a si mesma primeiro. o resto do dia acontece a partir de outro lugar.",
+      p2_step: "02", p2_category: "autoconhecimento", p2_title: "escrita sem julgamento", p2_desc: "não tem bonito ou feio, certo ou errado e nem forma certa. você para de escrever para ser lida e começa a escrever para se entender (é aí que a escrita vira ferramenta).",
+      p3_step: "03", p3_category: "espaço seguro", p3_title: "vulnerabilidade e conexão", p3_desc: "você descobre que se vulnerabilizar, antes de mais nada, é se permitir enregar a própria história de outra maneira. e aqui você faz isso num ambiente seguro, sem obrigação de performar nem de mostrar.",
+      p4_step: "04", p4_category: "comunidade ativa", p4_title: "roda contínua no whatsapp", p4_desc: "o grupo onde os textos da terça seguem circulando e onde o exercício do dia é enviado, para quem não conseguiu estar na roda escrever no seu tempo."
+    },
+    depoimentos: {
+      badge_text: "vozes de quem já toma esse café com a gente",
+      title: "vozes de quem já toma esse café com a gente",
+      subtitle: "mensagens reais de quem escreve com a gente nas terças.",
+      selected_ids: "t1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5"
+    },
+    final_cta: {
+      title: "sua próxima terça pode começar diferente",
+      subtitle: "você não precisa esperar a vontade chegar, nem ter assunto, nem saber escrever. precisa só aparecer numa terça, às 8h.",
+      price_text: "97 reais · 100% incluso para quem está no ciclo de aprofundamento",
+      button_text: "sim, quero minha xícara por R$97/mês"
+    },
+    faq: {
+      title: "perguntas frequentes sobre o café com letras",
+      q1: "quando acontecem os encontros?", a1: "toda terça-feira, das 8h às 8h30 da manhã (horário de brasília), ao vivo no zoom.",
+      q2: "o café é semanal ou mensal?", a2: "semanal. toda terça temos nosso encontro marcado.",
+      q3: "o encontro fica gravado?", a3: "não. o café é ao vivo. é um ritual de presença.",
+      q4: "e se eu não puder participar numa terça?", a4: "você não fica de fora: enviamos o exercício do dia no grupo de whatsapp, para você escrever no seu tempo e partilhar com a gente. não existe falta nem cobrança: você vem nas terças que puder.",
+      q5: "sou obrigada a ler meu texto em voz alta?", a5: "nunca. a partilha é sempre voluntária (e isso também é escrever junto).",
+      q6: "preciso ter experiência com escrita?", a6: "não. aqui é um espaço sem julgamento onde não se corrige texto, se escuta gente. o único pré-requisito é vontade de escrever e estar junto.",
+      q7: "preciso escrever à mão?", a7: "gostamos de papel e caneta, mas escreva como for melhor para você. você também tem acesso à nossa plataforma digital e pode escrever por lá (e compartilhar na nossa área de partilha).",
+      q8: "quem está no ciclo de aprofundamento paga?", a8: "não. o café com letras está incluído na travessia do ciclo, sem custo adicional.",
+      q9: "posso cancelar quando quiser?", a9: "sim. é um passe mensal, sem fidelidade. e você tem garantia incondicional de 7 dias: se não for para você, devolvemos o valor integral.",
+      q10: "preciso levar algum material?", a10: "só caderno, caneta e um café. o resto deixa com a gente."
     }
   },
   programa_ciclo: {
