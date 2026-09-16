@@ -343,17 +343,41 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
           </span>
         </div>
 
-        <select
-          value={selectedPageSlug}
-          onChange={(e) => setSelectedPageSlug(e.target.value)}
-          className="w-full sm:w-auto px-4 py-2 bg-papelClaro border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo text-acentoAzul focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
-        >
-          {PAGE_OPTIONS.map((page) => (
-            <option key={page.slug} value={page.slug}>
-              {page.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <select
+            value={selectedPageSlug}
+            onChange={(e) => setSelectedPageSlug(e.target.value)}
+            className="w-full sm:w-auto px-4 py-2 bg-papelClaro border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo text-acentoAzul focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
+          >
+            {PAGE_OPTIONS.map((page) => (
+              <option key={page.slug} value={page.slug}>
+                {page.name}
+              </option>
+            ))}
+          </select>
+          <a
+            href={
+              selectedPageSlug === 'about' || selectedPageSlug === 'founders'
+                ? '/about'
+                : selectedPageSlug === 'programa_21_dias'
+                ? '/21-dias-de-escrita'
+                : selectedPageSlug === 'programa_cafe_com_letras'
+                ? '/cafe-com-letras'
+                : selectedPageSlug === 'programa_ciclo'
+                ? '/ciclo-de-aprofundamento'
+                : selectedPageSlug === 'contrate_experiencia'
+                ? '/contrate-uma-experiencia'
+                : '/'
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-2 bg-acentoAzul/10 hover:bg-acentoAzul text-acentoAzul hover:text-white border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo lowercase transition cursor-pointer flex items-center gap-1.5 flex-shrink-0"
+            title="visualizar página pública em nova aba"
+          >
+            <Eye className="w-3.5 h-3.5 text-acentoTerracota" />
+            <span className="hidden sm:inline">ver página</span>
+          </a>
+        </div>
       </div>
 
       {/* PAINEL DE SEÇÕES DA PÁGINA SELECIONADA */}
