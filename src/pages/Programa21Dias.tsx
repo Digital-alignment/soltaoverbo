@@ -132,9 +132,93 @@ const faqItems = [
 export default function Programa21Dias() {
   const { getSection } = usePageContent('programa_21_dias');
   const heroSec = getSection('hero', {
+    badge_text: 'escrever até virar hábito',
     title: 'escrever até virar hábito',
     subtitle: 'uma jornada guiada para desbloquear sua expressão, criar hábitos de escrita leve e reencontrar a sua voz autêntica sem autocrítica.',
+    price_text: 'R$ 77,00',
+    price_subtext: 'à vista (ou 2x R$ 38,50)',
+    guarantee_badge: 'garantia de 7 dias',
+    button_text: 'garantir minha vaga por R$ 77',
+    image_url: '/brand-assets/elements/collages/png-retro-collages-whit-book-publication-flower-plant.png',
+    quote: '“em 21 dias, você não aprende apenas a escrever: aprende a se ouvir com compaixão.”',
   });
+
+  const entregaveisSec = getSection('entregaveis', {
+    badge_text: 'tudo o que você recebe',
+    title: 'uma experiência completa para sua jornada de escrita',
+    subtitle: 'três pilares desenhados para acolher o seu ritmo e garantir o seu hábito.',
+    card1_title: '21 exercícios guiados',
+    card1_desc: 'liberados dia a dia na plataforma com comandos poéticos e reflexões práticas para aplicar em 15 minutos.',
+    card1_tag: '01 // plataforma própria',
+    card2_title: 'pílulas em áudio',
+    card2_desc: 'áudios inspiradores conduzidos pelas facilitadoras em formato de podcast interno para ouvir onde e quando quiser.',
+    card2_tag: '02 // podcast interno',
+    card3_title: 'fogueira comunitária',
+    card3_desc: 'acesso ilimitado ao espaço seguro de partilha durante todo o desafio para ler e trocar com outras leitoras.',
+    card3_tag: '03 // comunidade viva',
+  });
+
+  const trilhaSec = getSection('trilha', {
+    badge_text: 'a sua jornada passo a passo',
+    title: 'como a mágica acontece em 3 semanas',
+    subtitle: 'três fases evolutivas desenhadas para transformar a sua relação com as palavras.',
+    sem1_title: 'semana 1: olhar para dentro (dias 1 a 7)',
+    sem1_subtitle: 'desbloquear a voz e silenciar a crítica interna',
+    sem1_desc: 'antes de qualquer outra coisa, existe você: as memórias que te formaram, as emoções que passaram por você como rios. esta semana é um convite para parar, respirar e voltar para dentro.',
+    sem1_audio: 'áudio 01: perdendo o medo da folha em branco (5 min)',
+    sem1_img: '/brand-assets/gallery/events/13062026-IMG_6581-2.jpg',
+    sem2_title: 'semana 2: olhar para fora (dias 8 a 14)',
+    sem2_subtitle: 'perceber o mundo e dar forma ao caos emocional',
+    sem2_desc: 'o mundo ao seu redor está cheio de espelhos: cada pessoa, cada gesto, cada detalhe do ambiente reflete algo em você. esta semana amplia o olhar de dentro para fora.',
+    sem2_audio: 'áudio 08: a bússola das emoções e memórias (6 min)',
+    sem2_img: '/brand-assets/gallery/events/13062026-IMG_5364-2.jpg',
+    sem3_title: 'semana 3: olhar para o entre (dias 15 a 21)',
+    sem3_subtitle: 'afirmar sua voz autêntica e cultivar o hábito',
+    sem3_desc: 'duas semanas de olhar, pra dentro e pra fora. agora é hora de tecer: integrar o que ficou dentro com o que você percebeu fora, e projetar caminhos para o que vem a seguir.',
+    sem3_audio: 'áudio 15: seu manifesto de autoria e coragem (7 min)',
+    sem3_img: '/brand-assets/gallery/events/_MG_9849.jpg',
+  });
+
+  const paraQuemESec = getSection('para_quem_e', {
+    title: 'este programa é para você?',
+    subtitle: 'transparência e respeito com o seu tempo e investimento.',
+    sim_badge: 'este programa É para você se:',
+    sim_1: 'deseja destravar a escrita e criar um hábito constante sem cobranças',
+    sim_2: 'busca organizar pensamentos dispersos e aliviar o estresse diário',
+    sim_3: 'quer um espaço seguro para sentir, refletir e ressignificar histórias',
+    sim_4: 'prefere aprender no seu próprio ritmo com apenas 15 minutos por dia',
+    nao_badge: 'NÃO é para você se:',
+    nao_1: 'procura um curso técnico de gramática acadêmica ou regras rígidas',
+    nao_2: 'busca fórmulas mágicas de publicação de livros sem dedicação pessoal',
+    nao_3: 'não está disposta a olhar para dentro com afeto e escuta genuína',
+  });
+
+  const depoimentosSec = getSection('depoimentos', {
+    badge_text: 'relatos & impressões reais da comunidade',
+    title: 'vozes e prints de quem viveu os 21 dias',
+    subtitle: 'mensagens reais, trocas espontâneas e relatos de transformação compartilhados pelas nossas alunas.',
+  });
+
+  const finalOfferSec = getSection('final_offer', {
+    badge_text: 'inscrições abertas com preço promocional',
+    title: 'pronta para soltar o verbo e escrever sua história?',
+    subtitle: 'garanta seu acesso imediato aos 21 dias de exercícios, áudios inspiradores e à fogueira de partilha comunitária.',
+    box_badge: 'investimento único com acesso completo',
+    price_text: 'R$ 77,00',
+    price_subtext: 'à vista (ou 2x R$ 38,50)',
+    guarantee_text: 'garantia incondicional de 7 dias sem riscos',
+    button_text: 'sim! quero garantir minha vaga agora',
+  });
+
+  const faqSec = getSection('faq', {
+    title: 'perguntas frequentes sobre os 21 dias',
+    q1: faqItems[0].q, a1: faqItems[0].a,
+    q2: faqItems[1].q, a2: faqItems[1].a,
+    q3: faqItems[2].q, a3: faqItems[2].a,
+    q4: faqItems[3].q, a4: faqItems[3].a,
+    q5: faqItems[4].q, a5: faqItems[4].a,
+  });
+
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [activePhaseIndex, setActivePhaseIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
@@ -184,11 +268,11 @@ export default function Programa21Dias() {
                   alt="chama viva"
                   className="w-5 h-5 object-contain"
                 />
-                <span>escrever até virar hábito</span>
+                <span>{heroSec.badge_text || 'escrever até virar hábito'}</span>
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-editorial text-acentoAzul lowercase leading-[1.1] tracking-tight">
-                escrever até virar hábito
+                {heroSec.title || 'escrever até virar hábito'}
               </h1>
 
               <p className="text-tintaCarvao/85 text-lg sm:text-xl leading-relaxed max-w-2xl font-medium lowercase">
@@ -204,17 +288,17 @@ export default function Programa21Dias() {
                     </span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
-                        R$ 77,00
+                        {heroSec.price_text || 'R$ 77,00'}
                       </span>
                       <span className="text-xs sm:text-sm text-tintaCarvao/70 lowercase font-medium">
-                        à vista (ou 2x R$ 38,50)
+                        {heroSec.price_subtext || 'à vista (ou 2x R$ 38,50)'}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2 text-xs font-semibold text-acentoOliva bg-acentoOliva/10 px-3.5 py-1.5 rounded-full border border-acentoOliva/30 w-fit">
                     <ShieldCheck className="w-4 h-4 text-acentoOliva" />
-                    <span>garantia de 7 dias</span>
+                    <span>{heroSec.guarantee_badge || 'garantia de 7 dias'}</span>
                   </div>
                 </div>
 
@@ -236,7 +320,7 @@ export default function Programa21Dias() {
                   onClick={handleEnroll}
                   className="btn-pill-primary text-base sm:text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-3 cursor-pointer lowercase"
                 >
-                  <span>garantir minha vaga por R$ 77</span>
+                  <span>{heroSec.button_text || 'garantir minha vaga por R$ 77'}</span>
                   <Pencil className="w-5 h-5 text-white" />
                 </button>
               </div>
@@ -267,7 +351,7 @@ export default function Programa21Dias() {
 
                 <div className="space-y-2">
                   <blockquote className="font-editorial text-xl sm:text-2xl text-acentoAzul leading-snug font-bold lowercase">
-                    “em 21 dias, você não aprende apenas a escrever: aprende a se ouvir com compaixão.”
+                    {heroSec.quote || '“em 21 dias, você não aprende apenas a escrever: aprende a se ouvir com compaixão.”'}
                   </blockquote>
                   <p className="text-xs text-tintaCarvao/60 font-mono lowercase pt-2 border-t border-papelKraft/30">
                     método autoral // solta o verbo colectivo
@@ -289,13 +373,13 @@ export default function Programa21Dias() {
                 alt="icone"
                 className="w-5 h-5 object-contain"
               />
-              <span>tudo o que você recebe</span>
+              <span>{entregaveisSec.badge_text || 'tudo o que você recebe'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              uma experiência completa para sua jornada de escrita
+              {entregaveisSec.title || 'uma experiência completa para sua jornada de escrita'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              três pilares desenhados para acolher o seu ritmo e garantir o seu hábito.
+              {entregaveisSec.subtitle || 'três pilares desenhados para acolher o seu ritmo e garantir o seu hábito.'}
             </p>
           </div>
 
@@ -306,14 +390,14 @@ export default function Programa21Dias() {
                   <FileText className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  21 exercícios guiados
+                  {entregaveisSec.card1_title || '21 exercícios guiados'}
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  liberados dia a dia na plataforma com comandos poéticos e reflexões práticas para aplicar em 15 minutos.
+                  {entregaveisSec.card1_desc || 'liberados dia a dia na plataforma com comandos poéticos e reflexões práticas para aplicar em 15 minutos.'}
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>01 // plataforma própria</span>
+                <span>{entregaveisSec.card1_tag || '01 // plataforma própria'}</span>
               </div>
             </div>
 
@@ -323,14 +407,14 @@ export default function Programa21Dias() {
                   <Headphones className="w-6 h-6" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  pílulas em áudio
+                  {entregaveisSec.card2_title || 'pílulas em áudio'}
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  áudios inspiradores conduzidos pelas facilitadoras em formato de podcast interno para ouvir onde e quando quiser.
+                  {entregaveisSec.card2_desc || 'áudios inspiradores conduzidos pelas facilitadoras em formato de podcast interno para ouvir onde e quando quiser.'}
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>02 // podcast interno</span>
+                <span>{entregaveisSec.card2_tag || '02 // podcast interno'}</span>
               </div>
             </div>
 
@@ -340,14 +424,14 @@ export default function Programa21Dias() {
                   <Flame className="w-6 h-6 text-acentoAzul" />
                 </div>
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-2 group-hover:text-acentoTerracota transition-colors">
-                  fogueira comunitária
+                  {entregaveisSec.card3_title || 'fogueira comunitária'}
                 </h3>
                 <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                  acesso ilimitado ao espaço seguro de partilha durante todo o desafio para ler e trocar com outras leitoras.
+                  {entregaveisSec.card3_desc || 'acesso ilimitado ao espaço seguro de partilha durante todo o desafio para ler e trocar com outras leitoras.'}
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-papelKraft/30 text-xs font-bold text-acentoAzul opacity-70">
-                <span>03 // comunidade viva</span>
+                <span>{entregaveisSec.card3_tag || '03 // comunidade viva'}</span>
               </div>
             </div>
           </div>
@@ -360,19 +444,26 @@ export default function Programa21Dias() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-bgPlataforma border border-papelKraft/40 text-acentoAzul text-xs sm:text-sm font-semibold lowercase tracking-wider mb-4 shadow-sm">
               <Clock className="w-4 h-4 text-acentoTerracota" />
-              <span>a sua jornada passo a passo</span>
+              <span>{trilhaSec.badge_text || 'a sua jornada passo a passo'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              como a mágica acontece em 3 semanas
+              {trilhaSec.title || 'como a mágica acontece em 3 semanas'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              três fases evolutivas desenhadas para transformar a sua relação com as palavras.
+              {trilhaSec.subtitle || 'três fases evolutivas desenhadas para transformar a sua relação com as palavras.'}
             </p>
           </div>
 
           <div className="space-y-12 max-w-5xl mx-auto">
             {journeyPhases.map((phase, idx) => {
               const isSelected = activePhaseIndex === idx;
+              const phaseKey = `sem${idx + 1}`;
+              const pTitle = trilhaSec[`${phaseKey}_title`] || phase.title;
+              const pSubtitle = trilhaSec[`${phaseKey}_subtitle`] || phase.subtitle;
+              const pDesc = trilhaSec[`${phaseKey}_desc`] || phase.description;
+              const pAudio = trilhaSec[`${phaseKey}_audio`] || phase.audioTeaser;
+              const pImg = trilhaSec[`${phaseKey}_img`] || phase.image;
+
               return (
                 <div
                   key={idx}
@@ -393,8 +484,8 @@ export default function Programa21Dias() {
                     <div className="lg:col-span-5 relative">
                       <div className="w-full h-60 sm:h-72 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative group/img">
                         <img
-                          src={phase.image}
-                          alt={phase.title}
+                          src={pImg}
+                          alt={pTitle}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-acentoAzul/70 via-transparent to-transparent flex items-end p-4">
@@ -411,21 +502,21 @@ export default function Programa21Dias() {
                           {phase.number}
                         </span>
                         <h3 className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase">
-                          {phase.title}
+                          {pTitle}
                         </h3>
                       </div>
 
                       <p className="font-gesto text-acentoTerracota text-2xl font-normal">
-                        {phase.subtitle}
+                        {pSubtitle}
                       </p>
 
                       <p className="text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase">
-                        {phase.description}
+                        {pDesc}
                       </p>
 
                       <div className="inline-flex items-center gap-2.5 text-xs font-semibold text-acentoAzul bg-papelClaro px-4 py-2 rounded-full border border-papelKraft/50 shadow-xs">
                         <Volume2 className="w-4 h-4 text-acentoTerracota animate-pulse" />
-                        <span>{phase.audioTeaser}</span>
+                        <span>{pAudio}</span>
                       </div>
 
                       <div className="pt-3 border-t border-papelKraft/30 grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -435,10 +526,10 @@ export default function Programa21Dias() {
                             className="p-3 bg-papelClaro rounded-xl border border-papelKraft/40 space-y-1"
                           >
                             <span className="text-[11px] font-bold text-acentoTerracota lowercase tracking-wider block">
-                              {m.days}
+                              {trilhaSec[`${phaseKey}_m${mIdx + 1}_days`] || m.days}
                             </span>
                             <p className="text-xs text-tintaCarvao/80 font-medium lowercase line-clamp-2">
-                              {m.label}
+                              {trilhaSec[`${phaseKey}_m${mIdx + 1}_label`] || m.label}
                             </p>
                           </div>
                         ))}
@@ -457,10 +548,10 @@ export default function Programa21Dias() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              este programa é para você?
+              {paraQuemESec.title || 'este programa é para você?'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              transparência e respeito com o seu tempo e investimento.
+              {paraQuemESec.subtitle || 'transparência e respeito com o seu tempo e investimento.'}
             </p>
           </div>
 
@@ -468,48 +559,62 @@ export default function Programa21Dias() {
             <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoOliva/20 text-tintaCarvao text-xs font-bold lowercase tracking-wider">
                 <CheckCircle2 className="w-4 h-4 text-acentoOliva" />
-                <span>este programa É para você se:</span>
+                <span>{paraQuemESec.sim_badge || 'este programa É para você se:'}</span>
               </div>
 
               <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>deseja destravar a escrita e criar um hábito constante sem cobranças</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>busca organizar pensamentos dispersos e aliviar o estresse diário</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>quer um espaço seguro para sentir, refletir e ressignificar histórias</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
-                  <span>prefere aprender no seu próprio ritmo com apenas 15 minutos por dia</span>
-                </li>
+                {paraQuemESec.sim_1 && (
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.sim_1}</span>
+                  </li>
+                )}
+                {paraQuemESec.sim_2 && (
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.sim_2}</span>
+                  </li>
+                )}
+                {paraQuemESec.sim_3 && (
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.sim_3}</span>
+                  </li>
+                )}
+                {paraQuemESec.sim_4 && (
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-acentoOliva flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.sim_4}</span>
+                  </li>
+                )}
               </ul>
             </div>
 
             <div className="bg-papelClaro rounded-3xl p-8 border border-papelKraft/40 shadow-sm space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-acentoTerracota/10 text-acentoTerracota text-xs font-bold lowercase tracking-wider">
                 <XCircle className="w-4 h-4 text-acentoTerracota" />
-                <span>NÃO é para você se:</span>
+                <span>{paraQuemESec.nao_badge || 'NÃO é para você se:'}</span>
               </div>
 
               <ul className="space-y-4 text-tintaCarvao/85 text-base lowercase font-medium">
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>procura um curso técnico de gramática acadêmica ou regras rígidas</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>busca fórmulas mágicas de publicação de livros sem dedicação pessoal</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
-                  <span>não está disposta a olhar para dentro com afeto e escuta genuína</span>
-                </li>
+                {paraQuemESec.nao_1 && (
+                  <li className="flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.nao_1}</span>
+                  </li>
+                )}
+                {paraQuemESec.nao_2 && (
+                  <li className="flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.nao_2}</span>
+                  </li>
+                )}
+                {paraQuemESec.nao_3 && (
+                  <li className="flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-acentoTerracota flex-shrink-0 mt-0.5" />
+                    <span>{paraQuemESec.nao_3}</span>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -529,13 +634,13 @@ export default function Programa21Dias() {
                 alt="icone"
                 className="w-5 h-5 object-contain"
               />
-              <span>relatos & impressões reais da comunidade</span>
+              <span>{depoimentosSec.badge_text || 'relatos & impressões reais da comunidade'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              vozes e prints de quem viveu os 21 dias
+              {depoimentosSec.title || 'vozes e prints de quem viveu os 21 dias'}
             </h2>
             <p className="text-tintaCarvao/80 text-base sm:text-lg font-medium lowercase">
-              mensagens reais, trocas espontâneas e relatos de transformação compartilhados pelas nossas alunas.
+              {depoimentosSec.subtitle || 'mensagens reais, trocas espontâneas e relatos de transformação compartilhados pelas nossas alunas.'}
             </p>
           </div>
 
@@ -675,34 +780,34 @@ export default function Programa21Dias() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-acentoAzul text-white rounded-3xl p-8 sm:p-14 border border-white/20 shadow-kraft-lg text-center space-y-8 relative overflow-hidden">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-acentoOliva text-xs sm:text-sm font-semibold lowercase tracking-wider">
-              <span>inscrições abertas com preço promocional</span>
+              <span>{finalOfferSec.badge_text || 'inscrições abertas com preço promocional'}</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-papelClaro lowercase">
-              pronta para soltar o verbo e escrever sua história?
+              {finalOfferSec.title || 'pronta para soltar o verbo e escrever sua história?'}
             </h2>
 
             <p className="text-papelClaro/85 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium lowercase">
-              garanta seu acesso imediato aos 21 dias de exercícios, áudios inspiradores e à fogueira de partilha comunitária.
+              {finalOfferSec.subtitle || 'garanta seu acesso imediato aos 21 dias de exercícios, áudios inspiradores e à fogueira de partilha comunitária.'}
             </p>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-lg mx-auto space-y-4">
               <span className="text-xs font-bold text-papelClaro/70 lowercase tracking-wider block">
-                investimento único com acesso completo
+                {finalOfferSec.box_badge || 'investimento único com acesso completo'}
               </span>
 
               <div className="flex justify-center items-baseline gap-2">
                 <span className="text-4xl sm:text-5xl font-bold font-editorial text-white">
-                  R$ 77,00
+                  {finalOfferSec.price_text || 'R$ 77,00'}
                 </span>
                 <span className="text-sm text-papelClaro/80 lowercase">
-                  à vista (ou 2x R$ 38,50)
+                  {finalOfferSec.price_subtext || 'à vista (ou 2x R$ 38,50)'}
                 </span>
               </div>
 
               <div className="flex items-center justify-center gap-2 text-xs font-bold text-acentoOliva pt-2 border-t border-white/15">
                 <ShieldCheck className="w-4 h-4 text-acentoOliva" />
-                <span>garantia incondicional de 7 dias sem riscos</span>
+                <span>{finalOfferSec.guarantee_text || 'garantia incondicional de 7 dias sem riscos'}</span>
               </div>
             </div>
 
@@ -711,7 +816,7 @@ export default function Programa21Dias() {
                 onClick={handleEnroll}
                 className="btn-pill-accent text-lg px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-3 w-full sm:w-auto lowercase cursor-pointer"
               >
-                <span>sim! quero garantir minha vaga agora</span>
+                <span>{finalOfferSec.button_text || 'sim! quero garantir minha vaga agora'}</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
@@ -724,13 +829,18 @@ export default function Programa21Dias() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul lowercase mb-3">
-              perguntas frequentes sobre os 21 dias
+              {faqSec.title || 'perguntas frequentes sobre os 21 dias'}
             </h2>
           </div>
 
           <div className="space-y-4">
-            {faqItems.map((item, index) => {
+            {[1, 2, 3, 4, 5].map((num) => {
+              const qVal = faqSec[`q${num}`] || faqItems[num - 1]?.q;
+              const aVal = faqSec[`a${num}`] || faqItems[num - 1]?.a;
+              if (!qVal) return null;
+              const index = num - 1;
               const isOpen = openFaqIndex === index;
+
               return (
                 <div
                   key={index}
@@ -745,7 +855,7 @@ export default function Programa21Dias() {
                     className="w-full p-5 sm:p-6 text-left flex justify-between items-center gap-4 cursor-pointer focus:outline-none select-none"
                   >
                     <span className="font-bold text-lg sm:text-xl font-editorial text-acentoAzul lowercase">
-                      {item.q}
+                      {qVal}
                     </span>
                     <ChevronDown
                       className={`w-5 h-5 text-acentoAzul transition-transform duration-300 ${
@@ -756,7 +866,7 @@ export default function Programa21Dias() {
 
                   {isOpen && (
                     <div className="px-5 sm:px-6 pb-6 pt-2 border-t border-papelKraft/30 text-tintaCarvao/85 text-base leading-relaxed font-medium lowercase">
-                      {item.a}
+                      {aVal}
                     </div>
                   )}
                 </div>
