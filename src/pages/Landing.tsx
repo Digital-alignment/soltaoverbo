@@ -16,6 +16,7 @@ import ContrateExperienciaSection from '../components/ContrateExperienciaSection
 import FoundersSection from '../components/FoundersSection';
 import PaymentModal, { ProductKey } from '../components/PaymentModal';
 import { usePageContent } from '../hooks/usePageContent';
+import { BRAND_ASSETS } from '../config/brandAssets';
 
 export default function Landing() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
