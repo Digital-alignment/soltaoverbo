@@ -25,6 +25,7 @@ import {
   Coffee,
   RefreshCw,
   Briefcase,
+  CreditCard,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -40,6 +41,12 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     id: 'dashboard',
     label: 'dashboard',
     icon: LayoutDashboard,
+    group: 'geral',
+  },
+  {
+    id: 'financas',
+    label: 'finanças & assinaturas',
+    icon: CreditCard,
     group: 'geral',
   },
   {

@@ -9,6 +9,7 @@ import BannerManagement from '../components/BannerManagement';
 import BroadcastManagement from '../components/BroadcastManagement';
 import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
+import AdminFinancasManager from '../components/AdminFinancasManager';
 import PageContentManagement from '../components/PageContentManagement';
 import MediaGalleryManagement from '../components/MediaGalleryManagement';
 import Admin21DiasHub from '../components/admin/hubs/Admin21DiasHub';
@@ -822,6 +823,13 @@ export default function Admin() {
         {activeTab === 'checkout' && (
           <div ref={checkoutRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <CheckoutAnalytics />
+          </div>
+        )}
+
+        {/* ABA FINANÇAS & ASSINATURAS */}
+        {activeTab === 'financas' && (
+          <div className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
+            <AdminFinancasManager />
           </div>
         )}
 
