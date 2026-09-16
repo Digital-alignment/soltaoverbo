@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { usePageContent } from '../hooks/usePageContent';
 
 interface FaqItem {
   question: string;
@@ -47,6 +48,13 @@ const faqData: FaqItem[] = [
 
 export default function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { getSection } = usePageContent('landing');
+
+  const faqSec = getSection('faq', {
+    badge_text: 'dúvidas frequentes',
+    title: 'perguntas que costumam surgir',
+    subtitle: 'respostas simples e diretas para você dar o próximo passo com segurança.',
+  });
 
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -62,13 +70,13 @@ export default function FaqAccordion() {
               alt="duvidas"
               className="w-5 h-5 object-contain"
             />
-            <span>dúvidas frequentes</span>
+            <span>{faqSec.badge_text || 'dúvidas frequentes'}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-            perguntas que costumam surgir
+            {faqSec.title || 'perguntas que costumam surgir'}
           </h2>
           <p className="text-tintaCarvao/80 text-base sm:text-lg max-w-2xl mx-auto font-medium lowercase">
-            respostas simples e diretas para você dar o próximo passo com segurança.
+            {faqSec.subtitle || 'respostas simples e diretas para você dar o próximo passo com segurança.'}
           </p>
         </div>
 

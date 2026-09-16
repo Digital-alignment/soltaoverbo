@@ -102,15 +102,111 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
     depoimentos: {
       badge_text: "vozes da nossa comunidade",
       title: "o que dizem as pessoas que soltam o verbo",
-      t1_quote: "em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.",
-      t1_author: "bárbara alcântara (babi)",
-      t1_role: "café com letras & ciclo de aprofundamento",
-      t2_quote: "o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.",
-      t2_author: "tom vitralli",
-      t2_role: "aluno dos 21 dias de escrita",
-      t3_quote: "conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.",
-      t3_author: "jess",
-      t3_role: "aluna dos 21 dias de escrita"
+      selected_ids: "t1,t3,t5"
+    },
+    b2b_section: {
+      badge_text: "experiências sob medida",
+      title: "crie com a gente",
+      subtitle: "leve uma experiência de escrita da solta o verbo para a sua organização e cultive pertencimento a partir da escrita expressiva.",
+      card1_badge: "empresas e organizações",
+      card1_title: "oficinas corporativas",
+      card1_desc: "a escrita como pausa e cuidado dentro da rotina de trabalho: um encontro que aproxima as pessoas e revela novas maneiras de se relacionar.",
+      card2_badge: "eventos e experiências",
+      card2_title: "experiência com escrita em eventos",
+      card2_desc: "a escrita como convite à presença em festivais, retiros e encontros: um momento de pausa que muda a relação com o espaço, consigo e com os outros.",
+      card3_badge: "escolas e educação",
+      card3_title: "escrita para quem está aprendendo",
+      card3_desc: "atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo."
+    },
+    palavras_sob_medida: {
+      badge_text: "palavras sob medida",
+      title: "textos para momentos especiais",
+      body_text: "textos autorais para casamentos, homenagens, celebrações e marcos de empresas: ouvimos a sua história e devolvemos em palavras.",
+      button_text: "solicitar um texto sob medida"
+    },
+    teoria_pratica: {
+      badge_text: "teoria + prática / o que sustenta a nossa escrita.",
+      title: "“nosso trabalho nasce de estudo e de vivência.”",
+      body_text: "não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.",
+      highlight_final: "é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.",
+      button_text: "enviar e-mail",
+      button_link: "mailto:soltaoverbocoletivo@gmail.com"
+    },
+    final_cta: {
+      title: "vamos desenhar algo especial juntos?",
+      subtitle: "fale diretamente conosco pelo whatsapp e receba a proposta detalhada.",
+      button_text: "falar no whatsapp"
+    },
+    faq: {
+      badge_text: "dúvidas frequentes",
+      title: "perguntas que costumam surgir",
+      subtitle: "respostas simples e diretas para você dar o próximo passo com segurança."
+    }
+  },
+  founders: {
+    bruna: {
+      name: "bruna riedel",
+      role: "co-criadora & facilitadora",
+      photo: "/bruna copy copy.png",
+      summary: "de uma comuna em israel a uma horta comunitária em florianópolis, bruna riedel é geógrafa e escritora que encontrou na palavra a ferramenta pra construir pertencimento.",
+      bio: "aos dezoito anos morou numa comuna em israel, dividindo casa e salário com quinze amigos. antes disso, três meses num kibutz, e depois deu aula de hebraico pra refugiados da etiópia. foi ali que entendeu que pertencer é ser corresponsável pelo coletivo.\n\nformou-se em geografia na udesc, com pesquisa sobre um grupo que transformou um terreno baldio em horta comunitária, com pessoas em situação de rua plantando onde antes só tinha mato.\n\nrepetiu esse gesto em instituições diferentes: impact hub, salto inclusão produtiva, tribos lab, e há quatro anos o instituto amuta, aplicando o design de conexões. seu trabalho parte das pesquisas de james pennebaker sobre escrita expressiva e da curva do esquecimento de ebbinghaus, e acredita que todo mundo já sabe escrever, só precisa de um canal guiado pra se escutar.\n\ncofundadora e facilitadora da solta o verbo, ao lado de júlia alvim, onde aplica na palavra o que aprendeu na horta e na comuna: que ninguém pertence sozinho."
+    },
+    julia: {
+      name: "júlia alvim",
+      role: "co-criadora & facilitadora",
+      photo: "/jo.png",
+      summary: "julia alvim é contadora de histórias. encontrou na escrita a ferramenta da própria travessia e é o que hoje sustenta seu trabalho com outras pessoas.",
+      bio: "saiu de um cargo de gerência em multinacional para seguir um caminho autoral mais alinhado com sua verdade e explora todas as possibilidades de comunicação através da arte para contar uma boa história.\n\natualmente trabalha com comunicação digital, criação de conteúdo de vídeo e produção de eventos, retiros e encontros no brasil e na europa. criou projetos coletivos como o children of the universe e o 'segundas intenções', newsletter no substack. é movida pela possibilidade de aprender algo novo.\n\nco-criadora e facilitadora do solta o verbo, desenha jornadas em que a expressão através da escrita se torna um espaço seguro para reorganizar emoções e ressignificar narrativas."
+    }
+  },
+  testimonials_pool: {
+    t1: {
+      id: "t1",
+      author: "bárbara alcântara (babi)",
+      role: "café com letras & ciclo de aprofundamento",
+      quote: "em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.",
+      event_tag: "café com letras & ciclo",
+      image_url: ""
+    },
+    t2: {
+      id: "t2",
+      author: "bárbara alcântara (babi)",
+      role: "café com letras & ciclo de aprofundamento",
+      quote: "gostei de aprender sobre a resistência, sobre a importância da troca e, principalmente, sobre o quanto é possível escrever em só 15 minutos! vocês são demais, eu encontrei aleatoriamente o solta o verbo e sou muito grata por isso.",
+      event_tag: "café com letras & ciclo",
+      image_url: ""
+    },
+    t3: {
+      id: "t3",
+      author: "tom vitralli",
+      role: "explorador de realidades, andarilho de alma",
+      quote: "o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo.",
+      event_tag: "21 dias & ciclo",
+      image_url: ""
+    },
+    t4: {
+      id: "t4",
+      author: "tom vitralli",
+      role: "explorador de realidades, andarilho de alma",
+      quote: "minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica. apesar de já escrever poesias antes, o fluxo da escrita melhorou muito!",
+      event_tag: "21 dias & ciclo",
+      image_url: ""
+    },
+    t5: {
+      id: "t5",
+      author: "jess",
+      role: "aluna dos 21 dias de escrita",
+      quote: "conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.",
+      event_tag: "21 dias & ciclo",
+      image_url: ""
+    },
+    t6: {
+      id: "t6",
+      author: "jess",
+      role: "aluna dos 21 dias de escrita",
+      quote: "essa comunidade é um fio de vida humana, principalmente nessa transição planetária. agradeço e indico para quem busca uma comunidade aberta para avançar.",
+      event_tag: "21 dias & ciclo",
+      image_url: ""
     }
   },
   about: {

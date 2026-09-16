@@ -40,7 +40,32 @@ const PAGE_OPTIONS: PageOption[] = [
       { key: 'produto_ciclo', name: '04. Card Produto Ciclo de Aprofundamento', hasImage: true, hasButton: true },
       { key: 'produto_cafe', name: '05. Card Produto Café com Letras', hasImage: true, hasButton: true },
       { key: 'fundamentos', name: '06. Seção Fundamentos & 6 Pilares', hasImage: false, hasButton: false },
-      { key: 'depoimentos', name: '07. Seção Depoimentos & Prova Social', hasImage: false, hasButton: false },
+      { key: 'depoimentos', name: '07. Seção Depoimentos & Seleção por Página', hasImage: false, hasButton: false },
+      { key: 'b2b_section', name: '08. Seção B2B / Experiências Corporativas', hasImage: false, hasButton: false },
+      { key: 'palavras_sob_medida', name: '09. Seção Palavras Sob Medida', hasImage: false, hasButton: true },
+      { key: 'teoria_pratica', name: '10. Seção Teoria + Prática (Pennebaker & Ebbinghaus)', hasImage: false, hasButton: true },
+      { key: 'final_cta', name: '11. Seção Banner CTA Final', hasImage: false, hasButton: true },
+      { key: 'faq', name: '12. Seção Dúvidas Frequentes (FAQ)', hasImage: false, hasButton: false },
+    ],
+  },
+  {
+    slug: 'founders',
+    name: 'Co-Criadoras (Bruna & Júlia)',
+    sections: [
+      { key: 'bruna', name: 'Bruna Riedel (Foto & Trajetória)', hasImage: true, hasButton: false },
+      { key: 'julia', name: 'Júlia Alvim (Foto & Trajetória)', hasImage: true, hasButton: false },
+    ],
+  },
+  {
+    slug: 'testimonials_pool',
+    name: 'Banco Global de Depoimentos',
+    sections: [
+      { key: 't1', name: 'Depoimento 1 (Bárbara - Babi)', hasImage: false, hasButton: false },
+      { key: 't2', name: 'Depoimento 2 (Bárbara - Troca)', hasImage: false, hasButton: false },
+      { key: 't3', name: 'Depoimento 3 (Tom Vitralli - Sangha)', hasImage: false, hasButton: false },
+      { key: 't4', name: 'Depoimento 4 (Tom Vitralli - Fluxo)', hasImage: false, hasButton: false },
+      { key: 't5', name: 'Depoimento 5 (Jess - Resgate)', hasImage: false, hasButton: false },
+      { key: 't6', name: 'Depoimento 6 (Jess - Fio de Vida)', hasImage: false, hasButton: false },
     ],
   },
   {
@@ -640,36 +665,183 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                   {/* Depoimentos */}
                   {sec.key === 'depoimentos' && (
                     <>
-                      <div className="md:col-span-2">
+                      <div>
                         <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("vozes da nossa comunidade")</label>
                         <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="vozes da nossa comunidade" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
                       </div>
-                      <div className="md:col-span-2 space-y-3 pt-2 border-t border-papelKraft/20">
-                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">depoimento 1 (bárbara)</label>
-                        <textarea value={sectionData.t1_quote || ''} onChange={(e) => handleSectionChange(sec.key, 't1_quote', e.target.value)} rows={2} placeholder="citação..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
-                        <div className="grid grid-cols-2 gap-2">
-                          <input type="text" value={sectionData.t1_author || ''} onChange={(e) => handleSectionChange(sec.key, 't1_author', e.target.value)} placeholder="bárbara alcântara (babi)" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
-                          <input type="text" value={sectionData.t1_role || ''} onChange={(e) => handleSectionChange(sec.key, 't1_role', e.target.value)} placeholder="café com letras & ciclo..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
-                        </div>
-                      </div>
-                      <div className="md:col-span-2 space-y-3 pt-2 border-t border-papelKraft/20">
-                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">depoimento 2 (tom vitralli)</label>
-                        <textarea value={sectionData.t2_quote || ''} onChange={(e) => handleSectionChange(sec.key, 't2_quote', e.target.value)} rows={2} placeholder="citação..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
-                        <div className="grid grid-cols-2 gap-2">
-                          <input type="text" value={sectionData.t2_author || ''} onChange={(e) => handleSectionChange(sec.key, 't2_author', e.target.value)} placeholder="tom vitralli" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
-                          <input type="text" value={sectionData.t2_role || ''} onChange={(e) => handleSectionChange(sec.key, 't2_role', e.target.value)} placeholder="aluno dos 21 dias de escrita" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
-                        </div>
-                      </div>
-                      <div className="md:col-span-2 space-y-3 pt-2 border-t border-papelKraft/20">
-                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">depoimento 3 (jess)</label>
-                        <textarea value={sectionData.t3_quote || ''} onChange={(e) => handleSectionChange(sec.key, 't3_quote', e.target.value)} rows={2} placeholder="citação..." className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
-                        <div className="grid grid-cols-2 gap-2">
-                          <input type="text" value={sectionData.t3_author || ''} onChange={(e) => handleSectionChange(sec.key, 't3_author', e.target.value)} placeholder="jess" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
-                          <input type="text" value={sectionData.t3_role || ''} onChange={(e) => handleSectionChange(sec.key, 't3_role', e.target.value)} placeholder="aluna dos 21 dias de escrita" className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
-                        </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">IDs dos Depoimentos Exibidos nesta Página (separados por vírgula)</label>
+                        <input type="text" value={sectionData.selected_ids || ''} onChange={(e) => handleSectionChange(sec.key, 'selected_ids', e.target.value)} placeholder="ex: t1,t3,t5" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-mono" />
+                        <span className="text-[10px] text-tintaCarvao/60 lowercase mt-1 block">
+                          cadastre e edite depoimentos completos no 'Banco Global de Depoimentos' no menu de seleção de páginas.
+                        </span>
                       </div>
                     </>
                   )}
+
+                  {/* Seção B2B */}
+                  {sec.key === 'b2b_section' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge superior</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="experiências sob medida" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">card 1 (empresas)</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.card1_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'card1_badge', e.target.value)} placeholder="badge card 1..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.card1_title || ''} onChange={(e) => handleSectionChange(sec.key, 'card1_title', e.target.value)} placeholder="título card 1..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                        <input type="text" value={sectionData.card1_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'card1_desc', e.target.value)} placeholder="descrição card 1..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">card 2 (eventos)</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.card2_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'card2_badge', e.target.value)} placeholder="badge card 2..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.card2_title || ''} onChange={(e) => handleSectionChange(sec.key, 'card2_title', e.target.value)} placeholder="título card 2..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                        <input type="text" value={sectionData.card2_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'card2_desc', e.target.value)} placeholder="descrição card 2..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">card 3 (escolas)</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input type="text" value={sectionData.card3_badge || ''} onChange={(e) => handleSectionChange(sec.key, 'card3_badge', e.target.value)} placeholder="badge card 3..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                          <input type="text" value={sectionData.card3_title || ''} onChange={(e) => handleSectionChange(sec.key, 'card3_title', e.target.value)} placeholder="título card 3..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                        </div>
+                        <input type="text" value={sectionData.card3_desc || ''} onChange={(e) => handleSectionChange(sec.key, 'card3_desc', e.target.value)} placeholder="descrição card 3..." className="w-full px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Palavras sob medida */}
+                  {sec.key === 'palavras_sob_medida' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="palavras sob medida" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Teoria + Prática */}
+                  {sec.key === 'teoria_pratica' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge superior</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="teoria + prática / o que sustenta..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">frase em destaque azul (conclusão)</label>
+                        <input type="text" value={sectionData.highlight_final || ''} onChange={(e) => handleSectionChange(sec.key, 'highlight_final', e.target.value)} placeholder="é por isso que não entregamos só uma oficina bonita..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+
+                  {/* FAQ Header */}
+                  {sec.key === 'faq' && (
+                    <>
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge superior</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="dúvidas frequentes" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS DE CO-CRIADORAS (founders) */}
+              {selectedPageSlug === 'founders' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      nome da criadora
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.name || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'name', e.target.value)}
+                      placeholder="ex: bruna riedel"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      função / cargo
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.role || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'role', e.target.value)}
+                      placeholder="ex: co-criadora & facilitadora"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      resumo curto (card principal)
+                    </label>
+                    <textarea
+                      value={sectionData.summary || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'summary', e.target.value)}
+                      rows={2}
+                      placeholder="resumo de apresentação da criadora..."
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      biografia completa / trajetória (parágrafos separados por linha dupla)
+                    </label>
+                    <textarea
+                      value={typeof sectionData.bio === 'string' ? sectionData.bio : (Array.isArray(sectionData.bio) ? sectionData.bio.join('\n\n') : '')}
+                      onChange={(e) => handleSectionChange(sec.key, 'bio', e.target.value)}
+                      rows={6}
+                      placeholder="digite a trajetória completa da criadora..."
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* CAMPOS ESPECÍFICOS DO BANCO GLOBAL DE DEPOIMENTOS (testimonials_pool) */}
+              {selectedPageSlug === 'testimonials_pool' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-papelKraft/30">
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      autor(a) do depoimento
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.author || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'author', e.target.value)}
+                      placeholder="ex: bárbara alcântara (babi)"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      cargo / programa vivenciado / tag
+                    </label>
+                    <input
+                      type="text"
+                      value={sectionData.role || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'role', e.target.value)}
+                      placeholder="ex: café com letras & ciclo"
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">
+                      depoimento / citação poética (quote)
+                    </label>
+                    <textarea
+                      value={sectionData.quote || ''}
+                      onChange={(e) => handleSectionChange(sec.key, 'quote', e.target.value)}
+                      rows={3}
+                      placeholder="escreva o depoimento real da participante..."
+                      className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase"
+                    />
+                  </div>
                 </div>
               )}
 

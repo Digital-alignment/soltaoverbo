@@ -108,18 +108,11 @@ export default function Landing() {
     p6_desc: 'o propósito é que cada pessoa se torne autora da própria história, com ferramentas internas e clareza de direção.',
   });
 
+  const { getSection: getPoolSection } = usePageContent('testimonials_pool');
   const depoimentosSec = getSection('depoimentos', {
     badge_text: 'vozes da nossa comunidade',
     title: 'o que dizem as pessoas que soltam o verbo',
-    t1_quote: 'em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.',
-    t1_author: 'bárbara alcântara (babi)',
-    t1_role: 'café com letras & ciclo de aprofundamento',
-    t2_quote: 'o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo. minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica.',
-    t2_author: 'tom vitralli',
-    t2_role: 'aluno dos 21 dias de escrita',
-    t3_quote: 'conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.',
-    t3_author: 'jess',
-    t3_role: 'aluna dos 21 dias de escrita',
+    selected_ids: 't1,t3,t5',
   });
 
   const pillars = [
@@ -131,11 +124,20 @@ export default function Landing() {
     { title: fundamentosSec.p6_title || 'autonomia e coragem', description: fundamentosSec.p6_desc || 'o propósito é que cada pessoa...' },
   ];
 
-  const testimonials = [
-    { quote: depoimentosSec.t1_quote, author: depoimentosSec.t1_author, role: depoimentosSec.t1_role },
-    { quote: depoimentosSec.t2_quote, author: depoimentosSec.t2_author, role: depoimentosSec.t2_role },
-    { quote: depoimentosSec.t3_quote, author: depoimentosSec.t3_author, role: depoimentosSec.t3_role },
-  ];
+  const rawSelectedIds = (depoimentosSec.selected_ids || 't1,t3,t5')
+    .split(',')
+    .map((s: string) => s.trim())
+    .filter(Boolean);
+
+  const testimonials = rawSelectedIds.map((tId: string) => {
+    const item = getPoolSection(tId, {});
+    return {
+      quote: item.quote || 'experiência inspiradora na comunidade...',
+      author: item.author || 'aluna solta o verbo',
+      role: item.role || item.event_tag || 'comunidade',
+      image_url: item.image_url || '',
+    };
+  });
 
   return (
     <div className="min-h-screen bg-bgPlataforma text-tintaCarvao selection:bg-acentoTerracota/20 selection:text-acentoAzul">
@@ -621,45 +623,6 @@ export default function Landing() {
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
               {depoimentosSec.title || 'o que dizem as pessoas que soltam o verbo'}
-            </h2>
-          </div>
-
-          {/* Grid de Cards dos Pilares (Largura mais compacta max-w-5xl mx-auto) */}
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 relative z-10">
-            {pillars.map((pillar, index) => (
-              <div
-                key={index}
-                className="bg-papelClaro/95 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-papelKraft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-papelKraft relative overflow-hidden flex flex-col justify-between"
-              >
-                <span className="text-4xl sm:text-5xl font-gesto text-acentoAzul/30 absolute top-2 right-5 select-none">
-                  0{index + 1}
-                </span>
-
-                <div>
-                  <div className="w-6 h-1 rounded-full bg-acentoOliva mb-3.5" />
-                  <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium">
-                    {pillar.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. DEPOIMENTOS & PROVA SOCIAL */}
-      <section className="py-24 sm:py-32 bg-papelClaro border-t border-b border-papelKraft/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-bgPlataforma border border-papelKraft/60 text-acentoAzul text-xs sm:text-sm font-semibold lowercase mb-4 shadow-sm">
-              <Heart className="w-4 h-4 text-acentoTerracota" />
-              <span>vozes da nossa comunidade</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase mb-4">
-              o que dizem as pessoas que soltam o verbo
             </h2>
           </div>
 

@@ -40,8 +40,47 @@ const eventSlides: GallerySlide[] = [
 export default function ContrateExperienciaSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { getSection } = usePageContent('contacts');
+  const { getSection: getLandingSection } = usePageContent('landing');
+
   const contactsSec = getSection('info', {
     whatsapp: 'https://wa.link/w67ibp',
+  });
+
+  const b2bSec = getLandingSection('b2b_section', {
+    badge_text: 'experiências sob medida',
+    title: 'crie com a gente',
+    subtitle: 'leve uma experiência de escrita da solta o verbo para a sua organização e cultive pertencimento a partir da escrita expressiva.',
+    card1_badge: 'empresas e organizações',
+    card1_title: 'oficinas corporativas',
+    card1_desc: 'a escrita como pausa e cuidado dentro da rotina de trabalho: um encontro que aproxima as pessoas e revela novas maneiras de se relacionar.',
+    card2_badge: 'eventos e experiências',
+    card2_title: 'experiência com escrita em eventos',
+    card2_desc: 'a escrita como convite à presença em festivais, retiros e encontros: um momento de pausa que muda a relação com o espaço, consigo e com os outros.',
+    card3_badge: 'escolas e educação',
+    card3_title: 'escrita para quem está aprendendo',
+    card3_desc: 'atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.',
+  });
+
+  const sobMedidaSec = getLandingSection('palavras_sob_medida', {
+    badge_text: 'palavras sob medida',
+    title: 'textos para momentos especiais',
+    body_text: 'textos autorais para casamentos, homenagens, celebrações e marcos de empresas: ouvimos a sua história e devolvemos em palavras.',
+    button_text: 'solicitar um texto sob medida',
+  });
+
+  const teoriaSec = getLandingSection('teoria_pratica', {
+    badge_text: 'teoria + prática / o que sustenta a nossa escrita.',
+    title: '“nosso trabalho nasce de estudo e de vivência.”',
+    body_text: 'não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.',
+    highlight_final: 'é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.',
+    button_text: 'enviar e-mail',
+    button_link: 'mailto:soltaoverbocoletivo@gmail.com',
+  });
+
+  const finalCtaSec = getLandingSection('final_cta', {
+    title: 'vamos desenhar algo especial juntos?',
+    subtitle: 'fale diretamente conosco pelo whatsapp e receba a proposta detalhada.',
+    button_text: 'falar no whatsapp',
   });
 
   // Auto-play do carrossel a cada 4.5 segundos
@@ -67,24 +106,21 @@ export default function ContrateExperienciaSection() {
   const highlights = [
     {
       icon: Building2,
-      badge: 'empresas e organizações',
-      title: 'oficinas corporativas',
-      description:
-        'a escrita como pausa e cuidado dentro da rotina de trabalho: um encontro que aproxima as pessoas e revela novas maneiras de se relacionar.',
+      badge: b2bSec.card1_badge || 'empresas e organizações',
+      title: b2bSec.card1_title || 'oficinas corporativas',
+      description: b2bSec.card1_desc || 'a escrita como pausa e cuidado dentro da rotina de trabalho: um encontro que aproxima as pessoas e revela novas maneiras de se relacionar.',
     },
     {
       icon: Users2,
-      badge: 'eventos e experiências',
-      title: 'experiência com escrita em eventos',
-      description:
-        'a escrita como convite à presença em festivais, retiros e encontros: um momento de pausa que muda a relação com o espaço, consigo e com os outros.',
+      badge: b2bSec.card2_badge || 'eventos e experiências',
+      title: b2bSec.card2_title || 'experiência com escrita em eventos',
+      description: b2bSec.card2_desc || 'a escrita como convite à presença em festivais, retiros e encontros: um momento de pausa que muda a relação com o espaço, consigo e com os outros.',
     },
     {
       icon: Compass,
-      badge: 'escolas e educação',
-      title: 'escrita para quem está aprendendo',
-      description:
-        'atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.',
+      badge: b2bSec.card3_badge || 'escolas e educação',
+      title: b2bSec.card3_title || 'escrita para quem está aprendendo',
+      description: b2bSec.card3_desc || 'atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.',
     },
   ];
 
@@ -115,15 +151,15 @@ export default function ContrateExperienciaSection() {
                   decoding="async"
                   className="w-5 h-5 object-contain"
                 />
-                <span>experiências sob medida</span>
+                <span>{b2bSec.badge_text || 'experiências sob medida'}</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
-                crie com a gente
+                {b2bSec.title || 'crie com a gente'}
               </h2>
 
               <p className="text-tintaCarvao/85 text-base sm:text-lg leading-relaxed font-medium lowercase">
-                leve uma experiência de escrita da solta o verbo para a sua organização e cultive pertencimento a partir da escrita expressiva.
+                {b2bSec.subtitle || 'leve uma experiência de escrita da solta o verbo para a sua organização e cultive pertencimento a partir da escrita expressiva.'}
               </p>
             </div>
 
@@ -245,13 +281,13 @@ export default function ContrateExperienciaSection() {
             <div className="bg-bgPlataforma/90 rounded-2xl p-6 sm:p-7 border border-papelKraft/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <div className="space-y-2">
                 <span className="text-[10px] font-bold text-acentoTerracota lowercase tracking-wider bg-acentoTerracota/10 px-2.5 py-1 rounded-full">
-                  palavras sob medida
+                  {sobMedidaSec.badge_text || 'palavras sob medida'}
                 </span>
                 <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase">
-                  textos para momentos especiais
+                  {sobMedidaSec.title || 'textos para momentos especiais'}
                 </h3>
                 <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium max-w-2xl">
-                  textos autorais para casamentos, homenagens, celebrações e marcos de empresas: ouvimos a sua história e devolvemos em palavras.
+                  {sobMedidaSec.body_text || 'textos autorais para casamentos, homenagens, celebrações e marcos de empresas: ouvimos a sua história e devolvemos em palavras.'}
                 </p>
               </div>
               <a
@@ -260,7 +296,7 @@ export default function ContrateExperienciaSection() {
                 rel="noopener noreferrer"
                 className="btn-pill-secondary text-sm px-6 py-2.5 rounded-full border border-papelKraft/70 hover:bg-papelClaro transition-all flex items-center gap-2 flex-shrink-0 cursor-pointer lowercase"
               >
-                <span>solicitar um texto sob medida</span>
+                <span>{sobMedidaSec.button_text || 'solicitar um texto sob medida'}</span>
                 <ArrowRight className="w-4 h-4 text-acentoAzul" />
               </a>
             </div>
@@ -269,23 +305,23 @@ export default function ContrateExperienciaSection() {
           {/* NOVA SEÇÃO DE TEORIA E PRÁTICA (Item 1.5 - Pennebaker & Ebbinghaus) */}
           <div className="bg-bgPlataforma rounded-2xl p-6 sm:p-8 border border-papelKraft/60 shadow-sm space-y-4 relative overflow-hidden">
             <span className="text-xs font-bold text-acentoTerracota lowercase tracking-widest block">
-              teoria + prática / o que sustenta a nossa escrita.
+              {teoriaSec.badge_text || 'teoria + prática / o que sustenta a nossa escrita.'}
             </span>
             <blockquote className="font-editorial text-xl sm:text-2xl font-bold text-acentoAzul lowercase">
-              “nosso trabalho nasce de estudo e de vivência.”
+              {teoriaSec.title || '“nosso trabalho nasce de estudo e de vivência.”'}
             </blockquote>
             <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase">
-              não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.
+              {teoriaSec.body_text || 'não improvisamos. cada encontro que desenhamos parte de referências consistentes, como as pesquisas de james pennebaker sobre escrita expressiva e seus efeitos no bem-estar emocional, e a curva do esquecimento de ebbinghaus, que mostra por que a escrita precisa ser prática recorrente e não um encontro isolado.'}
             </p>
             <p className="text-acentoAzul font-bold text-sm sm:text-base lowercase">
-              é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.
+              {teoriaSec.highlight_final || 'é por isso que não entregamos só uma oficina bonita: desenhamos jornadas que continuam depois que a gente vai embora.'}
             </p>
             <div className="pt-3">
               <a
-                href="mailto:soltaoverbocoletivo@gmail.com"
+                href={teoriaSec.button_link || 'mailto:soltaoverbocoletivo@gmail.com'}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-acentoAzul text-white text-sm font-bold lowercase hover:bg-acentoAzul/90 transition-all cursor-pointer shadow-md"
               >
-                <span>enviar e-mail</span>
+                <span>{teoriaSec.button_text || 'enviar e-mail'}</span>
                 <ArrowRight className="w-4 h-4 text-white" />
               </a>
             </div>
@@ -304,10 +340,10 @@ export default function ContrateExperienciaSection() {
 
             <div className="space-y-1.5 relative z-10 text-center sm:text-left">
               <h4 className="text-2xl sm:text-3xl font-editorial font-bold lowercase text-papelClaro">
-                vamos desenhar algo especial juntos?
+                {finalCtaSec.title || 'vamos desenhar algo especial juntos?'}
               </h4>
               <p className="text-papelClaro/85 text-sm sm:text-base lowercase font-medium">
-                fale diretamente conosco pelo whatsapp e receba a proposta detalhada.
+                {finalCtaSec.subtitle || 'fale diretamente conosco pelo whatsapp e receba a proposta detalhada.'}
               </p>
             </div>
 
@@ -318,7 +354,7 @@ export default function ContrateExperienciaSection() {
               className="bg-[#BEC540] text-[#0D0859] hover:bg-[#BEC540]/90 font-bold px-8 py-3.5 rounded-full text-base sm:text-lg flex items-center gap-3 transition-all hover:scale-105 shadow-lg flex-shrink-0 cursor-pointer relative z-10 lowercase"
             >
               <MessageCircle className="w-5 h-5 text-[#0D0859]" />
-              <span>falar no whatsapp</span>
+              <span>{finalCtaSec.button_text || 'falar no whatsapp'}</span>
             </a>
           </div>
         </div>
