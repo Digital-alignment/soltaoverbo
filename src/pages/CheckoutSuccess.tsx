@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle2, MessageCircle, HelpCircle } from 'lucide-react';
+import { CheckCircle2, MessageCircle, HelpCircle, FileText } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -17,6 +17,12 @@ export default function CheckoutSuccess() {
   const [searchParams] = useSearchParams();
   const [timeLeft, setTimeLeft] = useState(8);
   const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
+
+  const receiptUrl = searchParams.get('receipt_url');
+  const orderNsu = searchParams.get('order_nsu');
+  const transactionNsu = searchParams.get('transaction_nsu');
+  const captureMethod = searchParams.get('capture_method');
+  const sessionId = searchParams.get('session_id') || orderNsu || transactionNsu;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -69,8 +75,6 @@ export default function CheckoutSuccess() {
     return () => clearInterval(timer);
   }, [navigate, user]);
 
-  const sessionId = searchParams.get('session_id');
-
   const formatInstallmentPlan = (plan: string, total: number) => {
     if (total === 1) return 'Pagamento Único';
     return `${total}x Parcelado`;
@@ -106,10 +110,10 @@ export default function CheckoutSuccess() {
 
           <div className="bg-gradient-to-r from-limeGreen/10 to-actionOrange/10 rounded-2xl p-6 mb-8 border border-limeGreen/30">
             <p className="text-lg text-deepBlue/70 leading-relaxed mb-4">
-              Você está oficialmente inscrito no Roteiro Original!
+              Você está oficialmente inscrito no Solta o Verbo!
             </p>
             <p className="text-deepBlue/60">
-              Prepare-se para uma jornada transformadora de 12 encontros. Em breve, você receberá um email com instruções de acesso e detalhes do programa.
+              Prepare-se para uma jornada transformadora. Em breve, você receberá um email com instruções de acesso e detalhes do programa.
             </p>
 
             {subscriptionData && (
@@ -133,9 +137,29 @@ export default function CheckoutSuccess() {
               </div>
             )}
 
+            {captureMethod && (
+              <p className="text-xs text-deepBlue/70 font-semibold uppercase mt-4">
+                Forma de Pagamento: {captureMethod === 'credit_card' ? 'Cartão de Crédito' : captureMethod.toUpperCase()}
+              </p>
+            )}
+
+            {receiptUrl && (
+              <div className="mt-4">
+                <a
+                  href={receiptUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-acentoAzul font-bold hover:underline"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Ver Comprovante de Pagamento</span>
+                </a>
+              </div>
+            )}
+
             {sessionId && (
-              <p className="text-sm text-deepBlue/40 mt-4 font-mono">
-                ID da Sessão: {sessionId}
+              <p className="text-xs text-deepBlue/40 mt-4 font-mono">
+                ID do Pedido: {sessionId}
               </p>
             )}
           </div>
@@ -151,11 +175,11 @@ export default function CheckoutSuccess() {
               <span>Fale no WhatsApp</span>
             </a>
             <a
-              href="mailto:contato@soltaoverbo.com.br?subject=Dúvidas sobre Roteiro Original"
+              href="mailto:contato@soltaoverbo.com.br?subject=Dúvidas sobre o Solta o Verbo"
               className="flex items-center justify-center gap-3 bg-actionOrange hover:bg-actionOrange/90 text-white font-bold py-4 rounded-xl transition-all hover:scale-105"
             >
               <HelpCircle className="w-6 h-6" />
-              <span>Dúvidas? Fala Conosco</span>
+              <span>Dúvidas? Fale Conosco</span>
             </a>
           </div>
 

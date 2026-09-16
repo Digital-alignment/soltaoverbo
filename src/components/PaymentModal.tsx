@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Loader } from 'lucide-react';
-import { createCheckoutSession } from '../lib/stripe';
+import { createInfinitePayCheckout } from '../lib/infinitepay';
 
 export type ProductKey = '21dias' | 'ciclo' | 'cafe' | 'geral';
 
@@ -11,35 +11,16 @@ interface PaymentModalProps {
   product?: ProductKey;
 }
 
-interface InstallmentOption {
-  months: number;
-  priceId: string;
-  monthlyAmount: number;
-  isHighlighted?: boolean;
-}
-
-const INSTALLMENT_OPTIONS: InstallmentOption[] = [
-  { months: 2, priceId: import.meta.env.VITE_STRIPE_PRICE_2X || '', monthlyAmount: 38.50 },
-  { months: 3, priceId: import.meta.env.VITE_STRIPE_PRICE_3X || '', monthlyAmount: 225.67, isHighlighted: true },
-];
-
-const PRICE_IDS = {
-  ONE_TIME: import.meta.env.VITE_STRIPE_PRICE_ONE_TIME || '',
-  TWO_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_2X || '',
-  THREE_INSTALLMENTS: import.meta.env.VITE_STRIPE_PRICE_3X || '',
-};
-
 export default function PaymentModal({ isOpen, onClose, userEmail = '', product = '21dias' }: PaymentModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selectedInstallment, setSelectedInstallment] = useState<InstallmentOption>(INSTALLMENT_OPTIONS[1]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const productDetails = {
     '21dias': {
       title: '21 dias de escrita',
       subtitle: 'jornada prática para criar um hábito sustentado de escrita autoral',
       priceText: 'R$ 77,00',
+      priceInCents: 7700,
       installmentText: 'ou 2x R$ 38,50',
       whatsappMessage: 'Olá! Quero garantir minha vaga nos 21 dias de escrita por R$ 77,00 via PIX.',
     },
@@ -47,6 +28,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
       title: 'ciclo de aprofundamento',
       subtitle: 'mentoria ao vivo, rodas quinzenais e acesso contínuo à comunidade',
       priceText: 'R$ 597,00',
+      priceInCents: 59700,
       installmentText: '/ trimestre (ou 3x R$ 225,67 sem juros)',
       whatsappMessage: 'Olá! Quero fazer parte do ciclo de aprofundamento (R$ 597,00/trimestre) via PIX.',
     },
@@ -54,6 +36,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
       title: 'café com letras',
       subtitle: 'encontro semanal de escrita ao vivo toda terça-feira 8h–8h30',
       priceText: 'R$ 97,00',
+      priceInCents: 9700,
       installmentText: '/ mês (incluso no ciclo de aprofundamento)',
       whatsappMessage: 'Olá! Quero me inscrever no café com letras (R$ 97,00/mês) via PIX.',
     },
@@ -61,6 +44,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
       title: 'plano de assinatura solta o verbo',
       subtitle: 'acesso completo a todas as experiências e comunidade',
       priceText: 'R$ 597,00',
+      priceInCents: 59700,
       installmentText: '/ trimestre',
       whatsappMessage: 'Olá! Gostaria de informações sobre formas de pagamento.',
     },
@@ -68,6 +52,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
     title: '21 dias de escrita',
     subtitle: 'jornada prática para criar um hábito sustentado de escrita autoral',
     priceText: 'R$ 77,00',
+    priceInCents: 7700,
     installmentText: 'ou 2x R$ 38,50',
     whatsappMessage: 'Olá! Quero garantir minha vaga no Solta o Verbo.',
   };
@@ -98,25 +83,25 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
     }
   };
 
-  const handleCheckout = async (priceId: string, mode: 'payment' | 'subscription') => {
-    if (!priceId) {
-      setError('Configuração de preço não disponível. Entre em contato com o suporte.');
-      return;
-    }
-
+  const handleCheckout = async () => {
     setLoading(true);
     setError('');
 
     try {
-      const checkoutUrl = await createCheckoutSession({
-        priceId,
-        email: userEmail,
-        mode,
+      const checkoutUrl = await createInfinitePayCheckout({
+        items: [
+          {
+            quantity: 1,
+            price: productDetails.priceInCents,
+            description: productDetails.title,
+          },
+        ],
+        customer: userEmail ? { email: userEmail } : undefined,
       });
 
       window.location.href = checkoutUrl;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao processar pagamento');
+      setError(err instanceof Error ? err.message : 'Erro ao processar pagamento com a InfinitePay');
       setLoading(false);
     }
   };
@@ -156,7 +141,7 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
             </div>
           )}
 
-          {/* Opção 1: Valor Principal & Checkout Direct */}
+          {/* Opção 1: Valor Principal & Checkout Direct InfinitePay */}
           <div className="bg-bgPlataforma rounded-2xl p-5 border border-papelKraft/60 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
@@ -173,22 +158,20 @@ export default function PaymentModal({ isOpen, onClose, userEmail = '', product 
                 </div>
               </div>
 
-              {PRICE_IDS.ONE_TIME ? (
-                <button
-                  onClick={() => !loading && handleCheckout(PRICE_IDS.ONE_TIME, 'payment')}
-                  disabled={loading}
-                  className="btn-pill-primary text-sm px-6 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  {loading ? (
-                    <>
-                      <Loader className="w-4 h-4 animate-spin text-white" />
-                      <span>processando...</span>
-                    </>
-                  ) : (
-                    <span>pagar agora</span>
-                  )}
-                </button>
-              ) : null}
+              <button
+                onClick={handleCheckout}
+                disabled={loading}
+                className="btn-pill-primary text-sm px-6 py-3 rounded-full flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <Loader className="w-4 h-4 animate-spin text-white" />
+                    <span>processando...</span>
+                  </>
+                ) : (
+                  <span>pagar com infinitepay</span>
+                )}
+              </button>
             </div>
           </div>
 
