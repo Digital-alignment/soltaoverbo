@@ -737,13 +737,20 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                     </>
                   )}
 
-                  {/* FAQ Header */}
+                  {/* FAQ Header & Perguntas Frequentes */}
                   {sec.key === 'faq' && (
                     <>
-                      <div>
+                      <div className="md:col-span-2">
                         <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge superior</label>
                         <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="dúvidas frequentes" className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
                       </div>
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                        <div key={num} className="md:col-span-2 space-y-2 pt-2 border-t border-papelKraft/20">
+                          <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">pergunta #{num}</label>
+                          <input type="text" value={sectionData[`q${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `q${num}`, e.target.value)} placeholder={`pergunta ${num}...`} className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase font-semibold" />
+                          <textarea value={sectionData[`a${num}`] || ''} onChange={(e) => handleSectionChange(sec.key, `a${num}`, e.target.value)} rows={2} placeholder={`resposta ${num}...`} className="w-full px-3.5 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul resize-none lowercase" />
+                        </div>
+                      ))}
                     </>
                   )}
                 </div>

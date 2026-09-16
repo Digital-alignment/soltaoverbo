@@ -140,7 +140,25 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
     faq: {
       badge_text: "dúvidas frequentes",
       title: "perguntas que costumam surgir",
-      subtitle: "respostas simples e diretas para você dar o próximo passo com segurança."
+      subtitle: "respostas simples e diretas para você dar o próximo passo com segurança.",
+      q1: "preciso ter experiência com escrita para participar?",
+      a1: "não. aqui não se trata de técnica acadêmica, gramática impecável ou talento literário. o que a gente pratica é escuta interna, presença e liberdade narrativa.",
+      q2: "o solta o verbo é um curso de escrita criativa?",
+      a2: "não exatamente. a escrita é a nossa ferramenta, não o nosso produto final. o que buscamos é autodesenvolvimento: dar contorno ao que te habita, reconhecer as narrativas que você repete e reescrevê-las com mais verdade e consciência. quem sai daqui escrevendo melhor, sai também se conhecendo melhor.",
+      q3: "isso é terapia?",
+      a3: "não. não somos psicólogas e o solta o verbo não substitui acompanhamento terapêutico. é um espaço de escuta, criação e coletividade, com propostas guiadas e cuidado com o que aparece. se você está em processo terapêutico, a escrita costuma caminhar muito bem ao lado dele.",
+      q4: "quem conduz os encontros?",
+      a4: "nós, bru e ju, co-criadoras e facilitadoras do coletivo. saiba mais na página \"sobre nós\".",
+      q5: "como funciona o acesso aos 21 dias de escrita?",
+      a5: "ao comprar os 21 dias de escrita, você recebe acesso imediato à plataforma. a cada dia é liberado um novo exercício guiado com áudio de reflexão, além do acesso à área de membros, nosso espaço de partilha com o grupo. você também tem acesso gratuito aos 21 dias de escrita ao fazer parte do ciclo de aprofundamento.",
+      q6: "o que é o ciclo de aprofundamento?",
+      a6: "é a nossa comunidade paga, organizada em travessias de três meses. cada travessia mergulha em um tema de autodesenvolvimento, criatividade e relações humanas, apoiada por um livro-guia e por um convidado especial. a travessia atual é \"a coragem de não agradar\", com o livro de ichiro kishimi e fumitake koga e a presença da jout jout. para saber mais, acesse \"ciclo de aprofundamento\" na aba de programas.",
+      q7: "o que é o café com letras?",
+      a7: "uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.",
+      q8: "quais são as formas de pagamento disponíveis?",
+      a8: "pix à vista com desconto especial, cartão de crédito em até 3x sem juros e boleto bancário.",
+      q9: "é necessário instalar algum aplicativo?",
+      a9: "não. você pode acessar pelo navegador ou instalar nossa plataforma como web app no seu celular (no navegador do celular, toque no menu de opções / compartilhar e depois em \"adicionar à tela de início\")."
     }
   },
   founders: {

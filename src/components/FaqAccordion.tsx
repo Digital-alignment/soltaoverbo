@@ -56,6 +56,15 @@ export default function FaqAccordion() {
     subtitle: 'respostas simples e diretas para você dar o próximo passo com segurança.',
   });
 
+  const activeFaqItems = faqData.map((item, index) => {
+    const qKey = `q${index + 1}`;
+    const aKey = `a${index + 1}`;
+    return {
+      question: faqSec[qKey] || item.question,
+      answer: faqSec[aKey] || item.answer,
+    };
+  });
+
   const toggleItem = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
@@ -81,7 +90,7 @@ export default function FaqAccordion() {
         </div>
 
         <div className="space-y-4">
-          {faqData.map((item, index) => {
+          {activeFaqItems.map((item, index) => {
             const isOpen = openIndex === index;
             return (
               <div
