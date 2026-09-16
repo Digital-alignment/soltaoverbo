@@ -58,14 +58,32 @@ const PAGE_OPTIONS: PageOption[] = [
   },
   {
     slug: 'testimonials_pool',
-    name: 'Banco Global de Depoimentos',
+    name: 'Banco Global de Depoimentos & Prints (Deployments)',
     sections: [
-      { key: 't1', name: 'Depoimento 1 (Bárbara - Babi)', hasImage: false, hasButton: false },
-      { key: 't2', name: 'Depoimento 2 (Bárbara - Troca)', hasImage: false, hasButton: false },
-      { key: 't3', name: 'Depoimento 3 (Tom Vitralli - Sangha)', hasImage: false, hasButton: false },
-      { key: 't4', name: 'Depoimento 4 (Tom Vitralli - Fluxo)', hasImage: false, hasButton: false },
-      { key: 't5', name: 'Depoimento 5 (Jess - Resgate)', hasImage: false, hasButton: false },
-      { key: 't6', name: 'Depoimento 6 (Jess - Fio de Vida)', hasImage: false, hasButton: false },
+      { key: 't1', name: 'Depoimento 1 (Bárbara - Babi)', hasImage: true, hasButton: false },
+      { key: 't2', name: 'Depoimento 2 (Bárbara - Troca)', hasImage: true, hasButton: false },
+      { key: 't3', name: 'Depoimento 3 (Tom Vitralli - Sangha)', hasImage: true, hasButton: false },
+      { key: 't4', name: 'Depoimento 4 (Tom Vitralli - Fluxo)', hasImage: true, hasButton: false },
+      { key: 't5', name: 'Depoimento 5 (Jess - Resgate)', hasImage: true, hasButton: false },
+      { key: 't6', name: 'Depoimento 6 (Jess - Fio de Vida)', hasImage: true, hasButton: false },
+      { key: 'd1', name: 'Print 1 (Partilha e Acolhimento)', hasImage: true, hasButton: false },
+      { key: 'd2', name: 'Print 2 (Desbloqueio Criativo)', hasImage: true, hasButton: false },
+      { key: 'd3', name: 'Print 3 (Relação com o Caderno)', hasImage: true, hasButton: false },
+      { key: 'd4', name: 'Print 4 (Mensagens de Alunas)', hasImage: true, hasButton: false },
+      { key: 'd5', name: 'Print 5 (Depoimento Espontâneo)', hasImage: true, hasButton: false },
+      { key: 'd6', name: 'Print 6 (Transformação Diária)', hasImage: true, hasButton: false },
+      { key: 'd7', name: 'Print 7 (Reflexão Comunitária)', hasImage: true, hasButton: false },
+      { key: 'd8', name: 'Print 8 (Vozes da Fogueira)', hasImage: true, hasButton: false },
+      { key: 'd9', name: 'Print 9 (Carinho e Presença)', hasImage: true, hasButton: false },
+      { key: 'd10', name: 'Print 10 (Impacto da Escrita)', hasImage: true, hasButton: false },
+      { key: 'd11', name: 'Print 11 (Relato de Experiência)', hasImage: true, hasButton: false },
+      { key: 'd12', name: 'Print 12 (Prints do Grupo)', hasImage: true, hasButton: false },
+      { key: 'd13', name: 'Print 13 (Experiência dos 21 Dias)', hasImage: true, hasButton: false },
+      { key: 'd14', name: 'Print 14 (Trocas Poéticas)', hasImage: true, hasButton: false },
+      { key: 'd15', name: 'Print 15 (Ritmo Pessoal)', hasImage: true, hasButton: false },
+      { key: 'd16', name: 'Print 16 (Caderno em Movimento)', hasImage: true, hasButton: false },
+      { key: 'd17', name: 'Print 17 (Comunidade Acolhedora)', hasImage: true, hasButton: false },
+      { key: 'd18', name: 'Print 18 (Gratidão das Leitoras)', hasImage: true, hasButton: false },
     ],
   },
   {
@@ -1175,9 +1193,72 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                   )}
 
                   {sec.key === 'depoimentos' && (
-                    <div>
-                      <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("relatos & impressões reais da comunidade")</label>
-                      <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="relatos & impressões reais..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                    <div className="md:col-span-2 space-y-3">
+                      <div>
+                        <label className="block text-xs font-bold text-acentoAzul mb-1 lowercase font-corpo">etiqueta badge ("relatos & impressões reais da comunidade")</label>
+                        <input type="text" value={sectionData.badge_text || ''} onChange={(e) => handleSectionChange(sec.key, 'badge_text', e.target.value)} placeholder="relatos & impressões reais..." className="w-full px-3.5 py-2 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase" />
+                      </div>
+
+                      <div className="pt-2 border-t border-papelKraft/30 space-y-2">
+                        <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
+                          seleção de depoimentos & prints (deployments) para exibir nesta página
+                        </label>
+                        <p className="text-[11px] text-tintaCarvao/70 lowercase font-corpo mb-2">
+                          marque quais depoimentos e prints do banco global serão exibidos no carrossel desta página:
+                        </p>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 max-h-64 overflow-y-auto p-2 bg-bgPlataforma rounded-xl border border-papelKraft/40">
+                          {[
+                            { id: 'd1', label: 'print 1: partilha & acolhimento' },
+                            { id: 'd2', label: 'print 2: desbloqueio criativo' },
+                            { id: 'd3', label: 'print 3: relação com o caderno' },
+                            { id: 'd4', label: 'print 4: mensagens de alunas' },
+                            { id: 'd5', label: 'print 5: depoimento espontâneo' },
+                            { id: 'd6', label: 'print 6: transformação diária' },
+                            { id: 'd7', label: 'print 7: reflexão comunitária' },
+                            { id: 'd8', label: 'print 8: vozes da fogueira' },
+                            { id: 'd9', label: 'print 9: carinho e presença' },
+                            { id: 'd10', label: 'print 10: impacto da escrita' },
+                            { id: 'd11', label: 'print 11: relato de experiência' },
+                            { id: 'd12', label: 'print 12: prints do grupo' },
+                            { id: 'd13', label: 'print 13: experiência 21 dias' },
+                            { id: 'd14', label: 'print 14: trocas poéticas' },
+                            { id: 'd15', label: 'print 15: ritmo pessoal' },
+                            { id: 'd16', label: 'print 16: caderno em movimento' },
+                            { id: 'd17', label: 'print 17: comunidade acolhedora' },
+                            { id: 'd18', label: 'print 18: gratidão das leitoras' },
+                            { id: 't1', label: 'depoimento babi (escrita)' },
+                            { id: 't2', label: 'depoimento babi (resistência)' },
+                            { id: 't3', label: 'depoimento tom (sangha)' },
+                            { id: 't4', label: 'depoimento tom (fluxo)' },
+                            { id: 't5', label: 'depoimento jess (resgate)' },
+                            { id: 't6', label: 'depoimento jess (fio de vida)' },
+                          ].map((item) => {
+                            const currentSelected = (sectionData.selected_ids || 'd1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18').split(',').map(s => s.trim());
+                            const isChecked = currentSelected.includes(item.id);
+
+                            return (
+                              <label key={item.id} className="flex items-center gap-2 p-2 bg-white rounded-lg border border-papelKraft/30 text-xs font-corpo text-tintaCarvao cursor-pointer hover:border-acentoAzul select-none">
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={(e) => {
+                                    let updated: string[];
+                                    if (e.target.checked) {
+                                      updated = [...currentSelected, item.id];
+                                    } else {
+                                      updated = currentSelected.filter(id => id !== item.id);
+                                    }
+                                    handleSectionChange(sec.key, 'selected_ids', updated.join(','));
+                                  }}
+                                  className="rounded border-papelKraft text-acentoAzul focus:ring-acentoAzul"
+                                />
+                                <span className="line-clamp-1">{item.label}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -1266,45 +1347,71 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
               {/* FOTO E BOTÕES (SE APLICÁVEL) */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-papelKraft/30">
                 
-                {/* GERENCIAMENTO DA IMAGEM DA SEÇÃO */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
-                      foto da seção
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActivePickerSecKey(sec.key);
-                        setIsPickerOpen(true);
-                      }}
-                      className="px-3 py-1 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul hover:text-white text-acentoAzul text-xs font-bold font-corpo lowercase transition cursor-pointer flex items-center gap-1"
-                    >
-                      <Grid className="w-3.5 h-3.5" />
-                      <span>escolher da galeria</span>
-                    </button>
-                  </div>
+                {/* GERENCIAMENTO DA IMAGEM DA SEÇÃO (APENAS SE HASIMAGE FOR TRUE) */}
+                {sec.hasImage !== false && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
+                        foto da seção
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActivePickerSecKey(sec.key);
+                          setIsPickerOpen(true);
+                        }}
+                        className="px-3 py-1 rounded-xl bg-acentoAzul/10 hover:bg-acentoAzul hover:text-white text-acentoAzul text-xs font-bold font-corpo lowercase transition cursor-pointer flex items-center gap-1"
+                      >
+                        <Grid className="w-3.5 h-3.5" />
+                        <span>escolher da galeria</span>
+                      </button>
+                    </div>
 
-                  {sectionData.image_url ? (
-                    <div className="relative rounded-2xl overflow-hidden border border-papelKraft/40 max-h-48 group">
-                      <img
-                        src={sectionData.image_url}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-tintaCarvao/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setActivePickerSecKey(sec.key);
-                            setIsPickerOpen(true);
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-acentoTerracota text-white font-bold text-xs cursor-pointer lowercase"
-                        >
-                          galeria
-                        </button>
-                        <label className="px-3 py-1.5 rounded-xl bg-white text-acentoAzul font-bold text-xs cursor-pointer lowercase">
-                          alterar foto
+                    {sectionData.image_url ? (
+                      <div className="relative rounded-2xl overflow-hidden border border-papelKraft/40 max-h-48 group">
+                        <img
+                          src={sectionData.image_url}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-tintaCarvao/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setActivePickerSecKey(sec.key);
+                              setIsPickerOpen(true);
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-acentoTerracota text-white font-bold text-xs cursor-pointer lowercase"
+                          >
+                            galeria
+                          </button>
+                          <label className="px-3 py-1.5 rounded-xl bg-white text-acentoAzul font-bold text-xs cursor-pointer lowercase">
+                            alterar foto
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) handleImageUpload(sec.key, file);
+                              }}
+                              className="hidden"
+                            />
+                          </label>
+                          <button
+                            onClick={() => handleSectionChange(sec.key, 'image_url', '')}
+                            className="px-3 py-1.5 rounded-xl bg-red-600 text-white font-bold text-xs cursor-pointer lowercase"
+                          >
+                            remover
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <label className="border border-dashed border-papelKraft/60 rounded-2xl p-4 text-center cursor-pointer hover:border-acentoAzul block bg-bgPlataforma">
+                          <Upload className="w-5 h-5 text-acentoAzul/50 mx-auto mb-1" />
+                          <span className="text-xs font-bold font-corpo text-acentoAzul lowercase block">
+                            {uploadingImage === sec.key ? 'enviando foto...' : '+ fazer upload de foto'}
+                          </span>
                           <input
                             type="file"
                             accept="image/*"
@@ -1313,37 +1420,13 @@ export default function PageContentManagement({ selectedSubPage }: PageContentMa
                               if (file) handleImageUpload(sec.key, file);
                             }}
                             className="hidden"
+                            disabled={uploadingImage === sec.key}
                           />
                         </label>
-                        <button
-                          onClick={() => handleSectionChange(sec.key, 'image_url', '')}
-                          className="px-3 py-1.5 rounded-xl bg-red-600 text-white font-bold text-xs cursor-pointer lowercase"
-                        >
-                          remover
-                        </button>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <label className="border border-dashed border-papelKraft/60 rounded-2xl p-4 text-center cursor-pointer hover:border-acentoAzul block bg-bgPlataforma">
-                        <Upload className="w-5 h-5 text-acentoAzul/50 mx-auto mb-1" />
-                        <span className="text-xs font-bold font-corpo text-acentoAzul lowercase block">
-                          {uploadingImage === sec.key ? 'enviando foto...' : '+ fazer upload de foto'}
-                        </span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleImageUpload(sec.key, file);
-                          }}
-                          className="hidden"
-                          disabled={uploadingImage === sec.key}
-                        />
-                      </label>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )}
 
                 {/* BOTÃO CTA (SE APLICÁVEL) */}
                 {sec.hasButton !== false && (

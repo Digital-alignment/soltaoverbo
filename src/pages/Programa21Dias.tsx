@@ -193,10 +193,12 @@ export default function Programa21Dias() {
     nao_3: 'não está disposta a olhar para dentro com afeto e escuta genuína',
   });
 
+  const { getSection: getPoolSection } = usePageContent('testimonials_pool');
   const depoimentosSec = getSection('depoimentos', {
     badge_text: 'relatos & impressões reais da comunidade',
     title: 'vozes e prints de quem viveu os 21 dias',
     subtitle: 'mensagens reais, trocas espontâneas e relatos de transformação compartilhados pelas nossas alunas.',
+    selected_ids: 'd1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18',
   });
 
   const finalOfferSec = getSection('final_offer', {
@@ -223,32 +225,61 @@ export default function Programa21Dias() {
   const [activePhaseIndex, setActivePhaseIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   
-  // Estado do Carrossel de Screenshots de Depoimentos
+  // Estado do Carrossel de Screenshots / Depoimentos
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
+  const [selectedQuoteModal, setSelectedQuoteModal] = useState<{ quote: string; author: string; role: string } | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+
+  const rawSelectedIds = (depoimentosSec.selected_ids || 'd1,d2,d3,d4,d5,d6,d7,d8,d9,d10,d11,d12,d13,d14,d15,d16,d17,d18')
+    .split(',')
+    .map((s: string) => s.trim())
+    .filter(Boolean);
+
+  const poolItems = rawSelectedIds.map((tId: string) => {
+    const item = getPoolSection(tId, {});
+    return {
+      id: tId,
+      src: item.image_url || '',
+      title: item.quote || item.title || 'relato real',
+      quote: item.quote || '',
+      author: item.author || 'aluna solta o verbo',
+      role: item.role || item.event_tag || 'comunidade',
+      tag: item.event_tag || 'depoimento real',
+    };
+  });
+
+  const activeDeploymentItems = poolItems.length > 0 ? poolItems : deploymentScreenshots.map((d, i) => ({
+    id: `d_default_${i}`,
+    src: d.src,
+    title: d.title,
+    quote: '',
+    author: 'aluna solta o verbo',
+    role: '21 dias de escrita',
+    tag: 'print real',
+  }));
 
   const navigate = useNavigate();
 
   // Auto-play do carrossel a cada 4 segundos
   useEffect(() => {
-    if (isPaused || selectedScreenshot !== null) return;
+    if (isPaused || selectedScreenshot !== null || selectedQuoteModal !== null) return;
     const interval = setInterval(() => {
-      setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
+      setCarouselIndex((prev) => (prev + 1) % activeDeploymentItems.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [isPaused, selectedScreenshot]);
+  }, [isPaused, selectedScreenshot, selectedQuoteModal, activeDeploymentItems.length]);
 
   const handleEnroll = () => {
     setIsPaymentModalOpen(true);
   };
 
   const nextSlide = () => {
-    setCarouselIndex((prev) => (prev + 1) % deploymentScreenshots.length);
+    setCarouselIndex((prev) => (prev + 1) % activeDeploymentItems.length);
   };
 
   const prevSlide = () => {
-    setCarouselIndex((prev) => (prev - 1 + deploymentScreenshots.length) % deploymentScreenshots.length);
+    setCarouselIndex((prev) => (prev - 1 + activeDeploymentItems.length) % activeDeploymentItems.length);
   };
 
   return (
@@ -670,17 +701,25 @@ export default function Programa21Dias() {
             {/* Grid de 3 Cards Visíveis em Desktop */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[0, 1, 2].map((offset) => {
-                const itemIndex = (carouselIndex + offset) % deploymentScreenshots.length;
-                const item = deploymentScreenshots[itemIndex];
+                const itemIndex = (carouselIndex + offset) % activeDeploymentItems.length;
+                const item = activeDeploymentItems[itemIndex];
                 const washiTapeImage =
                   offset % 2 === 0
                     ? '/brand-assets/elements/stickers/fitas-washi-flores-terracota.png'
                     : '/brand-assets/elements/stickers/fitas-washi-flores-azul.png';
 
+                const hasImage = Boolean(item.src);
+
                 return (
                   <div
-                    key={itemIndex}
-                    onClick={() => setSelectedScreenshot(item.src)}
+                    key={`${item.id}-${offset}`}
+                    onClick={() => {
+                      if (hasImage) {
+                        setSelectedScreenshot(item.src);
+                      } else if (item.quote) {
+                        setSelectedQuoteModal({ quote: item.quote, author: item.author, role: item.role });
+                      }
+                    }}
                     className="relative bg-bgPlataforma rounded-3xl p-4 sm:p-5 border border-papelKraft/40 shadow-kraft transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer group select-none flex flex-col justify-between"
                   >
                     {/* Sticker Fita Washi */}
@@ -692,29 +731,56 @@ export default function Programa21Dias() {
                       />
                     </div>
 
-                    {/* Frame com Foto 100% Visível em object-contain */}
-                    <div className="w-full h-[400px] sm:h-[440px] rounded-2xl overflow-hidden border border-papelKraft/30 relative bg-papelClaro p-2 flex items-center justify-center shadow-inner group/img mb-3">
-                      <img
-                        src={item.src}
-                        alt={item.title}
-                        className="w-full h-full object-contain object-top transition-transform duration-500 group-hover/img:scale-105"
-                      />
-                      
-                      {/* Hint Overlay para Ampliar */}
-                      <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
-                        <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
-                          <ZoomIn className="w-4 h-4 text-acentoTerracota" />
-                          <span>ampliar depoimento em tela cheia</span>
+                    {hasImage ? (
+                      /* Frame com Foto 100% Visível em object-contain */
+                      <div className="w-full h-[400px] sm:h-[440px] rounded-2xl overflow-hidden border border-papelKraft/30 relative bg-papelClaro p-2 flex items-center justify-center shadow-inner group/img mb-3">
+                        <img
+                          src={item.src}
+                          alt={item.title}
+                          className="w-full h-full object-contain object-top transition-transform duration-500 group-hover/img:scale-105"
+                        />
+                        
+                        {/* Hint Overlay para Ampliar */}
+                        <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+                          <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
+                            <ZoomIn className="w-4 h-4 text-acentoTerracota" />
+                            <span>ampliar depoimento em tela cheia</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      /* Frame para Depoimento em Texto */
+                      <div className="w-full h-[400px] sm:h-[440px] rounded-2xl border border-papelKraft/30 relative bg-papelClaro p-6 flex flex-col justify-between shadow-inner group/quote mb-3 overflow-hidden">
+                        <div className="space-y-3">
+                          <span className="text-4xl font-editorial text-acentoTerracota/50 block font-bold leading-none">“</span>
+                          <p className="text-tintaCarvao/90 text-sm sm:text-base leading-relaxed font-medium lowercase line-clamp-8">
+                            {item.quote}
+                          </p>
+                        </div>
+                        <div className="pt-3 border-t border-papelKraft/30">
+                          <p className="font-editorial text-sm font-bold text-acentoAzul lowercase">
+                            {item.author}
+                          </p>
+                          <p className="text-xs text-tintaCarvao/60 font-medium lowercase">
+                            {item.role}
+                          </p>
+                        </div>
+                        {/* Hint Overlay */}
+                        <div className="absolute inset-0 bg-acentoAzul/20 opacity-0 group-hover/quote:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-xs">
+                          <div className="bg-papelClaro/95 text-acentoAzul font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-2 shadow-xl border border-papelKraft/50 lowercase">
+                            <ZoomIn className="w-4 h-4 text-acentoTerracota" />
+                            <span>ler depoimento completo</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="px-2 text-center pt-1 border-t border-papelKraft/30 flex items-center justify-between">
-                      <span className="font-editorial text-sm font-bold text-acentoAzul lowercase">
+                      <span className="font-editorial text-sm font-bold text-acentoAzul lowercase truncate max-w-[70%]">
                         {item.title}
                       </span>
-                      <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase">
-                        print real
+                      <span className="text-[11px] font-bold text-acentoTerracota bg-acentoTerracota/10 px-2.5 py-0.5 rounded-full lowercase flex-shrink-0">
+                        {item.tag}
                       </span>
                     </div>
                   </div>
@@ -724,7 +790,7 @@ export default function Programa21Dias() {
 
             {/* Pílulas Indicadoras de Slide */}
             <div className="flex justify-center items-center gap-2 mt-8">
-              {deploymentScreenshots.slice(0, 8).map((_, idx) => (
+              {activeDeploymentItems.slice(0, 8).map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCarouselIndex(idx)}
@@ -770,6 +836,48 @@ export default function Programa21Dias() {
               className="btn-pill-primary w-full py-3 rounded-full text-center text-sm font-semibold lowercase"
             >
               fechar imagem
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Depoimento em Texto Ampliado */}
+      {selectedQuoteModal && (
+        <div
+          className="fixed inset-0 z-50 bg-acentoAzul/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setSelectedQuoteModal(null)}
+        >
+          <div
+            className="bg-papelClaro rounded-3xl p-6 sm:p-8 border border-papelKraft/60 shadow-2xl max-w-xl w-full relative animate-fadeIn flex flex-col space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedQuoteModal(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-acentoAzul text-white hover:bg-acentoTerracota transition-colors z-20"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-4 pt-2">
+              <span className="text-4xl font-editorial text-acentoTerracota block font-bold leading-none">“</span>
+              <p className="text-tintaCarvao text-base sm:text-lg leading-relaxed font-medium lowercase">
+                {selectedQuoteModal.quote}
+              </p>
+              <div className="pt-4 border-t border-papelKraft/40">
+                <p className="font-editorial text-lg font-bold text-acentoAzul lowercase">
+                  {selectedQuoteModal.author}
+                </p>
+                <p className="text-xs text-tintaCarvao/70 font-medium lowercase">
+                  {selectedQuoteModal.role}
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setSelectedQuoteModal(null)}
+              className="btn-pill-primary w-full py-3 rounded-full text-center text-sm font-semibold lowercase mt-4"
+            >
+              fechar depoimento
             </button>
           </div>
         </div>

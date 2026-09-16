@@ -225,7 +225,25 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       quote: "essa comunidade é um fio de vida humana, principalmente nessa transição planetária. agradeço e indico para quem busca uma comunidade aberta para avançar.",
       event_tag: "21 dias & ciclo",
       image_url: ""
-    }
+    },
+    d1: { id: "d1", author: "aluna solta o verbo", role: "print real da comunidade", quote: "partilha e acolhimento", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2847.PNG" },
+    d2: { id: "d2", author: "aluna solta o verbo", role: "print real da comunidade", quote: "desbloqueio criativo", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2848.PNG" },
+    d3: { id: "d3", author: "aluna solta o verbo", role: "print real da comunidade", quote: "relação com o caderno", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2849.PNG" },
+    d4: { id: "d4", author: "aluna solta o verbo", role: "print real da comunidade", quote: "mensagens de alunas", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2864.jpg" },
+    d5: { id: "d5", author: "aluna solta o verbo", role: "print real da comunidade", quote: "depoimento espontâneo", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2865.jpg" },
+    d6: { id: "d6", author: "aluna solta o verbo", role: "print real da comunidade", quote: "transformação diária", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2867.jpg" },
+    d7: { id: "d7", author: "aluna solta o verbo", role: "print real da comunidade", quote: "reflexão comunitária", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2868.jpg" },
+    d8: { id: "d8", author: "aluna solta o verbo", role: "print real da comunidade", quote: "vozes da fogueira", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2870.jpg" },
+    d9: { id: "d9", author: "aluna solta o verbo", role: "print real da comunidade", quote: "carinho e presença", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2877.jpg" },
+    d10: { id: "d10", author: "aluna solta o verbo", role: "print real da comunidade", quote: "impacto da escrita", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2878.jpg" },
+    d11: { id: "d11", author: "aluna solta o verbo", role: "print real da comunidade", quote: "relato de experiência", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8065.PNG" },
+    d12: { id: "d12", author: "aluna solta o verbo", role: "print real da comunidade", quote: "prints do grupo", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8066.PNG" },
+    d13: { id: "d13", author: "aluna solta o verbo", role: "print real da comunidade", quote: "experiência dos 21 dias", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8067.PNG" },
+    d14: { id: "d14", author: "aluna solta o verbo", role: "print real da comunidade", quote: "trocas poéticas", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8068.PNG" },
+    d15: { id: "d15", author: "aluna solta o verbo", role: "print real da comunidade", quote: "ritmo pessoal", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8069.PNG" },
+    d16: { id: "d16", author: "aluna solta o verbo", role: "print real da comunidade", quote: "caderno em movimento", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8151.PNG" },
+    d17: { id: "d17", author: "aluna solta o verbo", role: "print real da comunidade", quote: "comunidade acolhedora", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8846.PNG" },
+    d18: { id: "d18", author: "aluna solta o verbo", role: "print real da comunidade", quote: "gratidão das leitoras", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_8850.PNG" }
   },
   about: {
     hero: {
