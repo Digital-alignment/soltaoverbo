@@ -218,7 +218,7 @@ export default function Landing() {
 
                   <div className="relative z-10 space-y-6 py-4">
                     <blockquote className="font-editorial text-2xl sm:text-3xl lg:text-4xl text-acentoAzul leading-snug font-bold lowercase">
-                      “a palavra dita alivia. a palavra escrita liberta e constrói o amanhã.”
+                      {heroSec.quote_text || heroSec.card_quote || "“a narrativa muda a partir do ponto que você a observa.”"}
                     </blockquote>
 
                     <div className="pt-6 border-t border-papelKraft/40">
