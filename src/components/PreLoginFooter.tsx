@@ -232,7 +232,7 @@ export default function PreLoginFooter() {
 
           {/* Linha de Copyright & Legal */}
           <div className="pt-8 border-t border-white/15 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-white/60 lowercase">
-            <p>© {new Date().getFullYear()} solta o verbo colectivo. todos os direitos reservados. <span className="opacity-40 text-[10px] font-mono ml-1">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '1.9.3'}</span></p>
+            <p>© {new Date().getFullYear()} solta o verbo colectivo. todos os direitos reservados. <span className="opacity-40 text-[10px] font-mono ml-1">v{typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '1.9.4'}</span></p>
             <div className="flex items-center gap-4">
               <Link to="/privacy-policy" className="hover:text-acentoOliva transition-colors">
                 política de privacidade

@@ -27,6 +27,16 @@ export default function Landing() {
     setSelectedProduct(prod);
     setPaymentModalOpen(true);
   };
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+    if (target.startsWith('#')) {
+      e.preventDefault();
+      const element = document.querySelector(target);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
   const heroSec = getSection('hero', {
     badge_text: 'comunidade de autodesenvolvimento através da escrita',
     title: 'a narrativa muda a partir do ponto que você a observa.',
@@ -178,7 +188,8 @@ export default function Landing() {
               <div className="pt-4 flex flex-wrap items-center gap-4">
                 <a
                   href={heroSec.button_link || '#produtos'}
-                  className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5"
+                  onClick={(e) => handleAnchorClick(e, heroSec.button_link || '#produtos')}
+                  className="btn-pill-primary text-base sm:text-lg px-8 py-3.5 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2.5 cursor-pointer"
                 >
                   <span>{heroSec.button_text || 'conhecer os programas'}</span>
                   <Pencil className="w-5 h-5 text-white" />
@@ -186,6 +197,7 @@ export default function Landing() {
 
                 <a
                   href={heroSec.button_secondary_link || '#sobre-nos'}
+                  onClick={(e) => handleAnchorClick(e, heroSec.button_secondary_link || '#sobre-nos')}
                   className="bg-acentoAzul text-white hover:bg-acentoAzul/90 hover:scale-105 text-base sm:text-lg px-8 py-3.5 rounded-full font-medium transition-all shadow-md flex items-center gap-2.5 cursor-pointer"
                 >
                   <span>{heroSec.button_secondary_text || 'saiba mais'}</span>
@@ -359,7 +371,7 @@ export default function Landing() {
                     <h4 className="text-xl font-bold font-editorial text-acentoAzul lowercase">
                       {prod21Sec.for_who_title || 'para quem é este programa?'}
                     </h4>
-                    <p className="text-tintaCarvao/80 text-sm sm:text-base leading-relaxed lowercase font-medium">
+                    <p className="text-tintaCarvao/85 text-sm sm:text-base leading-relaxed lowercase font-medium">
                       {prod21Sec.for_who_text || 'ideal para quem deseja destravar a escrita, organizar pensamentos soltos e criar uma rotina constante sem pressão de perfeccionismo.'}
                     </p>
                   </div>
@@ -519,13 +531,13 @@ export default function Landing() {
                       </span>
                     </div>
 
-                    <Link
-                      to={prodCafeSec.button_link || '/programas/cafe-com-letras'}
+                    <button
+                      onClick={() => openPayment('cafe')}
                       className="btn-pill-primary text-base px-7 py-3 rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>{prodCafeSec.button_text || 'quero fazer parte'}</span>
                       <ArrowRight className="w-4 h-4 text-white" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
 
@@ -668,6 +680,13 @@ export default function Landing() {
 
       {/* 9. PreLoginFooter Poético */}
       <PreLoginFooter />
+
+      {/* 10. Modal de Inscrição & Checkout InfinitePay */}
+      <PaymentModal
+        isOpen={paymentModalOpen}
+        onClose={() => setPaymentModalOpen(false)}
+        product={selectedProduct}
+      />
     </div>
   );
 }
