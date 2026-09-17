@@ -1006,17 +1006,26 @@ export default function Dashboard() {
               </div>
 
               {/* Título da Leção com Dia em Muthazle (font-gesto) e Título da Leção em PP Editorial Serif */}
-              <div className="sm:col-span-8 space-y-1">
-                <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
-                  <span className="font-gesto text-2xl sm:text-3xl text-acentoTerracota font-normal mr-1.5">
-                    dia {String(courseProgress.currentLessonIndex + 1).padStart(2, '0')}:
-                  </span>
-                  {courseProgress.currentLesson?.title?.toLowerCase() || 'escutar o silêncio e dar forma ao sussurro'}
-                </h3>
-                <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase line-clamp-2 leading-relaxed">
-                  {courseProgress.currentLesson?.description?.toLowerCase() || 'um ritual diário de presença para organizar o caos interno sem a pressão de ser autor.'}
-                </p>
-              </div>
+              {(() => {
+                const rawTitle = courseProgress.currentLesson?.title || 'o começo de tudo.';
+                const cleanTitle = rawTitle.replace(/^dia\s*\d+:\s*/i, '').trim().toLowerCase();
+                const rawDesc = courseProgress.currentLesson?.description || 'um ritual diário de presença para organizar o caos interno sem a pressão de ser autor.';
+                const cleanDesc = rawDesc.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+                return (
+                  <div className="sm:col-span-8 space-y-1">
+                    <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
+                      <span className="font-gesto text-2xl sm:text-3xl text-acentoTerracota font-normal mr-1.5">
+                        dia {String(courseProgress.currentLessonIndex + 1).padStart(2, '0')}:
+                      </span>
+                      {cleanTitle}
+                    </h3>
+                    <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase line-clamp-2 leading-relaxed">
+                      {cleanDesc}
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Barra de Progresso com % em Helvetica (font-corpo min 14px) */}
