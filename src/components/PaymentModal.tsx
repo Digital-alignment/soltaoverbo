@@ -161,33 +161,34 @@ export default function PaymentModal({
 
   return (
     <div
-      className="fixed inset-0 bg-tintaCarvao/50 backdrop-blur-xs flex items-center justify-center z-[99999] p-4 overflow-y-auto"
+      className="fixed inset-0 bg-tintaCarvao/60 backdrop-blur-xs flex items-center justify-center z-[99999] p-3 sm:p-5"
       onClick={handleBackdropClick}
     >
-      <div className="bg-papelClaro rounded-3xl max-w-xl w-full my-8 shadow-kraft-lg border border-papelKraft/60 overflow-hidden">
-        {/* Cabeçalho */}
-        <div className="flex justify-between items-start p-6 sm:p-8 border-b border-papelKraft/40 bg-bgPlataforma">
-          <div>
-            <span className="text-[11px] font-bold text-acentoTerracota font-corpo lowercase tracking-wider block mb-1">
+      <div className="bg-papelClaro rounded-3xl max-w-lg w-full max-h-[88vh] sm:max-h-[90vh] flex flex-col shadow-kraft-lg border border-papelKraft/60 overflow-hidden relative animate-fade-in">
+        {/* Cabeçalho Fixo (Sticky) */}
+        <div className="flex items-start justify-between p-5 sm:p-6 border-b border-papelKraft/40 bg-bgPlataforma shrink-0 sticky top-0 z-20">
+          <div className="pr-3">
+            <span className="text-[10px] sm:text-[11px] font-bold text-acentoTerracota font-corpo lowercase tracking-wider block mb-0.5 sm:mb-1">
               inscrição & checkout seguro
             </span>
-            <h2 className="font-editorial text-2xl sm:text-3xl text-acentoAzul font-bold lowercase">
+            <h2 className="font-editorial text-2xl sm:text-3xl text-acentoAzul font-bold lowercase leading-tight">
               {productDetails.title}
             </h2>
-            <p className="text-xs sm:text-sm text-tintaCarvao/80 font-corpo font-medium lowercase mt-1">
+            <p className="text-xs sm:text-sm text-tintaCarvao/80 font-corpo font-medium lowercase mt-1 leading-snug">
               {productDetails.subtitle}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-papelKraft/30 rounded-full transition-colors flex-shrink-0 text-tintaCarvao/60 hover:text-tintaCarvao cursor-pointer"
+            className="p-2 hover:bg-papelKraft/40 bg-papelKraft/20 rounded-full transition-colors shrink-0 text-tintaCarvao/70 hover:text-tintaCarvao cursor-pointer"
             aria-label="fechar modal"
           >
             <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
-        <div className="p-6 sm:p-8 space-y-6">
+        {/* Conteúdo com Roolagem Interna */}
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4 sm:space-y-5 custom-scrollbar">
           {error && (
             <div className="p-4 bg-acentoTerracota/10 border border-acentoTerracota/40 rounded-2xl text-acentoTerracota text-xs font-corpo font-medium lowercase">
               {error}
@@ -195,13 +196,13 @@ export default function PaymentModal({
           )}
 
           {/* O que está incluso */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-papelKraft/40 space-y-2.5 shadow-xs">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-papelKraft/40 space-y-3 shadow-xs">
             <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase tracking-wider block">
               o que você recebe na inscrição:
             </span>
-            <ul className="space-y-1.5">
+            <ul className="space-y-2">
               {productDetails.features.map((feature, i) => (
-                <li key={i} className="flex items-start gap-2 text-xs font-corpo text-tintaCarvao/85 lowercase">
+                <li key={i} className="flex items-start gap-2 text-xs sm:text-sm font-corpo text-tintaCarvao/85 lowercase leading-snug">
                   <Check className="w-4 h-4 text-acentoOliva shrink-0 mt-0.5" />
                   <span>{feature}</span>
                 </li>
@@ -210,14 +211,14 @@ export default function PaymentModal({
           </div>
 
           {/* Opção 1: Valor Principal & Checkout Direct InfinitePay */}
-          <div className="bg-bgPlataforma rounded-2xl p-5 border border-papelKraft/50 shadow-xs space-y-4">
+          <div className="bg-bgPlataforma rounded-2xl p-4 sm:p-5 border border-papelKraft/40 shadow-xs space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <span className="text-[10px] font-bold text-tintaCarvao/60 font-corpo lowercase block">
                   investimento no seu hábito de escrita
                 </span>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="text-3xl font-bold font-editorial text-acentoAzul">
+                  <span className="text-3xl sm:text-4xl font-bold font-editorial text-acentoAzul">
                     {productDetails.priceText}
                   </span>
                   <span className="text-xs text-tintaCarvao/70 font-corpo lowercase font-medium">
@@ -225,29 +226,29 @@ export default function PaymentModal({
                   </span>
                 </div>
               </div>
-
-              <button
-                onClick={handleCheckout}
-                disabled={loading}
-                className="py-3 px-6 rounded-full bg-acentoAzul hover:bg-acentoAzul/90 text-white font-corpo font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shadow-xs"
-              >
-                {loading ? (
-                  <>
-                    <Loader className="w-4 h-4 animate-spin text-white" />
-                    <span>processando...</span>
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-4 h-4" />
-                    <span>pagar com infinitepay (pix ou cartão)</span>
-                  </>
-                )}
-              </button>
             </div>
 
-            <div className="pt-3 border-t border-papelKraft/30 flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/70 lowercase">
+            <button
+              onClick={handleCheckout}
+              disabled={loading}
+              className="w-full py-3.5 px-6 rounded-full bg-acentoAzul hover:bg-acentoAzul/90 text-white font-corpo font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 shadow-xs lowercase"
+            >
+              {loading ? (
+                <>
+                  <Loader className="w-4 h-4 animate-spin text-white" />
+                  <span>processando...</span>
+                </>
+              ) : (
+                <>
+                  <CreditCard className="w-4 h-4 shrink-0" />
+                  <span>pagar com infinitepay (pix ou cartão)</span>
+                </>
+              )}
+            </button>
+
+            <div className="pt-3 border-t border-papelKraft/30 flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/70 lowercase flex-wrap gap-2">
               <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-acentoOliva" />
+                <ShieldCheck className="w-3.5 h-3.5 text-acentoOliva shrink-0" />
                 pagamento 100% seguro pela infinitepay
               </span>
               <a
@@ -262,25 +263,23 @@ export default function PaymentModal({
           </div>
 
           {/* Opção 2: Pagamento Chave PIX & WhatsApp */}
-          <div className="bg-white rounded-2xl p-5 border border-papelKraft/50 shadow-xs space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-bold text-acentoAzul text-sm lowercase font-editorial">
-                  pagamento via pix ou atendimento humano
-                </h4>
-                <p className="text-xs text-tintaCarvao/70 font-corpo lowercase">
-                  receba a chave pix direta e auxílio imediato pela equipe no whatsapp
-                </p>
-              </div>
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-papelKraft/40 shadow-xs space-y-3">
+            <div>
+              <h4 className="font-bold text-acentoAzul text-sm lowercase font-editorial">
+                pagamento via pix ou atendimento humano
+              </h4>
+              <p className="text-xs text-tintaCarvao/70 font-corpo lowercase mt-0.5">
+                receba a chave pix direta e auxílio imediato pela equipe no whatsapp
+              </p>
             </div>
 
             <a
               href={`https://wa.me/5548991823637?text=${encodeURIComponent(productDetails.whatsappMessage)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-corpo font-bold py-3 px-6 rounded-full transition-all flex items-center justify-center gap-2.5 text-xs sm:text-sm shadow-xs cursor-pointer lowercase"
+              className="w-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-corpo font-bold py-3.5 px-6 rounded-full transition-all flex items-center justify-center gap-2.5 text-xs sm:text-sm shadow-xs cursor-pointer lowercase"
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4 shrink-0" />
               <span>garantir vaga pelo whatsapp</span>
             </a>
           </div>

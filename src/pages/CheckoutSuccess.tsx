@@ -164,7 +164,7 @@ export default function CheckoutSuccess() {
               href="https://wa.me/5548991823637?text=Ol%C3%A1!%20Acabei%20de%20realizar%20minha%20inscri%C3%A7%C3%A3o%20no%20Solta%20o%20Verbo."
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#20bd5a] text-white font-corpo font-bold py-3.5 px-6 rounded-full transition-all text-xs sm:text-sm shadow-xs cursor-pointer lowercase"
+              className="flex items-center justify-center gap-2.5 bg-acentoAzul hover:bg-acentoAzul/90 text-white font-corpo font-bold py-3.5 px-6 rounded-full transition-all text-xs sm:text-sm shadow-xs cursor-pointer lowercase"
             >
               <MessageCircle className="w-4 h-4" />
               <span>falar no whatsapp</span>
