@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   define: {
     __APP_BUILD_TIME__: JSON.stringify(new Date().toISOString()),
-    __APP_VERSION__: JSON.stringify('v1.9.4'),
+    __APP_VERSION__: JSON.stringify('v1.9.5'),
   },
   server: {
     port: 7788,
