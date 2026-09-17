@@ -42,7 +42,7 @@ export default function ProgramaCiclo() {
   const faqSec = content.faq || {};
 
   // Banco global de depoimentos e prints (Deployments)
-  const selectedIds = (depoimentosSec.selected_ids || 't1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5,d6,d7,d8')
+  const selectedIds = (depoimentosSec.selected_ids || 't10,t11,t12,d15,d16,d17,d18')
     .split(',')
     .map((s: string) => s.trim())
     .filter(Boolean);

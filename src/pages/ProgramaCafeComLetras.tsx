@@ -105,7 +105,7 @@ export default function ProgramaCafeComLetras() {
     badge_text: 'vozes de quem já toma esse café com a gente',
     title: 'vozes de quem já toma esse café com a gente',
     subtitle: 'mensagens reais de quem escreve com a gente nas terças.',
-    selected_ids: 't1,t2,t3,t4,t5,t6,d1,d2,d3,d4,d5',
+    selected_ids: 't7,t8,t9,d11,d12,d13,d14',
   });
 
   const finalCtaSec = getSection('final_cta', {

@@ -113,7 +113,7 @@ export default function Landing() {
   const depoimentosSec = getSection('depoimentos', {
     badge_text: 'vozes da nossa comunidade',
     title: 'o que dizem as pessoas que soltam o verbo',
-    selected_ids: 't1,t3,t5',
+    selected_ids: 't1,t2,t3',
   });
 
   const pillars = [
@@ -125,7 +125,7 @@ export default function Landing() {
     { title: fundamentosSec.p6_title || 'autonomia e coragem', description: fundamentosSec.p6_desc || 'o propósito é que cada pessoa...' },
   ];
 
-  const rawSelectedIds = (depoimentosSec.selected_ids || 't1,t3,t5')
+  const rawSelectedIds = (depoimentosSec.selected_ids || 't1,t2,t3')
     .split(',')
     .map((s: string) => s.trim())
     .filter(Boolean);

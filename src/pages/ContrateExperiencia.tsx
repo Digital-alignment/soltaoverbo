@@ -751,9 +751,19 @@ export default function ContrateExperiencia() {
                 <h3 className="text-xl font-bold font-editorial text-acentoAzul lowercase mb-3 group-hover:text-acentoTerracota transition-colors">
                   {formatosSec.f4_title || 'escrita para quem está aprendendo'}
                 </h3>
-                <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-6">
+                <p className="text-tintaCarvao/85 text-xs sm:text-sm leading-relaxed lowercase font-medium mb-4">
                   {formatosSec.f4_desc || 'atividades de escrita criativa para crianças, jovens e educadores, desenvolvendo imaginação, autoria e escuta desde cedo.'}
                 </p>
+
+                {/* Depoimento Real de Educação em Sala de Aula */}
+                <div className="p-3.5 bg-bgPlataforma rounded-2xl border border-papelKraft/40 mb-6 space-y-1.5 shadow-xs">
+                  <p className="font-editorial text-xs text-acentoAzul font-bold lowercase leading-snug">
+                    “apliquei o projeto de vocês para mais de 400 crianças. e elas amaram. se vulnerabilizaram, reduziram a prática de bullying em aula. foi humanizante. eram os '10 minutos mágicos' do começo de toda aula. uma das alunas que fez parte desse projeto foi eleita vereadora mirim e quer levar essa proposta para outras escolas.”
+                  </p>
+                  <p className="text-[10px] text-acentoTerracota font-bold lowercase">
+                    — professora que aplicou o projeto em sala de aula
+                  </p>
+                </div>
               </div>
 
               <div className="pt-4 border-t border-papelKraft/30">

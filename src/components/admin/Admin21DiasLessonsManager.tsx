@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import type { Database } from '../../lib/database.types';
 
+import { LESSONS_21_DIAS_DATA } from '../../data/lessons21DiasData';
+
 type Lesson = Database['public']['Tables']['course_lessons']['Row'];
 type Course = Database['public']['Tables']['courses']['Row'];
 
@@ -69,8 +71,26 @@ export default function Admin21DiasLessonsManager() {
           .eq('course_id', currentCourse.id)
           .order('order_index', { ascending: true });
 
-        if (!lessonsError && lessonsData) {
+        if (!lessonsError && lessonsData && lessonsData.length > 0) {
           setLessons(lessonsData);
+        } else if (currentCourse) {
+          // Auto-seed with canonical 21 lessons data
+          const lessonsToInsert = LESSONS_21_DIAS_DATA.map((l) => ({
+            course_id: currentCourse!.id,
+            title: `Dia ${l.day}: ${l.title}`,
+            description: `${l.opening}\n\nExercício:\n${l.exercise}`,
+            order_index: l.day,
+            tags: [l.week === 1 ? 'semana 1: olhar para dentro' : l.week === 2 ? 'semana 2: olhar para fora' : 'semana 3: olhar para o entre'],
+          }));
+
+          const { data: seeded, error: seedErr } = await supabase
+            .from('course_lessons')
+            .insert(lessonsToInsert)
+            .select();
+
+          if (!seedErr && seeded) {
+            setLessons(seeded);
+          }
         }
       }
     } catch (err) {

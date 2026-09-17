@@ -180,50 +180,106 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
   testimonials_pool: {
     t1: {
       id: "t1",
-      author: "bárbara alcântara (babi)",
-      role: "café com letras & ciclo de aprofundamento",
-      quote: "em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.",
-      event_tag: "café com letras & ciclo",
+      author: "voz da nossa comunidade",
+      role: "comunidade solta o verbo",
+      quote: "a gente escreve, fala com o outro, para poder se ouvir, se ler e tentar entender um pouquinho mais desse universo que somos.",
+      event_tag: "landing page",
       image_url: ""
     },
     t2: {
       id: "t2",
-      author: "bárbara alcântara (babi)",
-      role: "café com letras & ciclo de aprofundamento",
-      quote: "gostei de aprender sobre a resistência, sobre a importância da troca e, principalmente, sobre o quanto é possível escrever em só 15 minutos! vocês são demais, eu encontrei aleatoriamente o solta o verbo e sou muito grata por isso.",
-      event_tag: "café com letras & ciclo",
+      author: "jess",
+      role: "aluna da comunidade",
+      quote: "essa comunidade é um fio de vida humana, principalmente nessa transição planetária.",
+      event_tag: "landing page",
       image_url: ""
     },
     t3: {
       id: "t3",
-      author: "tom vitralli",
-      role: "explorador de realidades, andarilho de alma",
-      quote: "o simples fato de estar em sangha, ouvindo escritas pessoais diversas e se inspirando nelas, é o néctar da solta o verbo.",
-      event_tag: "21 dias & ciclo",
+      author: "voz da nossa comunidade",
+      role: "comunidade solta o verbo",
+      quote: "foi meu primeiro texto. nunca tinha feito isso.",
+      event_tag: "landing page",
       image_url: ""
     },
     t4: {
       id: "t4",
-      author: "tom vitralli",
-      role: "explorador de realidades, andarilho de alma",
-      quote: "minha escrita começou a pegar no tranco. menos analítica, mais expressiva e autêntica. apesar de já escrever poesias antes, o fluxo da escrita melhorou muito!",
-      event_tag: "21 dias & ciclo",
+      author: "voz da nossa comunidade",
+      role: "aluna dos 21 dias de escrita",
+      quote: "no dia 11, o meu número preferido, encontrei inspiração para a minha primeira poesia em português, honrando esta língua tão bonita e essa linguagem universal que é a poesia.",
+      event_tag: "21 dias de escrita",
       image_url: ""
     },
     t5: {
       id: "t5",
-      author: "jess",
+      author: "voz da nossa comunidade",
       role: "aluna dos 21 dias de escrita",
-      quote: "conhecer o solta o verbo foi um resgate desse instrumento, e ao mesmo tempo uma expansão de como colocar palavras: não como uma técnica engessada, mas inspiracional e fluida. sinto-me cada vez mais presente.",
-      event_tag: "21 dias & ciclo",
+      quote: "todo ano eu compro um caderno no intuito de que essa escrita vire hábito. esse ano foi o que mais escrevi. esse grupo tem me ajudado, acho que a partir desse exercício venho encontrado a criatividade e colocado ela no dia a dia.",
+      event_tag: "21 dias de escrita",
       image_url: ""
     },
     t6: {
       id: "t6",
-      author: "jess",
-      role: "aluna dos 21 dias de escrita",
-      quote: "essa comunidade é um fio de vida humana, principalmente nessa transição planetária. agradeço e indico para quem busca uma comunidade aberta para avançar.",
-      event_tag: "21 dias & ciclo",
+      author: "tom vitralli",
+      role: "aluno dos 21 dias de escrita",
+      quote: "minha escrita começou a pegar no tranco. menos analítica e racional, mais expressiva e autêntica. apesar de já escrever poesias antes, o fluxo da escrita melhorou muito!",
+      event_tag: "21 dias de escrita",
+      image_url: ""
+    },
+    t7: {
+      id: "t7",
+      author: "voz da nossa comunidade",
+      role: "participante do café com letras",
+      quote: "eu amei escrever. obrigada por isso. tô num turbilhão de coisas acontecendo e foi bom demais.",
+      event_tag: "café com letras",
+      image_url: ""
+    },
+    t8: {
+      id: "t8",
+      author: "voz da nossa comunidade",
+      role: "participante do café com letras",
+      quote: "escrever com foco, além de muito gostoso, faz a mente se divertir. adoro essa oportunidade de praticar todo dia, traz paz, revelações. nossa experiência de escrita está gerando uma onda linda de muita possibilidade futura.",
+      event_tag: "café com letras",
+      image_url: ""
+    },
+    t9: {
+      id: "t9",
+      author: "bárbara alcântara (babi)",
+      role: "participante do café com letras",
+      quote: "gostei de aprender sobre a resistência, sobre a importância da troca e, principalmente, sobre o quanto é possível escrever em só 15 minutos! vocês são demais.",
+      event_tag: "café com letras",
+      image_url: ""
+    },
+    t10: {
+      id: "t10",
+      author: "bárbara alcântara (babi)",
+      role: "integrante do ciclo de aprofundamento",
+      quote: "em 2022 entrei num processo muito profundo de autoconhecimento e passei por várias experiências. em todas elas, o denominador comum era a escrita como uma das principais e mais efetivas ferramentas pra me entender.",
+      event_tag: "ciclo de aprofundamento",
+      image_url: ""
+    },
+    t11: {
+      id: "t11",
+      author: "voz da nossa comunidade",
+      role: "integrante do ciclo de aprofundamento",
+      quote: "tenho refletido bastante sobre as travas em minha criatividade, e como a escrita íntima e os momentos intimistas me conectam mais e mais.",
+      event_tag: "ciclo de aprofundamento",
+      image_url: ""
+    },
+    t12: {
+      id: "t12",
+      author: "voz da nossa comunidade",
+      role: "integrante do ciclo de aprofundamento",
+      quote: "pra mim foi maravilhoso e veio justamente na hora certa. e o mais louco é escrever manifestando: quando eu leio dias, meses depois, eu estou vivendo exatamente o que escrevi.",
+      event_tag: "ciclo de aprofundamento",
+      image_url: ""
+    },
+    t13: {
+      id: "t13",
+      author: "professora que aplicou o projeto em sala de aula",
+      role: "formato escolas e educação",
+      quote: "apliquei o projeto de vocês para mais de 400 crianças. e elas amaram. se vulnerabilizaram, reduziram a prática de bullying em aula. foi humanizante. eram os '10 minutos mágicos' do começo de toda aula. uma das alunas que fez parte desse projeto foi eleita vereadora mirim e quer levar essa proposta para outras escolas.",
+      event_tag: "contrate uma experiência",
       image_url: ""
     },
     d1: { id: "d1", author: "aluna solta o verbo", role: "print real da comunidade", quote: "partilha e acolhimento", event_tag: "21 dias de escrita", image_url: "/brand-assets/deployments/IMG_2847.PNG" },
