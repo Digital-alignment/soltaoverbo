@@ -28,7 +28,7 @@ export default function PaymentModal({
       priceText: 'R$ 77,00',
       priceInCents: 7700,
       installmentText: 'ou 2x R$ 38,50',
-      directPayUrl: 'https://infinitepay.io/pay/soltaoverbo/7700',
+      directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
       whatsappMessage: 'Olá! Quero garantir minha vaga nos 21 dias de escrita por R$ 77,00 via PIX ou cartão.',
       features: [
         'acesso a 21 rituais diários de escrita autoral',
@@ -43,7 +43,7 @@ export default function PaymentModal({
       priceText: 'R$ 597,00',
       priceInCents: 59700,
       installmentText: '/ trimestre (ou 3x R$ 225,67 sem juros)',
-      directPayUrl: 'https://infinitepay.io/pay/soltaoverbo/59700',
+      directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
       whatsappMessage: 'Olá! Quero fazer parte do ciclo de aprofundamento (R$ 597,00/trimestre) via PIX ou cartão.',
       features: [
         'encontros ao vivo de mentoria & rituais de escrita',
@@ -58,7 +58,7 @@ export default function PaymentModal({
       priceText: 'R$ 97,00',
       priceInCents: 9700,
       installmentText: '/ mês (incluso no ciclo de aprofundamento)',
-      directPayUrl: 'https://infinitepay.io/pay/soltaoverbo/9700',
+      directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
       whatsappMessage: 'Olá! Quero me inscrever no café com letras (R$ 97,00/mês) via PIX ou cartão.',
       features: [
         '4 encontros ao vivo por mês (terças-feiras 8h–8h30)',
@@ -73,7 +73,7 @@ export default function PaymentModal({
       priceText: 'R$ 597,00',
       priceInCents: 59700,
       installmentText: '/ trimestre',
-      directPayUrl: 'https://infinitepay.io/pay/soltaoverbo/59700',
+      directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
       whatsappMessage: 'Olá! Gostaria de informações sobre formas de pagamento e matrícula geral.',
       features: [
         'acesso completo a todas as oficinas e rituais',
@@ -88,7 +88,7 @@ export default function PaymentModal({
     priceText: 'R$ 77,00',
     priceInCents: 7700,
     installmentText: 'ou 2x R$ 38,50',
-    directPayUrl: 'https://infinitepay.io/pay/soltaoverbo/7700',
+    directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
     whatsappMessage: 'Olá! Quero garantir minha vaga no Solta o Verbo.',
     features: ['acesso imediato à plataforma', 'rituais guiados de escrita autoral'],
   };

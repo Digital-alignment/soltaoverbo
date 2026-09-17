@@ -29,8 +29,9 @@ export async function createInfinitePayCheckout({
 }: CreateInfinitePayCheckoutParams): Promise<string> {
   try {
     const generatedOrderNsu = orderNsu || `sv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL || 'https://qtdruienammtqodgfqty.supabase.co';
     const defaultRedirectUrl = `${window.location.origin}/checkout-success`;
-    const defaultWebhookUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/infinitepay-webhook`;
+    const defaultWebhookUrl = `${supabaseUrl}/functions/v1/infinitepay-webhook`;
 
     const payload = {
       handle: INFINITEPAY_HANDLE,
@@ -51,23 +52,20 @@ export async function createInfinitePayCheckout({
 
     if (!response.ok) {
       console.warn(`api infinitepay retornou status ${response.status}, usando fallback direto.`);
-      const itemPrice = items[0]?.price || 7700;
-      return `https://infinitepay.io/pay/${INFINITEPAY_HANDLE}/${itemPrice}`;
+      return `https://checkout.infinitepay.io/${INFINITEPAY_HANDLE}`;
     }
 
     const data = await response.json();
     const checkoutUrl = data.url || data.link || data.checkout_url;
 
     if (!checkoutUrl) {
-      const itemPrice = items[0]?.price || 7700;
-      return `https://infinitepay.io/pay/${INFINITEPAY_HANDLE}/${itemPrice}`;
+      return `https://checkout.infinitepay.io/${INFINITEPAY_HANDLE}`;
     }
 
     return checkoutUrl;
   } catch (error) {
     console.warn('aviso na criação de sessão infinitepay, redirecionando para link direto:', error);
-    const itemPrice = items[0]?.price || 7700;
-    return `https://infinitepay.io/pay/${INFINITEPAY_HANDLE}/${itemPrice}`;
+    return `https://checkout.infinitepay.io/${INFINITEPAY_HANDLE}`;
   }
 }
 
