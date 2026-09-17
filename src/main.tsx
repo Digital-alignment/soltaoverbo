@@ -24,7 +24,7 @@ if ('serviceWorker' in navigator) {
 // Automatic cache bust detection on build update
 try {
   const lastBuild = localStorage.getItem('soltaoverbo_build_time');
-  if (lastBuild && lastBuild !== __APP_BUILD_TIME__) {
+  if (lastBuild !== __APP_BUILD_TIME__) {
     console.log('[CacheBust] New build detected:', __APP_BUILD_TIME__);
     if ('caches' in window) {
       caches.keys().then((names) => {
@@ -33,6 +33,7 @@ try {
         }
       });
     }
+    localStorage.removeItem('soltaoverbo_cms_data_cache');
   }
   localStorage.setItem('soltaoverbo_build_time', __APP_BUILD_TIME__);
 } catch (e) {

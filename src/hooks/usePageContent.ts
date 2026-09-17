@@ -102,7 +102,7 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
     depoimentos: {
       badge_text: "vozes da nossa comunidade",
       title: "o que dizem as pessoas que soltam o verbo",
-      selected_ids: "t1,t3,t5"
+      selected_ids: "t1,t2,t3"
     },
     b2b_section: {
       badge_text: "experiências sob medida",
@@ -923,7 +923,9 @@ export async function fetchCMSDataFromSupabase(): Promise<SiteCMSData> {
       const data: SiteCMSData = await res.json();
       const merged = mergeCMSWithDefaults(data);
       memoryCMSData = merged;
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
+      }
       notifyListeners();
       return merged;
     }
@@ -931,15 +933,17 @@ export async function fetchCMSDataFromSupabase(): Promise<SiteCMSData> {
     console.warn('não foi possível carregar CMS do supabase, usando cache local:', err);
   }
 
-  const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (cached) {
-    try {
-      const parsed = JSON.parse(cached);
-      const merged = mergeCMSWithDefaults(parsed);
-      memoryCMSData = merged;
-      return merged;
-    } catch (e) {
-      console.error(e);
+  if (typeof window !== 'undefined') {
+    const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        const merged = mergeCMSWithDefaults(parsed);
+        memoryCMSData = merged;
+        return merged;
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 
@@ -950,7 +954,9 @@ export async function fetchCMSDataFromSupabase(): Promise<SiteCMSData> {
 export async function saveCMSDataToSupabase(updatedCMSData: SiteCMSData): Promise<boolean> {
   try {
     memoryCMSData = updatedCMSData;
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedCMSData));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedCMSData));
+    }
     notifyListeners();
 
     const blob = new Blob([JSON.stringify(updatedCMSData, null, 2)], { type: 'application/json' });
