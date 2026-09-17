@@ -54,3 +54,8 @@ export const BRAND_ASSETS = {
 } as const;
 
 export type BrandAssets = typeof BRAND_ASSETS;
+
+if (typeof window !== 'undefined') {
+  (window as any).BRAND_ASSETS = BRAND_ASSETS;
+}
+

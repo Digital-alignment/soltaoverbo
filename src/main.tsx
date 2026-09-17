@@ -2,8 +2,27 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { BRAND_ASSETS } from './config/brandAssets';
 
 declare const __APP_BUILD_TIME__: string;
+
+// Expose BRAND_ASSETS globally on window to guarantee backward compatibility for any cached chunks
+if (typeof window !== 'undefined') {
+  (window as any).BRAND_ASSETS = BRAND_ASSETS;
+}
+
+// Global error handler for stale chunk recovery
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', (event) => {
+    if (event.message && (event.message.includes('BRAND_ASSETS') || event.message.includes('Loading chunk') || event.message.includes('dynamically imported module'))) {
+      console.warn('[CacheBust] Stale chunk error detected, force reloading page:', event.message);
+      if (!sessionStorage.getItem('soltaoverbo_reloaded_for_error')) {
+        sessionStorage.setItem('soltaoverbo_reloaded_for_error', 'true');
+        window.location.reload();
+      }
+    }
+  });
+}
 
 // Purge any active PWA Service Workers and browser CacheStorage
 if ('serviceWorker' in navigator) {
