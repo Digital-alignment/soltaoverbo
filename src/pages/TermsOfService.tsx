@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, PenTool, FileText, Menu, X } from 'lucide-react';
+import { FileText, Menu, X } from 'lucide-react';
 import PreLoginFooter from '../components/PreLoginFooter';
 
 export default function TermsOfService() {

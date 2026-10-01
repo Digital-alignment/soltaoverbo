@@ -188,14 +188,15 @@ const GUIDED_TEMPLATES: GuidedTemplate[] = [
 interface WordMilestone {
   minWords: number;
   label: string;
+  icon?: string;
 }
 
 const WORD_MILESTONES: WordMilestone[] = [
-  { minWords: 1, label: 'a semente foi plantada' },
-  { minWords: 50, label: 'primeiro sopro poético' },
-  { minWords: 150, label: 'corrente fluida de sentimentos' },
-  { minWords: 300, label: 'página autoral viva' },
-  { minWords: 500, label: 'obra em plena floração' },
+  { minWords: 1, label: 'a semente foi plantada', icon: '🌱' },
+  { minWords: 50, label: 'primeiro sopro poético', icon: '🍃' },
+  { minWords: 150, label: 'corrente fluida de sentimentos', icon: '🌊' },
+  { minWords: 300, label: 'página autoral viva', icon: '✨' },
+  { minWords: 500, label: 'obra em plena floração', icon: '🌸' },
 ];
 
 export default function WritingExercises() {
@@ -316,7 +317,7 @@ export default function WritingExercises() {
     if (!newPromptComment.trim()) return;
     const newComment = {
       id: `cm_${Date.now()}`,
-      author: profile?.full_name?.toLowerCase() || profile?.username?.toLowerCase() || 'aluna fogueira',
+      author: profile?.display_name?.toLowerCase() || profile?.email_public?.toLowerCase() || 'aluna fogueira',
       text: newPromptComment.trim(),
       time: 'agora',
     };
@@ -1654,7 +1655,7 @@ export default function WritingExercises() {
               <div className="bg-white p-4 rounded-2xl border border-papelKraft/35 space-y-1.5 text-left">
                 <div className="flex items-center justify-between text-[11px] font-corpo text-tintaCarvao/55">
                   <span className="font-bold text-acentoAzul lowercase">
-                    {publishSuccessModal.isAnonymous ? 'autora anônima' : (profile?.full_name || profile?.username || 'aluna solta o verbo').toLowerCase()}
+                    {publishSuccessModal.isAnonymous ? 'autora anônima' : (profile?.display_name || profile?.email_public || 'aluna solta o verbo').toLowerCase()}
                   </span>
                   <span>hoje</span>
                 </div>
