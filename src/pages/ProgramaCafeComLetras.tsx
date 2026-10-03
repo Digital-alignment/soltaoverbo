@@ -59,7 +59,7 @@ const defaultFaqItems = [
   { q: 'preciso ter experiência com escrita?', a: 'não. aqui é um espaço sem julgamento onde não se corrige texto, se escuta gente. o único pré-requisito é vontade de escrever e estar junto.' },
   { q: 'preciso escrever à mão?', a: 'gostamos de papel e caneta, mas escreva como for melhor para você. você também tem acesso à nossa plataforma digital e pode escrever por lá (e compartilhar na nossa área de partilha).' },
   { q: 'quem está no ciclo de aprofundamento paga?', a: 'não. o café com letras está incluído na travessia do ciclo, sem custo adicional.' },
-  { q: 'posso cancelar quando quiser?', a: 'sim. é um passe mensal, sem fidelidade. e você tem garantia incondicional de 7 dias: se não for para você, devolvemos o valor integral.' },
+  { q: 'posso cancelar quando quiser?', a: 'sim. é uma assinatura mensal recorrente sem fidelidade, cobrada a cada mês (R$ 97,00/mês). você pode cancelar quando quiser com um clique. e você tem garantia incondicional de 7 dias: se não for para você, devolvemos o valor integral.' },
   { q: 'preciso levar algum material?', a: 'só caderno, caneta e um café. o resto deixa com a gente.' },
 ];
 
@@ -72,11 +72,11 @@ export default function ProgramaCafeComLetras() {
     title: 'café com letras',
     subtitle_gesto: 'ritual de escrita semanal',
     subtitle: 'uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.',
-    button_text: 'sim, quero minha xícara por R$97/mês',
+    button_text: 'sim, quero minha xícara por R$ 97/mês',
     button_secondary_text: 'como funciona o café com letras ↓',
     schedule_badge: 'toda terça-feira · 8h às 8h30 (30 min) · zoom',
     price_text: 'R$ 97,00',
-    price_subtext: '/mês',
+    price_subtext: '/mês (assinatura recorrente)',
     ciclo_badge: '100% incluso para quem está no ciclo de aprofundamento',
     guarantee_text: 'garantia incondicional de 7 dias',
     quote: '“escrever junto é descobrir que a sua palavra não estava sozinha.”',
@@ -111,8 +111,8 @@ export default function ProgramaCafeComLetras() {
   const finalCtaSec = getSection('final_cta', {
     title: 'sua próxima terça pode começar diferente',
     subtitle: 'você não precisa esperar a vontade chegar, nem ter assunto, nem saber escrever. precisa só aparecer numa terça, às 8h.',
-    price_text: '97 reais · 100% incluso para quem está no ciclo de aprofundamento',
-    button_text: 'sim, quero minha xícara por R$97/mês',
+    price_text: 'R$ 97,00/mês (assinatura recorrente) · incluso no ciclo de aprofundamento',
+    button_text: 'sim, quero minha xícara por R$ 97/mês',
   });
 
   const faqSec = getSection('faq', {
@@ -638,7 +638,7 @@ export default function ProgramaCafeComLetras() {
       <PaymentModal
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
-        productKey="cafecomletras"
+        product="cafe"
       />
     </div>
   );

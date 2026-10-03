@@ -3,13 +3,14 @@ import { X, Loader, CreditCard, MessageCircle, ShieldCheck, Check } from 'lucide
 import { createInfinitePayCheckout } from '../lib/infinitepay';
 import { supabase } from '../lib/supabase';
 
-export type ProductKey = '21dias' | 'ciclo' | 'cafe' | 'geral';
+export type ProductKey = '21dias' | 'ciclo' | 'cafe' | 'geral' | 'cafecomletras';
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   userEmail?: string;
   product?: ProductKey;
+  productKey?: ProductKey | string;
 }
 
 export default function PaymentModal({
@@ -17,9 +18,16 @@ export default function PaymentModal({
   onClose,
   userEmail = '',
   product = '21dias',
+  productKey,
 }: PaymentModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const rawKey = (productKey || product) as string;
+  const resolvedProductKey: '21dias' | 'ciclo' | 'cafe' | 'geral' =
+    rawKey === 'cafecomletras' || rawKey === 'programa_cafe_com_letras'
+      ? 'cafe'
+      : (rawKey as '21dias' | 'ciclo' | 'cafe' | 'geral');
 
   const productDetails = {
     '21dias': {
@@ -29,6 +37,7 @@ export default function PaymentModal({
       priceInCents: 7700,
       installmentText: 'ou 2x R$ 38,50',
       directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
+      isRecurringPlan: false,
       whatsappMessage: 'Olá! Quero garantir minha vaga nos 21 dias de escrita por R$ 77,00 via PIX ou cartão.',
       features: [
         'acesso a 21 rituais diários de escrita autoral',
@@ -44,6 +53,7 @@ export default function PaymentModal({
       priceInCents: 59700,
       installmentText: '/ trimestre (ou 3x R$ 225,67 sem juros)',
       directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
+      isRecurringPlan: false,
       whatsappMessage: 'Olá! Quero fazer parte do ciclo de aprofundamento (R$ 597,00/trimestre) via PIX ou cartão.',
       features: [
         'encontros ao vivo de mentoria & rituais de escrita',
@@ -57,13 +67,14 @@ export default function PaymentModal({
       subtitle: 'encontro semanal de escrita ao vivo toda terça-feira 8h–8h30',
       priceText: 'R$ 97,00',
       priceInCents: 9700,
-      installmentText: '/ mês (incluso no ciclo de aprofundamento)',
-      directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
-      whatsappMessage: 'Olá! Quero me inscrever no café com letras (R$ 97,00/mês) via PIX ou cartão.',
+      installmentText: '/ mês (assinatura mensal recorrente)',
+      directPayUrl: 'https://invoice.infinitepay.io/plans/soltaoverbo/ng11CypzK0',
+      isRecurringPlan: true,
+      whatsappMessage: 'Olá! Quero me inscrever no café com letras (assinatura mensal R$ 97,00/mês) via PIX ou cartão.',
       features: [
+        'assinatura mensal recorrente (cancele a qualquer momento)',
         '4 encontros ao vivo por mês (terças-feiras 8h–8h30)',
         'exercícios curtos para desbloqueio criativo semanal',
-        'gravações dos encontros anteriores liberadas',
         'comunidade ativa no whatsapp e plataforma',
       ],
     },
@@ -74,6 +85,7 @@ export default function PaymentModal({
       priceInCents: 59700,
       installmentText: '/ trimestre',
       directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
+      isRecurringPlan: false,
       whatsappMessage: 'Olá! Gostaria de informações sobre formas de pagamento e matrícula geral.',
       features: [
         'acesso completo a todas as oficinas e rituais',
@@ -82,13 +94,14 @@ export default function PaymentModal({
         'suporte prioritário da equipe solta o verbo',
       ],
     },
-  }[product] || {
+  }[resolvedProductKey] || {
     title: '21 dias de escrita',
     subtitle: 'jornada prática para criar um hábito sustentado de escrita autoral',
     priceText: 'R$ 77,00',
     priceInCents: 7700,
     installmentText: 'ou 2x R$ 38,50',
     directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
+    isRecurringPlan: false,
     whatsappMessage: 'Olá! Quero garantir minha vaga no Solta o Verbo.',
     features: ['acesso imediato à plataforma', 'rituais guiados de escrita autoral'],
   };
@@ -137,7 +150,13 @@ export default function PaymentModal({
         console.warn('aviso: não foi possível registrar tentativa no supabase:', logErr);
       }
 
-      // Criar sessão de checkout via InfinitePay API
+      // Se for plano recorrente da InfinitePay (como o Café com Letras), redireciona direto para a página oficial do plano
+      if (productDetails.isRecurringPlan || productDetails.directPayUrl.includes('/plans/')) {
+        window.location.href = productDetails.directPayUrl;
+        return;
+      }
+
+      // Criar sessão de checkout via InfinitePay API para produtos avulsos
       const checkoutUrl = await createInfinitePayCheckout({
         items: [
           {
@@ -241,7 +260,11 @@ export default function PaymentModal({
               ) : (
                 <>
                   <CreditCard className="w-4 h-4 shrink-0" />
-                  <span>pagar com infinitepay (pix ou cartão)</span>
+                  <span>
+                    {productDetails.isRecurringPlan
+                      ? 'assinar com infinitepay (pix ou cartão)'
+                      : 'pagar com infinitepay (pix ou cartão)'}
+                  </span>
                 </>
               )}
             </button>

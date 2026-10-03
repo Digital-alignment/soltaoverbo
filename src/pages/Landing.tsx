@@ -524,7 +524,7 @@ export default function Landing() {
                   <div className="pt-6 border-t border-papelKraft/40 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                     <div className="space-y-0.5">
                       <span className="text-[11px] font-bold text-tintaCarvao/60 lowercase block">
-                        encontro semanal ao vivo
+                        encontro semanal ao vivo · assinatura mensal recorrente
                       </span>
                       <span className="text-2xl sm:text-3xl font-bold font-editorial text-acentoAzul lowercase block">
                         {prodCafeSec.price || 'R$ 97,00 / mês'}

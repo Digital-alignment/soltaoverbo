@@ -75,7 +75,7 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       p2: "às terças-feiras, das 8h às 8h30, no zoom, abrimos um espaço de escrita em coletivo com propostas temáticas que se renovam a cada encontro.",
       p3: "uma prática curta, potente e possível para quem deseja cultivar a escrita como ritual.",
       highlight: "incluído para quem já faz parte do ciclo de aprofundamento.",
-      price: "R$ 97,00 / mês",
+      price: "R$ 97,00 / mês (assinatura recorrente)",
       button_text: "quero fazer parte",
       button_link: "/programas/cafe-com-letras",
       image_url: "/brand-assets/gallery/events/13062026-IMG_6666-2.jpg",
@@ -533,11 +533,11 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       title: "café com letras",
       subtitle_gesto: "ritual de escrita semanal",
       subtitle: "uma roda de escrita de trinta minutos, toda terça de manhã, para começar o dia pela sua própria voz. café quentinho, caderno aberto e um grupo de pessoas escrevendo junto. sem correção, sem cobrança, sem precisar ler em voz alta. chegue como estiver, e saia mais consciente disso.",
-      button_text: "sim, quero minha xícara por R$97/mês",
+      button_text: "sim, quero minha xícara por R$ 97/mês",
       button_secondary_text: "como funciona o café com letras ↓",
       schedule_badge: "toda terça-feira · 8h às 8h30 (30 min) · zoom",
       price_text: "R$ 97,00",
-      price_subtext: "/mês",
+      price_subtext: "/mês (assinatura recorrente)",
       ciclo_badge: "100% incluso para quem está no ciclo de aprofundamento",
       guarantee_text: "garantia incondicional de 7 dias",
       quote: "“escrever junto é descobrir que a sua palavra não estava sozinha.”",
@@ -568,8 +568,8 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
     final_cta: {
       title: "sua próxima terça pode começar diferente",
       subtitle: "você não precisa esperar a vontade chegar, nem ter assunto, nem saber escrever. precisa só aparecer numa terça, às 8h.",
-      price_text: "97 reais · 100% incluso para quem está no ciclo de aprofundamento",
-      button_text: "sim, quero minha xícara por R$97/mês"
+      price_text: "R$ 97,00/mês (assinatura recorrente) · incluso no ciclo de aprofundamento",
+      button_text: "sim, quero minha xícara por R$ 97/mês"
     },
     faq: {
       title: "perguntas frequentes sobre o café com letras",
@@ -581,7 +581,7 @@ export const DEFAULT_CMS_DATA: SiteCMSData = {
       q6: "preciso ter experiência com escrita?", a6: "não. aqui é um espaço sem julgamento onde não se corrige texto, se escuta gente. o único pré-requisito é vontade de escrever e estar junto.",
       q7: "preciso escrever à mão?", a7: "gostamos de papel e caneta, mas escreva como for melhor para você. você também tem acesso à nossa plataforma digital e pode escrever por lá (e compartilhar na nossa área de partilha).",
       q8: "quem está no ciclo de aprofundamento paga?", a8: "não. o café com letras está incluído na travessia do ciclo, sem custo adicional.",
-      q9: "posso cancelar quando quiser?", a9: "sim. é um passe mensal, sem fidelidade. e você tem garantia incondicional de 7 dias: se não for para você, devolvemos o valor integral.",
+      q9: "posso cancelar quando quiser?", a9: "sim. é uma assinatura mensal recorrente sem fidelidade, cobrada a cada mês (R$ 97,00/mês). você pode cancelar quando quiser com um clique. e você tem garantia incondicional de 7 dias: se não for para você, devolvemos o valor integral.",
       q10: "preciso levar algum material?", a10: "só caderno, caneta e um café. o resto deixa com a gente."
     }
   },
