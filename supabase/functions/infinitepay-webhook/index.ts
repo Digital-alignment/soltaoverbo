@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Solta o Verbo <onboarding@resend.dev>',
+            from: 'Solta o Verbo <ola@contato.soltaoverbocoletivo.com>',
             to: [buyerEmail],
             subject: 'pagamento confirmado · seu acesso ao solta o verbo está liberado!',
             html: `

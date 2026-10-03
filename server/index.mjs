@@ -16,7 +16,7 @@ import {
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Solta o Verbo <onboarding@resend.dev>';
+const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Solta o Verbo <ola@contato.soltaoverbocoletivo.com>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'soltaoverbocoletivo@gmail.com';
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://qtdruienammtqodgfqty.supabase.co';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -76,7 +76,7 @@ async function sendEmailViaResend({ to, subject, html, replyTo = 'soltaoverbocol
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Solta o Verbo <onboarding@resend.dev>',
+            from: RESEND_FROM_EMAIL,
             to: [ADMIN_EMAIL],
             subject: fallbackSubject,
             html: fallbackHtml,
