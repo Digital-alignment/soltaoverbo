@@ -10,7 +10,7 @@
  * - 100% minúsculas (lowercase) e sem emojis
  */
 
-export function getEmailBaseWrapper({ title, content, previewText = '' }) {
+export function getEmailBaseWrapper({ title, content, previewText = '', headerPill = 'comunidade de autodesenvolvimento através da escrita' }) {
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -396,3 +396,146 @@ export function getAdminNotificationHtml({ type, details, rawPayload }) {
     content,
   });
 }
+
+/**
+ * 4. Email de Primeiros Passos da Travessia (Ciclo de Aprofundamento)
+ * Enviado após as boas-vindas / compra do ciclo
+ */
+export function getOnboardingStepsEmailHtml({ displayName, email }) {
+  const safeName = (displayName || 'escritora').toLowerCase();
+
+  const content = `
+    <h1 class="title-serif" style="margin-bottom: 4px;">ei, ${safeName}!</h1>
+    <p class="subtitle-terracota" style="margin-bottom: 22px;">preparada para soltar o verbo? 𖦹</p>
+
+    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 16px;">
+      que alegria ter você com a gente.
+    </p>
+
+    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 18px;">
+      a partir de hoje, você faz parte da <strong>primeira travessia do ciclo de aprofundamento</strong> da solta o verbo. nos próximos três meses, vamos descascar juntas as camadas da vontade de agradar, com a escrita como principal ferramenta e o livro <em>A Coragem de Não Agradar</em>, de Ichiro Kishimi e Fumitake Koga, como bússola.
+    </p>
+
+    <!-- Destaque Jout Jout -->
+    <div style="background-color: #FFFFFF; border: 1.5px solid #FD5E32; border-radius: 20px; padding: 22px 24px; margin: 24px 0;">
+      <div style="display: inline-block; padding: 4px 12px; border-radius: 9999px; background-color: #FD5E32; color: #FFFFFF; font-size: 11px; font-weight: 700; text-transform: lowercase; margin-bottom: 10px; letter-spacing: 0.3px;">
+        encontro de encerramento
+      </div>
+      <p style="margin: 0; font-size: 14px; line-height: 1.65; color: #2C2720;">
+        ah, e pra fechar com chave de ouro, teremos simplesmente a maior, a diva, a icônica <strong>Jout Jout</strong> com a gente!!!!! sim, você leu certo. estamos muito felizes, e não tinha pessoa melhor pra falar sobre a coragem de não agradar do que ela.
+      </p>
+    </div>
+
+    <p style="font-family: Georgia, serif; font-size: 17px; font-weight: 700; color: #140D82; margin: 28px 0 16px 0; text-transform: lowercase;">
+      pra você chegar inteira, separamos alguns primeiros passos:
+    </p>
+
+    <!-- Passo 1 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">1</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">responda o formulário de boas-vindas</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 14px 0;">
+        ele é o seu primeiro gesto dentro da travessia: é onde você conta um pouco de quem é, o que traz e o que deseja receber. leva uns 10 minutinhos.
+      </p>
+      <div>
+        <a href="https://forms.gle/yxPd7LCDroe5qQzB7" target="_blank" style="display: inline-block; background-color: #FD5E32; color: #FFFFFF !important; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 9999px; text-transform: lowercase;">
+          clica aqui para responder →
+        </a>
+      </div>
+    </div>
+
+    <!-- Passo 2 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">2</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">salve os encontros na sua agenda</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 10px 0;">
+        a travessia tem dois ritmos:
+      </p>
+      <div style="background-color: #FAF7F0; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.6; color: #2C2720;">
+        <p style="margin: 0 0 8px 0;">
+          ☕ <strong>café com letras:</strong> toda terça, das 8h às 8h30, pelo zoom. nosso ritual semanal de escrita coletiva, pra começar o dia escrevendo junto;
+        </p>
+        <p style="margin: 0;">
+          ✨ <strong>encontros do ciclo:</strong> três encontros ao vivo, pelo zoom, nas terças <strong>27/10</strong>, <strong>24/11</strong> e <strong>15/12</strong>, das 19h às 20:30h. é onde a gente junta tudo o que foi lido, escrito e sentido no mês.
+        </p>
+      </div>
+      <div>
+        <a href="https://calendar.google.com/calendar/embed?src=698c2a3109cf616865d61cfd3a99f4cd580fe76ddaf6bab1e89c13af41b537b4%40group.calendar.google.com&ctz=America%2FSao_Paulo" target="_blank" style="display: inline-block; background-color: #140D82; color: #FFFFFF !important; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 9999px; text-transform: lowercase;">
+          salve a agenda do ciclo no seu google agenda →
+        </a>
+      </div>
+    </div>
+
+    <!-- Passo 3 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">3</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">acesse a nossa plataforma</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 14px 0;">
+        web app completo com diário pessoal, inspiração de escrita, área de partilha e muito mais. para se cadastrar, é só entrar com o seu e-mail.
+      </p>
+      <div>
+        <a href="https://www.soltaoverbocoletivo.com" target="_blank" style="display: inline-block; background-color: #FAF7F0; color: #140D82 !important; border: 1px solid #140D82; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 20px; border-radius: 9999px; text-transform: lowercase;">
+          www.soltaoverbocoletivo.com →
+        </a>
+      </div>
+    </div>
+
+    <!-- Passo 4 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">4</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">entre no nosso grupo do whatsapp</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 14px 0;">
+        é onde a conversa acontece no dia a dia: trocas, textos, avisos e muito afeto.
+      </p>
+      <div>
+        <a href="https://chat.whatsapp.com/IfXG4tiWx3F2zjTxGBDEUA" target="_blank" style="display: inline-block; background-color: #140D82; color: #FFFFFF !important; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 9999px; text-transform: lowercase;">
+          entrar no grupo do whatsapp →
+        </a>
+      </div>
+    </div>
+
+    <!-- Passo 5 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 22px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">5</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">garanta o seu livro</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 0 0;">
+        o ideal é estar com ele em mãos até o primeiro encontro. dá pra encontrar em livrarias, no formato digital ou em sebos. se tiver qualquer dificuldade pra conseguir, é só falar com a gente.
+      </p>
+    </div>
+
+    <!-- Contato de Suporte Bru -->
+    <div style="background-color: #FAF7F0; border-radius: 16px; border: 1px solid #E8DFD0; padding: 16px 18px; margin: 22px 0; font-size: 13.5px; line-height: 1.6; color: #4A443D;">
+      qualquer dúvida, é só responder este e-mail ou chamar no WhatsApp
+      <a href="https://wa.me/5548991901483" target="_blank" style="color: #140D82; font-weight: 700; text-decoration: underline;">(48) 99190-1483</a>
+      (telefone da bru).
+    </div>
+
+    <p style="font-size: 14.5px; line-height: 1.7; color: #2C2720; margin: 22px 0 16px 0;">
+      a gente acredita que comunidade se faz com presença, e a sua já faz diferença por aqui. que bom que você chegou.
+    </p>
+
+    <p style="margin-top: 24px; margin-bottom: 0; font-size: 14px; color: #7D7569; line-height: 1.6;">
+      nos vemos na travessia,<br>
+      <strong style="font-size: 16px; color: #140D82; font-family: Georgia, serif;">Bru e Ju</strong><br>
+      <span style="font-size: 12px; color: #FD5E32; font-weight: 600;">Solta o Verbo</span>
+    </p>
+  `;
+
+  return getEmailBaseWrapper({
+    title: 'preparada para soltar o verbo? 𖦹',
+    previewText: 'primeiros passos para a sua travessia no ciclo de aprofundamento.',
+    headerPill: 'ciclo de aprofundamento · guia da travessia 𖦹',
+    content,
+  });
+}
+

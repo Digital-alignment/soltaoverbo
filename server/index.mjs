@@ -12,6 +12,7 @@ import {
   getWelcomeEmailHtml,
   getPaymentConfirmedHtml,
   getAdminNotificationHtml,
+  getOnboardingStepsEmailHtml,
 } from './templates/emailTemplates.mjs';
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
@@ -162,7 +163,7 @@ const server = http.createServer(async (req, res) => {
     req.on('error', reject);
   });
 
-  // 2. POST /api/auth/welcome-email (Registro de novas alunas)
+  // 2. POST /api/auth/welcome-email (Registro de novas alunas: boas-vindas + primeiros passos)
   if (req.method === 'POST' && url.pathname === '/api/auth/welcome-email') {
     try {
       const { email, displayName } = await parseJsonBody();
@@ -180,14 +181,27 @@ const server = http.createServer(async (req, res) => {
         email,
       });
 
-      // Envia para o usuário
-      const sendResult = await sendEmailViaResend({
+      // 1. Envia boas-vindas para a usuária
+      const welcomeResult = await sendEmailViaResend({
         to: email,
         subject: 'boas-vindas ao solta o verbo · sua jornada de escrita começa aqui',
         html: emailHtml,
       });
 
-      // Envia notificação para admin
+      // 2. Envia guia de primeiros passos da travessia logo em seguida
+      console.info(`[Auth] Disparando guia de primeiros passos para: ${email}`);
+      const onboardingHtml = getOnboardingStepsEmailHtml({
+        displayName: displayName || email.split('@')[0],
+        email,
+      });
+
+      const onboardingResult = await sendEmailViaResend({
+        to: email,
+        subject: 'preparada para soltar o verbo? 𖦹',
+        html: onboardingHtml,
+      });
+
+      // 3. Envia notificação para admin
       const adminNoticeHtml = getAdminNotificationHtml({
         type: 'novo cadastro de usuária',
         details: {
@@ -204,9 +218,47 @@ const server = http.createServer(async (req, res) => {
       }).catch(err => console.error('[Admin Alert Error]:', err));
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, sendResult }));
+      res.end(JSON.stringify({
+        success: true,
+        welcomeEmail: welcomeResult,
+        onboardingEmail: onboardingResult,
+      }));
     } catch (err) {
       console.error('[Welcome Email Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
+  // 3. POST /api/email/onboarding-steps (Guia da travessia / Primeiros passos)
+  if (req.method === 'POST' && (url.pathname === '/api/email/onboarding-steps' || url.pathname === '/api/onboarding-email')) {
+    try {
+      const { email, displayName } = await parseJsonBody();
+
+      if (!email || !email.includes('@')) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'E-mail inválido ou ausente' }));
+        return;
+      }
+
+      console.info(`[Email] Disparando guia de primeiros passos para: ${email} (${displayName})`);
+
+      const onboardingHtml = getOnboardingStepsEmailHtml({
+        displayName: displayName || email.split('@')[0],
+        email,
+      });
+
+      const sendResult = await sendEmailViaResend({
+        to: email,
+        subject: 'preparada para soltar o verbo? 𖦹',
+        html: onboardingHtml,
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, sendResult }));
+    } catch (err) {
+      console.error('[Onboarding Steps Error]:', err);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: err.message }));
     }
@@ -349,7 +401,25 @@ const server = http.createServer(async (req, res) => {
         html: paymentEmailHtml,
       });
 
-      // 6. Notificar o administrador por e-mail
+      // 6. Enviar guia de primeiros passos da travessia logo após a confirmação
+      let onboardingEmailResult = null;
+      try {
+        console.info(`[InfinitePay] Enviando guia de primeiros passos para o comprador: ${targetEmail}`);
+        const onboardingHtml = getOnboardingStepsEmailHtml({
+          displayName: customerName || customer?.name || 'escritora',
+          email: targetEmail,
+        });
+
+        onboardingEmailResult = await sendEmailViaResend({
+          to: targetEmail,
+          subject: 'preparada para soltar o verbo? 𖦹',
+          html: onboardingHtml,
+        });
+      } catch (onboardingErr) {
+        console.warn('[InfinitePay] Aviso ao enviar guia de primeiros passos:', onboardingErr.message);
+      }
+
+      // 7. Notificar o administrador por e-mail
       const adminNotification = getAdminNotificationHtml({
         type: 'pagamento confirmado (infinitepay)',
         details: {
@@ -376,6 +446,7 @@ const server = http.createServer(async (req, res) => {
         success: true,
         order: orderIdentifier,
         buyerEmailResult,
+        onboardingEmailResult,
       }));
     } catch (err) {
       console.error('[InfinitePay Webhook Error]:', err);
