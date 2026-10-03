@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Loader, CreditCard, MessageCircle, ShieldCheck, Check } from 'lucide-react';
 import { createInfinitePayCheckout } from '../lib/infinitepay';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 export type ProductKey = '21dias' | 'ciclo' | 'cafe' | 'geral' | 'cafecomletras';
 
@@ -9,6 +10,8 @@ interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   userEmail?: string;
+  userName?: string;
+  userPhone?: string;
   product?: ProductKey;
   productKey?: ProductKey | string;
 }
@@ -17,11 +20,39 @@ export default function PaymentModal({
   isOpen,
   onClose,
   userEmail = '',
+  userName = '',
+  userPhone = '',
   product = '21dias',
   productKey,
 }: PaymentModalProps) {
+  const auth = useAuth();
+  const user = auth?.user;
+  const profile = auth?.profile;
+
+  const [customerName, setCustomerName] = useState(
+    userName || profile?.display_name || user?.user_metadata?.full_name || ''
+  );
+  const [customerEmail, setCustomerEmail] = useState(
+    userEmail || user?.email || ''
+  );
+  const [customerPhone, setCustomerPhone] = useState(
+    userPhone || profile?.whatsapp || user?.user_metadata?.phone || ''
+  );
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (user?.email && !customerEmail) {
+      setCustomerEmail(user.email);
+    }
+    if ((profile?.display_name || user?.user_metadata?.full_name) && !customerName) {
+      setCustomerName(profile?.display_name || user?.user_metadata?.full_name || '');
+    }
+    if ((profile?.whatsapp || user?.user_metadata?.phone) && !customerPhone) {
+      setCustomerPhone(profile?.whatsapp || user?.user_metadata?.phone || '');
+    }
+  }, [user, profile]);
 
   const rawKey = (productKey || product) as string;
   const resolvedProductKey: '21dias' | 'ciclo' | 'cafe' | 'geral' =
@@ -133,14 +164,20 @@ export default function PaymentModal({
   };
 
   const handleCheckout = async () => {
-    setLoading(true);
     setError('');
+
+    if (!customerEmail.trim()) {
+      setError('por favor, informe o seu e-mail para receber as instruções e o acesso.');
+      return;
+    }
+
+    setLoading(true);
 
     try {
       // Registrar a tentativa de checkout no Supabase
       try {
         await supabase.from('checkout_attempts').insert({
-          email: userEmail || 'visitante@soltaoverbo.com.br',
+          email: customerEmail.trim() || userEmail || 'visitante@soltaoverbo.com.br',
           source_page: window.location.pathname,
           plan_type: productDetails.title,
           attempted_at: new Date().toISOString(),
@@ -157,6 +194,7 @@ export default function PaymentModal({
       }
 
       // Criar sessão de checkout via InfinitePay API para produtos avulsos
+      // NUNCA envia 'address' para garantir que não seja solicitada entrega física
       const checkoutUrl = await createInfinitePayCheckout({
         items: [
           {
@@ -165,7 +203,11 @@ export default function PaymentModal({
             description: productDetails.title,
           },
         ],
-        customer: userEmail ? { email: userEmail } : undefined,
+        customer: {
+          name: customerName.trim() || undefined,
+          email: customerEmail.trim() || undefined,
+          phone_number: customerPhone.trim() || undefined,
+        },
       });
 
       window.location.href = checkoutUrl;
@@ -229,6 +271,63 @@ export default function PaymentModal({
             </ul>
           </div>
 
+          {/* Dados Mínimos do Cliente (Apenas Nome, E-mail e Telefone - Sem Endereço de Entrega) */}
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-papelKraft/40 shadow-xs space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-acentoAzul font-corpo lowercase tracking-wider block">
+                dados para inscrição & acesso:
+              </span>
+              <span className="text-[10px] text-acentoOliva font-corpo font-medium lowercase bg-acentoOliva/10 px-2 py-0.5 rounded-full">
+                acesso digital · sem frete
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[11px] font-medium text-tintaCarvao/80 font-corpo lowercase mb-1">
+                  nome completo *
+                </label>
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="ex: Bruna Silva"
+                  className="w-full px-3.5 py-2.5 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-medium text-tintaCarvao/80 font-corpo lowercase mb-1">
+                    e-mail para acesso *
+                  </label>
+                  <input
+                    type="email"
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    placeholder="ex: aluna@email.com"
+                    className="w-full px-3.5 py-2.5 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-medium text-tintaCarvao/80 font-corpo lowercase mb-1">
+                    whatsapp / telefone
+                  </label>
+                  <input
+                    type="tel"
+                    value={customerPhone}
+                    onChange={(e) => setCustomerPhone(e.target.value)}
+                    placeholder="ex: (11) 99999-9999"
+                    className="w-full px-3.5 py-2.5 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Opção 1: Valor Principal & Checkout Direct InfinitePay */}
           <div className="bg-bgPlataforma rounded-2xl p-4 sm:p-5 border border-papelKraft/40 shadow-xs space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -274,14 +373,14 @@ export default function PaymentModal({
                 <ShieldCheck className="w-3.5 h-3.5 text-acentoOliva shrink-0" />
                 pagamento 100% seguro pela infinitepay
               </span>
-              <a
-                href={productDetails.directPayUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-acentoAzul font-bold hover:underline flex items-center gap-1"
+              <button
+                type="button"
+                onClick={handleCheckout}
+                disabled={loading}
+                className="text-acentoAzul font-bold hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0 text-[11px] lowercase"
               >
                 <span>link direto →</span>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -297,7 +396,11 @@ export default function PaymentModal({
             </div>
 
             <a
-              href={`https://wa.me/5548991823637?text=${encodeURIComponent(productDetails.whatsappMessage)}`}
+              href={`https://wa.me/5548991823637?text=${encodeURIComponent(
+                customerName.trim()
+                  ? `Olá! Meu nome é ${customerName.trim()}. Quero garantir minha vaga em ${productDetails.title} (${productDetails.priceText}) via PIX ou cartão.`
+                  : productDetails.whatsappMessage
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-corpo font-bold py-3.5 px-6 rounded-full transition-all flex items-center justify-center gap-2.5 text-xs sm:text-sm shadow-xs cursor-pointer lowercase"

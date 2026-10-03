@@ -18,6 +18,20 @@ export interface CreateInfinitePayCheckoutParams {
   webhookUrl?: string;
 }
 
+export function normalizePhoneNumber(phone?: string): string | undefined {
+  if (!phone) return undefined;
+  const digits = phone.replace(/\D/g, '');
+  if (!digits) return undefined;
+  if (phone.startsWith('+')) return phone.replace(/\s+/g, '');
+  if (digits.length === 10 || digits.length === 11) {
+    return `+55${digits}`;
+  }
+  if (digits.length >= 12) {
+    return `+${digits}`;
+  }
+  return `+55${digits}`;
+}
+
 export const INFINITEPAY_HANDLE = 'soltaoverbo';
 
 export async function createInfinitePayCheckout({
@@ -33,14 +47,28 @@ export async function createInfinitePayCheckout({
     const defaultRedirectUrl = `${window.location.origin}/checkout-success`;
     const defaultWebhookUrl = `${supabaseUrl}/functions/v1/infinitepay-webhook`;
 
-    const payload = {
+    // Normalizar dados mínimos do cliente (Nome, E-mail e Telefone)
+    // Facilitam o preenchimento automático no checkout
+    const formattedCustomer: InfinitePayCustomer = {};
+    if (customer?.name?.trim()) formattedCustomer.name = customer.name.trim();
+    if (customer?.email?.trim()) formattedCustomer.email = customer.email.trim();
+    const cleanPhone = normalizePhoneNumber(customer?.phone_number);
+    if (cleanPhone) formattedCustomer.phone_number = cleanPhone;
+
+    // Payload para api.checkout.infinitepay.io/links
+    // IMPORTANTE: 'address' NUNCA é enviado pois os produtos são 100% digitais.
+    // Omitir 'address' instrui a InfinitePay a NÃO solicitar endereço de entrega.
+    const payload: Record<string, any> = {
       handle: INFINITEPAY_HANDLE,
       items,
       order_nsu: generatedOrderNsu,
       redirect_url: redirectUrl || defaultRedirectUrl,
       webhook_url: webhookUrl || defaultWebhookUrl,
-      ...(customer && (customer.email || customer.name || customer.phone_number) ? { customer } : {}),
     };
+
+    if (Object.keys(formattedCustomer).length > 0) {
+      payload.customer = formattedCustomer;
+    }
 
     const response = await fetch('https://api.checkout.infinitepay.io/links', {
       method: 'POST',
