@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
+import { sendWelcomeEmail } from '../lib/email';
 
 type UserProfile = Database['public']['Tables']['users_profiles']['Row'];
 
@@ -119,6 +120,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
       if (profileError) console.error('Erro ao criar perfil:', profileError);
+
+      // Disparar e-mail de boas-vindas via API (Resend)
+      sendWelcomeEmail({ email, displayName }).catch((e) => {
+        console.warn('[auth] Aviso ao disparar boas-vindas:', e);
+      });
 
       if (data.session) {
         setSession(data.session);

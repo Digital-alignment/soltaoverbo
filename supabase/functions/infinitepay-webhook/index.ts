@@ -116,6 +116,39 @@ Deno.serve(async (req) => {
       }
 
       console.info(`Successfully activated user ${userId} for InfinitePay order ${order_nsu}`);
+
+      // Envio de e-mail de confirmação via Resend API
+      try {
+        const resendApiKey = Deno.env.get('RESEND_API_KEY') || '';
+        const formattedAmount = (amount ? (amount / 100).toFixed(2).replace('.', ',') : '97,00');
+        const buyerEmail = customerEmail || 'soltaoverbocoletivo@gmail.com';
+
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'Solta o Verbo <onboarding@resend.dev>',
+            to: [buyerEmail],
+            subject: 'pagamento confirmado · seu acesso ao solta o verbo está liberado!',
+            html: `
+              <div style="font-family: sans-serif; max-width: 580px; margin: 0 auto; padding: 24px; color: #2D2926;">
+                <h1 style="color: #23395B; text-transform: lowercase;">pagamento confirmado!</h1>
+                <p>olá! recebemos a confirmação do seu pagamento de R$ ${formattedAmount} via InfinitePay (${capture_method || 'Pix/Cartão'}).</p>
+                <p>seu acesso aos materiais e à comunidade do solta o verbo já está 100% liberado.</p>
+                <div style="margin: 24px 0;">
+                  <a href="https://soltaoverbocoletivo.com/dashboard" style="background-color: #23395B; color: #fff; padding: 12px 28px; border-radius: 9999px; text-decoration: none; font-weight: bold; text-transform: lowercase;">acessar plataforma →</a>
+                </div>
+                <p style="color: #6B655D; font-size: 13px;">com carinho,<br>coletivo solta o verbo</p>
+              </div>
+            `,
+          }),
+        });
+      } catch (emailErr) {
+        console.warn('Erro ao disparar e-mail via Resend:', emailErr);
+      }
     } else {
       console.warn(`Webhook received for InfinitePay order ${order_nsu}, but no matching user found.`);
     }

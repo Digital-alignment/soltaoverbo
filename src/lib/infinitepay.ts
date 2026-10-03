@@ -45,7 +45,7 @@ export async function createInfinitePayCheckout({
     const generatedOrderNsu = orderNsu || `sv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const supabaseUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL || 'https://qtdruienammtqodgfqty.supabase.co';
     const defaultRedirectUrl = `${window.location.origin}/checkout-success`;
-    const defaultWebhookUrl = `${supabaseUrl}/functions/v1/infinitepay-webhook`;
+    const defaultWebhookUrl = 'https://soltaoverbocoletivo.com/api/webhooks/infinitepay';
 
     // Normalizar dados mínimos do cliente (Nome, E-mail e Telefone)
     // Facilitam o preenchimento automático no checkout
