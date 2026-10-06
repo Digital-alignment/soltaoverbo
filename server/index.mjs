@@ -188,7 +188,7 @@ async function populateFeaturedPosts(postIds) {
 
     const [exercises, users] = await Promise.all([
       exerciseIds.length > 0 ? supabaseRest(`writing_exercises?or=(${exerciseIds.map(id => `id.eq.${id}`).join(',')})&select=id,title,content,created_at`) : [],
-      userIds.length > 0 ? supabaseRest(`users_profiles?or=(${userIds.map(id => `id.eq.${id}`).join(',')})&select=id,display_name,avatar_url,bio`) : [],
+      userIds.length > 0 ? supabaseRest(`users_profiles?or=(${userIds.map(id => `id.eq.${id}`).join(',')})&select=id,display_name,profile_picture_url,bio`) : [],
     ]);
 
     const exMap = new Map((exercises || []).map(e => [e.id, e]));
@@ -876,7 +876,7 @@ const server = http.createServer(async (req, res) => {
 
       const [exercises, users] = await Promise.all([
         exerciseIds.length > 0 ? supabaseRest(`writing_exercises?or=(${exerciseIds.map(id => `id.eq.${id}`).join(',')})&select=id,title,content,created_at`) : [],
-        userIds.length > 0 ? supabaseRest(`users_profiles?or=(${userIds.map(id => `id.eq.${id}`).join(',')})&select=id,display_name,avatar_url,bio`) : [],
+        userIds.length > 0 ? supabaseRest(`users_profiles?or=(${userIds.map(id => `id.eq.${id}`).join(',')})&select=id,display_name,profile_picture_url,bio`) : [],
       ]);
 
       const exMap = new Map((exercises || []).map(e => [e.id, e]));

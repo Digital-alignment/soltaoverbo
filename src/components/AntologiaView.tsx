@@ -216,9 +216,9 @@ export default function AntologiaView({ onBackToFogueira }: AntologiaViewProps) 
                     </span>
                     <div>
                       <div className="flex items-center gap-2">
-                        {post.user_profile?.avatar_url ? (
+                        {post.user_profile?.profile_picture_url ? (
                           <img
-                            src={post.user_profile.avatar_url}
+                            src={post.user_profile.profile_picture_url}
                             alt={post.user_profile.display_name}
                             className="w-5 h-5 rounded-full object-cover"
                           />

@@ -24,7 +24,7 @@ export interface AnthologyPost {
   user_profile?: {
     id: string;
     display_name: string;
-    avatar_url?: string | null;
+    profile_picture_url?: string | null;
     bio?: string | null;
   } | null;
 }
@@ -143,7 +143,7 @@ export async function fetchPostsByIds(postIds: string[]): Promise<AnthologyPost[
         comments_count,
         published_at,
         writing_exercise:writing_exercises(id, title, content, created_at),
-        user_profile:users_profiles(id, display_name, avatar_url, bio)
+        user_profile:users_profiles(id, display_name, profile_picture_url, bio)
       `)
       .in('id', postIds);
 
@@ -192,7 +192,7 @@ export async function fetchMonthPostCandidates(month: number, year: number): Pro
         comments_count,
         published_at,
         writing_exercise:writing_exercises(id, title, content, created_at),
-        user_profile:users_profiles(id, display_name, avatar_url, bio)
+        user_profile:users_profiles(id, display_name, profile_picture_url, bio)
       `)
       .eq('hidden_from_fogueira', false)
       .gte('published_at', startDate)
