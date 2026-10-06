@@ -174,9 +174,14 @@ export default function PaymentModal({
     setLoading(true);
 
     try {
-      // Registrar a tentativa de checkout no Supabase
+      // Gerar identificador exclusivo do pedido
+      const orderNsu = `sv-${resolvedProductKey}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
+      // Registrar a tentativa de checkout no Supabase com order_nsu e user_id
       try {
         await supabase.from('checkout_attempts').insert({
+          order_nsu: orderNsu,
+          user_id: user?.id || null,
           email: customerEmail.trim() || userEmail || 'visitante@soltaoverbo.com.br',
           source_page: window.location.pathname,
           plan_type: productDetails.title,
@@ -196,6 +201,7 @@ export default function PaymentModal({
       // Criar sessão de checkout via InfinitePay API para produtos avulsos
       // NUNCA envia 'address' para garantir que não seja solicitada entrega física
       const checkoutUrl = await createInfinitePayCheckout({
+        orderNsu,
         items: [
           {
             quantity: 1,

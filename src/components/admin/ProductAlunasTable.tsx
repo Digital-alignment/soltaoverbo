@@ -128,6 +128,7 @@ export default function ProductAlunasTable({
             completed_lessons: completedCount,
             last_activity: lastAct,
             role: p.role || 'paid',
+            created_at: p.created_at,
             bio: p.bio,
             instagram_url: p.instagram_url,
             linkedin_url: p.linkedin_url,

@@ -56,6 +56,9 @@ import {
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
+import { useUserAccess } from '../hooks/useUserAccess';
+import UpgradeModal from '../components/UpgradeModal';
+import PaymentModal from '../components/PaymentModal';
 
 type WritingExercise = Database['public']['Tables']['writing_exercises']['Row'];
 
@@ -201,6 +204,7 @@ const WORD_MILESTONES: WordMilestone[] = [
 
 export default function WritingExercises() {
   const { profile } = useAuth();
+  const { canWrite, isReadOnlyMode, isTrialExpired, canPostToFogueira } = useUserAccess();
   const [exercises, setExercises] = useState<WritingExercise[]>([]);
   const [currentExercise, setCurrentExercise] = useState<WritingExercise | null>(null);
   const [title, setTitle] = useState('');
@@ -208,6 +212,12 @@ export default function WritingExercises() {
   const [isEditing, setIsEditing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Modais de Upgrade & Pagamento
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedProductForPay, setSelectedProductForPay] = useState<'21dias' | 'cafe' | 'ciclo'>('21dias');
+  const [upgradeReason, setUpgradeReason] = useState<'trial_expired' | 'fogueira_limit' | 'course_locked' | 'general'>('trial_expired');
   const [showShareModal, setShowShareModal] = useState(false);
   const [isAnonymousShare, setIsAnonymousShare] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -589,6 +599,11 @@ export default function WritingExercises() {
 
   // AO CRIAR NOVO TEXTO -> ABRE DIRETO NO MODO FOCO (TELA CHEIA)
   const handleNew = (initialTitle?: string, initialContent?: string) => {
+    if (isReadOnlyMode) {
+      setUpgradeReason('trial_expired');
+      setShowUpgradeModal(true);
+      return;
+    }
     setCurrentExercise(null);
     setTitle(initialTitle || '');
     setContent(initialContent || '');
@@ -597,10 +612,20 @@ export default function WritingExercises() {
   };
 
   const handleApplyTemplate = (tmpl: GuidedTemplate) => {
+    if (isReadOnlyMode) {
+      setUpgradeReason('trial_expired');
+      setShowUpgradeModal(true);
+      return;
+    }
     handleNew(tmpl.initialTitle, tmpl.initialContent);
   };
 
   const handleApplyPrompt = (promptText: string) => {
+    if (isReadOnlyMode) {
+      setUpgradeReason('trial_expired');
+      setShowUpgradeModal(true);
+      return;
+    }
     const initialContent = `<blockquote style="border-left: 3px solid #FD5E32; padding-left: 12px; margin-bottom: 16px; color: #140D82; font-style: italic;">“${promptText}”</blockquote><p></p>`;
     handleNew('convite poético', initialContent);
   };
@@ -615,6 +640,11 @@ export default function WritingExercises() {
 
   const handleSave = async () => {
     if (!profile) return;
+    if (isReadOnlyMode) {
+      setUpgradeReason('trial_expired');
+      setShowUpgradeModal(true);
+      return;
+    }
 
     setSaving(true);
     try {
@@ -681,6 +711,13 @@ export default function WritingExercises() {
 
   const handleShare = async () => {
     if (!profile) return;
+
+    if (!canPostToFogueira) {
+      setShowShareModal(false);
+      setUpgradeReason('fogueira_limit');
+      setShowUpgradeModal(true);
+      return;
+    }
 
     let targetExercise = currentExercise;
     if (!targetExercise) {
@@ -1849,6 +1886,25 @@ export default function WritingExercises() {
                   className="w-full text-2xl sm:text-4xl font-bold font-editorial text-acentoAzul bg-transparent border-b border-papelKraft/30 pb-2 focus:outline-none focus:border-acentoTerracota placeholder:text-tintaCarvao/30 lowercase"
                 />
 
+                {/* Aviso Poético se estiver em Modo Somente Leitura (pós-trial) */}
+                {isReadOnlyMode && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs font-corpo text-amber-950 animate-fadeIn">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-acentoTerracota shrink-0" />
+                      <span>modo de somente leitura: seus textos continuam seguros. para escrever novos textos, desbloqueie seu plano.</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setUpgradeReason('trial_expired');
+                        setShowUpgradeModal(true);
+                      }}
+                      className="px-3 py-1 rounded-full bg-acentoTerracota text-white font-semibold lowercase shrink-0 hover:bg-acentoTerracota/90 transition-colors cursor-pointer"
+                    >
+                      liberar escrita →
+                    </button>
+                  </div>
+                )}
+
                 {/* Editor RichText */}
                 <div className="flex-1 my-4">
                   <RichTextEditor
@@ -1857,6 +1913,7 @@ export default function WritingExercises() {
                     onChange={setContent}
                     placeholder="comece a soltar a sua voz aqui sem interrupções..."
                     editorSettings={editorSettings}
+                    readOnly={isReadOnlyMode}
                   />
                 </div>
 
@@ -1889,6 +1946,24 @@ export default function WritingExercises() {
             </div>,
             document.body
           )}
+
+        {/* MODAL POÉTICO DE UPGRADE */}
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          reason={upgradeReason}
+          onSelectProduct={(productKey) => {
+            setSelectedProductForPay(productKey);
+            setShowPaymentModal(true);
+          }}
+        />
+
+        {/* MODAL DE CHECKOUT INFINITEPAY */}
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          productKey={selectedProductForPay}
+        />
 
       </div>
     </div>

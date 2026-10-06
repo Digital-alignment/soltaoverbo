@@ -8,6 +8,8 @@ import LoadingPage from '../components/LoadingPage';
 import { BookOpen, Crown, Sparkles, ArrowRight, Play, Lock, CheckCircle } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 
+import { useUserAccess } from '../hooks/useUserAccess';
+
 type Course = Database['public']['Tables']['courses']['Row'] & {
   lessonCount?: number;
   userProgress?: number;
@@ -15,6 +17,7 @@ type Course = Database['public']['Tables']['courses']['Row'] & {
 
 export default function CoursesCatalog() {
   const { profile, user } = useAuth();
+  const { hasAccessToCourse } = useUserAccess();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'free' | 'paid'>('all');
@@ -62,8 +65,7 @@ export default function CoursesCatalog() {
   });
 
   const canAccessCourse = (course: Course) => {
-    if (course.course_type === 'free') return true;
-    return profile?.role === 'paid' || profile?.role === 'admin';
+    return hasAccessToCourse(course.title, course.course_type);
   };
 
   if (loading) {

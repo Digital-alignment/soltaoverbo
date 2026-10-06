@@ -239,7 +239,7 @@ export function getWelcomeEmailHtml({ displayName, email }) {
     </p>
 
     <div class="info-card">
-      <div class="info-title">seus dados de acesso à plataforma</div>
+      <div class="info-title">seus dados de acesso & período de teste</div>
       <table style="width: 100%; border-collapse: collapse;">
         <tr>
           <td style="padding: 5px 0; font-size: 13px; color: #7D7569;">e-mail de login:</td>
@@ -249,12 +249,16 @@ export function getWelcomeEmailHtml({ displayName, email }) {
           <td style="padding: 5px 0; font-size: 13px; color: #7D7569;">endereço da comunidade:</td>
           <td style="padding: 5px 0; font-size: 13px; font-weight: 600; color: #2C2720; text-align: right;">soltaoverbocoletivo.com/login</td>
         </tr>
+        <tr>
+          <td style="padding: 5px 0; font-size: 13px; color: #7D7569;">período de experiência:</td>
+          <td style="padding: 5px 0; font-size: 13px; font-weight: 600; color: #FD5E32; text-align: right;">4 dias de teste livre no atelier</td>
+        </tr>
       </table>
     </div>
 
     <div class="btn-container">
       <a href="https://soltaoverbocoletivo.com/dashboard" class="btn-pill btn-navy" target="_blank">
-        entrar na plataforma →
+        entrar e começar a escrever →
       </a>
     </div>
 
@@ -538,4 +542,134 @@ export function getOnboardingStepsEmailHtml({ displayName, email }) {
     content,
   });
 }
+
+/**
+ * 5. Email de Boas-Vindas aos 21 Dias de Escrita (R$ 77)
+ * Foco em iniciar a prática diária no atelier e ouvir o primeiro áudio
+ */
+export function get21DiasWelcomeEmailHtml({ displayName, email }) {
+  const safeName = (displayName || 'escritora').toLowerCase();
+
+  const content = `
+    <h1 class="title-serif" style="margin-bottom: 4px;">olá, ${safeName}</h1>
+    <p class="subtitle-terracota" style="margin-bottom: 22px;">seu hábito de escrita autoral começa agora 𖦹</p>
+
+    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 16px;">
+      que alegria imensa ter você nos <strong>21 dias de escrita</strong>! durante as próximas três semanas, você terá um espaço sagrado e descomplicado para soltar o que sente no papel.
+    </p>
+
+    <div class="quote-box">
+      <p class="quote-text">“escrever todos os dias não é sobre perfeição, é sobre presença.”</p>
+      <p class="quote-author">21 dias de escrita · solta o verbo</p>
+    </div>
+
+    <p style="font-family: Georgia, serif; font-size: 17px; font-weight: 700; color: #140D82; margin: 28px 0 16px 0; text-transform: lowercase;">
+      como começar o seu dia 1:
+    </p>
+
+    <!-- Passo 1 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">1</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">acesse o curso na plataforma</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 14px 0;">
+        seu acesso ao curso completo e a 1 ano de atelier de escrita já está liberado. entre com o seu e-mail cadastrado.
+      </p>
+      <div>
+        <a href="https://soltaoverbocoletivo.com/dashboard" target="_blank" style="display: inline-block; background-color: #FD5E32; color: #FFFFFF !important; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 9999px; text-transform: lowercase;">
+          abrir meus 21 dias →
+        </a>
+      </div>
+    </div>
+
+    <!-- Passo 2 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">2</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">ouça o primeiro áudio guiado com fones</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 0 0;">
+        cada dia possui um sopro em áudio com frequências binaurais para te colocar em estado de fluxo antes de escrever. reserve 10 a 15 minutinhos no seu melhor momento do dia.
+      </p>
+    </div>
+
+    <!-- Passo 3 -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 20px 22px; margin-bottom: 22px;">
+      <div style="margin-bottom: 8px;">
+        <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; border-radius: 50%; background-color: #140D82; color: #FFFFFF; font-size: 11px; font-weight: 700; text-align: center; margin-right: 8px; vertical-align: middle;">3</span>
+        <strong style="font-size: 15px; color: #140D82; vertical-align: middle; text-transform: lowercase;">partilhe na nossa fogueira</strong>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 6px 0 0 0;">
+        quando terminar de escrever seu exercício do dia, você pode publicá-lo com um clique no mural comunitário para ler e se inspirar com outras mulheres.
+      </p>
+    </div>
+
+    <p style="margin-top: 24px; margin-bottom: 0; font-size: 14px; color: #7D7569; line-height: 1.6;">
+      nos vemos no primeiro dia,<br>
+      <strong style="font-size: 16px; color: #140D82; font-family: Georgia, serif;">Bru e Ju</strong><br>
+      <span style="font-size: 12px; color: #FD5E32; font-weight: 600;">Solta o Verbo</span>
+    </p>
+  `;
+
+  return getEmailBaseWrapper({
+    title: 'bem-vinda aos 21 dias de escrita 𖦹',
+    previewText: 'seu acesso está liberado. comece o seu dia 1 de prática autoral.',
+    headerPill: '21 dias de escrita · início da prática 𖦹',
+    content,
+  });
+}
+
+/**
+ * 6. Email de Boas-Vindas ao Café com Letras (Membros Recorrentes)
+ * Foco nos encontros de terça-feira 8h, link do zoom e ritual ao vivo
+ */
+export function getCafeWelcomeEmailHtml({ displayName, email }) {
+  const safeName = (displayName || 'escritora').toLowerCase();
+
+  const content = `
+    <h1 class="title-serif" style="margin-bottom: 4px;">bem-vinda à roda, ${safeName}!</h1>
+    <p class="subtitle-terracota" style="margin-bottom: 22px;">o café com letras te espera toda terça ☕</p>
+
+    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 16px;">
+      sua assinatura mensal do <strong>café com letras</strong> está confirmada! toda terça-feira abrimos nossa sala virtual para escrever juntas antes do mundo acordar.
+    </p>
+
+    <div style="background-color: #FAF7F0; border-radius: 16px; border: 1px solid #E8DFD0; padding: 18px 20px; margin: 22px 0;">
+      <p style="margin: 0 0 6px 0; font-size: 14px; font-weight: 700; color: #140D82;">
+        ☕ nosso ritual semanal ao vivo:
+      </p>
+      <p style="margin: 0; font-size: 13.5px; color: #2C2720; line-height: 1.6;">
+        <strong>quando:</strong> toda terça-feira, das 08h00 às 08h30 (horário de brasília)<br>
+        <strong>onde:</strong> sala ao vivo pelo zoom<br>
+        <strong>como funciona:</strong> 5min de provocação poética, 20min de escrita silenciosa concentrada e 5min de partilha opcional.
+      </p>
+    </div>
+
+    <!-- Salvar na agenda -->
+    <div class="btn-container">
+      <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Caf%C3%A9+com+Letras+%C2%B7+Solta+o+Verbo&details=Ritual+semanal+de+escrita+coletiva+ao+vivo.&location=Zoom&ctz=America/Sao_Paulo" target="_blank" class="btn-pill" style="background-color: #140D82;">
+        adicionar as terças no google agenda →
+      </a>
+    </div>
+
+    <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin-top: 20px;">
+      enquanto a terça não chega, aproveite seu <strong>atelier de escrita ilimitado</strong> na plataforma para registrar suas páginas matinais e pensamentos.
+    </p>
+
+    <p style="margin-top: 24px; margin-bottom: 0; font-size: 14px; color: #7D7569; line-height: 1.6;">
+      prepare a sua xícara e até terça,<br>
+      <strong style="font-size: 16px; color: #140D82; font-family: Georgia, serif;">Bru e Ju</strong><br>
+      <span style="font-size: 12px; color: #FD5E32; font-weight: 600;">Solta o Verbo</span>
+    </p>
+  `;
+
+  return getEmailBaseWrapper({
+    title: 'bem-vinda ao café com letras ☕',
+    previewText: 'sua vaga na roda semanal de escrita está confirmada.',
+    headerPill: 'café com letras · roda semanal de escrita ☕',
+    content,
+  });
+}
+
 

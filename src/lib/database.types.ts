@@ -477,6 +477,47 @@ export interface Database {
           updated_at?: string
         }
       }
+      user_entitlements: {
+        Row: {
+          id: string
+          user_id: string
+          product_slug: '21_dias' | 'cafe_com_letras' | 'ciclo_aprofundamento' | string
+          status: 'active' | 'expired' | 'cancelled'
+          source: string | null
+          order_id: string | null
+          starts_at: string
+          expires_at: string | null
+          metadata: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          product_slug: '21_dias' | 'cafe_com_letras' | 'ciclo_aprofundamento' | string
+          status?: 'active' | 'expired' | 'cancelled'
+          source?: string | null
+          order_id?: string | null
+          starts_at?: string
+          expires_at?: string | null
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          product_slug?: '21_dias' | 'cafe_com_letras' | 'ciclo_aprofundamento' | string
+          status?: 'active' | 'expired' | 'cancelled'
+          source?: string | null
+          order_id?: string | null
+          starts_at?: string
+          expires_at?: string | null
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

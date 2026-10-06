@@ -33,6 +33,9 @@ import {
   Award,
 } from 'lucide-react';
 import PoeticCertificateModal from '../components/PoeticCertificateModal';
+import { useUserAccess } from '../hooks/useUserAccess';
+import UpgradeModal from '../components/UpgradeModal';
+import PaymentModal from '../components/PaymentModal';
 import type { Database } from '../lib/database.types';
 
 type Course = Database['public']['Tables']['courses']['Row'];
@@ -54,6 +57,7 @@ type SavedQuote = {
 export default function CourseDetail() {
   const { courseId } = useParams();
   const { profile } = useAuth();
+  const { hasAccessToCourse } = useUserAccess();
   const navigate = useNavigate();
 
   const [course, setCourse] = useState<Course | null>(null);
@@ -66,6 +70,11 @@ export default function CourseDetail() {
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showComments, setShowComments] = useState(false);
+
+  // Modais de Upgrade & Checkout
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedProductForPay, setSelectedProductForPay] = useState<'21dias' | 'cafe' | 'ciclo'>('21dias');
 
   // MODO FOCO DA AULA (ZEN READER)
   const [isZenModeOpen, setIsZenModeOpen] = useState(false);
@@ -399,6 +408,72 @@ export default function CourseDetail() {
           >
             ← voltar às oficinas
           </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const isCourseAccessible = hasAccessToCourse(course.title, course.course_type);
+
+  // SE NÃO TIVER ACESSO -> MOSTRA PORTADA DE BLOQUEIO ELEGANTE COM BOTÃO DE UPGRADE
+  if (!isCourseAccessible) {
+    const is21Dias = course.title.toLowerCase().includes('21');
+    const recommendedProduct: '21dias' | 'cafe' | 'ciclo' = is21Dias ? '21dias' : 'ciclo';
+
+    return (
+      <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-12 px-4 sm:px-6 flex items-center justify-center">
+        <div className="bg-papelClaro rounded-3xl border border-papelKraft/70 p-6 sm:p-10 max-w-xl w-full shadow-kraft-lg text-center space-y-6">
+          <div className="w-16 h-16 rounded-full bg-acentoTerracota/15 border border-acentoTerracota/30 text-acentoTerracota flex items-center justify-center mx-auto">
+            <Lock className="w-7 h-7 text-acentoTerracota" />
+          </div>
+
+          <div className="space-y-2 max-w-md mx-auto">
+            <span className="px-3 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold font-corpo lowercase">
+              oficina exclusiva
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-normal font-gesto text-acentoAzul lowercase leading-tight">
+              {course.title.toLowerCase()}
+            </h2>
+            <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/80 lowercase leading-relaxed">
+              {course.description || 'esta jornada de escrita é exclusiva para alunas inscritas. escolha seu plano para destravar todos os rituais, áudios e cadernos.'}
+            </p>
+          </div>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => {
+                setSelectedProductForPay(recommendedProduct);
+                setShowUpgradeModal(true);
+              }}
+              className="w-full sm:w-auto px-7 py-3 rounded-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs transition-all cursor-pointer"
+            >
+              destravar acesso a esta oficina →
+            </button>
+            <Link
+              to="/programs"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-white hover:bg-papelKraft/20 border border-papelKraft/50 text-tintaCarvao text-xs font-corpo font-semibold lowercase transition-all"
+            >
+              ver outras oficinas
+            </Link>
+          </div>
+
+          {/* Modais de Upgrade & Pagamento */}
+          <UpgradeModal
+            isOpen={showUpgradeModal}
+            onClose={() => setShowUpgradeModal(false)}
+            reason="course_locked"
+            title={`destrave ${course.title.toLowerCase()}`}
+            onSelectProduct={(productKey) => {
+              setSelectedProductForPay(productKey);
+              setShowPaymentModal(true);
+            }}
+          />
+
+          <PaymentModal
+            isOpen={showPaymentModal}
+            onClose={() => setShowPaymentModal(false)}
+            productKey={selectedProductForPay}
+          />
         </div>
       </div>
     );

@@ -42,6 +42,7 @@ import {
   Plus,
   Eye,
 } from 'lucide-react';
+import { calculateTrialStatus, isEntitlementActive, Entitlement } from '../lib/entitlements';
 import { APP_VERSION } from '../config/version';
 import type { Database } from '../lib/database.types';
 
@@ -74,6 +75,7 @@ export default function Admin() {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<UserProfile[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [entitlementsMap, setEntitlementsMap] = useState<Record<string, Entitlement[]>>({});
 
   // Estado para Ficha Poética da Aluna (Student Inspection Drawer)
   const [selectedStudent, setSelectedStudent] = useState<StudentCourseProgress | null>(null);
@@ -107,7 +109,7 @@ export default function Admin() {
   });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'free' | 'paid' | 'admin'>('all');
+  const [roleFilter, setRoleFilter] = useState<'all' | 'free' | 'paid' | 'admin' | 'trial_active' | 'trial_expired' | 'has_product'>('all');
   const [dateFilter, setDateFilter] = useState<'all' | '7days' | '30days' | '90days'>('all');
 
   const usersRef = useRef<HTMLDivElement>(null);
@@ -185,7 +187,27 @@ export default function Admin() {
     }
 
     if (roleFilter !== 'all') {
-      filtered = filtered.filter((user) => user.role === roleFilter);
+      if (roleFilter === 'free' || roleFilter === 'paid' || roleFilter === 'admin') {
+        filtered = filtered.filter((user) => user.role === roleFilter);
+      } else if (roleFilter === 'trial_active') {
+        filtered = filtered.filter((user) => {
+          const userEnts = (entitlementsMap[user.id] || []).filter(isEntitlementActive);
+          const trial = calculateTrialStatus(user.created_at, user.role === 'admin' || user.role === 'paid' || userEnts.length > 0);
+          return trial.isTrial;
+        });
+      } else if (roleFilter === 'trial_expired') {
+        filtered = filtered.filter((user) => {
+          const userEnts = (entitlementsMap[user.id] || []).filter(isEntitlementActive);
+          if (user.role === 'admin' || user.role === 'paid' || userEnts.length > 0) return false;
+          const trial = calculateTrialStatus(user.created_at, false);
+          return trial.isExpired;
+        });
+      } else if (roleFilter === 'has_product') {
+        filtered = filtered.filter((user) => {
+          const userEnts = (entitlementsMap[user.id] || []).filter(isEntitlementActive);
+          return userEnts.length > 0;
+        });
+      }
     }
 
     if (dateFilter !== 'all') {
@@ -228,18 +250,31 @@ export default function Admin() {
       admin: 'administrador'
     };
 
-    const headers = ['nome', 'email', 'instagram', 'linkedin', 'substack', 'email publico', 'plano', 'data de registro'];
+    const headers = ['nome', 'email', 'instagram', 'linkedin', 'substack', 'email publico', 'plano', 'produtos ativos', 'status do teste (96h)', 'data de registro'];
 
-    const rows = filteredUsers.map(user => [
-      escapeCSV(user.display_name),
-      escapeCSV(user.email),
-      escapeCSV(user.instagram_url),
-      escapeCSV(user.linkedin_url),
-      escapeCSV(user.substack_url),
-      escapeCSV(user.email_public),
-      escapeCSV(roleNames[user.role] || user.role),
-      escapeCSV(new Date(user.created_at).toLocaleDateString('pt-BR'))
-    ]);
+    const rows = filteredUsers.map(user => {
+      const userEnts = (entitlementsMap[user.id] || []).filter(isEntitlementActive);
+      const activeSlugs = userEnts.map((e) => e.product_slug).join(', ');
+      const trial = calculateTrialStatus(user.created_at, user.role === 'admin' || user.role === 'paid' || userEnts.length > 0);
+      const trialStatusText = user.role === 'admin' || userEnts.length > 0 || user.role === 'paid'
+        ? 'coberto por plano'
+        : trial.isTrial
+        ? `ativo (${trial.daysRemaining}d restantes)`
+        : 'expirado (modo leitura)';
+
+      return [
+        escapeCSV(user.display_name),
+        escapeCSV(user.email),
+        escapeCSV(user.instagram_url),
+        escapeCSV(user.linkedin_url),
+        escapeCSV(user.substack_url),
+        escapeCSV(user.email_public),
+        escapeCSV(roleNames[user.role] || user.role),
+        escapeCSV(activeSlugs || 'nenhum'),
+        escapeCSV(trialStatusText),
+        escapeCSV(new Date(user.created_at).toLocaleDateString('pt-BR'))
+      ];
+    });
 
     const csvContent = [
       headers.join(','),
@@ -278,6 +313,7 @@ export default function Admin() {
       completed_lessons: completedCount,
       last_activity: u.created_at ? `membro desde ${new Date(u.created_at).toLocaleDateString('pt-BR')}` : 'registrada recentemente',
       role: u.role,
+      created_at: u.created_at,
       bio: u.bio,
       instagram_url: u.instagram_url,
       linkedin_url: u.linkedin_url,
@@ -306,6 +342,18 @@ export default function Admin() {
         .from('courses')
         .select('*')
         .order('created_at', { ascending: false });
+
+      // Buscar entitlements para mapeamento de status
+      const { data: entitlementsData } = await supabase
+        .from('user_entitlements')
+        .select('*');
+
+      const entMap: Record<string, Entitlement[]> = {};
+      (entitlementsData || []).forEach((e) => {
+        if (!entMap[e.user_id]) entMap[e.user_id] = [];
+        entMap[e.user_id].push(e as Entitlement);
+      });
+      setEntitlementsMap(entMap);
 
       setUsers(usersWithEmails);
       setFilteredUsers(usersWithEmails);
@@ -623,10 +671,13 @@ export default function Admin() {
                 <div className="w-full sm:w-auto">
                   <select
                     value={roleFilter}
-                    onChange={(e) => setRoleFilter(e.target.value as 'all' | 'free' | 'paid' | 'admin')}
+                    onChange={(e) => setRoleFilter(e.target.value as any)}
                     className="w-full px-3 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
                   >
-                    <option value="all">todos os planos</option>
+                    <option value="all">todos os planos & acessos</option>
+                    <option value="trial_active">🌱 teste ativo (4 dias)</option>
+                    <option value="trial_expired">⏳ teste expirado (modo leitura)</option>
+                    <option value="has_product">✨ com produto / assinatura</option>
                     <option value="free">plano gratuito</option>
                     <option value="paid">plano premium</option>
                     <option value="admin">administradores</option>
@@ -676,114 +727,155 @@ export default function Admin() {
               </div>
             ) : (
               <div className="space-y-3 max-h-[550px] overflow-y-auto pr-1">
-                {filteredUsers.map((user) => (
-                  <div
-                    key={user.id}
-                    className="bg-white p-4 rounded-2xl border border-papelKraft/40 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-                  >
-                    {/* Info da Aluna */}
+                {filteredUsers.map((user) => {
+                  const userEnts = (entitlementsMap[user.id] || []).filter(isEntitlementActive);
+                  const activeSlugs = userEnts.map((e) => e.product_slug);
+                  const hasActiveProducts = activeSlugs.length > 0 || user.role === 'paid';
+                  const trial = calculateTrialStatus(user.created_at, user.role === 'admin' || hasActiveProducts);
+
+                  return (
                     <div
-                      onClick={() => handleOpenStudentDrawer(user)}
-                      className="space-y-1 min-w-0 flex-1 cursor-pointer group"
+                      key={user.id}
+                      className="bg-white p-4 rounded-2xl border border-papelKraft/40 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                     >
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-editorial font-bold text-base text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase truncate">
-                          {user.display_name}
-                        </h3>
-                        <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
-                          {user.role === 'admin' ? 'administradora' : user.role === 'paid' ? 'premium' : 'gratuito'}
-                        </span>
-                      </div>
-
-                      <p className="text-xs font-corpo text-tintaCarvao/80 font-medium truncate">
-                        {user.email_public || user.email || 'e-mail não disponível'}
-                      </p>
-
-                      <div className="flex items-center gap-3 text-[10px] font-corpo text-tintaCarvao/50">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3 text-tintaCarvao/40" />
-                          <span>membro desde {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Redes Sociais */}
-                    <div className="flex items-center gap-1.5">
-                      {user.substack_url && (
-                        <a
-                          href={user.substack_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
-                          title="Substack"
-                        >
-                          <FileText className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                      {user.instagram_url && (
-                        <a
-                          href={user.instagram_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
-                          title="Instagram"
-                        >
-                          <Instagram className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                      {user.linkedin_url && (
-                        <a
-                          href={user.linkedin_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
-                          title="LinkedIn"
-                        >
-                          <Linkedin className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                      {user.email_public && (
-                        <a
-                          href={`mailto:${user.email_public}`}
-                          className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
-                          title="E-mail Público"
-                        >
-                          <Mail className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
-
-                    {/* Botão de Ver Ficha Poética & Seletor de Papel */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
+                      {/* Info da Aluna */}
+                      <div
                         onClick={() => handleOpenStudentDrawer(user)}
-                        className="px-3.5 py-1.5 rounded-xl bg-acentoAzul hover:bg-acentoAzul/90 text-white font-gesto text-[18px] lowercase transition-all shadow-xs flex items-center gap-1.5 cursor-pointer hover:scale-105"
-                        title="abrir ficha poética da aluna e ver seus textos no atelier"
+                        className="space-y-1 min-w-0 flex-1 cursor-pointer group"
                       >
-                        <Search className="w-3.5 h-3.5" />
-                        <span>ver ficha →</span>
-                      </button>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-editorial font-bold text-base text-acentoAzul group-hover:text-acentoTerracota transition-colors lowercase truncate">
+                            {user.display_name}
+                          </h3>
+                          <span className="px-2 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
+                            {user.role === 'admin' ? 'administradora' : user.role === 'paid' && activeSlugs.length === 0 ? 'premium' : user.role === 'paid' ? 'assinante' : 'gratuito'}
+                          </span>
 
-                      <select
-                        value={user.role}
-                        onChange={(e) => updateUserRole(user.id, e.target.value as 'free' | 'paid' | 'admin')}
-                        className="px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
-                      >
-                        <option value="free">gratuito</option>
-                        <option value="paid">premium</option>
-                        <option value="admin">admin</option>
-                      </select>
+                          {/* Badges de Entitlements Ativos */}
+                          {activeSlugs.map((slug) => (
+                            <span
+                              key={slug}
+                              className="px-2 py-0.5 rounded-full bg-acentoOliva/20 text-acentoOliva text-[10px] font-bold font-corpo lowercase"
+                            >
+                              {slug === '21_dias'
+                                ? '📖 21 dias'
+                                : slug === 'cafe_com_letras'
+                                ? '☕ café'
+                                : slug === 'ciclo_aprofundamento'
+                                ? '✨ ciclo'
+                                : slug === 'degustacao_atelier'
+                                ? '🌱 degustação'
+                                : slug}
+                            </span>
+                          ))}
+
+                          {/* Badge de Trial de 4 dias se não tem produtos adquiridos */}
+                          {!hasActiveProducts && user.role !== 'admin' && (
+                            trial.isTrial ? (
+                              <span className="px-2 py-0.5 rounded-full bg-acentoOliva/15 text-acentoOliva text-[10px] font-bold font-corpo lowercase">
+                                🌱 teste ({trial.daysRemaining}d restantes)
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full bg-papelKraft text-tintaCarvao/60 text-[10px] font-bold font-corpo lowercase">
+                                ⏳ teste expirado
+                              </span>
+                            )
+                          )}
+                        </div>
+
+                        <p className="text-xs font-corpo text-tintaCarvao/80 font-medium truncate">
+                          {user.email_public || user.email || 'e-mail não disponível'}
+                        </p>
+
+                        <div className="flex items-center gap-3 text-[10px] font-corpo text-tintaCarvao/50">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3 text-tintaCarvao/40" />
+                            <span>membro desde {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Redes Sociais */}
+                      <div className="flex items-center gap-1.5">
+                        {user.substack_url && (
+                          <a
+                            href={user.substack_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                            title="Substack"
+                          >
+                            <FileText className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {user.instagram_url && (
+                          <a
+                            href={user.instagram_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                            title="Instagram"
+                          >
+                            <Instagram className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {user.linkedin_url && (
+                          <a
+                            href={user.linkedin_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                            title="LinkedIn"
+                          >
+                            <Linkedin className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {user.email_public && (
+                          <a
+                            href={`mailto:${user.email_public}`}
+                            className="p-2 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-acentoAzul border border-papelKraft/40 transition-colors"
+                            title="E-mail Público"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Botão de Ver Ficha Poética & Seletor de Papel */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenStudentDrawer(user)}
+                          className="px-3.5 py-1.5 rounded-xl bg-acentoAzul hover:bg-acentoAzul/90 text-white font-gesto text-[18px] lowercase transition-all shadow-xs flex items-center gap-1.5 cursor-pointer hover:scale-105"
+                          title="abrir ficha poética da aluna e ver seus textos no atelier"
+                        >
+                          <Search className="w-3.5 h-3.5" />
+                          <span>ver ficha →</span>
+                        </button>
+
+                        <select
+                          value={user.role}
+                          onChange={(e) => updateUserRole(user.id, e.target.value as 'free' | 'paid' | 'admin')}
+                          className="px-3 py-1.5 bg-bgPlataforma border border-papelKraft/40 rounded-xl text-xs font-bold font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase cursor-pointer"
+                        >
+                          <option value="free">gratuito</option>
+                          <option value="paid">premium</option>
+                          <option value="admin">admin</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
             {/* PAINEL LATERAL DE INSPEÇÃO DE ALUNA (FICHA POÉTICA) */}
             <StudentInspectionDrawer
               isOpen={isDrawerOpen}
-              onClose={() => setIsDrawerOpen(false)}
+              onClose={() => {
+                setIsDrawerOpen(false);
+                loadData();
+              }}
               student={selectedStudent}
               productSlug="programa_21_dias"
               productName="visão geral do coletivo"

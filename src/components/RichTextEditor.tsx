@@ -33,6 +33,7 @@ interface RichTextEditorProps {
   onZoomChange?: (newZoom: number) => void;
   fontFamily?: EditorFontFamily;
   editorSettings?: any;
+  readOnly?: boolean;
 }
 
 const FORMAT_OPTIONS = [
@@ -65,6 +66,7 @@ export default function RichTextEditor({
   zoomLevel = 100,
   onZoomChange,
   fontFamily = 'editorial',
+  readOnly = false,
 }: RichTextEditorProps) {
   const actualValue = value !== undefined ? value : content !== undefined ? content : '';
 
@@ -114,6 +116,7 @@ export default function RichTextEditor({
   }, []);
 
   const handleInput = () => {
+    if (readOnly) return;
     if (editorRef.current) {
       onChange(editorRef.current.innerHTML);
     }
@@ -121,6 +124,7 @@ export default function RichTextEditor({
 
   // HANDLER DE ATALHOS DE TECLADO (CTRL+B, CTRL+I, CTRL+U, CTRL+S, CMD+B, ETC)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (readOnly) return;
     const modifier = isMac ? e.metaKey : e.ctrlKey;
 
     if (modifier) {
@@ -145,6 +149,7 @@ export default function RichTextEditor({
   };
 
   const executeCommand = (command: string, val?: string) => {
+    if (readOnly) return;
     if (editorRef.current) {
       editorRef.current.focus();
     }
@@ -260,20 +265,23 @@ export default function RichTextEditor({
       {/* ÁREA DE ESCRITA DE PAPEL LIMPA E TRANSPARENTE */}
       <div
         ref={editorRef}
-        contentEditable
+        contentEditable={!readOnly}
         onInput={handleInput}
         onKeyDown={handleKeyDown}
-        className="p-4 sm:p-6 min-h-[300px] focus:outline-none text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-32 transition-all"
+        className={`p-4 sm:p-6 min-h-[300px] focus:outline-none text-tintaCarvao leading-relaxed text-base sm:text-lg bg-transparent pb-32 transition-all ${
+          readOnly ? 'cursor-default select-text' : ''
+        }`}
         style={{
           fontFamily: FONT_FAMILY_MAP[fontFamily] || FONT_FAMILY_MAP.editorial,
           fontSize: `${scaledFontSize}px`,
           lineHeight: '1.7',
           color: textColor,
         }}
-        data-placeholder={placeholder}
+        data-placeholder={readOnly ? '' : placeholder}
       />
 
-      {/* CONTAINER EXTERNO DA BARRA FLUTUANTE (90% LARGURA EM DESKTOP, COR #EDE6D4, TIPOGRAFIA EDITORIAL SERIF) */}
+      {/* CONTAINER EXTERNO DA BARRA FLUTUANTE (ocultado se estiver em modo somente leitura) */}
+      {!readOnly && (
       <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[100000] w-[92vw] md:w-[90vw] max-w-5xl overflow-visible">
         
         {/* TOOLTIP FLUTUANTE ELEGANTE E UNIFICADO DA BARRA (100% VISÍVEL, SEM NENHUM CORTE DE OVERFLOW) */}
@@ -627,6 +635,7 @@ export default function RichTextEditor({
         </div>
 
       </div>
+      )}
 
       <style>{`
         /* Barra de rolagem compacta e elegante para dispositivos móveis */

@@ -13,6 +13,8 @@ import {
   getPaymentConfirmedHtml,
   getAdminNotificationHtml,
   getOnboardingStepsEmailHtml,
+  get21DiasWelcomeEmailHtml,
+  getCafeWelcomeEmailHtml,
 } from './templates/emailTemplates.mjs';
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
@@ -330,7 +332,50 @@ const server = http.createServer(async (req, res) => {
             body: JSON.stringify({ role: 'paid' }),
           });
 
-          // Registra assinatura
+          // Determinar produto comprado a partir de valor e itens
+          const paidCents = paid_amount || amount || 0;
+          const itemsDesc = (items && items[0]?.description) ? items[0].description.toLowerCase() : '';
+          let productSlug = 'ciclo_aprofundamento'; // Default bundle
+          let durationDays = 365;
+
+          if (paidCents === 7700 || itemsDesc.includes('21 dias') || itemsDesc.includes('21_dias')) {
+            productSlug = '21_dias';
+            durationDays = 365;
+          } else if (itemsDesc.includes('cafe') || itemsDesc.includes('café') || itemsDesc.includes('mensal')) {
+            productSlug = 'cafe_com_letras';
+            durationDays = 30;
+          } else if (itemsDesc.includes('ciclo') || itemsDesc.includes('aprofundamento')) {
+            productSlug = 'ciclo_aprofundamento';
+            durationDays = 365;
+          }
+
+          const expiresDate = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+
+          // Registra entitlement granular do produto
+          try {
+            await supabaseRest('user_entitlements', {
+              method: 'POST',
+              body: JSON.stringify({
+                user_id: userId,
+                product_slug: productSlug,
+                status: 'active',
+                source: 'infinitepay',
+                order_id: transaction_nsu || order_nsu || invoice_slug,
+                starts_at: new Date().toISOString(),
+                expires_at: expiresDate,
+                metadata: {
+                  paid_amount: paidCents,
+                  installments,
+                  capture_method,
+                },
+              }),
+            });
+            console.info(`[Webhook] Entitlement '${productSlug}' registrado com sucesso para a usuária ${userId}`);
+          } catch (entErr) {
+            console.warn('[Webhook] Aviso ao registrar user_entitlements:', entErr.message);
+          }
+
+          // Registra assinatura legada para retrocompatibilidade
           await supabaseRest('user_subscriptions', {
             method: 'POST',
             body: JSON.stringify({
@@ -338,7 +383,7 @@ const server = http.createServer(async (req, res) => {
               stripe_payment_id: transaction_nsu || order_nsu || invoice_slug,
               status: 'active',
               started_at: new Date().toISOString(),
-              expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+              expires_at: expiresDate,
               installment_plan: installments > 1 ? `${installments}x` : 'one_time',
               total_installments: installments,
               completed_installments: 1,
@@ -401,22 +446,41 @@ const server = http.createServer(async (req, res) => {
         html: paymentEmailHtml,
       });
 
-      // 6. Enviar guia de primeiros passos da travessia logo após a confirmação
+      // 6. Enviar guia de boas-vindas específico do produto comprado
       let onboardingEmailResult = null;
       try {
-        console.info(`[InfinitePay] Enviando guia de primeiros passos para o comprador: ${targetEmail}`);
-        const onboardingHtml = getOnboardingStepsEmailHtml({
-          displayName: customerName || customer?.name || 'escritora',
-          email: targetEmail,
-        });
+        console.info(`[InfinitePay] Enviando guia específico para '${productSlug}' para: ${targetEmail}`);
+        let specializedHtml = '';
+        let specializedSubject = '';
+
+        if (productSlug === '21_dias') {
+          specializedSubject = 'bem-vinda aos 21 dias de escrita 𖦹';
+          specializedHtml = get21DiasWelcomeEmailHtml({
+            displayName: customerName || customer?.name || 'escritora',
+            email: targetEmail,
+          });
+        } else if (productSlug === 'cafe_com_letras') {
+          specializedSubject = 'bem-vinda ao café com letras ☕';
+          specializedHtml = getCafeWelcomeEmailHtml({
+            displayName: customerName || customer?.name || 'escritora',
+            email: targetEmail,
+          });
+        } else {
+          // Ciclo de Aprofundamento (bundle com Jout Jout e encontros ao vivo)
+          specializedSubject = 'preparada para soltar o verbo? 𖦹';
+          specializedHtml = getOnboardingStepsEmailHtml({
+            displayName: customerName || customer?.name || 'escritora',
+            email: targetEmail,
+          });
+        }
 
         onboardingEmailResult = await sendEmailViaResend({
           to: targetEmail,
-          subject: 'preparada para soltar o verbo? 𖦹',
-          html: onboardingHtml,
+          subject: specializedSubject,
+          html: specializedHtml,
         });
       } catch (onboardingErr) {
-        console.warn('[InfinitePay] Aviso ao enviar guia de primeiros passos:', onboardingErr.message);
+        console.warn('[InfinitePay] Aviso ao enviar guia específico do produto:', onboardingErr.message);
       }
 
       // 7. Notificar o administrador por e-mail

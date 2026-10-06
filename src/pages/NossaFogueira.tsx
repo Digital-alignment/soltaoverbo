@@ -23,6 +23,9 @@ import {
 } from 'lucide-react';
 import { getWordPreview, stripHtmlTags } from '../utils/textProcessing';
 import type { Database } from '../lib/database.types';
+import { useUserAccess } from '../hooks/useUserAccess';
+import UpgradeModal from '../components/UpgradeModal';
+import PaymentModal from '../components/PaymentModal';
 
 type CommunityPost = Database['public']['Tables']['community_posts']['Row'] & {
   writing_exercise: Database['public']['Tables']['writing_exercises']['Row'];
@@ -37,6 +40,7 @@ type Comment = Database['public']['Tables']['comments']['Row'] & {
 
 export default function NossaFogueira() {
   const { profile } = useAuth();
+  const { canPostToFogueira, isTrialExpired, isPaidMember, weeklyPostsCount, weeklyPostsLimit } = useUserAccess();
   const [allPosts, setAllPosts] = useState<CommunityPost[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +56,12 @@ export default function NossaFogueira() {
   const [editContent, setEditContent] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
+
+  // Modais de Upgrade & Checkout
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedProductForPay, setSelectedProductForPay] = useState<'21dias' | 'cafe' | 'ciclo'>('21dias');
+  const [upgradeReason, setUpgradeReason] = useState<'trial_expired' | 'fogueira_limit' | 'general'>('fogueira_limit');
 
   // Filtros de Categoria e Busca
   const [selectedFilter, setSelectedFilter] = useState<'todos' | '21dias' | 'livres' | 'poesia' | 'rituais'>('todos');
@@ -404,13 +414,44 @@ export default function NossaFogueira() {
             </p>
           </div>
 
-          <Link
-            to="/exercises?new=true"
-            className="px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-xs hover:bg-acentoTerracota/90 hover:scale-102 transition-all inline-flex items-center gap-2 cursor-pointer shrink-0"
-          >
-            <Plus className="w-4.5 h-4.5 text-white" />
-            <span>partilhar novo texto</span>
-          </Link>
+          <div className="flex items-center gap-2.5">
+            {/* Indicador de Partilhas Semanais para Conta Gratuita */}
+            {!isPaidMember && profile?.role !== 'admin' && (
+              <span
+                className={`text-xs font-mono font-bold px-3 py-1.5 rounded-full border transition-all ${
+                  weeklyPostsCount >= weeklyPostsLimit
+                    ? 'bg-amber-100 text-amber-900 border-amber-300'
+                    : 'bg-white text-acentoAzul border-papelKraft/50'
+                }`}
+                title="limite de partilhas da conta gratuita"
+              >
+                {weeklyPostsCount}/{weeklyPostsLimit} partilhas na semana
+              </span>
+            )}
+
+            {canPostToFogueira ? (
+              <Link
+                to="/exercises?new=true"
+                className="px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-xs hover:bg-acentoTerracota/90 hover:scale-102 transition-all inline-flex items-center gap-2 cursor-pointer shrink-0"
+              >
+                <Plus className="w-4.5 h-4.5 text-white" />
+                <span>partilhar novo texto</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setUpgradeReason('fogueira_limit');
+                  setShowUpgradeModal(true);
+                }}
+                className="px-5 py-2.5 rounded-2xl bg-acentoTerracota text-white font-gesto text-[20px] sm:text-[22px] lowercase shadow-xs hover:bg-acentoTerracota/90 transition-all inline-flex items-center gap-2 cursor-pointer shrink-0"
+                title="limite de 3 partilhas semanais atingido"
+              >
+                <Plus className="w-4.5 h-4.5 text-white" />
+                <span>partilhar novo texto</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* BARRA DE FILTROS & CAMPO DE BUSCA (MOBILE SAFE ROLAGEM) */}
@@ -790,6 +831,24 @@ export default function NossaFogueira() {
             )}
           </div>
         )}
+
+        {/* MODAL POÉTICO DE UPGRADE (Fogueira Quota / Planos) */}
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          reason={upgradeReason}
+          onSelectProduct={(productKey) => {
+            setSelectedProductForPay(productKey);
+            setShowPaymentModal(true);
+          }}
+        />
+
+        {/* MODAL DE CHECKOUT INFINITEPAY */}
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          productKey={selectedProductForPay}
+        />
 
       </div>
     </div>

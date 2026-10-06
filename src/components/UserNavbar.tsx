@@ -5,23 +5,22 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { BRAND_ASSETS } from '../config/brandAssets';
 
+import { useUserAccess } from '../hooks/useUserAccess';
+
 export default function UserNavbar() {
   const { profile, signOut } = useAuth();
+  const { isPaidMember, isTrialActive, trial } = useUserAccess();
   const [unreadCount, setUnreadCount] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const getRoleLabel = () => {
-    switch (profile?.role) {
-      case 'admin':
-        return 'administrador';
-      case 'paid':
-        return 'membro premium';
-      default:
-        return 'membro registrado';
-    }
+    if (profile?.role === 'admin') return 'administrador';
+    if (isPaidMember) return 'membro premium';
+    if (isTrialActive) return `teste livre (${trial.daysRemaining}d restantes)`;
+    return 'membro registrado';
   };
 
-  const isPremiumOrAdmin = profile?.role === 'paid' || profile?.role === 'admin';
+  const isPremiumOrAdmin = profile?.role === 'admin' || isPaidMember;
 
   useEffect(() => {
     if (!profile) return;

@@ -31,6 +31,10 @@ import {
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';
+import { useUserAccess } from '../hooks/useUserAccess';
+import TrialBanner from '../components/TrialBanner';
+import UpgradeModal from '../components/UpgradeModal';
+import PaymentModal from '../components/PaymentModal';
 
 type Course = Database['public']['Tables']['courses']['Row'];
 
@@ -138,9 +142,15 @@ interface ActiveCourseProgress {
 
 export default function Dashboard() {
   const { profile, user } = useAuth();
+  const { hasAccessToCourse, isTrialActive, isTrialExpired, isPaidMember, trial } = useUserAccess();
   const [courses, setCourses] = useState<Course[]>([]);
   const [, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Modais de Upgrade & Checkout
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedProductForPay, setSelectedProductForPay] = useState<'21dias' | 'cafe' | 'ciclo'>('21dias');
 
   // Ejercicios reales del usuario autenticado
   const [userExercises, setUserExercises] = useState<RealExercise[]>([]);
@@ -620,19 +630,14 @@ export default function Dashboard() {
   };
 
   const canAccessCourse = (course: Course) => {
-    if (course.course_type === 'free') return true;
-    return profile?.role === 'paid' || profile?.role === 'admin';
+    return hasAccessToCourse(course.title, course.course_type);
   };
 
   const getRoleLabel = () => {
-    switch (profile?.role) {
-      case 'admin':
-        return 'administrador';
-      case 'paid':
-        return 'membro premium';
-      default:
-        return 'membro registrado';
-    }
+    if (profile?.role === 'admin') return 'administrador';
+    if (isPaidMember) return 'membro premium';
+    if (isTrialActive) return `teste livre (${trial.daysRemaining}d restantes)`;
+    return 'membro registrado';
   };
 
   if (loading) {
@@ -649,6 +654,9 @@ export default function Dashboard() {
             {welcomeMessage}
           </h1>
         </div>
+
+        {/* BANNER DINÂMICO DE PERÍODO DE EXPERIÊNCIA (4 DIAS) OU UPGRADE */}
+        <TrialBanner onUpgradeClick={() => setShowUpgradeModal(true)} />
 
         {/* BENTO GRID PRINCIPAL (items-start para desacoplar a altura dos cards) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -1650,6 +1658,24 @@ export default function Dashboard() {
             }}
           />
         </div>
+
+        {/* MODAL POÉTICO DE UPGRADE (3 PLANOS DA MARCA) */}
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          reason={isTrialExpired ? 'trial_expired' : 'general'}
+          onSelectProduct={(productKey) => {
+            setSelectedProductForPay(productKey);
+            setShowPaymentModal(true);
+          }}
+        />
+
+        {/* MODAL DE CHECKOUT INFINITEPAY */}
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          productKey={selectedProductForPay}
+        />
 
       </div>
     </div>
