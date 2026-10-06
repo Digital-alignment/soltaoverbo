@@ -1,10 +1,13 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserAccess } from '../hooks/useUserAccess';
 import LoadingPage from '../components/LoadingPage';
 import ImageCropModal from '../components/ImageCropModal';
 import PoeticCertificateModal from '../components/PoeticCertificateModal';
+import UpgradeModal from '../components/UpgradeModal';
+import PaymentModal, { ProductKey } from '../components/PaymentModal';
 import {
   User,
   Edit,
@@ -27,9 +30,79 @@ import {
   Calendar,
   ChevronRight,
   CheckCircle,
+  CreditCard,
+  Coffee,
+  RefreshCw,
+  Clock,
+  ShieldCheck,
+  Lock,
+  HelpCircle,
 } from 'lucide-react';
 import { getWordPreview, stripHtmlTags } from '../utils/textProcessing';
 import type { Database } from '../lib/database.types';
+
+function formatDatePtBr(dateStr?: string | null) {
+  if (!dateStr) return 'indeterminado';
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+function getProductMeta(slug: string) {
+  switch (slug) {
+    case '21_dias':
+    case '21dias':
+      return {
+        title: 'oficina 21 dias de escrita autoral',
+        badge: 'oficina fundamental',
+        icon: Feather,
+        color: 'text-acentoAzul',
+        bgColor: 'bg-acentoAzul/10',
+        borderColor: 'border-acentoAzul/30',
+        paymentKey: '21dias' as ProductKey,
+        link: '/courses',
+      };
+    case 'cafe_com_letras':
+    case 'cafe':
+    case 'cafecomletras':
+      return {
+        title: 'café com letras — comunidade contínua',
+        badge: 'encontros mensais',
+        icon: Coffee,
+        color: 'text-acentoTerracota',
+        bgColor: 'bg-acentoTerracota/10',
+        borderColor: 'border-acentoTerracota/30',
+        paymentKey: 'cafe' as ProductKey,
+        link: '/courses',
+      };
+    case 'ciclo_aprofundamento':
+    case 'ciclo':
+      return {
+        title: 'ciclo de aprofundamento poético',
+        badge: 'mentoria imersiva',
+        icon: BookOpen,
+        color: 'text-acentoAzul',
+        bgColor: 'bg-acentoAzul/10',
+        borderColor: 'border-acentoAzul/30',
+        paymentKey: 'ciclo' as ProductKey,
+        link: '/courses',
+      };
+    default:
+      return {
+        title: slug.replace(/_/g, ' '),
+        badge: 'jornada literária',
+        icon: Sparkles,
+        color: 'text-tintaCarvao',
+        bgColor: 'bg-papelKraft/20',
+        borderColor: 'border-papelKraft/40',
+        paymentKey: 'geral' as ProductKey,
+        link: '/courses',
+      };
+  }
+}
 
 type UserProfile = Database['public']['Tables']['users_profiles']['Row'];
 type CommunityPost = Database['public']['Tables']['community_posts']['Row'] & {
@@ -55,8 +128,30 @@ export default function Profile() {
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // ABAS DO PORTFÓLIO: 'fogueira' | 'rascunhos' | 'citacoes' | 'certificados'
-  const [activeTab, setActiveTab] = useState<'fogueira' | 'rascunhos' | 'citacoes' | 'certificados'>('fogueira');
+  // ABAS DO PORTFÓLIO: 'fogueira' | 'rascunhos' | 'citacoes' | 'certificados' | 'assinaturas'
+  const [activeTab, setActiveTab] = useState<'fogueira' | 'rascunhos' | 'citacoes' | 'certificados' | 'assinaturas'>('fogueira');
+
+  // CONTROLE DE ACESSO & ENTITLEMENTS (FASE 2)
+  const access = useUserAccess();
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedProductForPayment, setSelectedProductForPayment] = useState<ProductKey>('21dias');
+
+  const activeEntitlements = useMemo(() => {
+    return (access.entitlements || []).filter((e) => {
+      if (e.status !== 'active') return false;
+      if (!e.expires_at) return true;
+      return new Date(e.expires_at).getTime() > Date.now();
+    });
+  }, [access.entitlements]);
+
+  const pastEntitlements = useMemo(() => {
+    return (access.entitlements || []).filter((e) => {
+      if (e.status === 'expired' || e.status === 'cancelled') return true;
+      if (e.expires_at && new Date(e.expires_at).getTime() <= Date.now()) return true;
+      return false;
+    });
+  }, [access.entitlements]);
 
   // DADOS DO PORTFÓLIO & ESTATÍSTICAS
   const [userPosts, setUserPosts] = useState<CommunityPost[]>([]);
@@ -675,6 +770,20 @@ export default function Profile() {
             >
               certificados poéticos
             </button>
+
+            {isOwnProfile && (
+              <button
+                onClick={() => setActiveTab('assinaturas')}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                  activeTab === 'assinaturas'
+                    ? 'bg-acentoAzul text-white shadow-xs'
+                    : 'bg-white/80 text-tintaCarvao/70 hover:text-tintaCarvao border border-papelKraft/40'
+                }`}
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                <span>minhas assinaturas & plano</span>
+              </button>
+            )}
           </div>
 
           {/* CONTEÚDO DA ABA 1: OBRAS NA FOGUEIRA */}
@@ -835,6 +944,367 @@ export default function Profile() {
             </div>
           )}
 
+          {/* CONTEÚDO DA ABA 5: MINHAS ASSINATURAS & JORNADAS (FASE 2) */}
+          {activeTab === 'assinaturas' && isOwnProfile && (
+            <div className="space-y-6">
+              {/* 1. STATUS GERAL DA CONTA / DEGUSTAÇÃO */}
+              <div className="bg-papelClaro p-6 sm:p-7 rounded-3xl border border-papelKraft/40 shadow-xs relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-start sm:items-center gap-3.5">
+                    <div className="p-3 rounded-2xl bg-white border border-papelKraft/40 text-acentoAzul shadow-xs">
+                      {access.isAdmin ? (
+                        <Sparkles className="w-6 h-6 text-acentoTerracota" />
+                      ) : activeEntitlements.length > 0 || access.isPaidMember ? (
+                        <ShieldCheck className="w-6 h-6 text-acentoAzul" />
+                      ) : access.trial.isTrial ? (
+                        <Clock className="w-6 h-6 text-acentoTerracota" />
+                      ) : (
+                        <Lock className="w-6 h-6 text-acentoTerracota" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-editorial text-lg sm:text-xl font-bold text-acentoAzul lowercase">
+                          {access.isAdmin
+                            ? 'facilitadora & guardiã do espaço'
+                            : activeEntitlements.length > 0 || access.isPaidMember
+                            ? 'aluna com jornada ativa'
+                            : access.trial.isTrial
+                            ? 'degustação poética em andamento'
+                            : 'degustação concluída — modo leitura protegida'}
+                        </h3>
+                        <span
+                          className={`text-[10px] font-bold font-corpo px-2.5 py-0.5 rounded-full lowercase ${
+                            access.isAdmin
+                              ? 'bg-acentoAzul text-white'
+                              : activeEntitlements.length > 0 || access.isPaidMember
+                              ? 'bg-emerald-600 text-white'
+                              : access.trial.isTrial
+                              ? 'bg-acentoTerracota text-white animate-pulse'
+                              : 'bg-papelKraft/60 text-tintaCarvao'
+                          }`}
+                        >
+                          {access.isAdmin
+                            ? 'acesso vitalício pleno'
+                            : activeEntitlements.length > 0 || access.isPaidMember
+                            ? 'ativa'
+                            : access.trial.isTrial
+                            ? `degustação (${access.trial.hoursRemaining}h restantes)`
+                            : 'leitura protegida'}
+                        </span>
+                      </div>
+                      <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/75 lowercase mt-1 max-w-2xl leading-relaxed">
+                        {access.isAdmin
+                          ? 'você possui acesso livre e vitalício a todas as salas, oficinas, ateliers e ferramentas administrativas.'
+                          : activeEntitlements.length > 0 || access.isPaidMember
+                          ? 'sua presença em nossas travessias está viva. você pode escrever sem limites no atelier, desfrutar dos encontros e partilhar na fogueira.'
+                          : access.trial.isTrial
+                          ? `aproveite para experimentar o ritual de escrita. restam aproximadamente ${
+                              access.trial.daysRemaining > 0
+                                ? `${access.trial.daysRemaining} dias e ${access.trial.hoursRemaining % 24} horas`
+                                : `${access.trial.hoursRemaining} horas`
+                            } de degustação integral livre.`
+                          : 'suas 96 horas de degustação livre terminaram. seus textos continuam salvos com total segurança e você tem direito a 3 publicações por semana na fogueira. para continuar escrevendo novas obras no atelier, escolha uma jornada.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
+                    {access.trial.isExpired && !access.isPaidMember && activeEntitlements.length === 0 ? (
+                      <button
+                        onClick={() => setShowUpgradeModal(true)}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <Sparkles className="w-4 h-4 text-white" />
+                        <span>desbloquear escrita ilimitada</span>
+                      </button>
+                    ) : access.trial.isTrial ? (
+                      <button
+                        onClick={() => setShowUpgradeModal(true)}
+                        className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] lowercase shadow-xs transition-all inline-flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <Sparkles className="w-4 h-4 text-white" />
+                        <span>garantir vaga definitiva</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowUpgradeModal(true)}
+                        className="w-full sm:w-auto px-4 py-2 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-acentoAzul/30 font-corpo text-xs font-bold lowercase shadow-2xs transition-all inline-flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-acentoTerracota" />
+                        <span>explorar novas oficinas</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* CONTADOR VISUAL DE DEGUSTAÇÃO (SE TRIAL ATIVO) */}
+                {access.trial.isTrial && (
+                  <div className="mt-4 pt-4 border-t border-papelKraft/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-corpo text-tintaCarvao/70">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-acentoTerracota" />
+                      <span>
+                        início do período:{' '}
+                        <strong className="text-tintaCarvao font-bold">
+                          {formatDatePtBr(currentUserProfile?.created_at)}
+                        </strong>
+                      </span>
+                      <span className="text-papelKraft">|</span>
+                      <span>
+                        expira em:{' '}
+                        <strong className="text-acentoTerracota font-bold">
+                          {access.trial.expiresAt
+                            ? formatDatePtBr(access.trial.expiresAt.toISOString())
+                            : 'em breve'}
+                        </strong>
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-tintaCarvao/60 italic lowercase">
+                      modo degustação integral: cadernos e publicações livres
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. JORNADAS & ASSINATURAS ATIVAS */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-editorial text-lg font-bold text-acentoAzul lowercase flex items-center gap-2">
+                    <Feather className="w-4 h-4 text-acentoTerracota" />
+                    <span>suas travessias ativas</span>
+                  </h4>
+                  <span className="text-xs font-corpo text-tintaCarvao/60 lowercase">
+                    {activeEntitlements.length}{' '}
+                    {activeEntitlements.length === 1 ? 'jornada ativa' : 'jornadas ativas'}
+                  </span>
+                </div>
+
+                {activeEntitlements.length === 0 ? (
+                  <div className="bg-white/80 p-6 sm:p-8 rounded-3xl border border-papelKraft/40 text-center space-y-3">
+                    <BookOpen className="w-10 h-10 text-papelKraft mx-auto" />
+                    <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/70 lowercase max-w-md mx-auto">
+                      você ainda não possui uma jornada autoral contratada ou bolsa comunitária ativa.
+                    </p>
+                    <div className="pt-2 flex flex-wrap justify-center gap-2">
+                      <button
+                        onClick={() => {
+                          setSelectedProductForPayment('21dias');
+                          setShowPaymentModal(true);
+                        }}
+                        className="px-4 py-2 rounded-xl bg-acentoAzul hover:bg-acentoAzul/90 text-white font-corpo text-xs font-bold lowercase transition-all cursor-pointer"
+                      >
+                        oficina 21 dias
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedProductForPayment('cafe');
+                          setShowPaymentModal(true);
+                        }}
+                        className="px-4 py-2 rounded-xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-corpo text-xs font-bold lowercase transition-all cursor-pointer"
+                      >
+                        café com letras
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedProductForPayment('ciclo');
+                          setShowPaymentModal(true);
+                        }}
+                        className="px-4 py-2 rounded-xl bg-white hover:bg-papelKraft/20 text-acentoAzul border border-acentoAzul/30 font-corpo text-xs font-bold lowercase transition-all cursor-pointer"
+                      >
+                        ciclo de aprofundamento
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {activeEntitlements.map((ent, idx) => {
+                      const meta = getProductMeta(ent.product_slug);
+                      const IconComponent = meta.icon;
+                      const isExpiringSoon =
+                        ent.expires_at &&
+                        new Date(ent.expires_at).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000;
+
+                      return (
+                        <div
+                          key={ent.id || idx}
+                          className="bg-papelClaro p-5 sm:p-6 rounded-2xl border border-papelKraft/40 space-y-4 shadow-xs flex flex-col justify-between"
+                        >
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span
+                                className={`text-[10px] font-bold font-corpo px-2.5 py-0.5 rounded-full lowercase ${meta.bgColor} ${meta.color} border ${meta.borderColor}`}
+                              >
+                                {meta.badge}
+                              </span>
+                              <div className="flex items-center gap-1.5 text-[11px] font-corpo font-bold text-emerald-600">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                                <span>ativa</span>
+                              </div>
+                            </div>
+
+                            <div className="flex items-start gap-3">
+                              <div className={`p-2.5 rounded-xl bg-white border border-papelKraft/40 ${meta.color}`}>
+                                <IconComponent className="w-5 h-5" />
+                              </div>
+                              <div>
+                                <h5 className="font-editorial text-base font-bold text-acentoAzul lowercase leading-tight">
+                                  {meta.title}
+                                </h5>
+                                <p className="text-[11px] font-corpo text-tintaCarvao/60 lowercase mt-0.5">
+                                  origem:{' '}
+                                  {ent.source === 'coupon'
+                                    ? 'bolsa comunitária / cupom'
+                                    : ent.source === 'infinitepay'
+                                    ? 'inscrição confirmada'
+                                    : 'concessão poética'}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="bg-white/80 p-3 rounded-xl border border-papelKraft/30 space-y-1.5 text-xs font-corpo">
+                              <div className="flex items-center justify-between text-tintaCarvao/70">
+                                <span className="flex items-center gap-1">
+                                  <Calendar className="w-3.5 h-3.5 text-tintaCarvao/50" />
+                                  <span>início:</span>
+                                </span>
+                                <span className="font-bold text-tintaCarvao">
+                                  {formatDatePtBr(ent.starts_at)}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between text-tintaCarvao/70">
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3.5 h-3.5 text-tintaCarvao/50" />
+                                  <span>validade / renovação:</span>
+                                </span>
+                                <span
+                                  className={`font-bold ${
+                                    isExpiringSoon ? 'text-acentoTerracota' : 'text-tintaCarvao'
+                                  }`}
+                                >
+                                  {ent.expires_at ? formatDatePtBr(ent.expires_at) : 'acesso vitalício'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="pt-2 border-t border-papelKraft/30 flex items-center justify-between gap-2">
+                            <Link
+                              to={meta.link}
+                              className="text-xs font-bold font-corpo text-acentoAzul hover:underline lowercase flex items-center gap-1"
+                            >
+                              <span>acessar conteúdos</span>
+                              <ChevronRight className="w-3.5 h-3.5" />
+                            </Link>
+
+                            {isExpiringSoon && (
+                              <button
+                                onClick={() => {
+                                  setSelectedProductForPayment(meta.paymentKey);
+                                  setShowPaymentModal(true);
+                                }}
+                                className="px-3 py-1 rounded-lg bg-acentoTerracota text-white text-[11px] font-corpo font-bold lowercase hover:bg-acentoTerracota/90 transition-all cursor-pointer flex items-center gap-1"
+                              >
+                                <RefreshCw className="w-3 h-3" />
+                                <span>renovar ciclo</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* 3. HISTÓRICO DE CICLOS CONCLUÍDOS / EXPIRADOS (SE HOUVER) */}
+              {pastEntitlements.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="font-editorial text-base font-bold text-tintaCarvao/70 lowercase flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-tintaCarvao/50" />
+                    <span>ciclos & jornadas anteriores ({pastEntitlements.length})</span>
+                  </h4>
+
+                  <div className="space-y-2">
+                    {pastEntitlements.map((ent, idx) => {
+                      const meta = getProductMeta(ent.product_slug);
+                      return (
+                        <div
+                          key={ent.id || idx}
+                          className="bg-white/60 p-4 rounded-2xl border border-papelKraft/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-corpo"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-xl bg-papelKraft/20 text-tintaCarvao/60">
+                              <Clock className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <p className="font-bold text-tintaCarvao/80 lowercase">{meta.title}</p>
+                              <p className="text-[11px] text-tintaCarvao/50 lowercase">
+                                encerrado em: {formatDatePtBr(ent.expires_at)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 self-end sm:self-center">
+                            <span className="text-[10px] font-bold text-tintaCarvao/50 px-2 py-0.5 rounded-md bg-papelKraft/30 lowercase">
+                              concluído
+                            </span>
+                            <button
+                              onClick={() => {
+                                setSelectedProductForPayment(meta.paymentKey);
+                                setShowPaymentModal(true);
+                              }}
+                              className="px-3 py-1 rounded-lg bg-white border border-acentoAzul/30 text-acentoAzul hover:bg-acentoAzul hover:text-white text-xs font-bold lowercase transition-all cursor-pointer flex items-center gap-1"
+                            >
+                              <RefreshCw className="w-3 h-3" />
+                              <span>reativar travessia</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* 4. CANAL DE ACOLHIMENTO, DÚVIDAS & SUPORTE */}
+              <div className="bg-white p-6 sm:p-7 rounded-3xl border border-papelKraft/40 space-y-4 shadow-xs">
+                <div className="flex items-start gap-3.5">
+                  <div className="p-3 rounded-2xl bg-acentoTerracota/10 text-acentoTerracota border border-acentoTerracota/20 shrink-0">
+                    <HelpCircle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-editorial text-lg font-bold text-acentoAzul lowercase">
+                      acolhimento humano & suporte da aluna
+                    </h4>
+                    <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/75 lowercase mt-1 leading-relaxed">
+                      precisa transferir sua inscrição, pausar temporariamente seu plano, consultar notas fiscais ou solicitar uma bolsa comunitária? estamos sempre por perto para ouvir você.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-papelKraft/30 flex flex-wrap items-center gap-3">
+                  <a
+                    href="https://wa.me/5548991823637?text=ol%C3%A1!%20preciso%20de%20ajuda%20com%20minha%20assinatura%20ou%20plano%20no%20solta%20o%20verbo."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-corpo text-xs font-bold lowercase transition-all shadow-2xs inline-flex items-center gap-2"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>falar no whatsapp de acolhimento</span>
+                  </a>
+
+                  <a
+                    href="mailto:contato@soltaoverbocoletivo.com?subject=solta%20o%20verbo%20-%20duvida%20sobre%20plano%20ou%20assinatura"
+                    className="px-4 py-2.5 rounded-xl bg-papelClaro hover:bg-papelKraft/20 text-tintaCarvao border border-papelKraft/40 font-corpo text-xs font-bold lowercase transition-all inline-flex items-center gap-2"
+                  >
+                    <Mail className="w-4 h-4 text-acentoAzul" />
+                    <span>escrever para contato@soltaoverbocoletivo.com</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
 
       </div>
@@ -854,6 +1324,28 @@ export default function Profile() {
           onClose={() => setImageToCrop(null)}
         />
       )}
+
+      {/* MODAL DE UPGRADE / ESCOLHA DE JORNADA */}
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        reason={access.trial.isExpired ? 'trial_expired' : 'general'}
+        onSelectProduct={(productKey) => {
+          setSelectedProductForPayment(productKey);
+          setShowPaymentModal(true);
+        }}
+      />
+
+      {/* MODAL DE PAGAMENTO INFINITEPAY */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        product={selectedProductForPayment}
+        productKey={selectedProductForPayment}
+        userEmail={profile?.email || ''}
+        userName={profile?.display_name || ''}
+        userPhone={profile?.whatsapp || ''}
+      />
     </div>
   );
 }
