@@ -50,6 +50,12 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     group: 'geral',
   },
   {
+    id: 'email_flows',
+    label: 'fluxos & automações de e-mail',
+    icon: Mail,
+    group: 'geral',
+  },
+  {
     id: 'programa_21_dias',
     label: '21 dias de escrita',
     icon: BookOpen,
