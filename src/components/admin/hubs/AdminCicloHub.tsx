@@ -21,7 +21,13 @@ export default function AdminCicloHub() {
       {/* CABEÇALHO DO HUB O CICLO */}
       <div className="border-b border-papelKraft/40 pb-4 space-y-1">
         <div className="flex items-center gap-2 mb-1 text-xs font-corpo font-light text-tintaCarvao/70 lowercase tracking-wide">
-          <span className="font-light text-acentoAzul">painel administrativo</span>
+          <button
+            type="button"
+            onClick={() => setSearchParams({ tab: 'dashboard' })}
+            className="font-light text-acentoAzul hover:underline cursor-pointer"
+          >
+            painel administrativo
+          </button>
           <span className="text-tintaCarvao/40 font-light">/</span>
           <span className="font-light text-acentoTerracota">
             ciclo de aprofundamento

@@ -17,6 +17,7 @@ import AdminCicloHub from '../components/admin/hubs/AdminCicloHub';
 import AdminCafeHub from '../components/admin/hubs/AdminCafeHub';
 import AdminExperienciasHub from '../components/admin/hubs/AdminExperienciasHub';
 import StudentInspectionDrawer from '../components/admin/StudentInspectionDrawer';
+import { ADMIN_NAV_ITEMS } from '../components/AdminSidebar';
 import { StudentCourseProgress } from '../types/productHubs';
 import {
   Users,
@@ -376,20 +377,26 @@ export default function Admin() {
         }`}
       >
         
-        {/* BREADCRUMB BAR PARA ABAS DIFERENTES DE DASHBOARD */}
-        {activeTab !== 'dashboard' && (
+        {/* BREADCRUMB BAR PARA ABAS QUE NÃO POSSUEM CABEÇALHO/BREADCRUMB PRÓPRIO */}
+        {!['programa_21_dias', 'programa_ciclo', 'programa_cafe_com_letras', 'contrate_experiencia'].includes(activeTab) && activeTab !== 'dashboard' && (
           <div className="flex items-center justify-between gap-2 border-b border-papelKraft/40 pb-3">
             <div className="flex items-center gap-2 text-xs font-corpo font-light text-tintaCarvao/70 lowercase tracking-wide">
-              <span className="font-light text-acentoAzul">painel administrativo</span>
+              <button
+                type="button"
+                onClick={() => setActiveTab('dashboard')}
+                className="font-light text-acentoAzul hover:underline cursor-pointer"
+              >
+                painel administrativo
+              </button>
               <span className="text-tintaCarvao/40 font-light">/</span>
               <span className="font-light text-acentoTerracota">
-                {activeTab}
+                {ADMIN_NAV_ITEMS.find((item) => item.id === activeTab)?.label || activeTab}
               </span>
               {activeSub && (
                 <>
                   <span className="text-tintaCarvao/40 font-light">/</span>
                   <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul font-light text-[11px]">
-                    {activeSub}
+                    {ADMIN_NAV_ITEMS.find((item) => item.id === activeTab)?.subItems?.find((sub) => sub.id === activeSub)?.label || activeSub}
                   </span>
                 </>
               )}
