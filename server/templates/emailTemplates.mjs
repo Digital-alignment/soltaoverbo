@@ -672,4 +672,102 @@ export function getCafeWelcomeEmailHtml({ displayName, email }) {
   });
 }
 
+/**
+ * 7. Email de Contagem Regressiva de Degustação (72h decorridas · 24h restantes)
+ * Tom afetuoso e acolhedor convidando a aluna a revisitar seus textos guardados
+ * e escolher sua jornada de continuidade no coletivo.
+ */
+export function getTrialCountdownEmailHtml({ displayName, draftsCount = 0 }) {
+  const safeName = (displayName || 'escritora').toLowerCase();
+  const draftsNotice = draftsCount > 0 
+    ? `você já tem <strong>${draftsCount} ${draftsCount === 1 ? 'texto guardado' : 'textos guardados'}</strong> no seu caderno autoral.` 
+    : 'suas palavras escritas até aqui continuam guardadas em segurança na sua estante.';
+
+  const content = `
+    <h1 class="title-serif" style="margin-bottom: 4px;">olá, ${safeName}</h1>
+    <p class="subtitle-terracota" style="margin-bottom: 22px;">faltam 24 horas para o fim da sua degustação livre 𖦹</p>
+
+    <p style="font-size: 15px; line-height: 1.7; margin-bottom: 16px;">
+      escrever é um ato de presença e coragem. durante esses primeiros dias, as portas do atelier e da fogueira estiveram abertas para você experimentar como é ter um refúgio para as suas palavras.
+    </p>
+
+    <div class="quote-box">
+      <p class="quote-text">“a escrita não pede pressa, pede permanência.”</p>
+      <p class="quote-author">solta o verbo colectivo</p>
+    </div>
+
+    <p style="font-size: 14.5px; line-height: 1.65; color: #4A443D; margin-bottom: 20px;">
+      amanhã o período de teste livre chega ao final. ${draftsNotice} mesmo após o término, você poderá reler seus cadernos a qualquer momento.
+    </p>
+
+    <p style="font-size: 14.5px; line-height: 1.65; color: #4A443D; margin-bottom: 24px;">
+      para que você continue escrevendo sem interrupções e faça parte dos nossos rituais ao vivo, aqui estão os dois caminhos abertos no coletivo:
+    </p>
+
+    <!-- Opção 1: Café com Letras -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 22px; margin-bottom: 16px;">
+      <div style="margin-bottom: 6px;">
+        <span style="display: inline-block; padding: 4px 12px; border-radius: 9999px; background-color: #FAF7F0; color: #140D82; font-size: 11px; font-weight: 600; text-transform: lowercase; border: 1px solid #E8DFD0; margin-bottom: 8px;">
+          mensalidade viva
+        </span>
+        <h3 style="font-family: Georgia, serif; font-size: 18px; color: #140D82; margin: 0 0 6px 0; text-transform: lowercase;">
+          café com letras
+        </h3>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 0 0 16px 0;">
+        encontros de escrita ao vivo toda terça-feira das 08h00 às 08h30 pelo zoom, atelier de escrita ilimitado o mês todo e partilha contínua na nossa fogueira.
+      </p>
+      <div>
+        <a href="https://soltaoverbocoletivo.com/cafe-com-letras" target="_blank" style="display: inline-block; background-color: #FD5E32; color: #FFFFFF !important; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 9999px; text-transform: lowercase;">
+          entrar na roda do café →
+        </a>
+      </div>
+    </div>
+
+    <!-- Opção 2: 21 Dias de Escrita -->
+    <div style="background-color: #FFFFFF; border: 1px solid #E8DFD0; border-radius: 18px; padding: 22px; margin-bottom: 22px;">
+      <div style="margin-bottom: 6px;">
+        <span style="display: inline-block; padding: 4px 12px; border-radius: 9999px; background-color: #FAF7F0; color: #140D82; font-size: 11px; font-weight: 600; text-transform: lowercase; border: 1px solid #E8DFD0; margin-bottom: 8px;">
+          jornada autoral de 1 ano
+        </span>
+        <h3 style="font-family: Georgia, serif; font-size: 18px; color: #140D82; margin: 0 0 6px 0; text-transform: lowercase;">
+          21 dias de escrita poética
+        </h3>
+      </div>
+      <p style="font-size: 13.5px; line-height: 1.6; color: #4A443D; margin: 0 0 16px 0;">
+        curso prático completo com 21 exercícios guiados, frequências sonoras binaurais para destravar o fluxo e 1 ano inteiro de atelier de escrita liberado.
+      </p>
+      <div>
+        <a href="https://soltaoverbocoletivo.com/21-dias" target="_blank" style="display: inline-block; background-color: #140D82; color: #FFFFFF !important; text-decoration: none; font-size: 13px; font-weight: 600; padding: 9px 22px; border-radius: 9999px; text-transform: lowercase;">
+          conhecer os 21 dias (r$ 77) →
+        </a>
+      </div>
+    </div>
+
+    <!-- Releitura dos cadernos -->
+    <div style="text-align: center; padding: 12px 0 20px 0;">
+      <p style="font-size: 13.5px; color: #7D7569; margin-bottom: 12px;">
+        prefere reler o que você escreveu durante esses dias antes de escolher?
+      </p>
+      <a href="https://soltaoverbocoletivo.com/exercicios" target="_blank" style="display: inline-block; background-color: #FAF7F0; border: 1px solid #E8DFD0; color: #140D82 !important; text-decoration: none; font-size: 12.5px; font-weight: 600; padding: 8px 20px; border-radius: 9999px; text-transform: lowercase;">
+        abrir meus cadernos no atelier →
+      </a>
+    </div>
+
+    <p style="margin-top: 24px; margin-bottom: 0; font-size: 14px; color: #7D7569; line-height: 1.6;">
+      com carinho pelas suas palavras,<br>
+      <strong style="font-size: 16px; color: #140D82; font-family: Georgia, serif;">Bru e Ju</strong><br>
+      <span style="font-size: 12px; color: #FD5E32; font-weight: 600;">Solta o Verbo</span>
+    </p>
+  `;
+
+  return getEmailBaseWrapper({
+    title: 'sua degustação termina em 24 horas 𖦹',
+    previewText: 'faltam 24 horas para o fim da sua degustação livre. seus textos continuam guardados com carinho.',
+    headerPill: 'solta o verbo · degustação livre 𖦹',
+    content,
+  });
+}
+
+
 

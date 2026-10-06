@@ -53,6 +53,7 @@ import {
   Wand2,
   Eye,
   Compass,
+  Lock,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
 import { BRAND_ASSETS } from '../config/brandAssets';

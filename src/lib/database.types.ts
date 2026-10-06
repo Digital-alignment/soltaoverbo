@@ -27,6 +27,7 @@ export interface Database {
           email_public: string | null
           created_at: string
           updated_at: string
+          trial_reminder_sent_at?: string | null
         }
         Insert: {
           id: string
@@ -40,6 +41,7 @@ export interface Database {
           email_public?: string | null
           created_at?: string
           updated_at?: string
+          trial_reminder_sent_at?: string | null
         }
         Update: {
           id?: string
@@ -53,6 +55,7 @@ export interface Database {
           email_public?: string | null
           created_at?: string
           updated_at?: string
+          trial_reminder_sent_at?: string | null
         }
       }
       courses: {

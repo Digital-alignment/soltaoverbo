@@ -8,6 +8,31 @@
  */
 
 import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// Carrega variáveis do arquivo .env automaticamente caso presentes
+try {
+  const envPath = path.resolve(process.cwd(), '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    for (const line of envContent.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const idx = trimmed.indexOf('=');
+      if (idx !== -1) {
+        const key = trimmed.slice(0, idx).trim();
+        const value = trimmed.slice(idx + 1).trim();
+        if (key && !process.env[key]) {
+          process.env[key] = value;
+        }
+      }
+    }
+  }
+} catch (e) {
+  console.warn('[Env] Falha ao ler .env:', e.message);
+}
+
 import {
   getWelcomeEmailHtml,
   getPaymentConfirmedHtml,
@@ -15,6 +40,7 @@ import {
   getOnboardingStepsEmailHtml,
   get21DiasWelcomeEmailHtml,
   getCafeWelcomeEmailHtml,
+  getTrialCountdownEmailHtml,
 } from './templates/emailTemplates.mjs';
 
 const PORT = parseInt(process.env.PORT || '3001', 10);
@@ -23,6 +49,10 @@ const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Solta o Verbo <ola@c
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'soltaoverbocoletivo@gmail.com';
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://qtdruienammtqodgfqty.supabase.co';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const CRON_SECRET = process.env.CRON_SECRET || '';
+
+// Cache em memória para reforço de idempotência
+const sentTrialRemindersCache = new Set();
 
 /**
  * Envio seguro de e-mails via Resend API
@@ -120,6 +150,207 @@ async function supabaseRest(endpoint, options = {}) {
     throw new Error(`Supabase REST Error (${response.status}): ${errorText}`);
   }
   return await response.json();
+}
+
+/**
+ * Busca e-mail de login real da usuária no Supabase Auth Admin
+ */
+async function fetchAuthUserEmail(userId) {
+  try {
+    const url = `${SUPABASE_URL}/auth/v1/admin/users/${encodeURIComponent(userId)}`;
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.email || null;
+  } catch (err) {
+    console.warn(`[Auth Admin] Falha ao obter e-mail da usuária ${userId}:`, err.message);
+    return null;
+  }
+}
+
+/**
+ * Processador de Lembretes de Contagem Regressiva de Degustação (Fase 1)
+ * Envia e-mail afetuoso faltando ~24h para o término do período de 96h (janela: 70h a 95h após cadastro)
+ */
+async function processTrialCountdownReminders({ dryRun = false, forceUserId = null } = {}) {
+  const now = Date.now();
+  const windowStart = new Date(now - 95 * 60 * 60 * 1000).toISOString(); // 95h atrás
+  const windowEnd = new Date(now - 70 * 60 * 60 * 1000).toISOString();   // 70h atrás
+
+  console.info(`[Trial Countdown Cron] Iniciando verificação... (dryRun: ${dryRun}, forceUser: ${forceUserId || 'nenhum'})`);
+
+  let candidateProfiles = [];
+
+  if (forceUserId) {
+    try {
+      candidateProfiles = await supabaseRest(`users_profiles?id=eq.${encodeURIComponent(forceUserId)}`);
+    } catch (e) {
+      console.error('[Trial Countdown Cron] Erro ao buscar usuária forçada:', e.message);
+      return { success: false, error: e.message };
+    }
+  } else {
+    try {
+      candidateProfiles = await supabaseRest(
+        `users_profiles?created_at=gte.${encodeURIComponent(windowStart)}&created_at=lte.${encodeURIComponent(windowEnd)}&order=created_at.asc`
+      );
+    } catch (e) {
+      console.error('[Trial Countdown Cron] Erro ao buscar candidatas:', e.message);
+      return { success: false, error: e.message };
+    }
+  }
+
+  const results = {
+    totalCandidates: candidateProfiles.length,
+    processed: [],
+    skipped: [],
+    sentCount: 0,
+    dryRun,
+    timestamp: new Date().toISOString(),
+  };
+
+  for (const profile of candidateProfiles) {
+    const userId = profile.id;
+
+    // 1. Pular administradoras ou usuárias pagas
+    if (profile.role === 'admin' || profile.role === 'paid') {
+      results.skipped.push({ userId, reason: `papel_${profile.role}` });
+      continue;
+    }
+
+    // 2. Verificar se já possui entitlements ativos
+    try {
+      const entitlements = await supabaseRest(`user_entitlements?user_id=eq.${encodeURIComponent(userId)}&status=eq.active`);
+      const hasActive = entitlements.some(e => !e.expires_at || new Date(e.expires_at).getTime() > now);
+      if (hasActive) {
+        results.skipped.push({ userId, reason: 'entitlement_ativo' });
+        continue;
+      }
+    } catch (entErr) {
+      console.warn(`[Trial Countdown Cron] Aviso ao checar entitlements de ${userId}:`, entErr.message);
+    }
+
+    // 3. Verificar idempotência via campo no perfil ou cache local em memória
+    if (profile.trial_reminder_sent_at || sentTrialRemindersCache.has(userId)) {
+      results.skipped.push({ userId, reason: 'lembrete_ja_enviado_previamente' });
+      continue;
+    }
+
+    // 4. Verificar idempotência via tabela de notificações in-app
+    try {
+      const existingNotifs = await supabaseRest(
+        `notifications?user_id=eq.${encodeURIComponent(userId)}&title=ilike.*degusta%C3%A7%C3%A3o%20termina*&limit=1`
+      );
+      if (existingNotifs && existingNotifs.length > 0) {
+        sentTrialRemindersCache.add(userId);
+        results.skipped.push({ userId, reason: 'notificacao_ja_existente' });
+        continue;
+      }
+    } catch (notifErr) {
+      console.warn(`[Trial Countdown Cron] Aviso ao checar notificações de ${userId}:`, notifErr.message);
+    }
+
+    // 5. Determinar e-mail de destino
+    let recipientEmail = profile.email_public && profile.email_public.includes('@') ? profile.email_public : null;
+    if (!recipientEmail) {
+      recipientEmail = await fetchAuthUserEmail(userId);
+    }
+
+    if (!recipientEmail) {
+      results.skipped.push({ userId, reason: 'email_nao_localizado' });
+      continue;
+    }
+
+    // 6. Contar rascunhos poéticos para personalizar o e-mail
+    let draftsCount = 0;
+    try {
+      const drafts = await supabaseRest(`writing_exercises?user_id=eq.${encodeURIComponent(userId)}&select=id`);
+      draftsCount = Array.isArray(drafts) ? drafts.length : 0;
+    } catch (draftErr) {
+      console.warn(`[Trial Countdown Cron] Aviso ao contar rascunhos de ${userId}:`, draftErr.message);
+    }
+
+    // 7. Se for dryRun, apenas relata sem disparar e-mail
+    if (dryRun) {
+      results.processed.push({
+        userId,
+        email: recipientEmail,
+        displayName: profile.display_name,
+        draftsCount,
+        status: 'dry_run_elegivel',
+      });
+      continue;
+    }
+
+    // 8. Enviar e-mail de contagem regressiva via Resend
+    try {
+      const emailHtml = getTrialCountdownEmailHtml({
+        displayName: profile.display_name,
+        draftsCount,
+      });
+
+      console.info(`[Trial Countdown Cron] Enviando e-mail de 24h restantes para ${recipientEmail} (${profile.display_name})...`);
+      const emailResult = await sendEmailViaResend({
+        to: recipientEmail,
+        subject: 'sua degustação termina em 24 horas 𖦹',
+        html: emailHtml,
+      });
+
+      // Registrar envio no perfil (se a coluna existir)
+      try {
+        await supabaseRest(`users_profiles?id=eq.${encodeURIComponent(userId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ trial_reminder_sent_at: new Date().toISOString() }),
+        });
+      } catch (patchErr) {
+        console.warn(`[Trial Countdown Cron] Aviso ao atualizar trial_reminder_sent_at no perfil de ${userId}:`, patchErr.message);
+      }
+
+      // Inserir notificação in-app na plataforma
+      try {
+        await supabaseRest('notifications', {
+          method: 'POST',
+          body: JSON.stringify({
+            user_id: userId,
+            type: 'course_update',
+            title: 'sua degustação termina em 24 horas',
+            message: 'faltam 24 horas para o fim da sua degustação livre. seus cadernos continuam guardados com carinho na sua estante!',
+            link: '/exercicios',
+            is_read: false,
+          }),
+        });
+      } catch (notifInsertErr) {
+        console.warn(`[Trial Countdown Cron] Aviso ao criar notificação de ${userId}:`, notifInsertErr.message);
+      }
+
+      // Adicionar ao cache em memória
+      sentTrialRemindersCache.add(userId);
+      results.sentCount += 1;
+      results.processed.push({
+        userId,
+        email: recipientEmail,
+        displayName: profile.display_name,
+        draftsCount,
+        status: 'enviado_com_sucesso',
+        emailResult,
+      });
+    } catch (sendErr) {
+      console.error(`[Trial Countdown Cron] Erro ao enviar e-mail para ${recipientEmail}:`, sendErr.message);
+      results.processed.push({
+        userId,
+        email: recipientEmail,
+        status: 'erro_ao_enviar',
+        error: sendErr.message,
+      });
+    }
+  }
+
+  console.info(`[Trial Countdown Cron] Processamento concluído: ${results.sentCount} e-mails enviados, ${results.skipped.length} ignorados.`);
+  return results;
 }
 
 /**
@@ -261,6 +492,46 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: true, sendResult }));
     } catch (err) {
       console.error('[Onboarding Steps Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message }));
+    }
+    return;
+  }
+
+  // 4. GET / POST /api/cron/trial-countdown-reminders (Lembrete poético das 24h restantes do período de teste)
+  if (
+    (req.method === 'POST' || req.method === 'GET') &&
+    url.pathname === '/api/cron/trial-countdown-reminders'
+  ) {
+    try {
+      const authHeader = req.headers['authorization'] || '';
+      const secretHeader = req.headers['x-cron-secret'] || '';
+      const querySecret = url.searchParams.get('secret') || '';
+      const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
+
+      if (CRON_SECRET) {
+        const matches = secretHeader === CRON_SECRET || bearerToken === CRON_SECRET || querySecret === CRON_SECRET;
+        if (!matches) {
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Acesso não autorizado ao endpoint de cron' }));
+          return;
+        }
+      }
+
+      let bodyData = {};
+      if (req.method === 'POST') {
+        bodyData = await parseJsonBody().catch(() => ({}));
+      }
+
+      const dryRun = url.searchParams.get('dryRun') === 'true' || bodyData.dryRun === true;
+      const forceUserId = url.searchParams.get('forceUserId') || bodyData.forceUserId || null;
+
+      const result = await processTrialCountdownReminders({ dryRun, forceUserId });
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(result));
+    } catch (err) {
+      console.error('[Cron Trial Countdown Error]:', err);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: err.message }));
     }
@@ -527,4 +798,18 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.info(`[soltaoverbo-api] Servidor ativo ouvindo na porta ${PORT}`);
+
+  // Agendador autônomo periódico para lembretes de contagem regressiva (a cada 30 minutos)
+  const THIRTY_MINUTES_MS = 30 * 60 * 1000;
+  setTimeout(() => {
+    processTrialCountdownReminders().catch(err => {
+      console.error('[Trial Countdown Scheduler Exception]:', err);
+    });
+    setInterval(() => {
+      processTrialCountdownReminders().catch(err => {
+        console.error('[Trial Countdown Scheduler Exception]:', err);
+      });
+    }, THIRTY_MINUTES_MS);
+  }, 60 * 1000); // Primeiro ciclo inicia 1 minuto após o boot
 });
+
