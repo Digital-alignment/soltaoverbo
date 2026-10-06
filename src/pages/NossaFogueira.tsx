@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -26,6 +26,7 @@ import type { Database } from '../lib/database.types';
 import { useUserAccess } from '../hooks/useUserAccess';
 import UpgradeModal from '../components/UpgradeModal';
 import PaymentModal from '../components/PaymentModal';
+import AntologiaView from '../components/AntologiaView';
 
 type CommunityPost = Database['public']['Tables']['community_posts']['Row'] & {
   writing_exercise: Database['public']['Tables']['writing_exercises']['Row'];
@@ -40,6 +41,18 @@ type Comment = Database['public']['Tables']['comments']['Row'] & {
 
 export default function NossaFogueira() {
   const { profile } = useAuth();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeMainTab = (location.pathname === '/antologia' || searchParams.get('tab') === 'antologia') ? 'antologia' : 'partilhas';
+
+  const handleSwitchTab = (tab: 'partilhas' | 'antologia') => {
+    if (tab === 'antologia') {
+      setSearchParams({ tab: 'antologia' });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   const { canPostToFogueira, isTrialExpired, isPaidMember, weeklyPostsCount, weeklyPostsLimit } = useUserAccess();
   const [allPosts, setAllPosts] = useState<CommunityPost[]>([]);
   const [displayedPosts, setDisplayedPosts] = useState<CommunityPost[]>([]);
@@ -454,8 +467,50 @@ export default function NossaFogueira() {
           </div>
         </div>
 
-        {/* BARRA DE FILTROS & CAMPO DE BUSCA (MOBILE SAFE ROLAGEM) */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-papelClaro p-3 rounded-2xl border border-papelKraft/40 shadow-xs">
+        {/* NAVEGAÇÃO PRINCIPAL DA FOGUEIRA: partilhas vs antologia */}
+        <div className="flex items-center gap-2 border-b border-papelKraft/40 pb-3">
+          <button
+            type="button"
+            onClick={() => handleSwitchTab('partilhas')}
+            className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+              activeMainTab === 'partilhas'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white text-tintaCarvao/70 hover:bg-papelClaro border border-papelKraft/40'
+            }`}
+          >
+            <Flame className="w-4 h-4 text-acentoTerracota" />
+            <span>partilhas da fogueira</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleSwitchTab('antologia')}
+            className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold font-corpo lowercase transition-all flex items-center gap-2 cursor-pointer ${
+              activeMainTab === 'antologia'
+                ? 'bg-acentoAzul text-white shadow-xs'
+                : 'bg-white text-tintaCarvao/70 hover:bg-papelClaro border border-papelKraft/40'
+            }`}
+          >
+            <BookOpen className="w-4 h-4 text-acentoTerracota" />
+            <span>antologia do mês</span>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                activeMainTab === 'antologia'
+                  ? 'bg-white/20 text-white'
+                  : 'bg-acentoTerracota/15 text-acentoTerracota'
+              }`}
+            >
+              curadoria
+            </span>
+          </button>
+        </div>
+
+        {activeMainTab === 'antologia' ? (
+          <AntologiaView onBackToFogueira={() => handleSwitchTab('partilhas')} />
+        ) : (
+          <>
+            {/* BARRA DE FILTROS & CAMPO DE BUSCA (MOBILE SAFE ROLAGEM) */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-papelClaro p-3 rounded-2xl border border-papelKraft/40 shadow-xs">
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
             <button
               onClick={() => setSelectedFilter('todos')}
@@ -830,6 +885,8 @@ export default function NossaFogueira() {
               </div>
             )}
           </div>
+        )}
+          </>
         )}
 
         {/* MODAL POÉTICO DE UPGRADE (Fogueira Quota / Planos) */}

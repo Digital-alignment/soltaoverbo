@@ -174,6 +174,41 @@ async function fetchAuthUserEmail(userId) {
 }
 
 /**
+ * Popula posts em destaque da antologia com dados de exercício e perfil de autora
+ */
+async function populateFeaturedPosts(postIds) {
+  if (!postIds || postIds.length === 0) return [];
+  try {
+    const filter = postIds.map(id => `id.eq.${id}`).join(',');
+    const posts = await supabaseRest(`community_posts?or=(${filter})&select=id,writing_exercise_id,user_id,likes_count,comments_count,published_at`);
+    if (!posts || posts.length === 0) return [];
+
+    const exerciseIds = [...new Set(posts.map(p => p.writing_exercise_id).filter(Boolean))];
+    const userIds = [...new Set(posts.map(p => p.user_id).filter(Boolean))];
+
+    const [exercises, users] = await Promise.all([
+      exerciseIds.length > 0 ? supabaseRest(`writing_exercises?or=(${exerciseIds.map(id => `id.eq.${id}`).join(',')})&select=id,title,content,created_at`) : [],
+      userIds.length > 0 ? supabaseRest(`users_profiles?or=(${userIds.map(id => `id.eq.${id}`).join(',')})&select=id,display_name,avatar_url,bio`) : [],
+    ]);
+
+    const exMap = new Map((exercises || []).map(e => [e.id, e]));
+    const usrMap = new Map((users || []).map(u => [u.id, u]));
+
+    const populated = posts.map(p => ({
+      ...p,
+      writing_exercise: exMap.get(p.writing_exercise_id) || null,
+      user_profile: usrMap.get(p.user_id) || null,
+    }));
+
+    const orderMap = new Map(postIds.map((id, idx) => [id, idx]));
+    return populated.sort((a, b) => (orderMap.get(a.id) ?? 999) - (orderMap.get(b.id) ?? 999));
+  } catch (err) {
+    console.warn('[Anthology Populate Error]:', err.message);
+    return [];
+  }
+}
+
+/**
  * Processador de Lembretes de Contagem Regressiva de Degustação (Fase 1)
  * Envia e-mail afetuoso faltando ~24h para o término do período de 96h (janela: 70h a 95h após cadastro)
  */
@@ -764,6 +799,202 @@ const server = http.createServer(async (req, res) => {
       }));
     } catch (err) {
       console.error('[Coupon Redeem Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 6. ROTAS DE ANTOLOGIA MENSAL DA FOGUEIRA (Fase 4)
+  // GET /api/anthologies
+  if (req.method === 'GET' && url.pathname === '/api/anthologies') {
+    try {
+      const includeDrafts = url.searchParams.get('includeDrafts') === 'true';
+      let endpoint = 'fogueira_anthologies?order=year.desc,month.desc';
+      if (!includeDrafts) {
+        endpoint += '&published=eq.true';
+      }
+
+      let anthologies = [];
+      try {
+        anthologies = await supabaseRest(endpoint);
+      } catch (dbErr) {
+        console.warn('[Anthologies API] Falha ao consultar fogueira_anthologies:', dbErr.message);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ anthologies: [] }));
+        return;
+      }
+
+      // Popular posts para cada antologia
+      const populatedAnthologies = await Promise.all(
+        (anthologies || []).map(async (ant) => {
+          if (!ant.featured_post_ids || ant.featured_post_ids.length === 0) {
+            return { ...ant, featured_posts: [] };
+          }
+          const posts = await populateFeaturedPosts(ant.featured_post_ids);
+          return { ...ant, featured_posts: posts };
+        })
+      );
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ anthologies: populatedAnthologies }));
+    } catch (err) {
+      console.error('[Anthologies API Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message, anthologies: [] }));
+    }
+    return;
+  }
+
+  // GET /api/anthologies/month-candidates?month=X&year=Y
+  if (req.method === 'GET' && url.pathname === '/api/anthologies/month-candidates') {
+    try {
+      const month = parseInt(url.searchParams.get('month') || `${new Date().getMonth() + 1}`, 10);
+      const year = parseInt(url.searchParams.get('year') || `${new Date().getFullYear()}`, 10);
+
+      const startDate = new Date(year, month - 1, 1).toISOString();
+      const endDate = new Date(year, month, 0, 23, 59, 59, 999).toISOString();
+
+      let posts = [];
+      try {
+        posts = await supabaseRest(
+          `community_posts?hidden_from_fogueira=eq.false&published_at=gte.${encodeURIComponent(startDate)}&published_at=lte.${encodeURIComponent(endDate)}&order=likes_count.desc&limit=30`
+        );
+      } catch (fetchErr) {
+        console.warn('[Anthologies Candidates DB Error]:', fetchErr.message);
+        posts = [];
+      }
+
+      if (!posts || posts.length === 0) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ candidates: [] }));
+        return;
+      }
+
+      const exerciseIds = [...new Set(posts.map(p => p.writing_exercise_id).filter(Boolean))];
+      const userIds = [...new Set(posts.map(p => p.user_id).filter(Boolean))];
+
+      const [exercises, users] = await Promise.all([
+        exerciseIds.length > 0 ? supabaseRest(`writing_exercises?or=(${exerciseIds.map(id => `id.eq.${id}`).join(',')})&select=id,title,content,created_at`) : [],
+        userIds.length > 0 ? supabaseRest(`users_profiles?or=(${userIds.map(id => `id.eq.${id}`).join(',')})&select=id,display_name,avatar_url,bio`) : [],
+      ]);
+
+      const exMap = new Map((exercises || []).map(e => [e.id, e]));
+      const usrMap = new Map((users || []).map(u => [u.id, u]));
+
+      const candidates = posts.map(p => ({
+        ...p,
+        writing_exercise: exMap.get(p.writing_exercise_id) || null,
+        user_profile: usrMap.get(p.user_id) || null,
+      }));
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ candidates }));
+    } catch (err) {
+      console.error('[Anthologies Candidates Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message, candidates: [] }));
+    }
+    return;
+  }
+
+  // POST /api/anthologies (Criar ou atualizar antologia)
+  if (req.method === 'POST' && url.pathname === '/api/anthologies') {
+    try {
+      const payload = await parseJsonBody();
+      const { id, title, month, year, curator_note, cover_image_url, featured_post_ids, published } = payload;
+
+      if (!title || !month || !year) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Título, mês e ano são obrigatórios' }));
+        return;
+      }
+
+      const record = {
+        title: title.trim().toLowerCase(),
+        month: parseInt(month, 10),
+        year: parseInt(year, 10),
+        curator_note: curator_note || null,
+        cover_image_url: cover_image_url || null,
+        featured_post_ids: featured_post_ids || [],
+        published: published ?? false,
+        published_at: published ? new Date().toISOString() : null,
+        updated_at: new Date().toISOString(),
+      };
+
+      let result;
+      if (id) {
+        result = await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify(record),
+          headers: { 'Prefer': 'return=representation' },
+        });
+      } else {
+        result = await supabaseRest('fogueira_anthologies', {
+          method: 'POST',
+          body: JSON.stringify(record),
+          headers: { 'Prefer': 'return=representation' },
+        });
+      }
+
+      const saved = Array.isArray(result) ? result[0] : result;
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, anthology: saved }));
+    } catch (err) {
+      console.error('[Anthologies Save Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // POST /api/anthologies/toggle-publish
+  if (req.method === 'POST' && url.pathname === '/api/anthologies/toggle-publish') {
+    try {
+      const { id, published } = await parseJsonBody();
+      if (!id) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'ID da antologia não informado' }));
+        return;
+      }
+
+      await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          published: !!published,
+          published_at: published ? new Date().toISOString() : null,
+          updated_at: new Date().toISOString(),
+        }),
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      console.error('[Anthologies Toggle Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // DELETE /api/anthologies
+  if (req.method === 'DELETE' && url.pathname === '/api/anthologies') {
+    try {
+      const { id } = await parseJsonBody();
+      if (!id) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'ID não informado' }));
+        return;
+      }
+
+      await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      console.error('[Anthologies Delete Error]:', err);
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, error: err.message }));
     }

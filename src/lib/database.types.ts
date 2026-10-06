@@ -603,6 +603,47 @@ export interface Database {
           redeemed_at?: string
         }
       }
+      fogueira_anthologies: {
+        Row: {
+          id: string
+          title: string
+          month: number
+          year: number
+          curator_note: string | null
+          cover_image_url: string | null
+          featured_post_ids: string[]
+          published: boolean
+          published_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          month: number
+          year: number
+          curator_note?: string | null
+          cover_image_url?: string | null
+          featured_post_ids?: string[]
+          published?: boolean
+          published_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          month?: number
+          year?: number
+          curator_note?: string | null
+          cover_image_url?: string | null
+          featured_post_ids?: string[]
+          published?: boolean
+          published_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

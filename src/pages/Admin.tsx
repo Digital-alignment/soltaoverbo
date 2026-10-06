@@ -12,6 +12,7 @@ import CheckoutAnalytics from '../components/CheckoutAnalytics';
 import AdminFinancasManager from '../components/AdminFinancasManager';
 import AdminEmailFlowsManager from '../components/AdminEmailFlowsManager';
 import AdminCouponsManager from '../components/AdminCouponsManager';
+import AdminAnthologyManager from '../components/AdminAnthologyManager';
 import PageContentManagement from '../components/PageContentManagement';
 import MediaGalleryManagement from '../components/MediaGalleryManagement';
 import Admin21DiasHub from '../components/admin/hubs/Admin21DiasHub';
@@ -57,6 +58,7 @@ const VALID_TABS = [
   'dashboard',
   'financas',
   'cupons',
+  'antologia',
   'email_flows',
   'programa_21_dias',
   'programa_ciclo',
@@ -945,6 +947,11 @@ export default function Admin() {
         {/* ABA CUPONS & BOLSAS COMUNITÁRIAS */}
         {activeTab === 'cupons' && (
           <AdminCouponsManager />
+        )}
+
+        {/* ABA ANTOLOGIA MENSAL DA FOGUEIRA */}
+        {activeTab === 'antologia' && (
+          <AdminAnthologyManager />
         )}
 
         {/* ABA 8: GESTÃO DE PÁGINAS DO SITE (CMS) */}

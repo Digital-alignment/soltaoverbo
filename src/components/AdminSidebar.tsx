@@ -27,6 +27,7 @@ import {
   Briefcase,
   CreditCard,
   Tag,
+  Sparkles,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -54,6 +55,12 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     id: 'cupons',
     label: 'cupons & bolsas comunitárias',
     icon: Tag,
+    group: 'geral',
+  },
+  {
+    id: 'antologia',
+    label: 'antologia da fogueira',
+    icon: Sparkles,
     group: 'geral',
   },
   {

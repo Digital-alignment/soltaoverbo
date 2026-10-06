@@ -109,6 +109,15 @@ function AppContent() {
           />
 
           <Route
+            path="/antologia"
+            element={
+              <ProtectedRoute>
+                <NossaFogueira />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/profile"
             element={
               <ProtectedRoute>
