@@ -26,6 +26,7 @@ import {
   RefreshCw,
   Briefcase,
   CreditCard,
+  Tag,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -47,6 +48,12 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     id: 'financas',
     label: 'finanças & assinaturas',
     icon: CreditCard,
+    group: 'geral',
+  },
+  {
+    id: 'cupons',
+    label: 'cupons & bolsas comunitárias',
+    icon: Tag,
     group: 'geral',
   },
   {

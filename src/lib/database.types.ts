@@ -521,6 +521,88 @@ export interface Database {
           updated_at?: string
         }
       }
+      coupons: {
+        Row: {
+          id: string
+          code: string
+          description: string | null
+          type: 'trial_extension' | 'discount_percent' | 'free_access'
+          benefit_value: number
+          product_target: 'all' | '21_dias' | 'cafe_com_letras' | 'ciclo_aprofundamento'
+          max_uses: number | null
+          used_count: number
+          expires_at: string | null
+          active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          code: string
+          description?: string | null
+          type: 'trial_extension' | 'discount_percent' | 'free_access'
+          benefit_value: number
+          product_target?: 'all' | '21_dias' | 'cafe_com_letras' | 'ciclo_aprofundamento'
+          max_uses?: number | null
+          used_count?: number
+          expires_at?: string | null
+          active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          code?: string
+          description?: string | null
+          type?: 'trial_extension' | 'discount_percent' | 'free_access'
+          benefit_value?: number
+          product_target?: 'all' | '21_dias' | 'cafe_com_letras' | 'ciclo_aprofundamento'
+          max_uses?: number | null
+          used_count?: number
+          expires_at?: string | null
+          active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      coupon_redemptions: {
+        Row: {
+          id: string
+          coupon_id: string
+          coupon_code: string
+          user_id: string
+          user_email: string | null
+          benefit_type: string
+          benefit_value: number
+          product_slug: string | null
+          metadata: Json
+          redeemed_at: string
+        }
+        Insert: {
+          id?: string
+          coupon_id: string
+          coupon_code: string
+          user_id: string
+          user_email?: string | null
+          benefit_type: string
+          benefit_value: number
+          product_slug?: string | null
+          metadata?: Json
+          redeemed_at?: string
+        }
+        Update: {
+          id?: string
+          coupon_id?: string
+          coupon_code?: string
+          user_id?: string
+          user_email?: string | null
+          benefit_type?: string
+          benefit_value?: number
+          product_slug?: string | null
+          metadata?: Json
+          redeemed_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

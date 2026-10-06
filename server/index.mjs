@@ -538,7 +538,239 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 3. POST /api/webhooks/infinitepay (Confirmação de pagamento InfinitePay)
+  // 5. POST /api/coupons/validate (Validação de cupom poético)
+  if (req.method === 'POST' && url.pathname === '/api/coupons/validate') {
+    try {
+      const { code, productSlug, userId } = await parseJsonBody();
+      const cleanCode = (code || '').trim().toUpperCase();
+
+      if (!cleanCode) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ valid: false, error: 'Código de cupom não informado' }));
+        return;
+      }
+
+      const coupons = await supabaseRest(`coupons?code=eq.${encodeURIComponent(cleanCode)}&limit=1`);
+      if (!coupons || coupons.length === 0) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ valid: false, error: 'Código de cupom não encontrado ou inválido' }));
+        return;
+      }
+
+      const coupon = coupons[0];
+
+      if (!coupon.active) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ valid: false, error: 'Este cupom foi desativado' }));
+        return;
+      }
+
+      if (coupon.expires_at && new Date(coupon.expires_at).getTime() < Date.now()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ valid: false, error: 'Este cupom já expirou' }));
+        return;
+      }
+
+      if (coupon.max_uses !== null && coupon.used_count >= coupon.max_uses) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ valid: false, error: 'Este cupom atingiu o limite máximo de utilizações' }));
+        return;
+      }
+
+      if (coupon.product_target !== 'all' && productSlug && productSlug !== 'all' && coupon.product_target !== productSlug) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          valid: false,
+          error: `Este cupom é exclusivo para ${coupon.product_target === '21_dias' ? 'a oficina 21 dias' : coupon.product_target === 'cafe_com_letras' ? 'o café com letras' : 'o ciclo de aprofundamento'}.`,
+        }));
+        return;
+      }
+
+      if (userId) {
+        const redemptions = await supabaseRest(`coupon_redemptions?coupon_id=eq.${encodeURIComponent(coupon.id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`);
+        if (redemptions && redemptions.length > 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ valid: false, error: 'Você já resgatou este cupom anteriormente' }));
+          return;
+        }
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        valid: true,
+        coupon,
+        message:
+          coupon.type === 'free_access'
+            ? 'Bolsa comunitária 100% integral disponível!'
+            : coupon.type === 'trial_extension'
+            ? `Extensão de degustação por +${coupon.benefit_value} dias!`
+            : `Desconto de ${coupon.benefit_value}% aplicado com afeto!`,
+      }));
+    } catch (err) {
+      console.error('[Coupon Validate Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ valid: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 6. POST /api/coupons/redeem (Resgate e aplicação de cupom / bolsa comunitária)
+  if (req.method === 'POST' && url.pathname === '/api/coupons/redeem') {
+    try {
+      const { code, productSlug, userId, userEmail } = await parseJsonBody();
+      const cleanCode = (code || '').trim().toUpperCase();
+
+      if (!cleanCode || !userId) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Código e usuário são obrigatórios para resgate' }));
+        return;
+      }
+
+      const coupons = await supabaseRest(`coupons?code=eq.${encodeURIComponent(cleanCode)}&limit=1`);
+      if (!coupons || coupons.length === 0) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Cupom não encontrado' }));
+        return;
+      }
+
+      const coupon = coupons[0];
+
+      if (!coupon.active) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Este cupom foi desativado' }));
+        return;
+      }
+
+      if (coupon.expires_at && new Date(coupon.expires_at).getTime() < Date.now()) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Este cupom já expirou' }));
+        return;
+      }
+
+      if (coupon.max_uses !== null && coupon.used_count >= coupon.max_uses) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Limite de utilizações atingido' }));
+        return;
+      }
+
+      const redemptions = await supabaseRest(`coupon_redemptions?coupon_id=eq.${encodeURIComponent(coupon.id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`);
+      if (redemptions && redemptions.length > 0) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Você já resgatou este cupom anteriormente' }));
+        return;
+      }
+
+      // Determinar produto
+      const finalProductSlug =
+        coupon.product_target === 'all'
+          ? (!productSlug || productSlug === 'all' ? '21_dias' : productSlug)
+          : coupon.product_target;
+
+      let expiresAt = null;
+      let durationDays = 365;
+
+      if (coupon.type === 'trial_extension') {
+        durationDays = Number(coupon.benefit_value) || 30;
+        expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+      } else if (coupon.type === 'free_access') {
+        durationDays = finalProductSlug === 'cafe_com_letras' ? 30 : 365;
+        expiresAt = new Date(Date.now() + durationDays * 24 * 60 * 60 * 1000).toISOString();
+      }
+
+      // 1. Inserir entitlement
+      let entitlementData = null;
+      try {
+        const entRes = await supabaseRest('user_entitlements', {
+          method: 'POST',
+          body: JSON.stringify({
+            user_id: userId,
+            product_slug: coupon.type === 'trial_extension' ? 'degustacao_estendida' : finalProductSlug,
+            status: 'active',
+            source: 'coupon',
+            order_id: `coupon-${coupon.code}`,
+            starts_at: new Date().toISOString(),
+            expires_at: expiresAt,
+            metadata: {
+              coupon_code: coupon.code,
+              benefit_type: coupon.type,
+              benefit_value: coupon.benefit_value,
+            },
+          }),
+        });
+        entitlementData = entRes;
+      } catch (entErr) {
+        console.warn('[Coupon Redeem] Aviso ao registrar user_entitlements:', entErr.message);
+      }
+
+      // 2. Atualizar papel da usuária para 'paid'
+      try {
+        await supabaseRest(`users_profiles?id=eq.${encodeURIComponent(userId)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ role: 'paid' }),
+        });
+      } catch (profileErr) {
+        console.warn('[Coupon Redeem] Aviso ao atualizar users_profiles:', profileErr.message);
+      }
+
+      // 3. Incrementar used_count do cupom
+      try {
+        await supabaseRest(`coupons?id=eq.${encodeURIComponent(coupon.id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ used_count: coupon.used_count + 1 }),
+        });
+      } catch (cupErr) {
+        console.warn('[Coupon Redeem] Aviso ao incrementar used_count:', cupErr.message);
+      }
+
+      // 4. Inserir registro em coupon_redemptions
+      try {
+        await supabaseRest('coupon_redemptions', {
+          method: 'POST',
+          body: JSON.stringify({
+            coupon_id: coupon.id,
+            coupon_code: coupon.code,
+            user_id: userId,
+            user_email: userEmail || null,
+            benefit_type: coupon.type,
+            benefit_value: coupon.benefit_value,
+            product_slug: finalProductSlug,
+          }),
+        });
+      } catch (redErr) {
+        console.warn('[Coupon Redeem] Aviso ao registrar coupon_redemptions:', redErr.message);
+      }
+
+      // 5. Inserir notificação in-app
+      try {
+        await supabaseRest('notifications', {
+          method: 'POST',
+          body: JSON.stringify({
+            user_id: userId,
+            type: 'system',
+            title: 'bolsa / cupom ativado com afeto ✨',
+            message: `seu código ${coupon.code} foi ativado com sucesso! aproveite a sua jornada.`,
+            is_read: false,
+          }),
+        });
+      } catch (notifErr) {
+        // silencioso
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        message: `código ${coupon.code} ativado com afeto! seus benefícios já estão livres.`,
+        entitlement: entitlementData,
+      }));
+    } catch (err) {
+      console.error('[Coupon Redeem Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // 7. POST /api/webhooks/infinitepay (Confirmação de pagamento InfinitePay)
   if (req.method === 'POST' && (url.pathname === '/api/webhooks/infinitepay' || url.pathname === '/api/infinitepay-webhook')) {
     try {
       const payload = await parseJsonBody();
@@ -569,10 +801,12 @@ const server = http.createServer(async (req, res) => {
       let customerName = customer?.name || null;
 
       // 1. Localizar tentativa de checkout pelo order_nsu
+      let checkoutAttempt = null;
       if (order_nsu) {
         try {
           const attempts = await supabaseRest(`checkout_attempts?order_nsu=eq.${encodeURIComponent(order_nsu)}&order=attempted_at.desc&limit=1`);
           if (attempts && attempts.length > 0) {
+            checkoutAttempt = attempts[0];
             userId = attempts[0].user_id;
             if (!customerEmail) customerEmail = attempts[0].email;
           }
@@ -603,19 +837,37 @@ const server = http.createServer(async (req, res) => {
             body: JSON.stringify({ role: 'paid' }),
           });
 
-          // Determinar produto comprado a partir de valor e itens
+          // Determinar produto comprado a partir de valor, descrição e tentativa original de checkout
           const paidCents = paid_amount || amount || 0;
           const itemsDesc = (items && items[0]?.description) ? items[0].description.toLowerCase() : '';
+          const attemptPlan = (checkoutAttempt?.plan_type || '').toLowerCase();
           let productSlug = 'ciclo_aprofundamento'; // Default bundle
           let durationDays = 365;
 
-          if (paidCents === 7700 || itemsDesc.includes('21 dias') || itemsDesc.includes('21_dias')) {
+          if (
+            paidCents === 7700 ||
+            itemsDesc.includes('21 dias') ||
+            itemsDesc.includes('21_dias') ||
+            attemptPlan.includes('21 dias') ||
+            attemptPlan.includes('21_dias')
+          ) {
             productSlug = '21_dias';
             durationDays = 365;
-          } else if (itemsDesc.includes('cafe') || itemsDesc.includes('café') || itemsDesc.includes('mensal')) {
+          } else if (
+            itemsDesc.includes('cafe') ||
+            itemsDesc.includes('café') ||
+            itemsDesc.includes('mensal') ||
+            attemptPlan.includes('cafe') ||
+            attemptPlan.includes('café')
+          ) {
             productSlug = 'cafe_com_letras';
             durationDays = 30;
-          } else if (itemsDesc.includes('ciclo') || itemsDesc.includes('aprofundamento')) {
+          } else if (
+            itemsDesc.includes('ciclo') ||
+            itemsDesc.includes('aprofundamento') ||
+            attemptPlan.includes('ciclo') ||
+            attemptPlan.includes('aprofundamento')
+          ) {
             productSlug = 'ciclo_aprofundamento';
             durationDays = 365;
           }
@@ -660,6 +912,37 @@ const server = http.createServer(async (req, res) => {
               completed_installments: 1,
             }),
           });
+
+          // Se houve cupom aplicado nesta tentativa de checkout, registrar e incrementar uso
+          const appliedCouponCode = checkoutAttempt?.coupon_code || checkoutAttempt?.metadata?.coupon_code;
+          if (appliedCouponCode) {
+            try {
+              const cupList = await supabaseRest(`coupons?code=eq.${encodeURIComponent(appliedCouponCode)}&limit=1`);
+              if (cupList && cupList.length > 0) {
+                const cup = cupList[0];
+                await supabaseRest(`coupons?id=eq.${encodeURIComponent(cup.id)}`, {
+                  method: 'PATCH',
+                  body: JSON.stringify({ used_count: (cup.used_count || 0) + 1 }),
+                });
+                await supabaseRest('coupon_redemptions', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                    coupon_id: cup.id,
+                    coupon_code: cup.code,
+                    user_id: userId,
+                    user_email: customerEmail,
+                    benefit_type: cup.type,
+                    benefit_value: cup.benefit_value,
+                    product_slug: productSlug,
+                    metadata: { order_nsu, transaction_nsu, paid_amount: paidCents },
+                  }),
+                });
+                console.info(`[Webhook] Redenção de cupom ${cup.code} registrada com sucesso para usuária ${userId}`);
+              }
+            } catch (cupLogErr) {
+              console.warn('[Webhook] Aviso ao registrar redenção de cupom:', cupLogErr.message);
+            }
+          }
 
           // Insere notificação in-app
           await supabaseRest('notifications', {

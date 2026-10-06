@@ -37,7 +37,9 @@ import {
   ShieldCheck,
   Lock,
   HelpCircle,
+  Tag,
 } from 'lucide-react';
+import { redeemCoupon } from '../lib/coupons';
 import { getWordPreview, stripHtmlTags } from '../utils/textProcessing';
 import type { Database } from '../lib/database.types';
 
@@ -90,6 +92,17 @@ function getProductMeta(slug: string) {
         paymentKey: 'ciclo' as ProductKey,
         link: '/courses',
       };
+    case 'degustacao_estendida':
+      return {
+        title: 'degustação estendida (bolsa comunitária)',
+        badge: 'bolsa de acolhimento',
+        icon: Sparkles,
+        color: 'text-acentoTerracota',
+        bgColor: 'bg-acentoTerracota/10',
+        borderColor: 'border-acentoTerracota/30',
+        paymentKey: '21dias' as ProductKey,
+        link: '/exercises',
+      };
     default:
       return {
         title: slug.replace(/_/g, ' '),
@@ -136,6 +149,45 @@ export default function Profile() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedProductForPayment, setSelectedProductForPayment] = useState<ProductKey>('21dias');
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string>('');
+
+  // CONTROLE DE CUPONS & BOLSAS COMUNITÁRIAS (FASE 3)
+  const [profileCouponInput, setProfileCouponInput] = useState('');
+  const [redeemingProfileCoupon, setRedeemingProfileCoupon] = useState(false);
+  const [profileCouponMessage, setProfileCouponMessage] = useState('');
+  const [profileCouponError, setProfileCouponError] = useState('');
+
+  const handleRedeemCouponFromProfile = async () => {
+    const code = profileCouponInput.trim();
+    if (!code) {
+      setProfileCouponError('digite um código de cupom ou bolsa.');
+      return;
+    }
+
+    setRedeemingProfileCoupon(true);
+    setProfileCouponError('');
+    setProfileCouponMessage('');
+
+    try {
+      const res = await redeemCoupon({
+        code,
+        userId: currentUserProfile?.id || '',
+        userEmail: currentUserProfile?.email_public || '',
+      });
+
+      if (!res.success) {
+        setProfileCouponError(res.error || 'não foi possível ativar este código.');
+      } else {
+        setProfileCouponMessage(res.message || 'código ativado com afeto!');
+        setProfileCouponInput('');
+        await access.refreshAccess();
+      }
+    } catch (err: any) {
+      setProfileCouponError(err.message || 'erro ao resgatar código.');
+    } finally {
+      setRedeemingProfileCoupon(false);
+    }
+  };
 
   const activeEntitlements = useMemo(() => {
     return (access.entitlements || []).filter((e) => {
@@ -1266,6 +1318,68 @@ export default function Profile() {
                 </div>
               )}
 
+              {/* RESGATE DE BOLSA COMUNITÁRIA OU CUPOM (FASE 3) */}
+              <div className="bg-white p-5 sm:p-6 rounded-3xl border border-papelKraft/40 shadow-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-acentoTerracota" />
+                    <h4 className="font-editorial text-base font-bold text-acentoAzul lowercase">
+                      resgatar cupom ou bolsa comunitária
+                    </h4>
+                  </div>
+                  <span className="text-[10px] text-tintaCarvao/60 font-corpo lowercase">
+                    código poético de acesso
+                  </span>
+                </div>
+                <p className="text-xs font-corpo text-tintaCarvao/75 lowercase leading-relaxed">
+                  recebeu um código da facilitadora para extensão de degustação ou bolsa comunitária? insira abaixo para ativar seu benefício imediato:
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                  <input
+                    type="text"
+                    value={profileCouponInput}
+                    onChange={(e) => {
+                      setProfileCouponInput(e.target.value.toUpperCase());
+                      setProfileCouponError('');
+                      setProfileCouponMessage('');
+                    }}
+                    placeholder="ex: LIRICA2026, COLETIVOAFETO"
+                    className="flex-1 px-3.5 py-2 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs font-corpo uppercase tracking-wider text-tintaCarvao focus:outline-none focus:border-acentoAzul"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRedeemCouponFromProfile}
+                    disabled={redeemingProfileCoupon || !profileCouponInput.trim()}
+                    className="px-5 py-2 bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-corpo text-xs font-bold lowercase rounded-xl transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5 shrink-0"
+                  >
+                    {redeemingProfileCoupon ? (
+                      <>
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>ativando...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>ativar código</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {profileCouponMessage && (
+                  <p className="text-xs text-emerald-700 font-corpo font-medium lowercase">
+                    ✓ {profileCouponMessage}
+                  </p>
+                )}
+
+                {profileCouponError && (
+                  <p className="text-xs text-acentoTerracota font-corpo lowercase">
+                    {profileCouponError}
+                  </p>
+                )}
+              </div>
+
               {/* 4. CANAL DE ACOLHIMENTO, DÚVIDAS & SUPORTE */}
               <div className="bg-white p-6 sm:p-7 rounded-3xl border border-papelKraft/40 space-y-4 shadow-xs">
                 <div className="flex items-start gap-3.5">
@@ -1330,8 +1444,9 @@ export default function Profile() {
         isOpen={showUpgradeModal}
         onClose={() => setShowUpgradeModal(false)}
         reason={access.trial.isExpired ? 'trial_expired' : 'general'}
-        onSelectProduct={(productKey) => {
+        onSelectProduct={(productKey, couponCode) => {
           setSelectedProductForPayment(productKey);
+          setAppliedCouponCode(couponCode || '');
           setShowPaymentModal(true);
         }}
       />
@@ -1339,9 +1454,13 @@ export default function Profile() {
       {/* MODAL DE PAGAMENTO INFINITEPAY */}
       <PaymentModal
         isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
+        onClose={() => {
+          setShowPaymentModal(false);
+          setAppliedCouponCode('');
+        }}
         product={selectedProductForPayment}
         productKey={selectedProductForPayment}
+        initialCouponCode={appliedCouponCode}
         userEmail={profile?.email || ''}
         userName={profile?.display_name || ''}
         userPhone={profile?.whatsapp || ''}

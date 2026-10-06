@@ -11,6 +11,7 @@ import CommentModeration from '../components/CommentModeration';
 import CheckoutAnalytics from '../components/CheckoutAnalytics';
 import AdminFinancasManager from '../components/AdminFinancasManager';
 import AdminEmailFlowsManager from '../components/AdminEmailFlowsManager';
+import AdminCouponsManager from '../components/AdminCouponsManager';
 import PageContentManagement from '../components/PageContentManagement';
 import MediaGalleryManagement from '../components/MediaGalleryManagement';
 import Admin21DiasHub from '../components/admin/hubs/Admin21DiasHub';
@@ -55,6 +56,7 @@ type Course = Database['public']['Tables']['courses']['Row'];
 const VALID_TABS = [
   'dashboard',
   'financas',
+  'cupons',
   'email_flows',
   'programa_21_dias',
   'programa_ciclo',
@@ -938,6 +940,11 @@ export default function Admin() {
         {/* ABA FLUXOS & AUTOMAÇÕES DE E-MAIL */}
         {activeTab === 'email_flows' && (
           <AdminEmailFlowsManager />
+        )}
+
+        {/* ABA CUPONS & BOLSAS COMUNITÁRIAS */}
+        {activeTab === 'cupons' && (
+          <AdminCouponsManager />
         )}
 
         {/* ABA 8: GESTÃO DE PÁGINAS DO SITE (CMS) */}
