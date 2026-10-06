@@ -54,6 +54,7 @@ interface ActivityDay {
   words?: number;
   title?: string;
   excerpt?: string;
+  isToday?: boolean;
 }
 
 interface AgendaEvent {
@@ -231,6 +232,11 @@ export default function Dashboard() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const firstDayOfWeek = new Date(year, month, 1).getDay();
 
+    const today = new Date();
+    const isCurrentMonthAndYear =
+      today.getFullYear() === year && today.getMonth() === month;
+    const currentDayNum = today.getDate();
+
     const emptyLeadingSlots = Array.from({ length: firstDayOfWeek });
 
     const days: ActivityDay[] = [];
@@ -243,6 +249,7 @@ export default function Dashboard() {
       if (active) totalWordsInMonth += wordCount;
 
       const mainActivity = active ? dayActivities[0] : null;
+      const isToday = isCurrentMonthAndYear && day === currentDayNum;
 
       days.push({
         dayNum: String(day).padStart(2, '0'),
@@ -252,6 +259,7 @@ export default function Dashboard() {
         words: wordCount,
         title: active && mainActivity ? mainActivity.title.toLowerCase() : 'sem prática gravada',
         excerpt: active && mainActivity ? mainActivity.excerpt.toLowerCase() : undefined,
+        isToday,
       });
     }
 
@@ -736,25 +744,47 @@ export default function Dashboard() {
                         onClick={() => setSelectedDayDetail(day)}
                         className="flex flex-col items-center justify-center group/day relative focus:outline-none"
                       >
-                        {/* Tile do Dia: Fundo Terracota se Ativo, ou Fundo Sólido de Plataforma */}
+                        {/* Tile do Dia: Fundo Terracota se Ativo, ou Fundo Sólido com destaque se for hoje */}
                         <div
                           className={`w-full h-9 sm:h-10 rounded-xl transition-all duration-300 flex items-center justify-center font-gesto text-base sm:text-lg relative ${
                             day.active
                               ? 'bg-acentoTerracota text-white shadow-sm hover:scale-105'
+                              : day.isToday
+                              ? 'bg-white text-acentoAzul border border-acentoAzul shadow-xs'
                               : 'bg-bgPlataforma text-tintaCarvao/60 border border-papelKraft/40 hover:bg-papelKraft/40'
-                          }`}
+                          } ${day.isToday && day.active ? 'ring-1 ring-acentoAzul ring-offset-1 ring-offset-papelClaro' : ''}`}
                         >
                           {day.dayNum}
                           {/* Ponto indicador de atividade */}
                           {day.active && (
                             <span className="w-1.5 h-1.5 rounded-full bg-acentoOliva absolute bottom-1" />
                           )}
+                          {/* Indicador discreto de hoje */}
+                          {day.isToday && (
+                            <span
+                              className={`w-1.5 h-1.5 rounded-full absolute top-1 right-1 ${
+                                day.active ? 'bg-white' : 'bg-acentoAzul'
+                              }`}
+                              title="hoje"
+                            />
+                          )}
                         </div>
 
                         {/* Tooltip no Hover: Fundo Branco, Texto em Helvetica font-corpo min 14px, Número em Muthazle */}
                         <div className="absolute bottom-12 left-1/2 -translate-x-1/2 px-3.5 py-1.5 bg-white text-acentoAzul border border-papelKraft/80 text-xs sm:text-sm font-light font-corpo lowercase rounded-2xl opacity-0 pointer-events-none group-hover/day:opacity-100 transition-all duration-200 whitespace-nowrap z-30 shadow-lg flex items-center gap-1.5">
-                          <span className="font-gesto text-base sm:text-lg text-acentoTerracota font-normal">{day.words}</span>
-                          <span className="text-acentoAzul font-light">palavras escritas</span>
+                          {day.isToday && (
+                            <span className="font-bold text-acentoTerracota">hoje ·</span>
+                          )}
+                          {day.active ? (
+                            <>
+                              <span className="font-gesto text-base sm:text-lg text-acentoTerracota font-normal">{day.words}</span>
+                              <span className="text-acentoAzul font-light">palavras escritas</span>
+                            </>
+                          ) : (
+                            <span className="text-tintaCarvao/70 font-light">
+                              {day.isToday ? 'dia de soltar o verbo' : 'sem prática gravada'}
+                            </span>
+                          )}
                         </div>
                       </button>
                     ))}
@@ -1531,14 +1561,25 @@ export default function Dashboard() {
                         return (
                           <div
                             key={`cal-day-${day.dayNum}`}
-                            className={`h-24 sm:h-28 p-2 rounded-2xl border transition-all flex flex-col justify-between overflow-hidden ${
-                              matchedEvents.length > 0
+                            className={`h-24 sm:h-28 p-2 rounded-2xl border transition-all flex flex-col justify-between overflow-hidden relative ${
+                              day.isToday
+                                ? 'bg-white border-acentoAzul shadow-sm ring-1 ring-acentoAzul/30'
+                                : matchedEvents.length > 0
                                 ? 'bg-white border-acentoAzul/30 shadow-sm'
                                 : 'bg-bgPlataforma border-papelKraft/30'
                             }`}
                           >
                             <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
-                              <span className="font-gesto text-lg font-normal text-acentoAzul">{day.dayNum}</span>
+                              <div className="flex items-center gap-1.5">
+                                <span className={`font-gesto text-lg font-normal ${day.isToday ? 'text-acentoTerracota font-bold' : 'text-acentoAzul'}`}>
+                                  {day.dayNum}
+                                </span>
+                                {day.isToday && (
+                                  <span className="text-[9px] font-bold font-corpo lowercase text-white bg-acentoTerracota px-1.5 py-0.5 rounded-full">
+                                    hoje
+                                  </span>
+                                )}
+                              </div>
                               {matchedEvents.length > 0 && (
                                 <span className="w-2 h-2 rounded-full bg-acentoTerracota" />
                               )}
@@ -1600,7 +1641,12 @@ export default function Dashboard() {
               </button>
 
               <div className="space-y-1.5">
-                <div className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase flex items-center gap-1.5">
+                <div className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase flex items-center gap-1.5 flex-wrap">
+                  {selectedDayDetail.isToday && (
+                    <span className="font-bold text-white bg-acentoTerracota px-2 py-0.5 rounded-full text-[10px]">
+                      hoje
+                    </span>
+                  )}
                   <span>data: {selectedDayDetail.dateStr}</span>
                   <span>•</span>
                   <span>
@@ -1633,7 +1679,7 @@ export default function Dashboard() {
                   fechar
                 </button>
 
-                {selectedDayDetail.active && (
+                {selectedDayDetail.active ? (
                   <Link
                     to="/exercises"
                     onClick={() => setSelectedDayDetail(null)}
@@ -1641,7 +1687,15 @@ export default function Dashboard() {
                   >
                     <span>reler caderno →</span>
                   </Link>
-                )}
+                ) : selectedDayDetail.isToday ? (
+                  <Link
+                    to="/exercises"
+                    onClick={() => setSelectedDayDetail(null)}
+                    className="btn-pill-accent px-6 py-2.5 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-1.5"
+                  >
+                    <span>escrever hoje →</span>
+                  </Link>
+                ) : null}
               </div>
             </div>
           </div>
