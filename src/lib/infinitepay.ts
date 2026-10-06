@@ -47,13 +47,15 @@ export async function createInfinitePayCheckout({
     const defaultRedirectUrl = `${window.location.origin}/checkout-success`;
     const defaultWebhookUrl = 'https://soltaoverbocoletivo.com/api/webhooks/infinitepay';
 
-    // Normalizar dados mínimos do cliente (Nome, E-mail e Telefone)
-    // Facilitam o preenchimento automático no checkout
+    // Normalizar dados mínimos do cliente (Nome e E-mail para produtos 100% digitais)
+    // Sem solicitação de endereço ou dados supérfluos para máxima conversão
     const formattedCustomer: InfinitePayCustomer = {};
     if (customer?.name?.trim()) formattedCustomer.name = customer.name.trim();
     if (customer?.email?.trim()) formattedCustomer.email = customer.email.trim();
-    const cleanPhone = normalizePhoneNumber(customer?.phone_number);
-    if (cleanPhone) formattedCustomer.phone_number = cleanPhone;
+    if (customer?.phone_number) {
+      const cleanPhone = normalizePhoneNumber(customer.phone_number);
+      if (cleanPhone) formattedCustomer.phone_number = cleanPhone;
+    }
 
     // Payload para api.checkout.infinitepay.io/links
     // IMPORTANTE: 'address' NUNCA é enviado pois os produtos são 100% digitais.

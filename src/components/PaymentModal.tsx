@@ -54,10 +54,6 @@ export default function PaymentModal({
   const [customerEmail, setCustomerEmail] = useState(
     userEmail || user?.email || ''
   );
-  const [customerPhone, setCustomerPhone] = useState(
-    userPhone || profile?.whatsapp || user?.user_metadata?.phone || ''
-  );
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -75,9 +71,6 @@ export default function PaymentModal({
     }
     if ((profile?.display_name || user?.user_metadata?.full_name) && !customerName) {
       setCustomerName(profile?.display_name || user?.user_metadata?.full_name || '');
-    }
-    if ((profile?.whatsapp || user?.user_metadata?.phone) && !customerPhone) {
-      setCustomerPhone(profile?.whatsapp || user?.user_metadata?.phone || '');
     }
   }, [user, profile]);
 
@@ -342,7 +335,6 @@ export default function PaymentModal({
         customer: {
           name: customerName.trim() || undefined,
           email: customerEmail.trim() || undefined,
-          phone_number: customerPhone.trim() || undefined,
         },
       });
 
@@ -458,33 +450,18 @@ export default function PaymentModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-tintaCarvao/80 font-corpo lowercase mb-1">
-                        e-mail para acesso *
-                      </label>
-                      <input
-                        type="email"
-                        value={customerEmail}
-                        onChange={(e) => setCustomerEmail(e.target.value)}
-                        placeholder="ex: aluna@email.com"
-                        className="w-full px-3.5 py-2.5 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-tintaCarvao/80 font-corpo lowercase mb-1">
-                        whatsapp / telefone
-                      </label>
-                      <input
-                        type="tel"
-                        value={customerPhone}
-                        onChange={(e) => setCustomerPhone(e.target.value)}
-                        placeholder="ex: (11) 99999-9999"
-                        className="w-full px-3.5 py-2.5 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40"
-                      />
-                    </div>
+                  <div>
+                    <label className="block text-[11px] font-medium text-tintaCarvao/80 font-corpo lowercase mb-1">
+                      e-mail para acesso *
+                    </label>
+                    <input
+                      type="email"
+                      value={customerEmail}
+                      onChange={(e) => setCustomerEmail(e.target.value)}
+                      placeholder="ex: aluna@email.com"
+                      className="w-full px-3.5 py-2.5 bg-bgPlataforma border border-papelKraft/50 rounded-xl text-xs sm:text-sm font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul transition-colors placeholder:text-tintaCarvao/40"
+                      required
+                    />
                   </div>
                 </div>
               </div>
