@@ -2,7 +2,10 @@ export type ProductSlug =
   | 'programa_21_dias'
   | 'programa_ciclo'
   | 'programa_cafe_com_letras'
-  | 'contrate_experiencia';
+  | 'contrate_experiencia'
+  | 'comunidade';
+
+export type MeetingAudienceType = 'all' | 'product' | 'role' | 'specific_users';
 
 export interface ProductMeeting {
   id: string;
@@ -12,6 +15,10 @@ export interface ProductMeeting {
   meeting_link?: string;
   description?: string;
   is_published: boolean;
+  audience_type?: MeetingAudienceType;
+  target_products?: ProductSlug[];
+  target_roles?: string[];
+  target_user_ids?: string[];
   created_at?: string;
   updated_at?: string;
 }

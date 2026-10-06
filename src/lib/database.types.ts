@@ -644,6 +644,53 @@ export interface Database {
           updated_at?: string
         }
       }
+      product_meetings: {
+        Row: {
+          id: string
+          product_slug: string
+          title: string
+          date_time: string
+          meeting_link: string | null
+          description: string | null
+          is_published: boolean
+          audience_type: string | null
+          target_products: string[] | null
+          target_roles: string[] | null
+          target_user_ids: string[] | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          product_slug?: string
+          title: string
+          date_time: string
+          meeting_link?: string | null
+          description?: string | null
+          is_published?: boolean
+          audience_type?: string | null
+          target_products?: string[] | null
+          target_roles?: string[] | null
+          target_user_ids?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          product_slug?: string
+          title?: string
+          date_time?: string
+          meeting_link?: string | null
+          description?: string | null
+          is_published?: boolean
+          audience_type?: string | null
+          target_products?: string[] | null
+          target_roles?: string[] | null
+          target_user_ids?: string[] | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

@@ -13,6 +13,7 @@ import AdminFinancasManager from '../components/AdminFinancasManager';
 import AdminEmailFlowsManager from '../components/AdminEmailFlowsManager';
 import AdminCouponsManager from '../components/AdminCouponsManager';
 import AdminAnthologyManager from '../components/AdminAnthologyManager';
+import AdminAgendaManager from '../components/admin/AdminAgendaManager';
 import PageContentManagement from '../components/PageContentManagement';
 import MediaGalleryManagement from '../components/MediaGalleryManagement';
 import Admin21DiasHub from '../components/admin/hubs/Admin21DiasHub';
@@ -56,6 +57,7 @@ type Course = Database['public']['Tables']['courses']['Row'];
 
 const VALID_TABS = [
   'dashboard',
+  'agenda',
   'financas',
   'cupons',
   'antologia',
@@ -930,6 +932,11 @@ export default function Admin() {
           <div ref={checkoutRef} className="bg-papelClaro rounded-3xl border border-papelKraft/40 p-5 sm:p-8 shadow-kraft">
             <CheckoutAnalytics />
           </div>
+        )}
+
+        {/* ABA AGENDA & ENCONTROS DA COMUNIDADE */}
+        {activeTab === 'agenda' && (
+          <AdminAgendaManager />
         )}
 
         {/* ABA FINANÇAS & ASSINATURAS */}

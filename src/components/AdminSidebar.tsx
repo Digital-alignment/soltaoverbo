@@ -28,6 +28,7 @@ import {
   CreditCard,
   Tag,
   Sparkles,
+  Calendar,
 } from 'lucide-react';
 
 export interface AdminNavItem {
@@ -43,6 +44,12 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     id: 'dashboard',
     label: 'dashboard',
     icon: LayoutDashboard,
+    group: 'geral',
+  },
+  {
+    id: 'agenda',
+    label: 'agenda & encontros',
+    icon: Calendar,
     group: 'geral',
   },
   {

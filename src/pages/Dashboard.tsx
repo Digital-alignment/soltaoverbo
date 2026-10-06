@@ -30,6 +30,7 @@ import {
   Rocket,
 } from 'lucide-react';
 import type { Database } from '../lib/database.types';
+import { isEntitlementActive } from '../lib/entitlements';
 import { BRAND_ASSETS } from '../config/brandAssets';
 import { useUserAccess } from '../hooks/useUserAccess';
 import TrialBanner from '../components/TrialBanner';
@@ -143,7 +144,18 @@ interface ActiveCourseProgress {
 
 export default function Dashboard() {
   const { profile, user } = useAuth();
-  const { hasAccessToCourse, isTrialActive, isTrialExpired, isPaidMember, trial } = useUserAccess();
+  const {
+    hasAccessToCourse,
+    isTrialActive,
+    isTrialExpired,
+    isPaidMember,
+    trial,
+    hasAccessToCafe,
+    hasAccessToCiclo,
+    hasAccessTo21Dias,
+    entitlements,
+    isAdmin,
+  } = useUserAccess();
   const [courses, setCourses] = useState<Course[]>([]);
   const [, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
@@ -342,16 +354,91 @@ export default function Dashboard() {
           .order('date_time', { ascending: true });
 
         if (!error && data && data.length > 0) {
-          const fetchedEvents: AgendaEvent[] = data.map((m: any) => {
+          // Filtragem estrita de audiência (se não tem acesso, fica completamente oculto)
+          const filteredData = data.filter((m: any) => {
+            if (isAdmin || profile?.role === 'admin') return true;
+
+            const audience = m.audience_type || 'all';
+            if (audience === 'all') return true;
+
+            if (audience === 'product') {
+              const targetProds: string[] =
+                m.target_products && m.target_products.length > 0
+                  ? m.target_products
+                  : m.product_slug
+                  ? [m.product_slug]
+                  : [];
+
+              return targetProds.some((p: string) => {
+                if (p === 'programa_cafe_com_letras' || p === 'cafe_com_letras') {
+                  return (
+                    hasAccessToCafe ||
+                    entitlements.some(
+                      (e) =>
+                        (e.product_slug === 'cafe_com_letras' || e.product_slug === 'programa_cafe_com_letras') &&
+                        isEntitlementActive(e)
+                    )
+                  );
+                }
+                if (p === 'programa_ciclo' || p === 'ciclo_aprofundamento') {
+                  return (
+                    hasAccessToCiclo ||
+                    entitlements.some(
+                      (e) =>
+                        (e.product_slug === 'ciclo_aprofundamento' || e.product_slug === 'programa_ciclo') &&
+                        isEntitlementActive(e)
+                    )
+                  );
+                }
+                if (p === 'programa_21_dias' || p === '21_dias') {
+                  return (
+                    hasAccessTo21Dias ||
+                    entitlements.some(
+                      (e) =>
+                        (e.product_slug === '21_dias' || e.product_slug === 'programa_21_dias') &&
+                        isEntitlementActive(e)
+                    )
+                  );
+                }
+                if (p === 'contrate_experiencia') {
+                  return entitlements.some(
+                    (e) => e.product_slug === 'contrate_experiencia' && isEntitlementActive(e)
+                  );
+                }
+                if (p === 'comunidade') {
+                  return true;
+                }
+                return false;
+              });
+            }
+
+            if (audience === 'role') {
+              const targetRoles: string[] = m.target_roles || [];
+              if (targetRoles.includes('admin') && (isAdmin || profile?.role === 'admin')) return true;
+              if (targetRoles.includes('paid') && isPaidMember) return true;
+              if (targetRoles.includes('trial') && isTrialActive) return true;
+              if (targetRoles.includes('free') && !isPaidMember && !isTrialActive) return true;
+              return false;
+            }
+
+            if (audience === 'specific_users') {
+              const targetUserIds: string[] = m.target_user_ids || [];
+              return user?.id ? targetUserIds.includes(user.id) : false;
+            }
+
+            return false;
+          });
+
+          const fetchedEvents: AgendaEvent[] = filteredData.map((m: any) => {
             const dateObj = new Date(m.date_time);
             const dayNum = dateObj.getDate();
             const monthStr = dateObj.toLocaleDateString('pt-BR', { month: 'long' });
             const dayOfWeekStr = dateObj.toLocaleDateString('pt-BR', { weekday: 'long' });
             const timeStr = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-            let category = 'cafe';
+            let category: 'cafe' | 'admin' | 'launch' | 'personal' = 'cafe';
             if (m.product_slug === 'programa_ciclo') category = 'launch';
-            if (m.product_slug === 'contrate_experiencia') category = 'admin';
+            if (m.product_slug === 'contrate_experiencia' || m.audience_type === 'specific_users') category = 'admin';
 
             return {
               id: m.id,
@@ -362,21 +449,36 @@ export default function Dashboard() {
               description: m.description || 'encontro ao vivo agendado.',
               time: timeStr,
               category,
-              categoryLabel: `ao vivo • ${m.product_slug.replace('programa_', '').replace(/_/g, ' ')}`,
+              categoryLabel:
+                m.audience_type === 'specific_users'
+                  ? 'convite exclusivo'
+                  : `ao vivo • ${m.product_slug.replace('programa_', '').replace(/_/g, ' ')}`,
               modality: 'online • ao vivo',
               completed: false,
               linkUrl: m.meeting_link || '#',
             };
           });
 
-          setAgendaEvents((prev) => [...fetchedEvents, ...prev]);
+          if (fetchedEvents.length > 0) {
+            setAgendaEvents(fetchedEvents);
+          }
         }
       } catch (err) {
         console.warn('Could not fetch product_meetings for dashboard agenda:', err);
       }
     }
     fetchPublishedMeetings();
-  }, []);
+  }, [
+    profile,
+    user,
+    entitlements,
+    hasAccessToCafe,
+    hasAccessToCiclo,
+    hasAccessTo21Dias,
+    isPaidMember,
+    isTrialActive,
+    isAdmin,
+  ]);
 
   // Feed da Comunidade Nossa Fogueira
   const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([
