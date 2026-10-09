@@ -8,13 +8,11 @@ import {
   BookOpen,
   ArrowRight,
   CheckCircle2,
-  Play,
   Sparkles,
   Lock,
   Crown,
   MessageSquare,
   BookMarked,
-  Compass,
   Heart,
   Pencil,
   X,
@@ -93,14 +91,6 @@ interface NotebookItem {
   wordCount: number;
 }
 
-interface DiscoverItem {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  link: string;
-}
-
 // Tabela de Níveis e Marcos Literários / Equivalências de Palavras
 const WORD_MILESTONES = [
   { minWords: 100, title: 'um haicai poético de bashō ou uma estrofe de vinicius de moraes' },
@@ -170,7 +160,7 @@ export default function Dashboard() {
   const [userExercises, setUserExercises] = useState<RealExercise[]>([]);
 
   // Progreso real del curso activo
-  const [courseProgress, setCourseProgress] = useState<ActiveCourseProgress>({
+  const [, setCourseProgress] = useState<ActiveCourseProgress>({
     course: null,
     lessons: [],
     currentLesson: null,
@@ -557,24 +547,6 @@ export default function Dashboard() {
       };
     });
   }, [userExercises]);
-
-  // Curadoria Descubra (Cursos, Blog & Recomendações Admin)
-  const [discoverItems] = useState<DiscoverItem[]>([
-    {
-      id: '1',
-      title: 'ciclo de aprofundamento trimestral',
-      category: 'programa ao vivo',
-      image: '/brand-assets/elements/collages/creative-vintage-collage-design.png',
-      link: '/ciclo-de-aprofundamento',
-    },
-    {
-      id: '2',
-      title: 'como sustentar a escrita sem cobrança',
-      category: 'artigo do blog',
-      image: '/brand-assets/elements/collages/butterfly-collage-woman-art.png',
-      link: '/about',
-    },
-  ]);
 
   // Mensagem de Boas-Vindas Curta em Muthazle
   const welcomeMessage = useMemo(() => {
@@ -1110,78 +1082,73 @@ export default function Dashboard() {
           </div>
 
           {/* ========================================================
-              ITEM 2 DO BENTO: CARD RETOMAR CURSOS / TALLERES
-              (Dia em Muthazle, Título de Curso em Editorial Serif, Botão "retomar" em Muthazle)
+              ITEM 2 DO BENTO: MEU CADERNO DE ESCRITA
+              (Muthazle no Título e Botões 23px/20px, Editorial Serif nos Títulos de Cadernos)
              ======================================================== */}
-          <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft relative overflow-hidden space-y-4">
+          <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm font-normal font-corpo lowercase text-acentoAzul bg-white px-3.5 py-1 rounded-full border border-papelKraft/60 shadow-sm">
-                {courseProgress.progressPercent > 0 ? 'em andamento' : 'jornada inicial'}
-              </span>
-              <span className="text-xs sm:text-sm font-light font-corpo text-acentoTerracota lowercase">
-                {(courseProgress.course?.title || '21 dias de escrita online').toLowerCase()}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
-              {/* Miniatura Colagem */}
-              <div className="sm:col-span-4 relative">
-                <div className="w-full h-32 rounded-2xl overflow-hidden border border-papelKraft/40 shadow-sm relative bg-bgPlataforma">
-                  <img
-                    src={courseProgress.course?.thumbnail_url || "/brand-assets/elements/collages/writes-torn-out-sheets-paper-trendy-vintage-style-mixed-media-art.png"}
-                    alt="continuar jornada"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <div>
+                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
+                  seus textos & memórias
+                </span>
+                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
+                  meu caderno de escrita
+                </h3>
               </div>
 
-              {/* Título da Leção com Dia em Muthazle (font-gesto) e Título da Leção em PP Editorial Serif */}
-              {(() => {
-                const rawTitle = courseProgress.currentLesson?.title || 'o começo de tudo.';
-                const cleanTitle = rawTitle.replace(/^dia\s*\d+:\s*/i, '').trim().toLowerCase();
-                const rawDesc = courseProgress.currentLesson?.description || 'um ritual diário de presença para organizar o caos interno sem a pressão de ser autor.';
-                const cleanDesc = rawDesc.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim().toLowerCase();
-
-                return (
-                  <div className="sm:col-span-8 space-y-1">
-                    <h3 className="text-xl sm:text-2xl font-bold font-editorial text-acentoAzul lowercase leading-tight">
-                      <span className="font-gesto text-2xl sm:text-3xl text-acentoTerracota font-normal mr-1.5">
-                        dia {String(courseProgress.currentLessonIndex + 1).padStart(2, '0')}:
-                      </span>
-                      {cleanTitle}
-                    </h3>
-                    <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase line-clamp-2 leading-relaxed">
-                      {cleanDesc}
-                    </p>
-                  </div>
-                );
-              })()}
-            </div>
-
-            {/* Barra de Progresso com % em Helvetica (font-corpo min 14px) */}
-            <div className="space-y-1.5 pt-1">
-              <div className="w-full bg-papelKraft/40 rounded-full h-2.5 overflow-hidden">
-                <div
-                  className="bg-acentoTerracota h-2.5 rounded-full transition-all duration-500"
-                  style={{ width: `${courseProgress.progressPercent}%` }}
-                />
-              </div>
-              <div className="flex justify-between items-center text-xs sm:text-sm font-light font-corpo text-tintaCarvao/70 pt-0.5">
-                <span>progresso da jornada</span>
-                <span className="font-normal font-corpo text-acentoAzul">{courseProgress.progressPercent}% concluído</span>
-              </div>
-            </div>
-
-            {/* Botão "retomar" em Muthazle (font-gesto 23px / 20px) */}
-            <div className="pt-1">
               <Link
-                to={courseProgress.course ? `/course/${courseProgress.course.id}` : '/programs'}
-                className="btn-pill-primary px-6 py-2.5 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-2 hover:scale-[1.02] transition-transform"
+                to="/exercises?new=true"
+                className="btn-pill-primary px-5 py-2 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
               >
-                <Play className="w-4 h-4 text-white fill-white" />
-                <span>{courseProgress.progressPercent > 0 ? 'retomar' : 'começar jornada'}</span>
+                <Pencil className="w-4 h-4" />
+                <span>escrever algo novo</span>
               </Link>
             </div>
+
+            {/* Lista dos Cadernos Já Escritos */}
+            {notebooks.length === 0 ? (
+              <div className="p-6 rounded-2xl bg-white border border-papelKraft/50 text-center space-y-3 shadow-sm">
+                <Feather className="w-8 h-8 text-acentoAzul/40 mx-auto" />
+                <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase">
+                  você ainda não criou nenhum texto no seu caderno.
+                </p>
+                <Link
+                  to="/exercises?new=true"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm transition-transform hover:scale-105"
+                >
+                  <Plus className="w-4 h-4 text-white" />
+                  <span>+ criar meu primeiro texto</span>
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {notebooks.map((nb) => (
+                  <div
+                    key={nb.id}
+                    className="p-3 rounded-2xl bg-white border border-papelKraft/50 shadow-sm flex items-center justify-between hover:border-acentoAzul transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <BookMarked className="w-5 h-5 text-acentoAzul" />
+                      <div>
+                        <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase">
+                          {nb.title}
+                        </h4>
+                        <span className="text-xs font-light font-corpo text-tintaCarvao/50 block">
+                          atualizado {nb.updatedAt} • {nb.wordCount} palavras
+                        </span>
+                      </div>
+                    </div>
+
+                    <Link
+                      to="/exercises"
+                      className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoTerracota hover:underline lowercase"
+                    >
+                      abrir →
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ========================================================
@@ -1265,131 +1232,6 @@ export default function Dashboard() {
                   </Link>
                 ))
               )}
-            </div>
-          </div>
-
-          {/* ========================================================
-              ITEM 4 DO BENTO: MEU CADERNO
-              (Muthazle no Título e Botões 23px/20px, Editorial Serif nos Títulos de Cadernos)
-             ======================================================== */}
-          <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
-                  seus textos & memórias
-                </span>
-                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
-                  meu caderno de escrita
-                </h3>
-              </div>
-
-              <Link
-                to="/exercises?new=true"
-                className="btn-pill-primary px-5 py-2 text-[20px] sm:text-[23px] font-normal font-gesto shadow-sm inline-flex items-center gap-1.5 hover:scale-105 transition-transform"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>escrever algo novo</span>
-              </Link>
-            </div>
-
-            {/* Lista dos Cadernos Já Escritos */}
-            {notebooks.length === 0 ? (
-              <div className="p-6 rounded-2xl bg-white border border-papelKraft/50 text-center space-y-3 shadow-sm">
-                <Feather className="w-8 h-8 text-acentoAzul/40 mx-auto" />
-                <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/80 lowercase">
-                  você ainda não criou nenhum texto no seu caderno.
-                </p>
-                <Link
-                  to="/exercises?new=true"
-                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-2xl bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-gesto text-[20px] sm:text-[23px] lowercase shadow-sm transition-transform hover:scale-105"
-                >
-                  <Plus className="w-4 h-4 text-white" />
-                  <span>+ criar meu primeiro texto</span>
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-2.5">
-                {notebooks.map((nb) => (
-                  <div
-                    key={nb.id}
-                    className="p-3 rounded-2xl bg-white border border-papelKraft/50 shadow-sm flex items-center justify-between hover:border-acentoAzul transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <BookMarked className="w-5 h-5 text-acentoAzul" />
-                      <div>
-                        <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase">
-                          {nb.title}
-                        </h4>
-                        <span className="text-xs font-light font-corpo text-tintaCarvao/50 block">
-                          atualizado {nb.updatedAt} • {nb.wordCount} palavras
-                        </span>
-                      </div>
-                    </div>
-
-                    <Link
-                      to="/exercises"
-                      className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoTerracota hover:underline lowercase"
-                    >
-                      abrir →
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* ========================================================
-              ITEM 5 DO BENTO: DESCUBRA (CURADORIA DO ADMIN)
-              (Muthazle no Título e Botões 23px/20px, Editorial Serif nos Títulos Recomendados)
-             ======================================================== */}
-          <div className="lg:col-span-6 bg-papelClaro rounded-3xl p-5 sm:p-7 border border-papelKraft/60 shadow-kraft space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-xs font-light font-corpo text-tintaCarvao/60 lowercase block">
-                  recomendado pelas facilitadoras
-                </span>
-                <h3 className="text-[2.2rem] leading-snug font-normal font-gesto text-acentoAzul lowercase">
-                  descubra & novidades
-                </h3>
-              </div>
-
-              <Link
-                to="/programs"
-                className="text-[20px] sm:text-[23px] font-normal font-gesto text-acentoAzul hover:text-acentoTerracota transition-colors lowercase flex items-center gap-1"
-              >
-                <Compass className="w-4 h-4 text-acentoTerracota" />
-                <span>explorar tudo</span>
-              </Link>
-            </div>
-
-            {/* Lista de Recomendações do Admin */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {discoverItems.map((disc) => (
-                <Link
-                  key={disc.id}
-                  to={disc.link}
-                  className="bg-bgPlataforma rounded-2xl border border-papelKraft/50 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group flex flex-col justify-between"
-                >
-                  <div className="h-28 overflow-hidden relative">
-                    <img
-                      src={disc.image}
-                      alt={disc.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute top-2 left-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-normal font-corpo bg-acentoAzul text-white lowercase shadow-sm">
-                        {disc.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="p-3">
-                    <h4 className="text-sm sm:text-base font-bold font-editorial text-acentoAzul lowercase group-hover:text-acentoTerracota transition-colors line-clamp-2">
-                      {disc.title}
-                    </h4>
-                  </div>
-                </Link>
-              ))}
             </div>
           </div>
 
