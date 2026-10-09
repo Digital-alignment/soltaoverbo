@@ -726,6 +726,42 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ROTAS DE VÍNCULOS DE OFICINAS A PRODUTOS
+  // GET /api/courses/product-links
+  if (req.method === 'GET' && url.pathname === '/api/courses/product-links') {
+    try {
+      const links = await storageDownloadJson('courses_product_links.json', {});
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ links: links || {} }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: err.message, links: {} }));
+    }
+    return;
+  }
+
+  // POST /api/courses/product-links
+  if (req.method === 'POST' && url.pathname === '/api/courses/product-links') {
+    try {
+      const { courseId, products } = await parseJsonBody();
+      if (!courseId) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'courseId obrigatório' }));
+        return;
+      }
+      const links = await storageDownloadJson('courses_product_links.json', {});
+      links[courseId] = Array.isArray(products) ? products : [];
+      await storageUploadJson('courses_product_links.json', links);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, links }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
   // 5. ROTAS DE CUPONS POÉTICOS & BOLSAS (Fase 3)
   // GET /api/coupons
   if (req.method === 'GET' && url.pathname === '/api/coupons') {

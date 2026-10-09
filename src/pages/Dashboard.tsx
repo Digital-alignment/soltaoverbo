@@ -747,7 +747,7 @@ export default function Dashboard() {
   };
 
   const canAccessCourse = (course: Course) => {
-    return hasAccessToCourse(course.title, course.course_type);
+    return hasAccessToCourse(course);
   };
 
   const getRoleLabel = () => {

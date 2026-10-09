@@ -6,6 +6,7 @@ import ProductAlunasTable from '../ProductAlunasTable';
 import ProductTaskManager from '../ProductTaskManager';
 import ProductBroadcastSender from '../ProductBroadcastSender';
 import Admin21DiasLessonsManager from '../Admin21DiasLessonsManager';
+import ProductLinkedCoursesManager from '../ProductLinkedCoursesManager';
 import {
   BookOpen,
   Users,
@@ -149,6 +150,17 @@ export default function Admin21DiasHub() {
         </button>
 
         <button
+          onClick={() => setSub('courses')}
+          className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+            activeSub === 'courses'
+              ? 'bg-acentoAzul text-white font-bold shadow-xs'
+              : 'text-tintaCarvao/70 hover:bg-papelKraft/20'
+          }`}
+        >
+          oficinas vinculadas
+        </button>
+
+        <button
           onClick={() => setSub('tasks')}
           className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
             activeSub === 'tasks'
@@ -288,6 +300,13 @@ export default function Admin21DiasHub() {
 
       {activeSub === 'lessons' && (
         <Admin21DiasLessonsManager />
+      )}
+
+      {activeSub === 'courses' && (
+        <ProductLinkedCoursesManager
+          productSlug="21_dias"
+          productName="21 Dias de Escrita"
+        />
       )}
 
       {activeSub === 'tasks' && (

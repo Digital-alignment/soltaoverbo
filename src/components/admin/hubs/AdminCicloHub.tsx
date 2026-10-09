@@ -6,7 +6,8 @@ import ProductMeetingScheduler from '../ProductMeetingScheduler';
 import ProductTaskManager from '../ProductTaskManager';
 import ProductBroadcastSender from '../ProductBroadcastSender';
 import ProductMaterialsManager from '../ProductMaterialsManager';
-import { RefreshCw, Calendar, Users, Layers, CheckSquare, Megaphone, FileText } from 'lucide-react';
+import ProductLinkedCoursesManager from '../ProductLinkedCoursesManager';
+import { RefreshCw, Calendar, Users, Layers, CheckSquare, Megaphone, FileText, BookOpen } from 'lucide-react';
 
 export default function AdminCicloHub() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -101,6 +102,17 @@ export default function AdminCicloHub() {
           }`}
         >
           materiais de apoio
+        </button>
+
+        <button
+          onClick={() => setSub('courses')}
+          className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+            activeSub === 'courses'
+              ? 'bg-acentoAzul text-white font-bold shadow-xs'
+              : 'text-tintaCarvao/70 hover:bg-papelKraft/20'
+          }`}
+        >
+          oficinas vinculadas
         </button>
 
         <button
@@ -247,6 +259,13 @@ export default function AdminCicloHub() {
       {activeSub === 'materials' && (
         <ProductMaterialsManager
           productSlug="programa_ciclo"
+          productName="Ciclo de Aprofundamento"
+        />
+      )}
+
+      {activeSub === 'courses' && (
+        <ProductLinkedCoursesManager
+          productSlug="ciclo_aprofundamento"
           productName="Ciclo de Aprofundamento"
         />
       )}

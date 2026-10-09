@@ -20,6 +20,7 @@ interface UpgradeModalProps {
   title?: string;
   subtitle?: string;
   reason?: 'trial_expired' | 'fogueira_limit' | 'course_locked' | 'general';
+  defaultPlan?: '21dias' | 'cafe' | 'ciclo';
   onSelectProduct?: (productKey: '21dias' | 'cafe' | 'ciclo', couponCode?: string) => void;
 }
 
@@ -96,10 +97,18 @@ export default function UpgradeModal({
   title,
   subtitle,
   reason = 'trial_expired',
+  defaultPlan = '21dias',
   onSelectProduct,
 }: UpgradeModalProps) {
-  const [selectedPlan, setSelectedPlan] = useState<'21dias' | 'cafe' | 'ciclo'>('21dias');
-  const [expandedMobilePlan, setExpandedMobilePlan] = useState<'21dias' | 'cafe' | 'ciclo'>('21dias');
+  const [selectedPlan, setSelectedPlan] = useState<'21dias' | 'cafe' | 'ciclo'>(defaultPlan);
+  const [expandedMobilePlan, setExpandedMobilePlan] = useState<'21dias' | 'cafe' | 'ciclo'>(defaultPlan);
+
+  React.useEffect(() => {
+    if (defaultPlan) {
+      setSelectedPlan(defaultPlan);
+      setExpandedMobilePlan(defaultPlan);
+    }
+  }, [defaultPlan, isOpen]);
   const [couponCode, setCouponCode] = useState('');
   const [validating, setValidating] = useState(false);
   const [validatedCoupon, setValidatedCoupon] = useState<Coupon | null>(null);

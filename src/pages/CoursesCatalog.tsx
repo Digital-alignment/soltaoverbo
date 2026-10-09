@@ -7,20 +7,22 @@ import FloatingNavbar from '../components/FloatingNavbar';
 import LoadingPage from '../components/LoadingPage';
 import { BookOpen, Crown, Sparkles, ArrowRight, Play, Lock, CheckCircle } from 'lucide-react';
 import type { Database } from '../lib/database.types';
-
 import { useUserAccess } from '../hooks/useUserAccess';
+import { getCourseLinkedProducts, getCourseProductLabels } from '../lib/courseProductLinks';
 
 type Course = Database['public']['Tables']['courses']['Row'] & {
   lessonCount?: number;
   userProgress?: number;
 };
 
+type CatalogFilter = 'all' | 'free' | 'cafe' | '21dias' | 'ciclo';
+
 export default function CoursesCatalog() {
   const { profile, user } = useAuth();
   const { hasAccessToCourse } = useUserAccess();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeFilter, setActiveFilter] = useState<'all' | 'free' | 'paid'>('all');
+  const [activeFilter, setActiveFilter] = useState<CatalogFilter>('all');
 
   useEffect(() => {
     loadCourses();
@@ -60,13 +62,20 @@ export default function CoursesCatalog() {
 
   const filteredCourses = courses.filter((c) => {
     if (activeFilter === 'free') return c.course_type === 'free';
-    if (activeFilter === 'paid') return c.course_type === 'paid';
+    if (activeFilter === 'cafe') return getCourseLinkedProducts(c).includes('cafe_com_letras');
+    if (activeFilter === '21dias') return getCourseLinkedProducts(c).includes('21_dias');
+    if (activeFilter === 'ciclo') return getCourseLinkedProducts(c).includes('ciclo_aprofundamento');
     return true;
   });
 
   const canAccessCourse = (course: Course) => {
-    return hasAccessToCourse(course.title, course.course_type);
+    return hasAccessToCourse(course);
   };
+
+  const countFree = courses.filter((c) => c.course_type === 'free').length;
+  const countCafe = courses.filter((c) => getCourseLinkedProducts(c).includes('cafe_com_letras')).length;
+  const count21Dias = courses.filter((c) => getCourseLinkedProducts(c).includes('21_dias')).length;
+  const countCiclo = courses.filter((c) => getCourseLinkedProducts(c).includes('ciclo_aprofundamento')).length;
 
   if (loading) {
     return <LoadingPage />;
@@ -78,7 +87,6 @@ export default function CoursesCatalog() {
       <FloatingNavbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pl-28 pt-4 sm:pt-6 space-y-6">
-        
         {/* CABEÇALHO DA PÁGINA */}
         <div className="space-y-3 border-b border-papelKraft/40 pb-4">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal font-gesto text-acentoAzul lowercase leading-tight text-left">
@@ -90,37 +98,61 @@ export default function CoursesCatalog() {
             <button
               type="button"
               onClick={() => setActiveFilter('all')}
-              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-sm ${
+              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-xs ${
                 activeFilter === 'all'
                   ? 'bg-acentoAzul text-white font-medium'
                   : 'bg-white text-tintaCarvao/80 hover:bg-papelKraft/30 border border-papelKraft/40'
               }`}
             >
-              todos ({courses.length})
+              todas ({courses.length})
             </button>
 
             <button
               type="button"
               onClick={() => setActiveFilter('free')}
-              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-sm ${
+              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-xs ${
                 activeFilter === 'free'
                   ? 'bg-acentoAzul text-white font-medium'
                   : 'bg-white text-tintaCarvao/80 hover:bg-papelKraft/30 border border-papelKraft/40'
               }`}
             >
-              gratuitos ({courses.filter((c) => c.course_type === 'free').length})
+              gratuitas ({countFree})
             </button>
 
             <button
               type="button"
-              onClick={() => setActiveFilter('paid')}
-              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-sm ${
-                activeFilter === 'paid'
+              onClick={() => setActiveFilter('cafe')}
+              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-xs ${
+                activeFilter === 'cafe'
                   ? 'bg-acentoAzul text-white font-medium'
                   : 'bg-white text-tintaCarvao/80 hover:bg-papelKraft/30 border border-papelKraft/40'
               }`}
             >
-              exclusivos premium ({courses.filter((c) => c.course_type === 'paid').length})
+              café com letras ({countCafe})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveFilter('21dias')}
+              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-xs ${
+                activeFilter === '21dias'
+                  ? 'bg-acentoAzul text-white font-medium'
+                  : 'bg-white text-tintaCarvao/80 hover:bg-papelKraft/30 border border-papelKraft/40'
+              }`}
+            >
+              21 dias ({count21Dias})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveFilter('ciclo')}
+              className={`px-4 py-1.5 rounded-full text-sm font-normal font-corpo lowercase transition-all cursor-pointer shadow-xs ${
+                activeFilter === 'ciclo'
+                  ? 'bg-acentoAzul text-white font-medium'
+                  : 'bg-white text-tintaCarvao/80 hover:bg-papelKraft/30 border border-papelKraft/40'
+              }`}
+            >
+              ciclo ({countCiclo})
             </button>
           </div>
         </div>
@@ -128,7 +160,7 @@ export default function CoursesCatalog() {
         {/* GRID DE CARDS CLICÁVEIS POR INTEIRO */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 items-stretch pt-2">
           {filteredCourses.length === 0 ? (
-            <div className="col-span-full bg-papelClaro rounded-3xl p-12 text-center space-y-3 border border-papelKraft/40 shadow-sm">
+            <div className="col-span-full bg-papelClaro rounded-3xl p-12 text-center space-y-3 border border-papelKraft/40 shadow-xs">
               <BookOpen className="w-10 h-10 text-acentoAzul mx-auto" />
               <p className="text-sm font-light font-corpo text-tintaCarvao/70 lowercase">
                 nenhuma oficina encontrada para este filtro no momento.
@@ -139,118 +171,126 @@ export default function CoursesCatalog() {
               const hasAccess = canAccessCourse(course);
               const savedLastLessonId = localStorage.getItem(`soltaoverbo_last_lesson_${course.id}`);
               const isStarted = hasAccess && Boolean(savedLastLessonId);
+              const linkedProducts = getCourseLinkedProducts(course);
+              const productLabels = getCourseProductLabels(linkedProducts);
 
-              // Card Container com Link Dinâmico
-              const CardContent = (
-                <div className="bg-papelClaro rounded-3xl border border-papelKraft/45 shadow-kraft hover:border-acentoAzul hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden group cursor-pointer h-full">
-                  {/* CAPA COMPACTA DO CURSO COM TAGS DENTRO DA IMAGEM */}
-                  <div className="relative h-40 sm:h-44 bg-papelKraft/30 overflow-hidden shrink-0">
-                    {course.thumbnail_url ? (
-                      <img
-                        src={course.thumbnail_url}
-                        alt={course.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-papelKraft/40 to-acentoAzul/20 flex items-center justify-center p-4 text-center">
-                        <BookOpen className="w-10 h-10 text-acentoAzul opacity-40" />
-                      </div>
-                    )}
-
-                    {/* TAG SUPERIOR ESQUERDO: APENAS O ÍCONE */}
-                    <div className="absolute top-2.5 left-2.5">
-                      {course.course_type === 'paid' ? (
-                        <div
-                          className="p-1.5 rounded-full bg-white/95 text-acentoTerracota border border-papelKraft/40 shadow-md flex items-center justify-center"
-                          title="exclusivo premium"
-                        >
-                          <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
-                        </div>
-                      ) : (
-                        <div
-                          className="p-1.5 rounded-full bg-white/95 text-acentoAzul border border-papelKraft/40 shadow-md flex items-center justify-center"
-                          title="oficina gratuita"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-acentoAzul" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* TAG INFERIOR DIREITO: ALTO CONTRASTE */}
-                    <div className="absolute bottom-2.5 right-2.5">
-                      {hasAccess ? (
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold font-corpo bg-acentoOliva text-white border border-white/80 lowercase shadow-md inline-flex items-center gap-1.5">
-                          <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
-                          <span>liberado</span>
-                        </span>
-                      ) : (
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold font-corpo bg-acentoTerracota text-white border border-white/80 lowercase shadow-md inline-flex items-center gap-1.5">
-                          <Lock className="w-3.5 h-3.5 text-white shrink-0" />
-                          <span>bloquear</span>
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* CONTEÚDO EDITORIAL DO CARD */}
-                  <div className="p-4 sm:p-5 space-y-4 flex-1 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase leading-snug group-hover:text-acentoTerracota transition-colors line-clamp-2">
-                        {course.title}
-                      </h3>
-
-                      {course.description && (
-                        <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed line-clamp-2">
-                          {course.description}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* ÁREA DO BOTÃO REATIVO AO HOVER DA CARD INTEIRA */}
-                    <div className="pt-3 border-t border-papelKraft/30">
-                      {isStarted ? (
-                        /* CASO B: JÁ COMEÇOU (CONTINUAR -> TERRACOTA) */
-                        <div className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-acentoTerracota text-white font-gesto text-[28px] sm:text-[34px] lowercase shadow-md group-hover:bg-acentoTerracota/90 group-hover:scale-[1.02] transition-transform">
-                          <span>continuar</span>
-                          <Play className="w-5 h-5 text-white fill-white shrink-0" />
-                        </div>
-                      ) : hasAccess ? (
-                        /* CASO A: NÃO COMEÇOU E LIBERADO (COMEÇAR -> VERDE OLIVA) */
-                        <div className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-acentoOliva text-white font-gesto text-[26px] sm:text-[32px] lowercase shadow-md group-hover:bg-acentoOliva/90 group-hover:scale-[1.02] transition-transform">
-                          <span>começar</span>
-                          <ArrowRight className="w-5 h-5 text-white shrink-0" />
-                        </div>
-                      ) : (
-                        /* CASO C: BLOQUEADO PARA UPGRADE (DESBLOQUEAR -> AZUL) */
-                        <div className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-acentoAzul text-white font-gesto text-[26px] sm:text-[32px] lowercase shadow-md group-hover:bg-acentoAzul/90 group-hover:scale-[1.02] transition-transform">
-                          <span>desbloquear</span>
-                          <Lock className="w-5 h-5 text-white shrink-0" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-
-              return hasAccess ? (
-                <Link key={course.id} to={`/course/${course.id}`} className="block h-full">
-                  {CardContent}
-                </Link>
-              ) : (
-                <a
+              return (
+                <Link
                   key={course.id}
-                  href={course.stripe_payment_link || '/profile'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block h-full"
+                  to={`/course/${course.id}`}
+                  className="block h-full focus:outline-none"
                 >
-                  {CardContent}
-                </a>
+                  <div className="bg-papelClaro rounded-3xl border border-papelKraft/45 shadow-kraft hover:border-acentoAzul hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden group cursor-pointer h-full">
+                    {/* CAPA COMPACTA DO CURSO COM TAGS DENTRO DA IMAGEM */}
+                    <div className="relative h-40 sm:h-44 bg-papelKraft/30 overflow-hidden shrink-0">
+                      {course.thumbnail_url ? (
+                        <img
+                          src={course.thumbnail_url}
+                          alt={course.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-papelKraft/40 to-acentoAzul/20 flex items-center justify-center p-4 text-center">
+                          <BookOpen className="w-10 h-10 text-acentoAzul opacity-40" />
+                        </div>
+                      )}
+
+                      {/* TAG SUPERIOR ESQUERDO: APENAS O ÍCONE */}
+                      <div className="absolute top-2.5 left-2.5">
+                        {course.course_type === 'paid' ? (
+                          <div
+                            className="p-1.5 rounded-full bg-white/95 text-acentoTerracota border border-papelKraft/40 shadow-md flex items-center justify-center"
+                            title="oficina vinculada a produtos"
+                          >
+                            <Crown className="w-3.5 h-3.5 text-acentoTerracota" />
+                          </div>
+                        ) : (
+                          <div
+                            className="p-1.5 rounded-full bg-white/95 text-acentoAzul border border-papelKraft/40 shadow-md flex items-center justify-center"
+                            title="oficina gratuita"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-acentoAzul" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* TAG INFERIOR DIREITO: STATUS DE ACESSO */}
+                      <div className="absolute bottom-2.5 right-2.5">
+                        {hasAccess ? (
+                          <span className="px-3 py-1 rounded-full text-xs font-semibold font-corpo bg-acentoOliva text-white border border-white/80 lowercase shadow-md inline-flex items-center gap-1.5">
+                            <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />
+                            <span>liberado</span>
+                          </span>
+                        ) : (
+                          <span className="px-3 py-1 rounded-full text-xs font-semibold font-corpo bg-acentoTerracota text-white border border-white/80 lowercase shadow-md inline-flex items-center gap-1.5">
+                            <Lock className="w-3.5 h-3.5 text-white shrink-0" />
+                            <span>bloqueada</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* CONTEÚDO EDITORIAL DO CARD */}
+                    <div className="p-4 sm:p-5 space-y-4 flex-1 flex flex-col justify-between">
+                      <div className="space-y-2">
+                        {/* BADGES DOS PRODUTOS VINCULADOS */}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {course.course_type === 'free' ? (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-corpo bg-acentoAzul/10 text-acentoAzul border border-acentoAzul/20 lowercase">
+                              aberta a todas
+                            </span>
+                          ) : (
+                            productLabels.map((lbl, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 rounded-full text-[10px] font-corpo bg-papelKraft/40 text-tintaCarvao/80 border border-papelKraft/70 lowercase"
+                              >
+                                {lbl}
+                              </span>
+                            ))
+                          )}
+                        </div>
+
+                        <h3 className="text-lg sm:text-xl font-bold font-editorial text-acentoAzul lowercase leading-snug group-hover:text-acentoTerracota transition-colors line-clamp-2">
+                          {course.title}
+                        </h3>
+
+                        {course.description && (
+                          <p className="text-xs font-light font-corpo text-tintaCarvao/75 lowercase leading-relaxed line-clamp-2">
+                            {course.description}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* ÁREA DO BOTÃO REATIVO AO HOVER DA CARD INTEIRA */}
+                      <div className="pt-3 border-t border-papelKraft/30">
+                        {isStarted ? (
+                          /* CASO B: JÁ COMEÇOU (CONTINUAR -> TERRACOTA) */
+                          <div className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-acentoTerracota text-white font-gesto text-[28px] sm:text-[34px] lowercase shadow-md group-hover:bg-acentoTerracota/90 group-hover:scale-[1.02] transition-transform">
+                            <span>continuar</span>
+                            <Play className="w-5 h-5 text-white fill-white shrink-0" />
+                          </div>
+                        ) : hasAccess ? (
+                          /* CASO A: NÃO COMEÇOU E LIBERADO (COMEÇAR -> VERDE OLIVA) */
+                          <div className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-acentoOliva text-white font-gesto text-[26px] sm:text-[32px] lowercase shadow-md group-hover:bg-acentoOliva/90 group-hover:scale-[1.02] transition-transform">
+                            <span>começar</span>
+                            <ArrowRight className="w-5 h-5 text-white shrink-0" />
+                          </div>
+                        ) : (
+                          /* CASO C: BLOQUEADO (DESBLOQUEAR -> AZUL) */
+                          <div className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-acentoAzul text-white font-gesto text-[26px] sm:text-[32px] lowercase shadow-md group-hover:bg-acentoAzul/90 group-hover:scale-[1.02] transition-transform">
+                            <span>desbloquear</span>
+                            <Lock className="w-5 h-5 text-white shrink-0" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
               );
             })
           )}
         </div>
-
       </main>
     </div>
   );

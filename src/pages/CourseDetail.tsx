@@ -36,6 +36,7 @@ import PoeticCertificateModal from '../components/PoeticCertificateModal';
 import { useUserAccess } from '../hooks/useUserAccess';
 import UpgradeModal from '../components/UpgradeModal';
 import PaymentModal from '../components/PaymentModal';
+import { getCourseLinkedProducts, getCourseProductLabels } from '../lib/courseProductLinks';
 import type { Database } from '../lib/database.types';
 
 type Course = Database['public']['Tables']['courses']['Row'];
@@ -413,12 +414,17 @@ export default function CourseDetail() {
     );
   }
 
-  const isCourseAccessible = hasAccessToCourse(course.title, course.course_type);
+  const isCourseAccessible = hasAccessToCourse(course);
 
   // SE NÃO TIVER ACESSO -> MOSTRA PORTADA DE BLOQUEIO ELEGANTE COM BOTÃO DE UPGRADE
   if (!isCourseAccessible) {
-    const is21Dias = course.title.toLowerCase().includes('21');
-    const recommendedProduct: '21dias' | 'cafe' | 'ciclo' = is21Dias ? '21dias' : 'ciclo';
+    const linkedProducts = getCourseLinkedProducts(course);
+    const productLabels = getCourseProductLabels(linkedProducts);
+    const recommendedProduct: '21dias' | 'cafe' | 'ciclo' = linkedProducts.includes('cafe_com_letras')
+      ? 'cafe'
+      : linkedProducts.includes('21_dias')
+      ? '21dias'
+      : 'ciclo';
 
     return (
       <div className="min-h-screen bg-bgPlataforma text-tintaCarvao py-12 px-4 sm:px-6 flex items-center justify-center">
@@ -427,15 +433,27 @@ export default function CourseDetail() {
             <Lock className="w-7 h-7 text-acentoTerracota" />
           </div>
 
-          <div className="space-y-2 max-w-md mx-auto">
-            <span className="px-3 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold font-corpo lowercase">
-              oficina exclusiva
-            </span>
+          <div className="space-y-3 max-w-md mx-auto">
+            <div className="flex items-center justify-center gap-1.5 flex-wrap">
+              <span className="px-3 py-1 rounded-full bg-acentoAzul/10 text-acentoAzul text-xs font-bold font-corpo lowercase">
+                oficina vinculada
+              </span>
+              {productLabels.map((lbl, idx) => (
+                <span
+                  key={idx}
+                  className="px-2.5 py-0.5 rounded-full bg-white text-tintaCarvao/80 text-[11px] font-corpo lowercase border border-papelKraft/60 shadow-2xs"
+                >
+                  {lbl}
+                </span>
+              ))}
+            </div>
+
             <h2 className="text-3xl sm:text-4xl font-normal font-gesto text-acentoAzul lowercase leading-tight">
               {course.title.toLowerCase()}
             </h2>
             <p className="text-xs sm:text-sm font-corpo text-tintaCarvao/80 lowercase leading-relaxed">
-              {course.description || 'esta jornada de escrita é exclusiva para alunas inscritas. escolha seu plano para destravar todos os rituais, áudios e cadernos.'}
+              {course.description ||
+                'esta oficina faz parte dos programas de escrita acima. assine o produto correspondente para destravar o acesso imediato.'}
             </p>
           </div>
 
@@ -463,6 +481,7 @@ export default function CourseDetail() {
             onClose={() => setShowUpgradeModal(false)}
             reason="course_locked"
             title={`destrave ${course.title.toLowerCase()}`}
+            defaultPlan={recommendedProduct}
             onSelectProduct={(productKey) => {
               setSelectedProductForPay(productKey);
               setShowPaymentModal(true);

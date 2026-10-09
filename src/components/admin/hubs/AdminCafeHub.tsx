@@ -6,7 +6,8 @@ import ProductMeetingScheduler from '../ProductMeetingScheduler';
 import ProductTaskManager from '../ProductTaskManager';
 import ProductBroadcastSender from '../ProductBroadcastSender';
 import ProductMaterialsManager from '../ProductMaterialsManager';
-import { Coffee, Calendar, Users, Layers, CheckSquare, Megaphone, FileText } from 'lucide-react';
+import ProductLinkedCoursesManager from '../ProductLinkedCoursesManager';
+import { Coffee, Calendar, Users, Layers, CheckSquare, Megaphone, FileText, BookOpen } from 'lucide-react';
 
 export default function AdminCafeHub() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -101,6 +102,17 @@ export default function AdminCafeHub() {
           }`}
         >
           materiais de apoio
+        </button>
+
+        <button
+          onClick={() => setSub('courses')}
+          className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+            activeSub === 'courses'
+              ? 'bg-acentoAzul text-white font-bold shadow-xs'
+              : 'text-tintaCarvao/70 hover:bg-papelKraft/20'
+          }`}
+        >
+          oficinas vinculadas
         </button>
 
         <button
@@ -247,6 +259,13 @@ export default function AdminCafeHub() {
       {activeSub === 'materials' && (
         <ProductMaterialsManager
           productSlug="programa_cafe_com_letras"
+          productName="Café com Letras"
+        />
+      )}
+
+      {activeSub === 'courses' && (
+        <ProductLinkedCoursesManager
+          productSlug="cafe_com_letras"
           productName="Café com Letras"
         />
       )}

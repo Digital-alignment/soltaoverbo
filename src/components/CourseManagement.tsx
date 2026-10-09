@@ -3,6 +3,7 @@ import { BookOpen, Plus, Edit2, Trash2, List, FolderOpen, ChevronDown, ChevronUp
 import { supabase } from '../lib/supabase';
 import CourseModal from './CourseModal';
 import LessonModal from './LessonModal';
+import { getCourseLinkedProducts, getCourseProductLabels } from '../lib/courseProductLinks';
 import type { Database } from '../lib/database.types';
 
 type Course = Database['public']['Tables']['courses']['Row'];
@@ -261,13 +262,25 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       
                       <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-editorial font-bold text-lg text-acentoAzul lowercase leading-tight">
                             {course.title}
                           </h3>
-                          <span className="px-2.5 py-0.5 rounded-full bg-acentoAzul/10 text-acentoAzul text-[10px] font-bold font-corpo lowercase">
-                            {course.course_type === 'free' ? 'gratuito' : 'premium'}
-                          </span>
+                          {course.course_type === 'free' ? (
+                            <span className="px-2.5 py-0.5 rounded-full bg-acentoOliva text-tintaCarvao text-[10px] font-bold font-corpo lowercase shadow-2xs">
+                              gratuita
+                            </span>
+                          ) : (
+                            getCourseProductLabels(getCourseLinkedProducts(course)).map((lbl) => (
+                              <span
+                                key={lbl}
+                                className="px-2.5 py-0.5 rounded-full bg-white text-acentoAzul border border-papelKraft/40 text-[10px] font-bold font-corpo lowercase shadow-2xs inline-flex items-center gap-1"
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-acentoTerracota" />
+                                <span>{lbl}</span>
+                              </span>
+                            ))
+                          )}
                         </div>
 
                         <div

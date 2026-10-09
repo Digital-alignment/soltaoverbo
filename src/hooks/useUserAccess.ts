@@ -12,6 +12,7 @@ import {
   TrialStatus,
   WEEKLY_FREE_POST_LIMIT,
 } from '../lib/entitlements';
+import { canAccessCourseWithLinks } from '../lib/courseProductLinks';
 
 export interface UserAccessInfo {
   // Estados principais
@@ -36,7 +37,11 @@ export interface UserAccessInfo {
   hasAccessTo21Dias: boolean;
   hasAccessToCafe: boolean;
   hasAccessToCiclo: boolean;
-  hasAccessToCourse: (courseSlugOrId: string, courseType?: 'free' | 'paid') => boolean;
+  hasAccessToCourse: (
+    courseOrTitle: string | { id?: string; title?: string; course_type?: string; stripe_payment_link?: string | null },
+    courseType?: 'free' | 'paid',
+    stripePaymentLink?: string | null
+  ) => boolean;
   
   // Ações
   refreshAccess: () => Promise<void>;
@@ -142,33 +147,32 @@ export function useUserAccess(): UserAccessInfo {
     });
   }, [isAdmin, isLegacyPaid, entitlements, trial, weeklyPostsCount]);
 
-  // 6. Helper para acesso a cursos
+  // 6. Helper para acesso a cursos e oficinas
   const hasAccessToCourse = useCallback(
-    (courseSlugOrId: string, courseType: 'free' | 'paid' = 'paid'): boolean => {
-      if (isAdmin) return true;
-      if (courseType === 'free') return true;
+    (
+      courseOrTitle: string | { id?: string; title?: string; course_type?: string; stripe_payment_link?: string | null },
+      courseType?: 'free' | 'paid',
+      stripePaymentLink?: string | null
+    ): boolean => {
+      const courseObj = typeof courseOrTitle === 'object' && courseOrTitle !== null
+        ? courseOrTitle
+        : {
+            id: courseOrTitle,
+            title: courseOrTitle,
+            course_type: courseType || 'paid',
+            stripe_payment_link: stripePaymentLink || null,
+          };
 
-      const lower = courseSlugOrId.toLowerCase();
-
-      // Curso 21 Dias
-      if (lower.includes('21') || lower.includes('21-dias') || lower.includes('21_dias')) {
-        return hasAccessTo21Dias;
-      }
-
-      // Ciclo de Aprofundamento
-      if (lower.includes('ciclo') || lower.includes('aprofundamento')) {
-        return hasAccessToCiclo;
-      }
-
-      // Café com Letras
-      if (lower.includes('cafe') || lower.includes('café')) {
-        return hasAccessToCafe;
-      }
-
-      // Se for membro legado pago ou tem assinatura geral
-      return isPaidMember;
+      return canAccessCourseWithLinks({
+        course: courseObj,
+        isAdmin,
+        isPaidMember,
+        hasAccessToCafe,
+        hasAccessToCiclo,
+        hasAccessTo21Dias,
+      });
     },
-    [isAdmin, hasAccessTo21Dias, hasAccessToCiclo, hasAccessToCafe, isPaidMember]
+    [isAdmin, isPaidMember, hasAccessToCafe, hasAccessToCiclo, hasAccessTo21Dias]
   );
 
   return {
