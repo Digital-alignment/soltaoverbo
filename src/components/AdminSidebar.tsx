@@ -85,7 +85,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
       { id: 'overview', label: 'visão geral' },
       { id: 'cms', label: 'cms da página' },
       { id: 'students', label: 'alunas & progresso (dia X/21)' },
-      { id: 'lessons', label: 'aulas & áudios binaurais' },
+      { id: 'courses', label: 'oficinas vinculadas' },
       { id: 'tasks', label: 'tarefas & organizacao' },
       { id: 'broadcasts', label: 'comunicação & avisos' },
     ],

@@ -5,7 +5,6 @@ import PageContentManagement from '../../PageContentManagement';
 import ProductAlunasTable from '../ProductAlunasTable';
 import ProductTaskManager from '../ProductTaskManager';
 import ProductBroadcastSender from '../ProductBroadcastSender';
-import Admin21DiasLessonsManager from '../Admin21DiasLessonsManager';
 import ProductLinkedCoursesManager from '../ProductLinkedCoursesManager';
 import {
   BookOpen,
@@ -20,7 +19,8 @@ import {
 
 export default function Admin21DiasHub() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeSub = searchParams.get('sub') || 'overview';
+  const rawSub = searchParams.get('sub') || 'overview';
+  const activeSub = rawSub === 'lessons' ? 'overview' : rawSub;
 
   const [stats, setStats] = useState({
     activeStudents: 23,
@@ -136,17 +136,6 @@ export default function Admin21DiasHub() {
           }`}
         >
           alunas & progresso (dia X/21)
-        </button>
-
-        <button
-          onClick={() => setSub('lessons')}
-          className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
-            activeSub === 'lessons'
-              ? 'bg-acentoAzul text-white font-bold shadow-xs'
-              : 'text-tintaCarvao/70 hover:bg-papelKraft/20'
-          }`}
-        >
-          aulas & áudios binaurais
         </button>
 
         <button
@@ -296,10 +285,6 @@ export default function Admin21DiasHub() {
           productName="21 Dias de Escrita"
           showProgressDay={true}
         />
-      )}
-
-      {activeSub === 'lessons' && (
-        <Admin21DiasLessonsManager />
       )}
 
       {activeSub === 'courses' && (
