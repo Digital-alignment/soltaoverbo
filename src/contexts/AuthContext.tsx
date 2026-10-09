@@ -64,13 +64,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error;
 
+      const { data: userData } = await supabase.auth.getUser();
+      const authUser = userData?.user;
+
       if (!data) {
-        const { data: userData } = await supabase.auth.getUser();
-        if (userData.user) {
-          const displayName = userData.user.user_metadata?.full_name ||
-                             userData.user.user_metadata?.name ||
-                             userData.user.email?.split('@')[0] ||
+        if (authUser) {
+          const displayName = authUser.user_metadata?.full_name ||
+                             authUser.user_metadata?.name ||
+                             authUser.email?.split('@')[0] ||
                              'Usuário';
+          const googleAvatar = authUser.user_metadata?.avatar_url ||
+                              authUser.user_metadata?.picture ||
+                              null;
+          const userEmail = authUser.email || authUser.user_metadata?.email || null;
 
           const { error: insertError } = await supabase
             .from('users_profiles')
@@ -79,6 +85,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               display_name: displayName,
               bio: '',
               role: 'free',
+              email_public: userEmail,
+              profile_picture_url: googleAvatar,
             });
 
           if (insertError) throw insertError;
@@ -92,6 +100,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfile(newProfile);
         }
       } else {
+        // Se o perfil existe, verificar se falta email ou foto do Google
+        let needsUpdate = false;
+        const updates: Partial<Database['public']['Tables']['users_profiles']['Update']> = {};
+
+        const userEmail = authUser?.email || authUser?.user_metadata?.email;
+        if ((!data.email_public || data.email_public.trim() === '') && userEmail) {
+          updates.email_public = userEmail;
+          needsUpdate = true;
+        }
+
+        const googleAvatar = authUser?.user_metadata?.avatar_url || authUser?.user_metadata?.picture;
+        // Se a usuária não subiu foto própria, usa a foto do Google
+        if ((!data.profile_picture_url || data.profile_picture_url.trim() === '') && googleAvatar) {
+          updates.profile_picture_url = googleAvatar;
+          needsUpdate = true;
+        }
+
+        if (needsUpdate) {
+          const { data: updatedProfile, error: updateError } = await supabase
+            .from('users_profiles')
+            .update(updates)
+            .eq('id', userId)
+            .select()
+            .single();
+
+          if (!updateError && updatedProfile) {
+            setProfile(updatedProfile);
+            return;
+          }
+        }
+
         setProfile(data);
       }
     } catch (error) {
@@ -117,6 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           display_name: displayName,
           bio: '',
           role: 'free',
+          email_public: email,
         });
 
       if (profileError) console.error('Erro ao criar perfil:', profileError);

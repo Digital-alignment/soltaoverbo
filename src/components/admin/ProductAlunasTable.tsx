@@ -121,7 +121,7 @@ export default function ProductAlunasTable({
           return {
             user_id: p.id,
             display_name: (p.display_name || p.email_public?.split('@')[0] || 'aluna solta o verbo').toLowerCase(),
-            email: (p.email_public || 'aluna@soltaoverbocoletivo.com').toLowerCase(),
+            email: (p.email_public || '').toLowerCase(),
             profile_picture_url: p.profile_picture_url,
             current_day: showProgressDay ? currentDay : 0,
             total_days: totalDays,

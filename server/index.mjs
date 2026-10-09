@@ -542,6 +542,81 @@ async function processTrialCountdownReminders({ dryRun = false, forceUserId = nu
 }
 
 /**
+ * Sincronização automática de dados de usuário de auth.users -> users_profiles
+ * Preenche email_public se vazio e adota a foto do Google (avatar_url / picture) se a aluna não tiver customizado.
+ */
+async function syncAllUsersFromAuth() {
+  if (!SUPABASE_SERVICE_ROLE_KEY) return { success: false, reason: 'no_service_key' };
+  try {
+    const authRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?per_page=1000`, {
+      headers: {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    });
+    if (!authRes.ok) {
+      console.warn('[SyncUsers] Falha ao consultar auth users:', authRes.status);
+      return { success: false, status: authRes.status };
+    }
+    const authData = await authRes.json();
+    if (!authData.users || !Array.isArray(authData.users)) {
+      return { success: false, reason: 'no_users_array' };
+    }
+
+    const profiles = await supabaseRest('users_profiles?select=*');
+    const profileMap = new Map();
+    (profiles || []).forEach(p => profileMap.set(p.id, p));
+
+    let updatedCount = 0;
+    for (const u of authData.users) {
+      const existing = profileMap.get(u.id);
+      const googleAvatar = u.user_metadata?.avatar_url || u.user_metadata?.picture || null;
+      const userEmail = u.email || u.user_metadata?.email || null;
+
+      if (!existing) {
+        const displayName = u.user_metadata?.full_name || u.user_metadata?.name || userEmail?.split('@')[0] || 'Aluna';
+        await supabaseRest('users_profiles', {
+          method: 'POST',
+          body: JSON.stringify({
+            id: u.id,
+            display_name: displayName,
+            email_public: userEmail,
+            profile_picture_url: googleAvatar,
+            role: 'free',
+            bio: '',
+          }),
+        });
+        updatedCount++;
+      } else {
+        const updates = {};
+        if ((!existing.email_public || existing.email_public.trim() === '') && userEmail) {
+          updates.email_public = userEmail;
+        }
+        // Se a pessoa não subiu foto própria, usa a foto do Google
+        if ((!existing.profile_picture_url || existing.profile_picture_url.trim() === '') && googleAvatar) {
+          updates.profile_picture_url = googleAvatar;
+        }
+        if (Object.keys(updates).length > 0) {
+          await supabaseRest(`users_profiles?id=eq.${encodeURIComponent(u.id)}`, {
+            method: 'PATCH',
+            body: JSON.stringify(updates),
+          });
+          updatedCount++;
+        }
+      }
+    }
+
+    if (updatedCount > 0) {
+      console.info(`[SyncUsers] Sincronização concluída com sucesso (${updatedCount} perfis atualizados).`);
+    }
+    return { success: true, updatedCount };
+  } catch (err) {
+    console.warn('[SyncUsers] Exceção na sincronização de usuários:', err.message);
+    return { success: false, error: err.message };
+  }
+}
+
+/**
  * Handlers de rota
  */
 const server = http.createServer(async (req, res) => {
@@ -567,6 +642,14 @@ const server = http.createServer(async (req, res) => {
       timestamp: new Date().toISOString(),
       resendConfigured: !!RESEND_API_KEY,
     }));
+    return;
+  }
+
+  // Sincronização manual sob demanda de usuários
+  if (req.method === 'GET' && url.pathname === '/api/admin/sync-users') {
+    const result = await syncAllUsersFromAuth();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(result));
     return;
   }
 
@@ -1696,6 +1779,19 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.info(`[soltaoverbo-api] Servidor ativo ouvindo na porta ${PORT}`);
+
+  // Sincronização automática contínua de usuários e fotos do Google
+  const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
+  setTimeout(() => {
+    syncAllUsersFromAuth().catch(err => {
+      console.error('[SyncUsers Scheduler Exception]:', err);
+    });
+    setInterval(() => {
+      syncAllUsersFromAuth().catch(err => {
+        console.error('[SyncUsers Scheduler Exception]:', err);
+      });
+    }, FIFTEEN_MINUTES_MS);
+  }, 5000); // Inicia 5 segundos após o boot
 
   // Agendador autônomo periódico para lembretes de contagem regressiva (a cada 30 minutos)
   const THIRTY_MINUTES_MS = 30 * 60 * 1000;

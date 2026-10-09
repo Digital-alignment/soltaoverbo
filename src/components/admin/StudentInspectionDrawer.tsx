@@ -62,6 +62,10 @@ export default function StudentInspectionDrawer({
   const [grantingSlug, setGrantingSlug] = useState<string | null>(null);
   const [actionFeedback, setActionFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
+  // Email and Avatar freshness state
+  const [currentEmail, setCurrentEmail] = useState<string>(student?.email_public || student?.email || '');
+  const [currentAvatar, setCurrentAvatar] = useState<string | null>(student?.profile_picture_url || null);
+
   const fetchEntitlements = async () => {
     if (!student?.user_id) return;
     setLoadingEntitlements(true);
@@ -86,6 +90,26 @@ export default function StudentInspectionDrawer({
 
   useEffect(() => {
     if (student) {
+      setCurrentEmail(student.email_public || student.email || '');
+      setCurrentAvatar(student.profile_picture_url || null);
+
+      // Sincronizar dados em tempo real direto de users_profiles
+      supabase
+        .from('users_profiles')
+        .select('email_public, profile_picture_url')
+        .eq('id', student.user_id)
+        .maybeSingle()
+        .then(({ data }) => {
+          if (data) {
+            if (data.email_public && data.email_public.trim() !== '') {
+              setCurrentEmail(data.email_public);
+            }
+            if (data.profile_picture_url && data.profile_picture_url.trim() !== '') {
+              setCurrentAvatar(data.profile_picture_url);
+            }
+          }
+        });
+
       const storedNote = localStorage.getItem(`facilitator_notes_${student.user_id}_${productSlug}`);
       setFacilitatorNotes(storedNote || student.facilitator_notes || '');
       setNotesSavedSuccess(false);
@@ -275,9 +299,9 @@ export default function StudentInspectionDrawer({
 
           <div className="flex items-start gap-4">
             <div className="w-14 h-14 rounded-full bg-acentoAzul text-white font-bold text-xl flex items-center justify-center shrink-0 border-2 border-acentoOliva shadow-xs overflow-hidden">
-              {student.profile_picture_url ? (
+              {currentAvatar || student.profile_picture_url ? (
                 <img
-                  src={student.profile_picture_url}
+                  src={currentAvatar || student.profile_picture_url || ''}
                   alt={student.display_name}
                   className="w-full h-full object-cover"
                 />
@@ -339,7 +363,7 @@ export default function StudentInspectionDrawer({
 
               <div className="flex items-center gap-1.5 text-xs font-corpo text-tintaCarvao/70 lowercase">
                 <Mail className="w-3.5 h-3.5 text-acentoTerracota shrink-0" />
-                <span className="truncate">{student.email}</span>
+                <span className="truncate">{currentEmail || student.email || 'e-mail não disponível'}</span>
               </div>
 
               <div className="flex items-center gap-3 text-[11px] font-corpo text-tintaCarvao/50 lowercase pt-0.5">
