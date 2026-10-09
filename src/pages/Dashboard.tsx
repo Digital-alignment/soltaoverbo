@@ -487,27 +487,9 @@ export default function Dashboard() {
     isAdmin,
   ]);
 
-  // Feed da Comunidade Nossa Fogueira
-  const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([
-    {
-      id: '1',
-      author: 'bruna riedel',
-      avatar: '/bruna copy copy.png',
-      title: 'escutar o silêncio antes de nomear o caos',
-      excerpt: 'na prática de hoje percebi como a escrita é antes de tudo um exercício de pausa e coragem...',
-      timeAgo: 'há 2 horas',
-      likes: 14,
-    },
-    {
-      id: '2',
-      author: 'júlia alvim',
-      avatar: '/jo.png',
-      title: 'fogueira das segundas: novos temas no ar',
-      excerpt: 'preparamos um caminho poético especial para o nosso próximo encontro ao vivo...',
-      timeAgo: 'há 5 horas',
-      likes: 21,
-    },
-  ]);
+  // Feed da Comunidade Nossa Fogueira (100% Real do Supabase)
+  const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([]);
+  const [communityLoading, setCommunityLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchFogueiraPosts() {
@@ -516,7 +498,8 @@ export default function Dashboard() {
           .from('community_posts')
           .select('*, writing_exercise:writing_exercises(*), user_profile:users_profiles(*)')
           .eq('hidden_from_fogueira', false)
-          .order('published_at', { ascending: false });
+          .order('published_at', { ascending: false })
+          .limit(4);
 
         if (realPosts && realPosts.length > 0) {
           const mapped: CommunityPost[] = realPosts.map((rp) => {
@@ -536,18 +519,18 @@ export default function Dashboard() {
               title: rawTitle,
               excerpt: excerpt,
               timeAgo: timeAgo,
-              likes: rp.likes_count || 1,
+              likes: rp.likes_count || 0,
             };
           });
 
-          setCommunityPosts((prev) => {
-            const existingIds = new Set(mapped.map((m) => m.id));
-            const filteredPrev = prev.filter((p) => !existingIds.has(p.id));
-            return [...mapped, ...filteredPrev];
-          });
+          setCommunityPosts(mapped);
+        } else {
+          setCommunityPosts([]);
         }
       } catch (e) {
         console.warn('Could not fetch real fogueira posts:', e);
+      } finally {
+        setCommunityLoading(false);
       }
     }
     fetchFogueiraPosts();
@@ -1227,40 +1210,61 @@ export default function Dashboard() {
 
             {/* Posts da Comunidade */}
             <div className="space-y-3">
-              {communityPosts.map((post) => (
-                <div
-                  key={post.id}
-                  className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 shadow-sm space-y-2 hover:border-acentoAzul transition-colors"
-                >
-                  <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full overflow-hidden border border-papelKraft">
-                        <img src={post.avatar} alt={post.author} className="w-full h-full object-cover" />
-                      </div>
-                      <span className="font-normal font-corpo text-acentoAzul lowercase">{post.author}</span>
-                    </div>
-                    <span className="text-xs font-light font-corpo text-tintaCarvao/50">{post.timeAgo}</span>
-                  </div>
-
-                  <h4 className="text-sm sm:text-base font-bold font-editorial text-tintaCarvao lowercase leading-snug">
-                    {post.title}
-                  </h4>
-                  <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/75 lowercase line-clamp-1 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex items-center gap-3 pt-1 text-xs font-light font-corpo text-tintaCarvao/60">
-                    <span className="flex items-center gap-1">
-                      <Heart className="w-3.5 h-3.5 text-acentoTerracota fill-acentoTerracota/20" />
-                      {post.likes}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MessageSquare className="w-3.5 h-3.5 text-acentoAzul" />
-                      responder
-                    </span>
-                  </div>
+              {communityLoading ? (
+                <div className="p-6 text-center text-xs font-corpo text-tintaCarvao/50 lowercase">
+                  carregando partilhas da fogueira...
                 </div>
-              ))}
+              ) : communityPosts.length === 0 ? (
+                <div className="p-6 rounded-2xl bg-white border border-dashed border-papelKraft/60 text-center space-y-2">
+                  <p className="text-xs font-corpo text-tintaCarvao/70 lowercase">
+                    nenhuma partilha na fogueira ainda. seja a primeira a partilhar seu texto!
+                  </p>
+                  <Link
+                    to="/exercises?new=true"
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-acentoTerracota text-white font-corpo text-xs font-medium lowercase shadow-2xs hover:bg-acentoTerracota/90 transition-colors"
+                  >
+                    escrever no atelier →
+                  </Link>
+                </div>
+              ) : (
+                communityPosts.map((post) => (
+                  <Link
+                    key={post.id}
+                    to="/fogueira"
+                    className="block group focus:outline-none"
+                  >
+                    <div className="p-3.5 rounded-2xl bg-white border border-papelKraft/50 shadow-xs space-y-2 group-hover:border-acentoAzul transition-colors">
+                      <div className="flex items-center justify-between text-xs sm:text-sm font-light font-corpo">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full overflow-hidden border border-papelKraft">
+                            <img src={post.avatar} alt={post.author} className="w-full h-full object-cover" />
+                          </div>
+                          <span className="font-normal font-corpo text-acentoAzul lowercase">{post.author}</span>
+                        </div>
+                        <span className="text-xs font-light font-corpo text-tintaCarvao/50">{post.timeAgo}</span>
+                      </div>
+
+                      <h4 className="text-sm sm:text-base font-bold font-editorial text-tintaCarvao lowercase leading-snug group-hover:text-acentoAzul transition-colors">
+                        {post.title}
+                      </h4>
+                      <p className="text-xs sm:text-sm font-light font-corpo text-tintaCarvao/75 lowercase line-clamp-1 leading-relaxed">
+                        {post.excerpt}
+                      </p>
+
+                      <div className="flex items-center gap-3 pt-1 text-xs font-light font-corpo text-tintaCarvao/60">
+                        <span className="flex items-center gap-1">
+                          <Heart className="w-3.5 h-3.5 text-acentoTerracota fill-acentoTerracota/20" />
+                          {post.likes}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="w-3.5 h-3.5 text-acentoAzul" />
+                          responder
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
           </div>
 
