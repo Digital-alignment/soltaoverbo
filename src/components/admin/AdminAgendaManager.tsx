@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '../../lib/supabase';
+import { meetingsService } from '../../lib/meetingsService';
 import { ProductSlug, ProductMeeting, MeetingAudienceType } from '../../types/productHubs';
 import {
   Calendar,
@@ -76,49 +77,17 @@ export default function AdminAgendaManager() {
   useEffect(() => {
     fetchMeetings();
     fetchUsers();
+    const unsubscribe = meetingsService.onMeetingsChanged(() => {
+      fetchMeetings();
+    });
+    return () => unsubscribe();
   }, []);
 
   const fetchMeetings = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('product_meetings')
-        .select('*')
-        .order('date_time', { ascending: true });
-
-      if (error) {
-        console.warn('product_meetings query fallback:', error.message);
-        const stored = localStorage.getItem('admin_all_meetings');
-        if (stored) {
-          setMeetings(JSON.parse(stored));
-        } else {
-          setMeetings([
-            {
-              id: 'm-demo-1',
-              product_slug: 'programa_cafe_com_letras',
-              title: 'café com letras: roda de leitura e afeto',
-              date_time: new Date(Date.now() + 86400000 * 2).toISOString(),
-              meeting_link: 'https://zoom.us/j/soltaoverbo-cafe',
-              description: 'leitura comentada de contos contemporâneos e partilha poética ao vivo.',
-              is_published: true,
-              audience_type: 'product',
-              target_products: ['programa_cafe_com_letras'],
-            },
-            {
-              id: 'm-demo-2',
-              product_slug: 'comunidade',
-              title: 'fogueira aberta: boas-vindas do mês',
-              date_time: new Date(Date.now() + 86400000 * 5).toISOString(),
-              meeting_link: 'https://zoom.us/j/soltaoverbo-fogueira',
-              description: 'encontro mensal aberto para todas as alunas e exploradoras da comunidade.',
-              is_published: true,
-              audience_type: 'all',
-            },
-          ]);
-        }
-      } else if (data) {
-        setMeetings(data as ProductMeeting[]);
-      }
+      const data = await meetingsService.getAllMeetings();
+      setMeetings(data);
     } catch (err) {
       console.error('Error fetching meetings in AdminAgendaManager:', err);
     } finally {
@@ -199,45 +168,9 @@ export default function AdminAgendaManager() {
     };
 
     try {
-      if (editingMeetingId) {
-        // Atualizar
-        const { error } = await supabase
-          .from('product_meetings')
-          .update(meetingPayload)
-          .eq('id', editingMeetingId);
-
-        if (!error) {
-          setMeetings((prev) =>
-            prev.map((m) => (m.id === editingMeetingId ? { ...m, ...meetingPayload } : m))
-          );
-        } else {
-          // Fallback local
-          const updated = meetings.map((m) =>
-            m.id === editingMeetingId ? { ...m, ...meetingPayload } : m
-          );
-          setMeetings(updated);
-          localStorage.setItem('admin_all_meetings', JSON.stringify(updated));
-        }
-      } else {
-        // Criar novo
-        const { data, error } = await supabase
-          .from('product_meetings')
-          .insert([meetingPayload])
-          .select();
-
-        if (!error && data && data.length > 0) {
-          setMeetings((prev) => [data[0] as ProductMeeting, ...prev]);
-        } else {
-          // Fallback local
-          const newLocal: ProductMeeting = {
-            id: `local-m-${Date.now()}`,
-            ...meetingPayload,
-          };
-          const updated = [newLocal, ...meetings];
-          setMeetings(updated);
-          localStorage.setItem('admin_all_meetings', JSON.stringify(updated));
-        }
-      }
+      await meetingsService.saveMeeting(meetingPayload, editingMeetingId || undefined);
+      const refreshed = await meetingsService.getAllMeetings();
+      setMeetings(refreshed);
 
       setIsModalOpen(false);
       setFeedbackMsg('encontro salvo com sucesso na agenda.');
@@ -250,17 +183,13 @@ export default function AdminAgendaManager() {
   };
 
   const togglePublishStatus = async (meeting: ProductMeeting) => {
-    const updated = meetings.map((m) =>
-      m.id === meeting.id ? { ...m, is_published: !m.is_published } : m
-    );
-    setMeetings(updated);
-    localStorage.setItem('admin_all_meetings', JSON.stringify(updated));
-
     try {
-      await supabase
-        .from('product_meetings')
-        .update({ is_published: !meeting.is_published })
-        .eq('id', meeting.id);
+      await meetingsService.saveMeeting(
+        { ...meeting, is_published: !meeting.is_published },
+        meeting.id
+      );
+      const refreshed = await meetingsService.getAllMeetings();
+      setMeetings(refreshed);
     } catch (err) {
       console.error('Error toggling publish status:', err);
     }
@@ -268,12 +197,10 @@ export default function AdminAgendaManager() {
 
   const deleteMeeting = async (id: string) => {
     if (!confirm('deseja realmente excluir este encontro da agenda?')) return;
-    const updated = meetings.filter((m) => m.id !== id);
-    setMeetings(updated);
-    localStorage.setItem('admin_all_meetings', JSON.stringify(updated));
-
     try {
-      await supabase.from('product_meetings').delete().eq('id', id);
+      await meetingsService.deleteMeeting(id);
+      const refreshed = await meetingsService.getAllMeetings();
+      setMeetings(refreshed);
     } catch (err) {
       console.error('Error deleting meeting:', err);
     }

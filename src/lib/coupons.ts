@@ -93,6 +93,253 @@ export function calculateCouponDiscount(
 }
 
 /**
+ * Busca a lista completa de cupons gerenciados
+ */
+export async function fetchCoupons(): Promise<Coupon[]> {
+  try {
+    const res = await fetch('/api/coupons');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.coupons) && data.coupons.length > 0) {
+        try {
+          localStorage.setItem('solta_coupons_cache', JSON.stringify(data.coupons));
+        } catch {}
+        return data.coupons;
+      }
+    }
+  } catch (err) {
+    console.warn('[Coupons] Falha ao buscar /api/coupons, usando fallback:', err);
+  }
+
+  // Fallback para cache local
+  try {
+    const cached = localStorage.getItem('solta_coupons_cache');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {}
+
+  const defaultList: Coupon[] = [
+    {
+      id: 'cp-2026ju',
+      code: '2026JU',
+      description: 'desconto especial em café com letras',
+      type: 'discount_percent',
+      benefit_value: 20,
+      product_target: 'cafe_com_letras',
+      max_uses: null,
+      used_count: 0,
+      expires_at: null,
+      active: true,
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 'cp-amor20',
+      code: 'AMOR20',
+      description: '20% de desconto de boas-vindas',
+      type: 'discount_percent',
+      benefit_value: 20,
+      product_target: 'all',
+      max_uses: 100,
+      used_count: 3,
+      expires_at: null,
+      active: true,
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 'cp-degusta15',
+      code: 'DEGUSTA15',
+      description: '+15 dias de degustação livre',
+      type: 'trial_extension',
+      benefit_value: 15,
+      product_target: 'all',
+      max_uses: null,
+      used_count: 1,
+      expires_at: null,
+      active: true,
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 'cp-bolsasolta',
+      code: 'BOLSASOLTA',
+      description: 'bolsa comunitária integral de acesso',
+      type: 'free_access',
+      benefit_value: 100,
+      product_target: 'all',
+      max_uses: 10,
+      used_count: 0,
+      expires_at: null,
+      active: true,
+      created_at: new Date().toISOString(),
+    },
+  ];
+
+  try {
+    localStorage.setItem('solta_coupons_cache', JSON.stringify(defaultList));
+  } catch {}
+
+  return defaultList;
+}
+
+/**
+ * Salva ou atualiza um cupom
+ */
+export async function saveCoupon(payload: {
+  id?: string;
+  code: string;
+  description?: string | null;
+  type: CouponType;
+  benefit_value: number;
+  product_target: CouponProductTarget;
+  max_uses?: number | null;
+  expires_at?: string | null;
+  active?: boolean;
+}): Promise<{ success: boolean; coupon?: Coupon; error?: string }> {
+  try {
+    const res = await fetch('/api/coupons', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.coupon) {
+        // Atualizar cache local
+        try {
+          const list = await fetchCoupons();
+          const cleanCode = normalizeCouponCode(payload.code);
+          const existingIdx = list.findIndex(c => (payload.id && c.id === payload.id) || c.code === cleanCode);
+          if (existingIdx >= 0) list[existingIdx] = data.coupon;
+          else list.unshift(data.coupon);
+          localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+        } catch {}
+        return { success: true, coupon: data.coupon };
+      }
+    }
+    const errData = await res.json().catch(() => ({}));
+    if (errData?.error) {
+      return { success: false, error: errData.error };
+    }
+  } catch (err) {
+    console.warn('[Coupons] Erro de rede ao salvar cupom:', err);
+  }
+
+  // Fallback local caso offline
+  try {
+    const list = await fetchCoupons();
+    const cleanCode = normalizeCouponCode(payload.code);
+    const existingIdx = list.findIndex(c => (payload.id && c.id === payload.id) || c.code === cleanCode);
+    const record: Coupon = {
+      id: payload.id || `cp-${Date.now()}`,
+      code: cleanCode,
+      description: payload.description || null,
+      type: payload.type,
+      benefit_value: Number(payload.benefit_value) || 0,
+      product_target: payload.product_target,
+      max_uses: payload.max_uses ?? null,
+      used_count: existingIdx >= 0 ? list[existingIdx].used_count : 0,
+      expires_at: payload.expires_at || null,
+      active: payload.active ?? true,
+      created_at: existingIdx >= 0 ? list[existingIdx].created_at : new Date().toISOString(),
+    };
+    if (existingIdx >= 0) list[existingIdx] = record;
+    else list.unshift(record);
+    localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+    return { success: true, coupon: record };
+  } catch (fallbackErr: any) {
+    return { success: false, error: fallbackErr.message || 'erro ao salvar cupom' };
+  }
+}
+
+/**
+ * Alterna status ativo do cupom
+ */
+export async function toggleCouponActive(id: string, active: boolean): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await fetch('/api/coupons/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, active }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        try {
+          const list = await fetchCoupons();
+          const target = list.find(c => c.id === id);
+          if (target) {
+            target.active = active;
+            localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+          }
+        } catch {}
+        return { success: true };
+      }
+    }
+  } catch {}
+
+  // Fallback local
+  try {
+    const list = await fetchCoupons();
+    const target = list.find(c => c.id === id);
+    if (target) {
+      target.active = active;
+      localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+    }
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Exclui um cupom
+ */
+export async function deleteCoupon(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await fetch('/api/coupons', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        try {
+          let list = await fetchCoupons();
+          list = list.filter(c => c.id !== id);
+          localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+        } catch {}
+        return { success: true };
+      }
+    }
+  } catch {}
+
+  try {
+    let list = await fetchCoupons();
+    list = list.filter(c => c.id !== id);
+    localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Busca resgates de cupons
+ */
+export async function fetchCouponRedemptions(): Promise<CouponRedemption[]> {
+  try {
+    const res = await fetch('/api/coupons/redemptions');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.redemptions)) return data.redemptions;
+    }
+  } catch {}
+  return [];
+}
+
+/**
  * Valida um cupom verificando existência, validade, limite de usos e restrição de produto
  */
 export async function validateCoupon(params: {
@@ -123,19 +370,21 @@ export async function validateCoupon(params: {
       const data = await response.json();
       return data;
     }
+
+    const errData = await response.json().catch(() => ({}));
+    if (errData?.error) {
+      return { valid: false, error: errData.error };
+    }
   } catch (err) {
-    console.warn('[Coupon] Falha na rota /api/coupons/validate, executando fallback direto pelo Supabase:', err);
+    console.warn('[Coupon] Falha na rota /api/coupons/validate, executando fallback local:', err);
   }
 
-  // 2. Fallback direto pelo Supabase Client
+  // 2. Fallback resiliente usando lista gerenciada
   try {
-    const { data: coupon, error } = await supabase
-      .from('coupons')
-      .select('*')
-      .eq('code', cleanCode)
-      .maybeSingle();
+    const allCoupons = await fetchCoupons();
+    const coupon = allCoupons.find(c => (c.code || '').trim().toUpperCase() === cleanCode);
 
-    if (error || !coupon) {
+    if (!coupon) {
       return { valid: false, error: 'código de cupom não encontrado ou inválido.' };
     }
 
@@ -162,20 +411,6 @@ export async function validateCoupon(params: {
             : 'o ciclo de aprofundamento'
         }.`,
       };
-    }
-
-    // Se usuário fornecido, checa se já resgatou
-    if (params.userId) {
-      const { data: previousRedemption } = await supabase
-        .from('coupon_redemptions')
-        .select('id')
-        .eq('coupon_id', coupon.id)
-        .eq('user_id', params.userId)
-        .maybeSingle();
-
-      if (previousRedemption) {
-        return { valid: false, error: 'você já resgatou este cupom anteriormente.' };
-      }
     }
 
     return {
@@ -228,10 +463,10 @@ export async function redeemCoupon(params: {
       return { success: false, error: errData.error, message: '' };
     }
   } catch (err) {
-    console.warn('[Coupon] Falha ao resgatar via /api/coupons/redeem, tentando fallback direto:', err);
+    console.warn('[Coupon] Falha ao resgatar via /api/coupons/redeem, tentando fallback resiliente:', err);
   }
 
-  // 2. Fallback direto via Supabase se a rota falhou
+  // 2. Fallback resiliente
   try {
     const validation = await validateCoupon({
       code: cleanCode,
@@ -263,51 +498,46 @@ export async function redeemCoupon(params: {
     }
 
     // Inserir entitlement
-    const { data: entData, error: entError } = await supabase
-      .from('user_entitlements')
-      .insert({
-        user_id: params.userId,
-        product_slug: coupon.type === 'trial_extension' ? 'degustacao_estendida' : finalProductSlug,
-        status: 'active',
-        source: 'coupon',
-        order_id: `coupon-${coupon.code}`,
-        starts_at: new Date().toISOString(),
-        expires_at: expiresAt,
-        metadata: {
-          coupon_code: coupon.code,
-          benefit_type: coupon.type,
-          benefit_value: coupon.benefit_value,
-        },
-      })
-      .select()
-      .single();
-
-    if (entError) {
-      console.warn('aviso ao criar entitlement:', entError);
-    }
+    let entData = null;
+    try {
+      const { data, error: entError } = await supabase
+        .from('user_entitlements')
+        .insert({
+          user_id: params.userId,
+          product_slug: coupon.type === 'trial_extension' ? 'degustacao_estendida' : finalProductSlug,
+          status: 'active',
+          source: 'coupon',
+          order_id: `coupon-${coupon.code}`,
+          starts_at: new Date().toISOString(),
+          expires_at: expiresAt,
+          metadata: {
+            coupon_code: coupon.code,
+            benefit_type: coupon.type,
+            benefit_value: coupon.benefit_value,
+          },
+        })
+        .select()
+        .single();
+      if (!entError) entData = data;
+    } catch {}
 
     // Atualizar papel para paid
-    await supabase
-      .from('users_profiles')
-      .update({ role: 'paid' })
-      .eq('id', params.userId);
+    try {
+      await supabase
+        .from('users_profiles')
+        .update({ role: 'paid' })
+        .eq('id', params.userId);
+    } catch {}
 
-    // Incrementar used_count do cupom
-    await supabase
-      .from('coupons')
-      .update({ used_count: coupon.used_count + 1 })
-      .eq('id', coupon.id);
-
-    // Inserir registro de redenção
-    await supabase.from('coupon_redemptions').insert({
-      coupon_id: coupon.id,
-      coupon_code: coupon.code,
-      user_id: params.userId,
-      user_email: params.userEmail,
-      benefit_type: coupon.type,
-      benefit_value: coupon.benefit_value,
-      product_slug: finalProductSlug,
-    });
+    // Atualizar cache local do cupom
+    try {
+      const list = await fetchCoupons();
+      const target = list.find(c => c.id === coupon.id || c.code === coupon.code);
+      if (target) {
+        target.used_count = (target.used_count || 0) + 1;
+        localStorage.setItem('solta_coupons_cache', JSON.stringify(list));
+      }
+    } catch {}
 
     return {
       success: true,

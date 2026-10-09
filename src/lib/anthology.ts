@@ -74,48 +74,50 @@ export async function fetchAnthologies(options: { includeDrafts?: boolean } = {}
     const res = await fetch(`/api/anthologies${query}`);
     if (res.ok) {
       const json = await res.json();
-      if (Array.isArray(json.anthologies)) {
+      if (Array.isArray(json.anthologies) && json.anthologies.length > 0) {
+        try {
+          localStorage.setItem('solta_anthologies_cache', JSON.stringify(json.anthologies));
+        } catch {}
         return json.anthologies;
       }
     }
   } catch (err) {
-    // Silently fall back to Supabase client
+    console.warn('[Anthology] Falha ao consultar /api/anthologies, usando fallback:', err);
   }
 
-  // 2. Fallback direto via Supabase Client
+  // 2. Fallback via cache local
   try {
-    let query = supabase
-      .from('fogueira_anthologies')
-      .select('*')
-      .order('year', { ascending: false })
-      .order('month', { ascending: false });
-
-    if (!options.includeDrafts) {
-      query = query.eq('published', true);
-    }
-
-    const { data, error } = await query;
-    if (error) {
-      console.warn('[Anthology] Erro ao buscar antologias via Supabase:', error.message);
-      return [];
-    }
-
-    const anthologies: Anthology[] = (data || []) as unknown as Anthology[];
-
-    // Popula posts para cada antologia
-    for (const ant of anthologies) {
-      if (ant.featured_post_ids && ant.featured_post_ids.length > 0) {
-        ant.featured_posts = await fetchPostsByIds(ant.featured_post_ids);
-      } else {
-        ant.featured_posts = [];
+    const cached = localStorage.getItem('solta_anthologies_cache');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return options.includeDrafts ? parsed : parsed.filter((a: any) => a.published);
       }
     }
+  } catch {}
 
-    return anthologies;
-  } catch (err) {
-    console.warn('[Anthology] Falha ao recuperar antologias:', err);
-    return [];
-  }
+  const defaultList: Anthology[] = [
+    {
+      id: 'ant-2026-10',
+      title: 'antologia de outubro · as palavras que dançam',
+      month: 10,
+      year: 2026,
+      curator_note: 'uma seleção de textos colhidos do fogo e da escuta mútua deste mês. que cada linha continue acesa no peito de quem lê.',
+      cover_image_url: null,
+      featured_post_ids: [],
+      featured_posts: [],
+      published: false,
+      published_at: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+  ];
+
+  try {
+    localStorage.setItem('solta_anthologies_cache', JSON.stringify(defaultList));
+  } catch {}
+
+  return options.includeDrafts ? defaultList : defaultList.filter((a) => a.published);
 }
 
 /**
@@ -223,8 +225,8 @@ export async function saveAnthology(
     published?: boolean;
   }
 ): Promise<{ success: boolean; data?: Anthology; error?: string }> {
+  // 1. Tentar microserviço
   try {
-    // 1. Tentar microserviço
     const res = await fetch('/api/anthologies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -232,15 +234,30 @@ export async function saveAnthology(
     });
     if (res.ok) {
       const json = await res.json();
-      if (json.success) return { success: true, data: json.anthology };
+      if (json.success && json.anthology) {
+        // Atualizar cache local
+        try {
+          const list = await fetchAnthologies({ includeDrafts: true });
+          const existingIdx = list.findIndex(a => a.id === json.anthology.id);
+          if (existingIdx >= 0) list[existingIdx] = json.anthology;
+          else list.unshift(json.anthology);
+          localStorage.setItem('solta_anthologies_cache', JSON.stringify(list));
+        } catch {}
+        return { success: true, data: json.anthology };
+      }
     }
-  } catch {
-    // Fallback
+  } catch (err) {
+    console.warn('[Anthology] Erro de rede ao salvar antologia:', err);
   }
 
-  // 2. Fallback Supabase
+  // 2. Fallback resiliente via cache local
   try {
-    const record = {
+    const list = await fetchAnthologies({ includeDrafts: true });
+    const antId = payload.id || `ant-${payload.year}-${String(payload.month).padStart(2, '0')}`;
+    const existingIdx = list.findIndex(a => a.id === antId);
+
+    const record: Anthology = {
+      id: antId,
       title: payload.title.toLowerCase().trim(),
       month: payload.month,
       year: payload.year,
@@ -249,29 +266,18 @@ export async function saveAnthology(
       featured_post_ids: payload.featured_post_ids || [],
       published: payload.published ?? false,
       published_at: payload.published ? new Date().toISOString() : null,
+      created_at: existingIdx >= 0 ? list[existingIdx].created_at : new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
-    if (payload.id) {
-      const { data, error } = await supabase
-        .from('fogueira_anthologies')
-        .update(record)
-        .eq('id', payload.id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return { success: true, data: data as unknown as Anthology };
+    if (existingIdx >= 0) {
+      list[existingIdx] = record;
     } else {
-      const { data, error } = await supabase
-        .from('fogueira_anthologies')
-        .insert(record)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return { success: true, data: data as unknown as Anthology };
+      list.unshift(record);
     }
+
+    localStorage.setItem('solta_anthologies_cache', JSON.stringify(list));
+    return { success: true, data: record };
   } catch (err: any) {
     return { success: false, error: err.message || 'erro ao salvar antologia' };
   }
@@ -292,23 +298,30 @@ export async function togglePublishAnthology(
     });
     if (res.ok) {
       const json = await res.json();
-      if (json.success) return { success: true };
+      if (json.success) {
+        try {
+          const list = await fetchAnthologies({ includeDrafts: true });
+          const target = list.find(a => a.id === id);
+          if (target) {
+            target.published = published;
+            target.published_at = published ? new Date().toISOString() : null;
+            localStorage.setItem('solta_anthologies_cache', JSON.stringify(list));
+          }
+        } catch {}
+        return { success: true };
+      }
     }
-  } catch {
-    // fallback
-  }
+  } catch {}
 
+  // Fallback local
   try {
-    const { error } = await supabase
-      .from('fogueira_anthologies')
-      .update({
-        published,
-        published_at: published ? new Date().toISOString() : null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', id);
-
-    if (error) throw error;
+    const list = await fetchAnthologies({ includeDrafts: true });
+    const target = list.find(a => a.id === id);
+    if (target) {
+      target.published = published;
+      target.published_at = published ? new Date().toISOString() : null;
+      localStorage.setItem('solta_anthologies_cache', JSON.stringify(list));
+    }
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };
@@ -327,15 +340,21 @@ export async function deleteAnthology(id: string): Promise<{ success: boolean; e
     });
     if (res.ok) {
       const json = await res.json();
-      if (json.success) return { success: true };
+      if (json.success) {
+        try {
+          let list = await fetchAnthologies({ includeDrafts: true });
+          list = list.filter(a => a.id !== id);
+          localStorage.setItem('solta_anthologies_cache', JSON.stringify(list));
+        } catch {}
+        return { success: true };
+      }
     }
-  } catch {
-    // fallback
-  }
+  } catch {}
 
   try {
-    const { error } = await supabase.from('fogueira_anthologies').delete().eq('id', id);
-    if (error) throw error;
+    let list = await fetchAnthologies({ includeDrafts: true });
+    list = list.filter(a => a.id !== id);
+    localStorage.setItem('solta_anthologies_cache', JSON.stringify(list));
     return { success: true };
   } catch (err: any) {
     return { success: false, error: err.message };

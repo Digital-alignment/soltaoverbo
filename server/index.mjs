@@ -153,6 +153,159 @@ async function supabaseRest(endpoint, options = {}) {
 }
 
 /**
+ * Baixa JSON persistente do bucket banners no Supabase Storage
+ */
+async function storageDownloadJson(fileName, defaultVal = null) {
+  try {
+    const url = `${SUPABASE_URL}/storage/v1/object/banners/${fileName}`;
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn(`[Storage Download] ${fileName}:`, err.message);
+  }
+  return defaultVal;
+}
+
+/**
+ * Salva JSON no bucket banners com upsert automático
+ */
+async function storageUploadJson(fileName, data) {
+  try {
+    const url = `${SUPABASE_URL}/storage/v1/object/banners/${fileName}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+      },
+      body: JSON.stringify(data, null, 2),
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn(`[Storage Upload] ${fileName}:`, err.message);
+    return false;
+  }
+}
+
+const DEFAULT_SERVER_COUPONS = [
+  {
+    id: 'cp-2026ju',
+    code: '2026JU',
+    description: 'desconto especial em café com letras',
+    type: 'discount_percent',
+    benefit_value: 20,
+    product_target: 'cafe_com_letras',
+    max_uses: null,
+    used_count: 0,
+    expires_at: null,
+    active: true,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 'cp-amor20',
+    code: 'AMOR20',
+    description: '20% de desconto de boas-vindas',
+    type: 'discount_percent',
+    benefit_value: 20,
+    product_target: 'all',
+    max_uses: 100,
+    used_count: 3,
+    expires_at: null,
+    active: true,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 'cp-degusta15',
+    code: 'DEGUSTA15',
+    description: '+15 dias de degustação livre',
+    type: 'trial_extension',
+    benefit_value: 15,
+    product_target: 'all',
+    max_uses: null,
+    used_count: 1,
+    expires_at: null,
+    active: true,
+    created_at: new Date().toISOString(),
+  },
+  {
+    id: 'cp-bolsasolta',
+    code: 'BOLSASOLTA',
+    description: 'bolsa comunitária integral de acesso',
+    type: 'free_access',
+    benefit_value: 100,
+    product_target: 'all',
+    max_uses: 10,
+    used_count: 0,
+    expires_at: null,
+    active: true,
+    created_at: new Date().toISOString(),
+  },
+];
+
+async function loadAllCouponsServer() {
+  try {
+    const list = await supabaseRest('coupons?order=created_at.desc');
+    if (Array.isArray(list) && list.length > 0) return list;
+  } catch (err) {
+    // Fallback to storage
+  }
+  const fromStorage = await storageDownloadJson('coupons_data.json', null);
+  if (Array.isArray(fromStorage) && fromStorage.length > 0) {
+    return fromStorage;
+  }
+  await storageUploadJson('coupons_data.json', DEFAULT_SERVER_COUPONS);
+  return DEFAULT_SERVER_COUPONS;
+}
+
+async function saveAllCouponsServer(coupons) {
+  await storageUploadJson('coupons_data.json', coupons);
+}
+
+const DEFAULT_SERVER_ANTHOLOGIES = [
+  {
+    id: 'ant-2026-10',
+    title: 'antologia de outubro · as palavras que dançam',
+    month: 10,
+    year: 2026,
+    curator_note: 'uma seleção de textos colhidos do fogo e da escuta mútua deste mês. que cada linha continue acesa no peito de quem lê.',
+    cover_image_url: null,
+    featured_post_ids: [],
+    published: false,
+    published_at: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  }
+];
+
+async function loadAllAnthologiesServer() {
+  try {
+    const list = await supabaseRest('fogueira_anthologies?order=year.desc,month.desc');
+    if (Array.isArray(list) && list.length > 0) return list;
+  } catch (err) {
+    // Fallback to storage
+  }
+  const fromStorage = await storageDownloadJson('fogueira_anthologies.json', null);
+  if (Array.isArray(fromStorage) && fromStorage.length > 0) {
+    return fromStorage;
+  }
+  await storageUploadJson('fogueira_anthologies.json', DEFAULT_SERVER_ANTHOLOGIES);
+  return DEFAULT_SERVER_ANTHOLOGIES;
+}
+
+async function saveAllAnthologiesServer(anthologies) {
+  await storageUploadJson('fogueira_anthologies.json', anthologies);
+}
+
+/**
  * Busca e-mail de login real da usuária no Supabase Auth Admin
  */
 async function fetchAuthUserEmail(userId) {
@@ -573,7 +726,159 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 5. POST /api/coupons/validate (Validação de cupom poético)
+  // 5. ROTAS DE CUPONS POÉTICOS & BOLSAS (Fase 3)
+  // GET /api/coupons
+  if (req.method === 'GET' && url.pathname === '/api/coupons') {
+    try {
+      const coupons = await loadAllCouponsServer();
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ coupons: coupons || [] }));
+    } catch (err) {
+      console.error('[Coupons List Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ coupons: [], error: err.message }));
+    }
+    return;
+  }
+
+  // POST /api/coupons (Criar ou atualizar cupom)
+  if (req.method === 'POST' && url.pathname === '/api/coupons') {
+    try {
+      const payload = await parseJsonBody();
+      const { id, code, description, type, benefit_value, product_target, max_uses, expires_at, active } = payload;
+      const cleanCode = (code || '').trim().toUpperCase();
+
+      if (!cleanCode) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Código do cupom é obrigatório' }));
+        return;
+      }
+
+      const coupons = await loadAllCouponsServer();
+      const existingIdx = coupons.findIndex(c => (id && c.id === id) || c.code === cleanCode);
+
+      const updatedRecord = {
+        id: id || (existingIdx >= 0 ? coupons[existingIdx].id : `cp-${Date.now()}`),
+        code: cleanCode,
+        description: description ? description.trim().toLowerCase() : null,
+        type: type || 'discount_percent',
+        benefit_value: Number(benefit_value) || 0,
+        product_target: product_target || 'all',
+        max_uses: max_uses !== undefined && max_uses !== null && max_uses !== '' ? Number(max_uses) : null,
+        used_count: existingIdx >= 0 ? (coupons[existingIdx].used_count || 0) : 0,
+        expires_at: expires_at || null,
+        active: active !== undefined ? !!active : true,
+        created_at: existingIdx >= 0 ? coupons[existingIdx].created_at : new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      if (existingIdx >= 0) {
+        coupons[existingIdx] = updatedRecord;
+      } else {
+        coupons.unshift(updatedRecord);
+      }
+
+      await saveAllCouponsServer(coupons);
+
+      // Tentar salvar no banco Supabase se a tabela existir
+      try {
+        await supabaseRest('coupons', {
+          method: 'POST',
+          body: JSON.stringify(updatedRecord),
+          headers: { 'Prefer': 'resolution=merge-duplicates' },
+        });
+      } catch (dbErr) {
+        // Silencioso se não houver tabela
+      }
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true, coupon: updatedRecord }));
+    } catch (err) {
+      console.error('[Coupons Save Error]:', err);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // POST /api/coupons/toggle
+  if (req.method === 'POST' && url.pathname === '/api/coupons/toggle') {
+    try {
+      const { id, active } = await parseJsonBody();
+      if (!id) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'ID do cupom não informado' }));
+        return;
+      }
+      const coupons = await loadAllCouponsServer();
+      const target = coupons.find(c => c.id === id);
+      if (target) {
+        target.active = !!active;
+        target.updated_at = new Date().toISOString();
+        await saveAllCouponsServer(coupons);
+      }
+      try {
+        await supabaseRest(`coupons?id=eq.${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ active: !!active }),
+        });
+      } catch (dbErr) {}
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // DELETE /api/coupons
+  if (req.method === 'DELETE' && url.pathname === '/api/coupons') {
+    try {
+      const { id } = await parseJsonBody();
+      if (!id) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'ID não informado' }));
+        return;
+      }
+      let coupons = await loadAllCouponsServer();
+      coupons = coupons.filter(c => c.id !== id);
+      await saveAllCouponsServer(coupons);
+
+      try {
+        await supabaseRest(`coupons?id=eq.${encodeURIComponent(id)}`, { method: 'DELETE' });
+      } catch (dbErr) {}
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: true }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: err.message }));
+    }
+    return;
+  }
+
+  // GET /api/coupons/redemptions
+  if (req.method === 'GET' && url.pathname === '/api/coupons/redemptions') {
+    try {
+      let redemptions = [];
+      try {
+        redemptions = await supabaseRest('coupon_redemptions?order=redeemed_at.desc');
+      } catch (dbErr) {}
+      if (!Array.isArray(redemptions) || redemptions.length === 0) {
+        redemptions = await storageDownloadJson('coupon_redemptions.json', []);
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ redemptions: redemptions || [] }));
+    } catch (err) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ redemptions: [], error: err.message }));
+    }
+    return;
+  }
+
+  // POST /api/coupons/validate (Validação de cupom poético)
   if (req.method === 'POST' && url.pathname === '/api/coupons/validate') {
     try {
       const { code, productSlug, userId } = await parseJsonBody();
@@ -585,14 +890,14 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const coupons = await supabaseRest(`coupons?code=eq.${encodeURIComponent(cleanCode)}&limit=1`);
-      if (!coupons || coupons.length === 0) {
+      const allCoupons = await loadAllCouponsServer();
+      const coupon = allCoupons.find(c => (c.code || '').trim().toUpperCase() === cleanCode);
+
+      if (!coupon) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ valid: false, error: 'Código de cupom não encontrado ou inválido' }));
         return;
       }
-
-      const coupon = coupons[0];
 
       if (!coupon.active) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -622,8 +927,17 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (userId) {
-        const redemptions = await supabaseRest(`coupon_redemptions?coupon_id=eq.${encodeURIComponent(coupon.id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`);
-        if (redemptions && redemptions.length > 0) {
+        let hasRedeemed = false;
+        try {
+          const redemptions = await supabaseRest(`coupon_redemptions?coupon_id=eq.${encodeURIComponent(coupon.id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`);
+          if (redemptions && redemptions.length > 0) hasRedeemed = true;
+        } catch (dbErr) {
+          const redemptions = await storageDownloadJson('coupon_redemptions.json', []);
+          if (Array.isArray(redemptions) && redemptions.some(r => r.coupon_id === coupon.id && r.user_id === userId)) {
+            hasRedeemed = true;
+          }
+        }
+        if (hasRedeemed) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ valid: false, error: 'Você já resgatou este cupom anteriormente' }));
           return;
@@ -649,7 +963,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // 6. POST /api/coupons/redeem (Resgate e aplicação de cupom / bolsa comunitária)
+  // POST /api/coupons/redeem (Resgate e aplicação de cupom / bolsa comunitária)
   if (req.method === 'POST' && url.pathname === '/api/coupons/redeem') {
     try {
       const { code, productSlug, userId, userEmail } = await parseJsonBody();
@@ -661,14 +975,16 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const coupons = await supabaseRest(`coupons?code=eq.${encodeURIComponent(cleanCode)}&limit=1`);
-      if (!coupons || coupons.length === 0) {
+      const allCoupons = await loadAllCouponsServer();
+      const couponIndex = allCoupons.findIndex(c => (c.code || '').trim().toUpperCase() === cleanCode);
+
+      if (couponIndex < 0) {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: 'Cupom não encontrado' }));
         return;
       }
 
-      const coupon = coupons[0];
+      const coupon = allCoupons[couponIndex];
 
       if (!coupon.active) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -688,8 +1004,18 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const redemptions = await supabaseRest(`coupon_redemptions?coupon_id=eq.${encodeURIComponent(coupon.id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`);
-      if (redemptions && redemptions.length > 0) {
+      // Checar se já resgatou
+      let hasRedeemed = false;
+      try {
+        const redemptions = await supabaseRest(`coupon_redemptions?coupon_id=eq.${encodeURIComponent(coupon.id)}&user_id=eq.${encodeURIComponent(userId)}&limit=1`);
+        if (redemptions && redemptions.length > 0) hasRedeemed = true;
+      } catch (dbErr) {
+        const redemptions = await storageDownloadJson('coupon_redemptions.json', []);
+        if (Array.isArray(redemptions) && redemptions.some(r => r.coupon_id === coupon.id && r.user_id === userId)) {
+          hasRedeemed = true;
+        }
+      }
+      if (hasRedeemed) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: 'Você já resgatou este cupom anteriormente' }));
         return;
@@ -747,32 +1073,39 @@ const server = http.createServer(async (req, res) => {
         console.warn('[Coupon Redeem] Aviso ao atualizar users_profiles:', profileErr.message);
       }
 
-      // 3. Incrementar used_count do cupom
+      // 3. Incrementar used_count do cupom no storage
+      allCoupons[couponIndex].used_count = (coupon.used_count || 0) + 1;
+      await saveAllCouponsServer(allCoupons);
+
       try {
         await supabaseRest(`coupons?id=eq.${encodeURIComponent(coupon.id)}`, {
           method: 'PATCH',
-          body: JSON.stringify({ used_count: coupon.used_count + 1 }),
+          body: JSON.stringify({ used_count: allCoupons[couponIndex].used_count }),
         });
-      } catch (cupErr) {
-        console.warn('[Coupon Redeem] Aviso ao incrementar used_count:', cupErr.message);
-      }
+      } catch (cupErr) {}
 
-      // 4. Inserir registro em coupon_redemptions
+      // 4. Salvar redenção
+      const redemptionEntry = {
+        id: `red-${Date.now()}`,
+        coupon_id: coupon.id,
+        coupon_code: coupon.code,
+        user_id: userId,
+        user_email: userEmail || null,
+        benefit_type: coupon.type,
+        benefit_value: coupon.benefit_value,
+        product_slug: finalProductSlug,
+        redeemed_at: new Date().toISOString(),
+      };
+
       try {
         await supabaseRest('coupon_redemptions', {
           method: 'POST',
-          body: JSON.stringify({
-            coupon_id: coupon.id,
-            coupon_code: coupon.code,
-            user_id: userId,
-            user_email: userEmail || null,
-            benefit_type: coupon.type,
-            benefit_value: coupon.benefit_value,
-            product_slug: finalProductSlug,
-          }),
+          body: JSON.stringify(redemptionEntry),
         });
       } catch (redErr) {
-        console.warn('[Coupon Redeem] Aviso ao registrar coupon_redemptions:', redErr.message);
+        const existingRedemptions = await storageDownloadJson('coupon_redemptions.json', []);
+        existingRedemptions.unshift(redemptionEntry);
+        await storageUploadJson('coupon_redemptions.json', existingRedemptions);
       }
 
       // 5. Inserir notificação in-app
@@ -787,9 +1120,7 @@ const server = http.createServer(async (req, res) => {
             is_read: false,
           }),
         });
-      } catch (notifErr) {
-        // silencioso
-      }
+      } catch (notifErr) {}
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
@@ -810,24 +1141,13 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'GET' && url.pathname === '/api/anthologies') {
     try {
       const includeDrafts = url.searchParams.get('includeDrafts') === 'true';
-      let endpoint = 'fogueira_anthologies?order=year.desc,month.desc';
-      if (!includeDrafts) {
-        endpoint += '&published=eq.true';
-      }
+      const anthologies = await loadAllAnthologiesServer();
 
-      let anthologies = [];
-      try {
-        anthologies = await supabaseRest(endpoint);
-      } catch (dbErr) {
-        console.warn('[Anthologies API] Falha ao consultar fogueira_anthologies:', dbErr.message);
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ anthologies: [] }));
-        return;
-      }
+      const filtered = includeDrafts ? anthologies : anthologies.filter(a => a.published);
 
       // Popular posts para cada antologia
       const populatedAnthologies = await Promise.all(
-        (anthologies || []).map(async (ant) => {
+        filtered.map(async (ant) => {
           if (!ant.featured_post_ids || ant.featured_post_ids.length === 0) {
             return { ...ant, featured_posts: [] };
           }
@@ -910,7 +1230,11 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      const anthologies = await loadAllAnthologiesServer();
+      const existingIdx = id ? anthologies.findIndex(a => a.id === id) : -1;
+
       const record = {
+        id: id || `ant-${year}-${String(month).padStart(2, '0')}`,
         title: title.trim().toLowerCase(),
         month: parseInt(month, 10),
         year: parseInt(year, 10),
@@ -918,28 +1242,35 @@ const server = http.createServer(async (req, res) => {
         cover_image_url: cover_image_url || null,
         featured_post_ids: featured_post_ids || [],
         published: published ?? false,
-        published_at: published ? new Date().toISOString() : null,
+        published_at: published ? (existingIdx >= 0 && anthologies[existingIdx].published_at ? anthologies[existingIdx].published_at : new Date().toISOString()) : null,
+        created_at: existingIdx >= 0 ? anthologies[existingIdx].created_at : new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
 
-      let result;
-      if (id) {
-        result = await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
-          method: 'PATCH',
-          body: JSON.stringify(record),
-          headers: { 'Prefer': 'return=representation' },
-        });
+      if (existingIdx >= 0) {
+        anthologies[existingIdx] = record;
       } else {
-        result = await supabaseRest('fogueira_anthologies', {
-          method: 'POST',
-          body: JSON.stringify(record),
-          headers: { 'Prefer': 'return=representation' },
-        });
+        anthologies.unshift(record);
       }
 
-      const saved = Array.isArray(result) ? result[0] : result;
+      await saveAllAnthologiesServer(anthologies);
+
+      try {
+        if (id) {
+          await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
+            method: 'PATCH',
+            body: JSON.stringify(record),
+          });
+        } else {
+          await supabaseRest('fogueira_anthologies', {
+            method: 'POST',
+            body: JSON.stringify(record),
+          });
+        }
+      } catch (dbErr) {}
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: true, anthology: saved }));
+      res.end(JSON.stringify({ success: true, anthology: record }));
     } catch (err) {
       console.error('[Anthologies Save Error]:', err);
       res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -958,14 +1289,25 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          published: !!published,
-          published_at: published ? new Date().toISOString() : null,
-          updated_at: new Date().toISOString(),
-        }),
-      });
+      const anthologies = await loadAllAnthologiesServer();
+      const target = anthologies.find(a => a.id === id);
+      if (target) {
+        target.published = !!published;
+        target.published_at = published ? new Date().toISOString() : null;
+        target.updated_at = new Date().toISOString();
+        await saveAllAnthologiesServer(anthologies);
+      }
+
+      try {
+        await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            published: !!published,
+            published_at: published ? new Date().toISOString() : null,
+            updated_at: new Date().toISOString(),
+          }),
+        });
+      } catch (dbErr) {}
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true }));
@@ -987,9 +1329,15 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
-        method: 'DELETE',
-      });
+      let anthologies = await loadAllAnthologiesServer();
+      anthologies = anthologies.filter(a => a.id !== id);
+      await saveAllAnthologiesServer(anthologies);
+
+      try {
+        await supabaseRest(`fogueira_anthologies?id=eq.${encodeURIComponent(id)}`, {
+          method: 'DELETE',
+        });
+      } catch (dbErr) {}
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: true }));

@@ -21,7 +21,16 @@ import {
   Check,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Coupon, CouponRedemption, normalizeCouponCode } from '../lib/coupons';
+import {
+  Coupon,
+  CouponRedemption,
+  normalizeCouponCode,
+  fetchCoupons,
+  saveCoupon,
+  toggleCouponActive,
+  deleteCoupon,
+  fetchCouponRedemptions,
+} from '../lib/coupons';
 
 export default function AdminCouponsManager() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -56,25 +65,13 @@ export default function AdminCouponsManager() {
   const loadCouponsData = async () => {
     setLoading(true);
     try {
-      // 1. Carregar cupons
-      const { data: couponsData, error: couponsErr } = await supabase
-        .from('coupons')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (!couponsErr && couponsData) {
-        setCoupons(couponsData as Coupon[]);
-      }
+      // 1. Carregar cupons via serviço resiliente
+      const couponsList = await fetchCoupons();
+      setCoupons(couponsList);
 
       // 2. Carregar resgates
-      const { data: redemptionsData, error: redemptionsErr } = await supabase
-        .from('coupon_redemptions')
-        .select('*')
-        .order('redeemed_at', { ascending: false });
-
-      if (!redemptionsErr && redemptionsData) {
-        setRedemptions(redemptionsData as CouponRedemption[]);
-      }
+      const redemptionsList = await fetchCouponRedemptions();
+      setRedemptions(redemptionsList);
     } catch (err) {
       console.error('erro ao carregar cupons:', err);
     } finally {
@@ -85,13 +82,9 @@ export default function AdminCouponsManager() {
   const handleToggleActive = async (coupon: Coupon) => {
     try {
       const newStatus = !coupon.active;
-      const { error } = await supabase
-        .from('coupons')
-        .update({ active: newStatus })
-        .eq('id', coupon.id);
-
-      if (error) {
-        alert(`erro ao atualizar cupom: ${error.message}`);
+      const res = await toggleCouponActive(coupon.id, newStatus);
+      if (!res.success) {
+        alert(`erro ao atualizar cupom: ${res.error || 'falha'}`);
         return;
       }
 
@@ -109,9 +102,9 @@ export default function AdminCouponsManager() {
     }
 
     try {
-      const { error } = await supabase.from('coupons').delete().eq('id', coupon.id);
-      if (error) {
-        alert(`erro ao excluir cupom: ${error.message}`);
+      const res = await deleteCoupon(coupon.id);
+      if (!res.success) {
+        alert(`erro ao excluir cupom: ${res.error || 'falha'}`);
         return;
       }
       setCoupons((prev) => prev.filter((c) => c.id !== coupon.id));
@@ -155,23 +148,15 @@ export default function AdminCouponsManager() {
         active: true,
       };
 
-      const { data, error } = await supabase
-        .from('coupons')
-        .insert(payload)
-        .select()
-        .single();
+      const result = await saveCoupon(payload);
 
-      if (error) {
-        if (error.code === '23505' || error.message.includes('unique')) {
-          setCreateError('já existe um cupom cadastrado com este código.');
-        } else {
-          setCreateError(`erro ao criar cupom: ${error.message}`);
-        }
+      if (!result.success || !result.coupon) {
+        setCreateError(result.error || 'erro ao criar cupom.');
         setCreating(false);
         return;
       }
 
-      setCoupons((prev) => [data as Coupon, ...prev]);
+      setCoupons((prev) => [result.coupon!, ...prev.filter((c) => c.id !== result.coupon!.id)]);
       setShowCreateModal(false);
       setFormData({
         code: '',

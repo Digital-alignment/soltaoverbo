@@ -89,7 +89,7 @@ export default function PaymentModal({
       installmentText: 'ou 2x R$ 38,50',
       directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
       isRecurringPlan: false,
-      whatsappMessage: 'Olá! Quero garantir minha vaga nos 21 dias de escrita por R$ 77,00 via PIX ou cartão.',
+      whatsappMessage: 'Olá! Gostaria de falar com atendimento humano e tirar dúvidas sobre os 21 dias de escrita.',
       features: [
         'acesso a 21 rituais diários de escrita autoral',
         'áudios binaurais guiados para foco e fluência',
@@ -99,15 +99,15 @@ export default function PaymentModal({
     },
     ciclo: {
       title: 'ciclo de aprofundamento',
-      subtitle: 'mentoria ao vivo, rodas quinzenais e acesso contínuo à comunidade',
+      subtitle: 'encontros online e aprofundamento',
       priceText: 'R$ 597,00',
       priceInCents: 59700,
       installmentText: '/ trimestre (ou 3x R$ 225,67 sem juros)',
       directPayUrl: 'https://checkout.infinitepay.io/soltaoverbo',
       isRecurringPlan: false,
-      whatsappMessage: 'Olá! Quero fazer parte do ciclo de aprofundamento (R$ 597,00/trimestre) via PIX ou cartão.',
+      whatsappMessage: 'Olá! Gostaria de falar com atendimento humano e tirar dúvidas sobre o ciclo de aprofundamento.',
       features: [
-        'encontros ao vivo de mentoria & rituais de escrita',
+        'encontros ao vivo & rituais de escrita',
         'rodas quinzenais de troca e feedback em grupo',
         'acesso a todos os encontros do café com letras',
         'acesso ilimitado ao acervo de gravações & materiais',
@@ -121,7 +121,7 @@ export default function PaymentModal({
       installmentText: '/ mês (assinatura mensal recorrente)',
       directPayUrl: 'https://invoice.infinitepay.io/plans/soltaoverbo/ng11CypzK0',
       isRecurringPlan: true,
-      whatsappMessage: 'Olá! Quero me inscrever no café com letras (assinatura mensal R$ 97,00/mês) via PIX ou cartão.',
+      whatsappMessage: 'Olá! Gostaria de falar com atendimento humano e tirar dúvidas sobre o café com letras.',
       features: [
         'assinatura mensal recorrente (cancele a qualquer momento)',
         '4 encontros ao vivo por mês (terças-feiras 8h–8h30)',
@@ -602,21 +602,21 @@ export default function PaymentModal({
                 </div>
               </div>
 
-              {/* Opção 2: Pagamento Chave PIX & WhatsApp */}
+              {/* Opção 2: Atendimento Humano & WhatsApp */}
               <div className="bg-white rounded-2xl p-4 sm:p-5 border border-papelKraft/40 shadow-xs space-y-3">
                 <div>
                   <h4 className="font-bold text-acentoAzul text-sm lowercase font-editorial">
-                    pagamento via pix ou atendimento humano
+                    atendimento humano
                   </h4>
                   <p className="text-xs text-tintaCarvao/70 font-corpo lowercase mt-0.5">
-                    receba a chave pix direta e auxílio imediato pela equipe no whatsapp
+                    auxílio imediato e suporte com a nossa equipe no whatsapp
                   </p>
                 </div>
 
                 <a
                   href={`https://wa.me/5548991823637?text=${encodeURIComponent(
                     customerName.trim()
-                      ? `Olá! Meu nome é ${customerName.trim()}. Quero garantir minha vaga em ${productDetails.title} (${formattedEffectivePrice}) via PIX ou cartão.`
+                      ? `Olá! Meu nome é ${customerName.trim()}. Gostaria de falar com atendimento humano sobre ${productDetails.title}.`
                       : productDetails.whatsappMessage
                   )}`}
                   target="_blank"
@@ -624,7 +624,7 @@ export default function PaymentModal({
                   className="w-full bg-acentoTerracota hover:bg-acentoTerracota/90 text-white font-corpo font-bold py-3.5 px-6 rounded-full transition-all flex items-center justify-center gap-2.5 text-xs sm:text-sm shadow-xs cursor-pointer lowercase"
                 >
                   <MessageCircle className="w-4 h-4 shrink-0" />
-                  <span>garantir vaga pelo whatsapp</span>
+                  <span>atendimento humano no whatsapp</span>
                 </a>
               </div>
 

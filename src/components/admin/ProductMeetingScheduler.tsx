@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
+import { meetingsService } from '../../lib/meetingsService';
 import { ProductSlug, ProductMeeting } from '../../types/productHubs';
 import {
   Calendar,
@@ -37,38 +38,17 @@ export default function ProductMeetingScheduler({
 
   useEffect(() => {
     fetchMeetings();
+    const unsubscribe = meetingsService.onMeetingsChanged(() => {
+      fetchMeetings();
+    });
+    return () => unsubscribe();
   }, [productSlug]);
 
   const fetchMeetings = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('product_meetings')
-        .select('*')
-        .eq('product_slug', productSlug)
-        .order('date_time', { ascending: true });
-
-      if (error) {
-        console.warn('product_meetings table fallback:', error.message);
-        const stored = localStorage.getItem(`meetings_${productSlug}`);
-        if (stored) {
-          setMeetings(JSON.parse(stored));
-        } else {
-          setMeetings([
-            {
-              id: 'demo-m1',
-              product_slug: productSlug,
-              title: `encontro ao vivo • ${productName}`,
-              date_time: new Date(Date.now() + 86400000 * 2).toISOString(),
-              meeting_link: 'https://zoom.us/j/soltaoverbo-demo',
-              description: 'rodada de escrita e partilha ao vivo com a comunidade.',
-              is_published: true,
-            },
-          ]);
-        }
-      } else if (data) {
-        setMeetings(data as ProductMeeting[]);
-      }
+      const all = await meetingsService.getAllMeetings();
+      setMeetings(all.filter((m) => m.product_slug === productSlug));
     } catch (err) {
       console.error('Error fetching meetings:', err);
     } finally {
@@ -91,22 +71,9 @@ export default function ProductMeetingScheduler({
     };
 
     try {
-      const { data, error } = await supabase
-        .from('product_meetings')
-        .insert([newMeeting])
-        .select();
-
-      if (!error && data && data.length > 0) {
-        setMeetings((prev) => [...prev, data[0] as ProductMeeting]);
-      } else {
-        const fallbackMeeting: ProductMeeting = {
-          id: `local-m-${Date.now()}`,
-          ...newMeeting,
-        };
-        const updated = [...meetings, fallbackMeeting];
-        setMeetings(updated);
-        localStorage.setItem(`meetings_${productSlug}`, JSON.stringify(updated));
-      }
+      await meetingsService.saveMeeting(newMeeting);
+      const all = await meetingsService.getAllMeetings();
+      setMeetings(all.filter((m) => m.product_slug === productSlug));
 
       setTitle('');
       setDateTime('');
@@ -122,29 +89,23 @@ export default function ProductMeetingScheduler({
   };
 
   const togglePublishStatus = async (meeting: ProductMeeting) => {
-    const updated = meetings.map((m) =>
-      m.id === meeting.id ? { ...m, is_published: !m.is_published } : m
-    );
-    setMeetings(updated);
-    localStorage.setItem(`meetings_${productSlug}`, JSON.stringify(updated));
-
     try {
-      await supabase
-        .from('product_meetings')
-        .update({ is_published: !meeting.is_published })
-        .eq('id', meeting.id);
+      await meetingsService.saveMeeting(
+        { ...meeting, is_published: !meeting.is_published },
+        meeting.id
+      );
+      const all = await meetingsService.getAllMeetings();
+      setMeetings(all.filter((m) => m.product_slug === productSlug));
     } catch (err) {
       console.error('Error toggling publish status:', err);
     }
   };
 
   const deleteMeeting = async (id: string) => {
-    const updated = meetings.filter((m) => m.id !== id);
-    setMeetings(updated);
-    localStorage.setItem(`meetings_${productSlug}`, JSON.stringify(updated));
-
     try {
-      await supabase.from('product_meetings').delete().eq('id', id);
+      await meetingsService.deleteMeeting(id);
+      const all = await meetingsService.getAllMeetings();
+      setMeetings(all.filter((m) => m.product_slug === productSlug));
     } catch (err) {
       console.error('Error deleting meeting:', err);
     }

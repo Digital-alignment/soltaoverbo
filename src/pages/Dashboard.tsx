@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { meetingsService } from '../lib/meetingsService';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingPage from '../components/LoadingPage';
 import {
@@ -325,35 +326,15 @@ export default function Dashboard() {
     return milestone;
   }, [totalWordsAccumulated]);
 
-  // Agenda Integrada com Cores de Data Dinâmicas e Ícones Uniformizados
-  const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([
-    {
-      id: '1',
-      dayOfMonth: 8,
-      monthName: 'agosto',
-      dayOfWeekLabel: 'segunda-feira',
-      title: 'café com letras (roda de partilha poética)',
-      description: 'roda virtual quinzenal de leitura e partilha de textos com todo o colectivo.',
-      time: '08h00',
-      countdownStr: '12h 52min',
-      category: 'cafe',
-      categoryLabel: 'ao vivo • fogueira',
-      modality: 'online • meet',
-      completed: false,
-      linkUrl: '/cafe-com-letras',
-    },
-  ]);
+  // Agenda Integrada com Cores de Data Dinâmicas e Sincronização em Tempo Real com o Admin
+  const [agendaEvents, setAgendaEvents] = useState<AgendaEvent[]>([]);
 
   useEffect(() => {
     async function fetchPublishedMeetings() {
       try {
-        const { data, error } = await supabase
-          .from('product_meetings')
-          .select('*')
-          .eq('is_published', true)
-          .order('date_time', { ascending: true });
+        const data = await meetingsService.getPublishedMeetings();
 
-        if (!error && data && data.length > 0) {
+        if (data && data.length > 0) {
           // Filtragem estrita de audiência (se não tem acesso, fica completamente oculto)
           const filteredData = data.filter((m: any) => {
             if (isAdmin || profile?.role === 'admin') return true;
@@ -429,12 +410,31 @@ export default function Dashboard() {
             return false;
           });
 
+          const now = Date.now();
           const fetchedEvents: AgendaEvent[] = filteredData.map((m: any) => {
             const dateObj = new Date(m.date_time);
             const dayNum = dateObj.getDate();
             const monthStr = dateObj.toLocaleDateString('pt-BR', { month: 'long' });
             const dayOfWeekStr = dateObj.toLocaleDateString('pt-BR', { weekday: 'long' });
             const timeStr = dateObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+            const diffMs = dateObj.getTime() - now;
+            let computedCountdown = 'em breve';
+            if (diffMs > 0) {
+              const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+              const diffDays = Math.floor(diffHours / 24);
+              if (diffDays >= 1) {
+                computedCountdown = `${diffDays}d ${diffHours % 24}h`;
+              } else if (diffHours >= 1) {
+                const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                computedCountdown = `${diffHours}h ${diffMins}min`;
+              } else {
+                const diffMins = Math.max(1, Math.floor(diffMs / (1000 * 60)));
+                computedCountdown = `${diffMins}min`;
+              }
+            } else {
+              computedCountdown = 'ao vivo agora';
+            }
 
             let category: 'cafe' | 'admin' | 'launch' | 'personal' = 'cafe';
             if (m.product_slug === 'programa_ciclo') category = 'launch';
@@ -448,26 +448,33 @@ export default function Dashboard() {
               title: m.title,
               description: m.description || 'encontro ao vivo agendado.',
               time: timeStr,
+              countdownStr: computedCountdown,
               category,
               categoryLabel:
                 m.audience_type === 'specific_users'
                   ? 'convite exclusivo'
                   : `ao vivo • ${m.product_slug.replace('programa_', '').replace(/_/g, ' ')}`,
-              modality: 'online • ao vivo',
+              modality: 'online • meet',
               completed: false,
-              linkUrl: m.meeting_link || '#',
+              linkUrl: m.meeting_link || '/cafe-com-letras',
             };
           });
 
-          if (fetchedEvents.length > 0) {
-            setAgendaEvents(fetchedEvents);
-          }
+          setAgendaEvents(fetchedEvents);
         }
       } catch (err) {
         console.warn('Could not fetch product_meetings for dashboard agenda:', err);
       }
     }
+
     fetchPublishedMeetings();
+
+    // Sincronização em tempo real quando o admin cria, edita ou exclui encontros
+    const unsubscribe = meetingsService.onMeetingsChanged(() => {
+      fetchPublishedMeetings();
+    });
+
+    return () => unsubscribe();
   }, [
     profile,
     user,

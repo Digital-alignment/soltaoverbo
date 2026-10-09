@@ -73,7 +73,7 @@ export default function PreLoginNavbar() {
     {
       to: '/programas/ciclo-de-aprofundamento',
       label: 'ciclo de aprofundamento',
-      desc: 'mentoria ao vivo & comunidade',
+      desc: 'encontros online e aprofundamento',
       icon: Users,
     },
     {
