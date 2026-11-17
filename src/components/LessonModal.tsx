@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Upload, FileText, File, Trash2, Link as LinkIcon, ExternalLink, CheckCircle2, AlertCircle, Music, Play } from 'lucide-react';
+import { X, Upload, FileText, File, Trash2, Link as LinkIcon, ExternalLink, CheckCircle2, AlertCircle, Music, Play, Video } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import YouTubeEmbed from './YouTubeEmbed';
 import { isYouTubeUrl } from '../lib/youtubeUtils';
@@ -565,6 +565,97 @@ export default function LessonModal({
               onChange={setDescription}
               placeholder="descreva o conteúdo e o exercício da leção..."
             />
+          </div>
+
+          {/* TRANSMISSÃO AO VIVO & VÍDEO GRAVADO */}
+          <div className="border-t border-papelKraft/30 pt-4 space-y-4">
+            <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo flex items-center gap-1.5">
+              <Video className="w-4 h-4 text-acentoTerracota" />
+              <span>vídeo & transmissão da leção</span>
+            </label>
+
+            {/* URL DA GRAVAÇÃO / YOUTUBE */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
+                  link do vídeo (youtube)
+                </label>
+                {recordingUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setRecordingUrl('')}
+                    className="text-[11px] text-red-500 hover:text-red-700 flex items-center gap-1 font-corpo lowercase transition cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>remover vídeo</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="relative">
+                <input
+                  type="url"
+                  value={recordingUrl}
+                  onChange={(e) => setRecordingUrl(e.target.value)}
+                  className="w-full pl-3.5 pr-10 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                  placeholder="https://www.youtube.com/watch?v=... ou https://youtu.be/..."
+                />
+                {recordingUrl && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center">
+                    {isYouTubeUrl(recordingUrl) ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-amber-500" />
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <p className="text-[10px] text-tintaCarvao/50 font-corpo lowercase">
+                {recordingUrl
+                  ? isYouTubeUrl(recordingUrl)
+                    ? 'link do youtube válido detectado'
+                    : 'insira um link válido do youtube para reproduzir na leção'
+                  : 'cole o link da gravação no youtube (opcional, deixe vazio para remover)'}
+              </p>
+
+              {recordingUrl && isYouTubeUrl(recordingUrl) && (
+                <div className="mt-3 p-3 bg-white border border-papelKraft/40 rounded-2xl shadow-xs space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold font-corpo text-acentoAzul lowercase">
+                      preview do vídeo
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setRecordingUrl('')}
+                      className="text-[10px] text-red-500 hover:text-red-700 font-corpo lowercase cursor-pointer"
+                    >
+                      remover
+                    </button>
+                  </div>
+                  <div className="rounded-xl overflow-hidden border border-papelKraft/20 max-w-md mx-auto">
+                    <YouTubeEmbed videoUrl={recordingUrl} title="preview da gravação" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* LINK DO ZOOM (OPCIONAL) */}
+            <div className="space-y-1">
+              <label className="block text-xs font-bold text-acentoAzul lowercase font-corpo">
+                link do zoom / aula ao vivo (opcional)
+              </label>
+              <input
+                type="url"
+                value={zoomLink}
+                onChange={(e) => setZoomLink(e.target.value)}
+                className="w-full px-3.5 py-2 bg-white border border-papelKraft/40 rounded-xl text-xs font-corpo text-tintaCarvao focus:outline-none focus:border-acentoAzul lowercase"
+                placeholder="https://zoom.us/j/..."
+              />
+              <p className="text-[10px] text-tintaCarvao/50 font-corpo lowercase">
+                link para encontro ao vivo ou transmissão externa
+              </p>
+            </div>
           </div>
 
           {/* ARQUIVOS DE ÁUDIO */}
