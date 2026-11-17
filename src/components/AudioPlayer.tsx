@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause, AlertCircle, Loader2 } from 'lucide-react';
 
 interface AudioFile {
   id: string;
@@ -14,28 +14,45 @@ interface AudioPlayerProps {
   className?: string;
 }
 
+const LOCAL_FALLBACK_AUDIO = '/brand-assets/audio/chuva-foco-escrita.wav';
+
 export default function AudioPlayer({ audioFiles, autoPlay = false, className = '' }: AudioPlayerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const [isMuted, setIsMuted] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [audioSrc, setAudioSrc] = useState<string>('');
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
 
   const currentAudio = audioFiles[currentIndex];
   const hasMultiple = audioFiles.length > 1;
 
+  // Sincronizar URL de áudio inicial ou ao alternar faixa
+  useEffect(() => {
+    if (currentAudio?.audio_file_url) {
+      setAudioSrc(currentAudio.audio_file_url);
+      setCurrentTime(0);
+      setIsPlaying(false);
+      setHasError(false);
+      setIsLoading(false);
+      setDuration(currentAudio.duration_seconds || 0);
+    }
+  }, [currentIndex, currentAudio?.audio_file_url, currentAudio?.duration_seconds]);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
+      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
+        setDuration(audio.duration);
+      }
       setIsLoading(false);
+      setHasError(false);
     };
 
     const handleTimeUpdate = () => {
@@ -54,10 +71,29 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
 
     const handleLoadStart = () => {
       setIsLoading(true);
+      setHasError(false);
     };
 
     const handleCanPlay = () => {
       setIsLoading(false);
+      setHasError(false);
+      if (audio.duration && !isNaN(audio.duration) && isFinite(audio.duration)) {
+        setDuration(audio.duration);
+      }
+    };
+
+    const handleError = () => {
+      console.warn('aviso: erro ao carregar URL remota do áudio:', audio.src);
+      setIsLoading(false);
+      setIsPlaying(false);
+      // Fallback gracioso para áudio ambiente local se a URL remota falhar
+      if (audioSrc !== LOCAL_FALLBACK_AUDIO) {
+        console.info('aplicando áudio ambiente autoral de contingência:', LOCAL_FALLBACK_AUDIO);
+        setAudioSrc(LOCAL_FALLBACK_AUDIO);
+        setHasError(false);
+      } else {
+        setHasError(true);
+      }
     };
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
@@ -65,6 +101,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('loadstart', handleLoadStart);
     audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
@@ -72,14 +109,9 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('loadstart', handleLoadStart);
       audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('error', handleError);
     };
-  }, [currentIndex, audioFiles.length, hasMultiple]);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume;
-    }
-  }, [volume, isMuted]);
+  }, [audioSrc, currentIndex, audioFiles.length, hasMultiple]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -88,26 +120,36 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
   }, [playbackRate]);
 
   useEffect(() => {
-    if (autoPlay && audioRef.current && currentAudio) {
+    if (autoPlay && audioRef.current && audioSrc) {
       audioRef.current.play().catch(() => setIsPlaying(false));
       setIsPlaying(true);
     }
-  }, [currentAudio, autoPlay]);
+  }, [audioSrc, autoPlay]);
 
   const togglePlay = async () => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
 
     try {
       if (isPlaying) {
-        audioRef.current.pause();
+        audio.pause();
         setIsPlaying(false);
       } else {
-        await audioRef.current.play();
+        setHasError(false);
+        setIsLoading(true);
+        await audio.play();
         setIsPlaying(true);
+        setIsLoading(false);
       }
     } catch (error) {
-      console.error('Error playing audio:', error);
+      console.error('erro ao reproduzir áudio:', error);
       setIsPlaying(false);
+      setIsLoading(false);
+      if (audioSrc !== LOCAL_FALLBACK_AUDIO) {
+        setAudioSrc(LOCAL_FALLBACK_AUDIO);
+      } else {
+        setHasError(true);
+      }
     }
   };
 
@@ -115,23 +157,12 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
     if (!audioRef.current || !progressRef.current) return;
 
     const rect = progressRef.current.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    const newTime = percent * duration;
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const effectiveDuration = duration > 0 ? duration : (currentAudio?.duration_seconds || 0);
+    const newTime = percent * effectiveDuration;
 
     audioRef.current.currentTime = newTime;
     setCurrentTime(newTime);
-  };
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    if (newVolume > 0) {
-      setIsMuted(false);
-    }
-  };
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
   };
 
   const handleNext = () => {
@@ -155,22 +186,27 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
   };
 
   const formatTime = (time: number) => {
-    if (isNaN(time)) return '0:00';
+    if (isNaN(time) || !isFinite(time) || time < 0) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-
   if (!currentAudio) {
     return null;
   }
 
-  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const effectiveDuration = duration > 0 ? duration : (currentAudio.duration_seconds || 0);
+  const progressPercent = effectiveDuration > 0 ? (currentTime / effectiveDuration) * 100 : 0;
 
   return (
-    <div className={`bg-white/80 rounded-2xl border border-papelKraft/35 p-3 sm:p-3.5 shadow-sm space-y-2 ${className}`}>
-      <audio ref={audioRef} src={currentAudio.audio_file_url} preload="metadata" />
+    <div className={`bg-white/80 rounded-2xl border border-papelKraft/35 p-3 sm:p-3.5 shadow-xs space-y-2 ${className}`}>
+      <audio
+        ref={audioRef}
+        key={audioSrc}
+        src={audioSrc || currentAudio.audio_file_url}
+        preload="metadata"
+      />
 
       {/* Linha Única Integrada de Áudio: Play + Título + Onda Sonora + Timers + Velocidade */}
       <div className="flex items-center gap-3">
@@ -178,11 +214,12 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
         <button
           type="button"
           onClick={togglePlay}
-          disabled={isLoading}
-          className="w-9 h-9 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-sm hover:scale-105 transition-transform shrink-0 cursor-pointer disabled:opacity-50"
+          className="w-9 h-9 rounded-full bg-acentoTerracota text-white flex items-center justify-center shadow-xs hover:scale-105 transition-transform shrink-0 cursor-pointer"
           aria-label={isPlaying ? 'pausar áudio' : 'reproduzir áudio'}
         >
-          {isPlaying ? (
+          {isLoading ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : isPlaying ? (
             <Pause className="w-3.5 h-3.5 fill-white" />
           ) : (
             <Play className="w-3.5 h-3.5 fill-white ml-0.5" />
@@ -195,9 +232,17 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             <span className="font-bold font-editorial text-acentoAzul lowercase truncate">
               {currentAudio.title}
             </span>
-            <span className="font-light font-corpo text-tintaCarvao/60 text-[11px] shrink-0">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </span>
+            <div className="flex items-center gap-2 shrink-0">
+              {hasError && (
+                <span className="text-[10px] text-amber-600 font-corpo lowercase flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>áudio indisponível</span>
+                </span>
+              )}
+              <span className="font-light font-corpo text-tintaCarvao/60 text-[11px]">
+                {formatTime(currentTime)} / {formatTime(effectiveDuration)}
+              </span>
+            </div>
           </div>
 
           {/* Progress Waveform Bar */}
@@ -230,7 +275,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
           </div>
         </div>
 
-        {/* Velocidade (1x, 1.25x, 1.5x) */}
+        {/* Velocidade (1x, 1.25x, 1.5x, 2x) */}
         <button
           type="button"
           onClick={() => {
@@ -238,7 +283,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
             setPlaybackRate(rates[nextIdx]);
           }}
-          className="px-2.5 py-1 rounded-full bg-white border border-papelKraft/40 text-[11px] font-normal font-corpo text-acentoAzul hover:bg-papelKraft/20 transition-colors lowercase shrink-0 cursor-pointer shadow-sm"
+          className="px-2.5 py-1 rounded-full bg-white border border-papelKraft/40 text-[11px] font-normal font-corpo text-acentoAzul hover:bg-papelKraft/20 transition-colors lowercase shrink-0 cursor-pointer shadow-xs"
           title="velocidade de reprodução"
         >
           {playbackRate}x
@@ -251,7 +296,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             type="button"
             onClick={handlePrevious}
             disabled={currentIndex === 0}
-            className="text-acentoAzul disabled:opacity-40 hover:underline lowercase"
+            className="text-acentoAzul disabled:opacity-40 hover:underline lowercase cursor-pointer"
           >
             ← anterior
           </button>
@@ -262,7 +307,7 @@ export default function AudioPlayer({ audioFiles, autoPlay = false, className = 
             type="button"
             onClick={handleNext}
             disabled={currentIndex === audioFiles.length - 1}
-            className="text-acentoAzul disabled:opacity-40 hover:underline lowercase"
+            className="text-acentoAzul disabled:opacity-40 hover:underline lowercase cursor-pointer"
           >
             próximo →
           </button>
